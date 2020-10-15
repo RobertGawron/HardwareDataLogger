@@ -6,6 +6,7 @@
 #include "gm_display_hw.h"
 #include "gm_display_labels.h"
 
+// TOD move it somewhere
 static const uint16_t DisplayUpdater_LCDHeightBlue = 48u;
 static const uint16_t DisplayUpdater_LCDHeightYellow = 16u;
 //static const uint16_t DisplayUpdater_LCDWidth = 128u;
@@ -29,7 +30,7 @@ void GMDisplayUpdater_Init()
     GMDisplayHW_Update();
 }
 
-void GMDisplayUpdater_Update()
+void GMDisplayUpdater_UpdateMeasurements()
 {
     GMDisplayHW_Clean();
     GMDisplayUpdater_PrintDoseLabel();
@@ -37,8 +38,16 @@ void GMDisplayUpdater_Update()
     GMDisplayHW_Update();
 }
 
+void GMDisplayUpdater_ReactOnKeyPress(GMKeyboardKeys_Key_t key)
+{
+    // dummy test
+    GMDisplayUpdater_PrintInitialLaoyout();
+    GMDisplayHW_Update();
+}
+
 static void GMDisplayUpdater_PrintInitialLaoyout()
 {
+    GMDisplayHW_Clean();
     GMDisplayHW_DrawText(0, DisplayUpdater_LCDHeightYellow,  (char*)labeWelcomeTop);
     GMDisplayHW_DrawText(0, DisplayUpdater_LCDHeightYellow + 10U, (char*)labeWelcomeBottom);
 }

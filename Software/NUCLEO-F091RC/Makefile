@@ -10,6 +10,7 @@ all: simulation.o \
 	gm_display_labels.o \
 	gm_measurement_calculator.o \
 	gm_logger.o \
+	gm_keyboard.o \
 	gm_display_hw.o \
 	gm_logger_sim.o \
 	ssd1306_i2c_sim.o \
@@ -21,6 +22,7 @@ all: simulation.o \
 		gm_display_labels.o \
 		gm_measurement_calculator.o \
 		gm_logger.o \
+		gm_keyboard.o \
 		gm_display_hw.o \
 		gm_logger_sim.o \
 		ssd1306_i2c_sim.o \
@@ -44,6 +46,10 @@ gm_measurement_calculator.o:  $(DUT_SRC_PATH)/gm_measurement_calculator.c
 
 gm_logger.o:  $(DUT_SRC_PATH)/gm_logger.c
 	$(CC) $(CFLAGS) -c $(DUT_SRC_PATH)/gm_logger.c	
+
+gm_keyboard.o:  $(DUT_SRC_PATH)/gm_keyboard.c
+	$(CC) $(CFLAGS) -c $(DUT_SRC_PATH)/gm_keyboard.c
+
 
 gm_display_hw.o:  $(DUT_SRC_PATH)/gm_display_hw.c
 	$(CC) $(CFLAGS) -c $(DUT_SRC_PATH)/gm_display_hw.c	
