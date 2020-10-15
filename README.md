@@ -6,7 +6,7 @@
 
 It's a simple hardware data logger, that presents data both on LCD and via COM port so it's possible to gather data using PC and do further analysis. Currently it supports only pulse counting.
 
-![Device Picture](https://raw.githubusercontent.com/RobertGawron/HardwareDataLogger/master/Documentation/Pictures/Device_10_01_2019.jpg)
+![Device Picture](https://raw.githubusercontent.com/RobertGawron/HardwareDataLogger/main/Documentation/Pictures/Device_10_01_2019.jpg)
 
 ## Hardware
 
