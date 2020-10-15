@@ -5,7 +5,7 @@ This project consists of two parts:
 - firmware that is built to sharable object (.so)
 - python script that loads this sharable object, and acts as a mockup of hardware
 
-![Simulator Picture](https://raw.githubusercontent.com/RobertGawron/HardwareDataLogger/master/Documentation/Pictures/PCSimulation_15_10_2020.png)
+![Simulator Picture](https://raw.githubusercontent.com/RobertGawron/HardwareDataLogger/main/Documentation/Pictures/PCSimulation_15_10_2020.png)
 
 Note that in order to load .so object into an application, both of them needs to be 32bits, or 64bits. In case of errors during loading .so object, check your version on Python and gcc (both should be either 32bits or 64bits).
 
