@@ -36,7 +36,7 @@ __declspec(dllexport) void Lib_GMLoggerSIM_GetLoggedData(uint8_t** buffer, uint1
 
 __declspec(dllexport) void Lib_GMLoggerSIM_KeyPress()
 {
-    GMKeyboard_onKeyPressDetection(GMKEYBOARD_KEY_UP);
+    GMKeyboard_OnKeyPressDetection(GMKEYBOARD_KEY_UP);
 }
 
 __declspec(dllexport) uint8_t Lib_GMLoggerSIM_GetDisplayLength()

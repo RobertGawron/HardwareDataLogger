@@ -7,7 +7,7 @@ void GMKeyboard_Init()
 }
 
 
-void GMKeyboard_onKeyPressDetection(GMKeyboardKeys_Key_t key)
+void GMKeyboard_OnKeyPressDetection(GMKeyboardKeys_Key_t key)
 {
     GMDisplayUpdater_ReactOnKeyPress(key);
 }

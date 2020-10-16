@@ -91,7 +91,7 @@ static void GMDisplayUpdater_PrintBargraph()
 {
 	GMMeasurement_Value_t maxValue = 0u;
 	GMCircularBuffer_GetMaxElement(&maxValue);
-	#warning "check return value"
+	// TODO check return value
 
     for(uint16_t i = 0; i < GMCircularBuffer_GetElementCount() ; i++)
     {
