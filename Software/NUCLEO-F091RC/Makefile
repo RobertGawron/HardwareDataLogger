@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -fpic -I./Inc
+CFLAGS = -Wall -fpic -I./Inc -DDEBUG_PRINTS_ENABLED
 DUT_SRC_PATH = ./Src
 STUB_SRC_PATH = ./DriversPCSimulation
 default: all

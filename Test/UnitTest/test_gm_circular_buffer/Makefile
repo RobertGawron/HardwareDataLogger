@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -I../UTestLib -I../../../Software/NUCLEO-F091RC/Inc
+CFLAGS = -Wall -I../UTestLib -I../../../Software/NUCLEO-F091RC/Inc -DDEBUG_PRINTS_ENABLED
 DUT_SRC_PATH = ../../../Software/NUCLEO-F091RC/Src/
 
 default: all
