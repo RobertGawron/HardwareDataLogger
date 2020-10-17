@@ -57,6 +57,7 @@ void GMDisplayUpdater_UpdateMeasurements()
 
 void GMDisplayUpdater_ReactOnKeyPress(GMKeyboardKeys_Key_t key)
 {
+    GMDisplayHW_Clean();
 
     GMDisplayUpdater_ViewSelector.currentViewIndex++;
     GMDisplayUpdater_ViewSelector.currentViewIndex %= GMDisplayUpdater_ViewSelector.viewsAmount;

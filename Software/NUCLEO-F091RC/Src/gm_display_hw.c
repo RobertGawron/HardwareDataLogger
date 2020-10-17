@@ -10,6 +10,7 @@ void GMDisplayHW_Init()
 void GMDisplayHW_Clean()
 {
     SSD1306_Fill(0);
+    GMDisplayHW_Update();
 }
 
 void GMDisplayHW_Update()
