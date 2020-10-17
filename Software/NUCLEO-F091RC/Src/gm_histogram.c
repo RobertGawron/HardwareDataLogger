@@ -15,7 +15,7 @@ uint16_t GMHistogram_GetBinValue(uint8_t binIndex, uint8_t totalBinAmount)
 
     GMMeasurement_Value_t elementOfBinMinValue = binLength * binIndex;
     GMMeasurement_Value_t elementOfBinMaxValue = elementOfBinMinValue + binLength;
-
+printf("%d\n", maxElement);
     for(uint16_t j = 0u; j < GMCircularBuffer_GetElementCount(); j++)
     {
         GMMeasurement_Value_t sampleValue; 
