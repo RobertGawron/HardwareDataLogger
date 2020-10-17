@@ -4,7 +4,7 @@
 #include "gm_histogram.h"
 
 
-static const uint8_t histogramBinAmount = 10;
+static const uint8_t histogramBinAmount = 20;
 
 // TOD move it somewhere
 static const uint16_t DisplayUpdater_LCDHeightBlue = 48u;
@@ -26,7 +26,7 @@ void GMViewHistogram_Show()
 
     if (maxBinValue > 0u)
     {
-        for (uint8_t i = 0U; i < histogramBinAmount; i++)
+        for (uint16_t i = 0U; i < histogramBinAmount; i++)
         {
             uint16_t binValue = GMHistogram_GetBinValue(i, histogramBinAmount);
             uint32_t normalizedBinValue = binValue * graphHeight/ maxBinValue;
