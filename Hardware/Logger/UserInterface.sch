@@ -1,0 +1,579 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 2 6
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Switch:SW_Push SW?
+U 1 1 60F43424
+P 2100 2000
+AR Path="/60F43424" Ref="SW?"  Part="1" 
+AR Path="/60F39CF0/60F43424" Ref="SW1"  Part="1" 
+F 0 "SW1" H 2100 2285 50  0000 C CNN
+F 1 "SW_Push" H 2100 2194 50  0000 C CNN
+F 2 "Button_Switch_SMD:SW_SPST_PTS645" H 2100 2200 50  0001 C CNN
+F 3 "~" H 2100 2200 50  0001 C CNN
+	1    2100 2000
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60F4342A
+P 2100 1550
+AR Path="/60F4342A" Ref="R?"  Part="1" 
+AR Path="/60F39CF0/60F4342A" Ref="R1"  Part="1" 
+F 0 "R1" H 2170 1596 50  0000 L CNN
+F 1 "1k" H 2170 1505 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 2030 1550 50  0001 C CNN
+F 3 "~" H 2100 1550 50  0001 C CNN
+	1    2100 1550
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60F43430
+P 2100 2300
+AR Path="/60F43430" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/60F43430" Ref="#PWR03"  Part="1" 
+F 0 "#PWR03" H 2100 2050 50  0001 C CNN
+F 1 "GND" H 2105 2127 50  0000 C CNN
+F 2 "" H 2100 2300 50  0001 C CNN
+F 3 "" H 2100 2300 50  0001 C CNN
+	1    2100 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 60F43436
+P 2100 1350
+AR Path="/60F43436" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/60F43436" Ref="#PWR01"  Part="1" 
+F 0 "#PWR01" H 2100 1200 50  0001 C CNN
+F 1 "VCC" H 2115 1523 50  0000 C CNN
+F 2 "" H 2100 1350 50  0001 C CNN
+F 3 "" H 2100 1350 50  0001 C CNN
+	1    2100 1350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60F4343C
+P 2650 1750
+AR Path="/60F4343C" Ref="R?"  Part="1" 
+AR Path="/60F39CF0/60F4343C" Ref="R3"  Part="1" 
+F 0 "R3" V 2857 1750 50  0000 C CNN
+F 1 "1k" V 2766 1750 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 2580 1750 50  0001 C CNN
+F 3 "~" H 2650 1750 50  0001 C CNN
+	1    2650 1750
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 60F43442
+P 2950 2000
+AR Path="/60F43442" Ref="C?"  Part="1" 
+AR Path="/60F39CF0/60F43442" Ref="C1"  Part="1" 
+F 0 "C1" H 3065 2046 50  0000 L CNN
+F 1 "47n" H 3065 1955 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 2988 1850 50  0001 C CNN
+F 3 "~" H 2950 2000 50  0001 C CNN
+	1    2950 2000
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60F43448
+P 2950 2300
+AR Path="/60F43448" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/60F43448" Ref="#PWR04"  Part="1" 
+F 0 "#PWR04" H 2950 2050 50  0001 C CNN
+F 1 "GND" H 2955 2127 50  0000 C CNN
+F 2 "" H 2950 2300 50  0001 C CNN
+F 3 "" H 2950 2300 50  0001 C CNN
+	1    2950 2300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2100 1350 2100 1400
+Wire Wire Line
+	2100 1700 2100 1750
+Wire Wire Line
+	2100 1750 2450 1750
+Connection ~ 2100 1750
+Wire Wire Line
+	2100 1750 2100 1800
+Wire Wire Line
+	2100 2300 2100 2200
+Wire Wire Line
+	2950 2300 2950 2150
+Wire Wire Line
+	2800 1750 2850 1750
+Wire Wire Line
+	2950 1750 2950 1850
+Wire Wire Line
+	2950 1750 3150 1750
+Connection ~ 2950 1750
+$Comp
+L Switch:SW_Push SW?
+U 1 1 60F43459
+P 4450 2000
+AR Path="/60F43459" Ref="SW?"  Part="1" 
+AR Path="/60F39CF0/60F43459" Ref="SW2"  Part="1" 
+F 0 "SW2" H 4450 2285 50  0000 C CNN
+F 1 "SW_Push" H 4450 2194 50  0000 C CNN
+F 2 "Button_Switch_SMD:SW_SPST_PTS645" H 4450 2200 50  0001 C CNN
+F 3 "~" H 4450 2200 50  0001 C CNN
+	1    4450 2000
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60F4345F
+P 4450 1550
+AR Path="/60F4345F" Ref="R?"  Part="1" 
+AR Path="/60F39CF0/60F4345F" Ref="R2"  Part="1" 
+F 0 "R2" H 4520 1596 50  0000 L CNN
+F 1 "1k" H 4520 1505 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 4380 1550 50  0001 C CNN
+F 3 "~" H 4450 1550 50  0001 C CNN
+	1    4450 1550
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60F43465
+P 4450 2300
+AR Path="/60F43465" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/60F43465" Ref="#PWR05"  Part="1" 
+F 0 "#PWR05" H 4450 2050 50  0001 C CNN
+F 1 "GND" H 4455 2127 50  0000 C CNN
+F 2 "" H 4450 2300 50  0001 C CNN
+F 3 "" H 4450 2300 50  0001 C CNN
+	1    4450 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 60F4346B
+P 4450 1350
+AR Path="/60F4346B" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/60F4346B" Ref="#PWR02"  Part="1" 
+F 0 "#PWR02" H 4450 1200 50  0001 C CNN
+F 1 "VCC" H 4465 1523 50  0000 C CNN
+F 2 "" H 4450 1350 50  0001 C CNN
+F 3 "" H 4450 1350 50  0001 C CNN
+	1    4450 1350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60F43471
+P 4950 1750
+AR Path="/60F43471" Ref="R?"  Part="1" 
+AR Path="/60F39CF0/60F43471" Ref="R4"  Part="1" 
+F 0 "R4" V 5157 1750 50  0000 C CNN
+F 1 "1k" V 5066 1750 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 4880 1750 50  0001 C CNN
+F 3 "~" H 4950 1750 50  0001 C CNN
+	1    4950 1750
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 60F43477
+P 5250 2000
+AR Path="/60F43477" Ref="C?"  Part="1" 
+AR Path="/60F39CF0/60F43477" Ref="C2"  Part="1" 
+F 0 "C2" H 5365 2046 50  0000 L CNN
+F 1 "47n" H 5365 1955 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 5288 1850 50  0001 C CNN
+F 3 "~" H 5250 2000 50  0001 C CNN
+	1    5250 2000
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60F4347D
+P 5250 2300
+AR Path="/60F4347D" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/60F4347D" Ref="#PWR06"  Part="1" 
+F 0 "#PWR06" H 5250 2050 50  0001 C CNN
+F 1 "GND" H 5255 2127 50  0000 C CNN
+F 2 "" H 5250 2300 50  0001 C CNN
+F 3 "" H 5250 2300 50  0001 C CNN
+	1    5250 2300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4450 1350 4450 1400
+Wire Wire Line
+	4450 1700 4450 1750
+Wire Wire Line
+	4450 1750 4750 1750
+Connection ~ 4450 1750
+Wire Wire Line
+	4450 1750 4450 1800
+Wire Wire Line
+	4450 2300 4450 2200
+Wire Wire Line
+	5250 2300 5250 2150
+Wire Wire Line
+	5250 1750 5250 1850
+Wire Wire Line
+	5250 1750 5450 1750
+Connection ~ 5250 1750
+$Comp
+L Switch:SW_Push SW?
+U 1 1 60F4348E
+P 2100 3650
+AR Path="/60F4348E" Ref="SW?"  Part="1" 
+AR Path="/60F39CF0/60F4348E" Ref="SW3"  Part="1" 
+F 0 "SW3" H 2100 3935 50  0000 C CNN
+F 1 "SW_Push" H 2100 3844 50  0000 C CNN
+F 2 "Button_Switch_SMD:SW_SPST_PTS645" H 2100 3850 50  0001 C CNN
+F 3 "~" H 2100 3850 50  0001 C CNN
+	1    2100 3650
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60F43494
+P 2100 3200
+AR Path="/60F43494" Ref="R?"  Part="1" 
+AR Path="/60F39CF0/60F43494" Ref="R5"  Part="1" 
+F 0 "R5" H 2170 3246 50  0000 L CNN
+F 1 "1k" H 2170 3155 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 2030 3200 50  0001 C CNN
+F 3 "~" H 2100 3200 50  0001 C CNN
+	1    2100 3200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60F4349A
+P 2100 3950
+AR Path="/60F4349A" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/60F4349A" Ref="#PWR09"  Part="1" 
+F 0 "#PWR09" H 2100 3700 50  0001 C CNN
+F 1 "GND" H 2105 3777 50  0000 C CNN
+F 2 "" H 2100 3950 50  0001 C CNN
+F 3 "" H 2100 3950 50  0001 C CNN
+	1    2100 3950
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 60F434A0
+P 2100 3000
+AR Path="/60F434A0" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/60F434A0" Ref="#PWR07"  Part="1" 
+F 0 "#PWR07" H 2100 2850 50  0001 C CNN
+F 1 "VCC" H 2115 3173 50  0000 C CNN
+F 2 "" H 2100 3000 50  0001 C CNN
+F 3 "" H 2100 3000 50  0001 C CNN
+	1    2100 3000
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60F434A6
+P 2550 3400
+AR Path="/60F434A6" Ref="R?"  Part="1" 
+AR Path="/60F39CF0/60F434A6" Ref="R7"  Part="1" 
+F 0 "R7" V 2757 3400 50  0000 C CNN
+F 1 "1k" V 2666 3400 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 2480 3400 50  0001 C CNN
+F 3 "~" H 2550 3400 50  0001 C CNN
+	1    2550 3400
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 60F434AC
+P 2850 3650
+AR Path="/60F434AC" Ref="C?"  Part="1" 
+AR Path="/60F39CF0/60F434AC" Ref="C3"  Part="1" 
+F 0 "C3" H 2965 3696 50  0000 L CNN
+F 1 "47n" H 2965 3605 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 2888 3500 50  0001 C CNN
+F 3 "~" H 2850 3650 50  0001 C CNN
+	1    2850 3650
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60F434B2
+P 2850 3950
+AR Path="/60F434B2" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/60F434B2" Ref="#PWR010"  Part="1" 
+F 0 "#PWR010" H 2850 3700 50  0001 C CNN
+F 1 "GND" H 2855 3777 50  0000 C CNN
+F 2 "" H 2850 3950 50  0001 C CNN
+F 3 "" H 2850 3950 50  0001 C CNN
+	1    2850 3950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2100 3000 2100 3050
+Wire Wire Line
+	2100 3350 2100 3400
+Wire Wire Line
+	2100 3400 2350 3400
+Connection ~ 2100 3400
+Wire Wire Line
+	2100 3400 2100 3450
+Wire Wire Line
+	2100 3950 2100 3850
+Wire Wire Line
+	2850 3950 2850 3800
+Wire Wire Line
+	2700 3400 2750 3400
+Wire Wire Line
+	2850 3400 2850 3500
+Wire Wire Line
+	2850 3400 3050 3400
+Connection ~ 2850 3400
+$Comp
+L Switch:SW_Push SW?
+U 1 1 60F434C3
+P 4450 3650
+AR Path="/60F434C3" Ref="SW?"  Part="1" 
+AR Path="/60F39CF0/60F434C3" Ref="SW4"  Part="1" 
+F 0 "SW4" H 4450 3935 50  0000 C CNN
+F 1 "SW_Push" H 4450 3844 50  0000 C CNN
+F 2 "Button_Switch_SMD:SW_SPST_PTS645" H 4450 3850 50  0001 C CNN
+F 3 "~" H 4450 3850 50  0001 C CNN
+	1    4450 3650
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60F434C9
+P 4450 3200
+AR Path="/60F434C9" Ref="R?"  Part="1" 
+AR Path="/60F39CF0/60F434C9" Ref="R6"  Part="1" 
+F 0 "R6" H 4520 3246 50  0000 L CNN
+F 1 "1k" H 4520 3155 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 4380 3200 50  0001 C CNN
+F 3 "~" H 4450 3200 50  0001 C CNN
+	1    4450 3200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60F434CF
+P 4450 3950
+AR Path="/60F434CF" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/60F434CF" Ref="#PWR011"  Part="1" 
+F 0 "#PWR011" H 4450 3700 50  0001 C CNN
+F 1 "GND" H 4455 3777 50  0000 C CNN
+F 2 "" H 4450 3950 50  0001 C CNN
+F 3 "" H 4450 3950 50  0001 C CNN
+	1    4450 3950
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 60F434D5
+P 4450 3000
+AR Path="/60F434D5" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/60F434D5" Ref="#PWR08"  Part="1" 
+F 0 "#PWR08" H 4450 2850 50  0001 C CNN
+F 1 "VCC" H 4465 3173 50  0000 C CNN
+F 2 "" H 4450 3000 50  0001 C CNN
+F 3 "" H 4450 3000 50  0001 C CNN
+	1    4450 3000
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60F434DB
+P 4900 3400
+AR Path="/60F434DB" Ref="R?"  Part="1" 
+AR Path="/60F39CF0/60F434DB" Ref="R8"  Part="1" 
+F 0 "R8" V 5107 3400 50  0000 C CNN
+F 1 "1k" V 5016 3400 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 4830 3400 50  0001 C CNN
+F 3 "~" H 4900 3400 50  0001 C CNN
+	1    4900 3400
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 60F434E1
+P 5200 3650
+AR Path="/60F434E1" Ref="C?"  Part="1" 
+AR Path="/60F39CF0/60F434E1" Ref="C4"  Part="1" 
+F 0 "C4" H 5315 3696 50  0000 L CNN
+F 1 "47n" H 5315 3605 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 5238 3500 50  0001 C CNN
+F 3 "~" H 5200 3650 50  0001 C CNN
+	1    5200 3650
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60F434E7
+P 5200 3950
+AR Path="/60F434E7" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/60F434E7" Ref="#PWR012"  Part="1" 
+F 0 "#PWR012" H 5200 3700 50  0001 C CNN
+F 1 "GND" H 5205 3777 50  0000 C CNN
+F 2 "" H 5200 3950 50  0001 C CNN
+F 3 "" H 5200 3950 50  0001 C CNN
+	1    5200 3950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4450 3000 4450 3050
+Wire Wire Line
+	4450 3350 4450 3400
+Wire Wire Line
+	4450 3400 4700 3400
+Connection ~ 4450 3400
+Wire Wire Line
+	4450 3400 4450 3450
+Wire Wire Line
+	4450 3950 4450 3850
+Wire Wire Line
+	5200 3950 5200 3800
+Wire Wire Line
+	5050 3400 5100 3400
+Wire Wire Line
+	5200 3400 5200 3500
+Wire Wire Line
+	5200 3400 5400 3400
+Connection ~ 5200 3400
+Text Notes 1550 1600 0    87   ~ 17
+key up
+Text Notes 3650 1600 0    87   ~ 17
+key down
+Text Notes 1450 3100 0    87   ~ 17
+key left
+Text Notes 3700 3100 0    87   ~ 17
+key right
+$Comp
+L Device:Jumper_NO_Small JP1
+U 1 1 60F0F678
+P 2650 1400
+F 0 "JP1" H 2650 1585 50  0000 C CNN
+F 1 "Jumper_NO_Small" H 2650 1494 50  0000 C CNN
+F 2 "Jumper:SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm" H 2650 1400 50  0001 C CNN
+F 3 "~" H 2650 1400 50  0001 C CNN
+	1    2650 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:Jumper_NO_Small JP3
+U 1 1 60F12E56
+P 2550 3100
+F 0 "JP3" H 2550 3285 50  0000 C CNN
+F 1 "Jumper_NO_Small" H 2550 3194 50  0000 C CNN
+F 2 "Jumper:SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm" H 2550 3100 50  0001 C CNN
+F 3 "~" H 2550 3100 50  0001 C CNN
+	1    2550 3100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:Jumper_NO_Small JP4
+U 1 1 60F13680
+P 4900 3100
+F 0 "JP4" H 4900 3285 50  0000 C CNN
+F 1 "Jumper_NO_Small" H 4900 3194 50  0000 C CNN
+F 2 "Jumper:SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm" H 4900 3100 50  0001 C CNN
+F 3 "~" H 4900 3100 50  0001 C CNN
+	1    4900 3100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2550 1400 2450 1400
+Wire Wire Line
+	2450 1400 2450 1750
+Connection ~ 2450 1750
+Wire Wire Line
+	2450 1750 2500 1750
+Wire Wire Line
+	2850 1400 2850 1750
+Wire Wire Line
+	2750 1400 2850 1400
+Connection ~ 2850 1750
+Wire Wire Line
+	2850 1750 2950 1750
+$Comp
+L Device:Jumper_NO_Small JP2
+U 1 1 60F12543
+P 4950 1450
+F 0 "JP2" H 4950 1635 50  0000 C CNN
+F 1 "Jumper_NO_Small" H 4950 1544 50  0000 C CNN
+F 2 "Jumper:SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm" H 4950 1450 50  0001 C CNN
+F 3 "~" H 4950 1450 50  0001 C CNN
+	1    4950 1450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4750 1450 4750 1750
+Wire Wire Line
+	4750 1450 4850 1450
+Connection ~ 4750 1750
+Wire Wire Line
+	4750 1750 4800 1750
+Wire Wire Line
+	5150 1450 5150 1750
+Wire Wire Line
+	5100 1750 5150 1750
+Wire Wire Line
+	5050 1450 5150 1450
+Connection ~ 5150 1750
+Wire Wire Line
+	5150 1750 5250 1750
+Wire Wire Line
+	2450 3100 2350 3100
+Wire Wire Line
+	2350 3100 2350 3400
+Connection ~ 2350 3400
+Wire Wire Line
+	2350 3400 2400 3400
+Wire Wire Line
+	2650 3100 2750 3100
+Wire Wire Line
+	2750 3100 2750 3400
+Connection ~ 2750 3400
+Wire Wire Line
+	2750 3400 2850 3400
+Wire Wire Line
+	4800 3100 4700 3100
+Wire Wire Line
+	4700 3100 4700 3400
+Connection ~ 4700 3400
+Wire Wire Line
+	4700 3400 4750 3400
+Wire Wire Line
+	5100 3100 5100 3400
+Wire Wire Line
+	5000 3100 5100 3100
+Connection ~ 5100 3400
+Wire Wire Line
+	5100 3400 5200 3400
+$Comp
+L Logger:ST7735S U2
+U 1 1 60F42698
+P 3900 4900
+F 0 "U2" H 4928 4551 50  0000 L CNN
+F 1 "ST7735S" H 4928 4460 50  0000 L CNN
+F 2 "Logger:ST7735S" H 3900 5050 50  0001 C CNN
+F 3 "https://fr.aliexpress.com/item/32880822720.html?spm=a2g0s.9042311.0.0.27426c37dWDL7m" H 3900 5050 50  0001 C CNN
+	1    3900 4900
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
