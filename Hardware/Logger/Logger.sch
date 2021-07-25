@@ -44,7 +44,7 @@ F0 "DataProcessing" 50
 F1 "DataProcessing.sch" 50
 $EndSheet
 Text Notes 3800 4000 0    71   ~ 14
-TODO\npower supply external\npower supply for lcd\nesp \nnucleo\nno copper under esp\nstqcked design
+TODO\n\nno copper under esp\nmale pins on top layer
 $Sheet
 S 6900 3850 500  150 
 U 6144CC5A
