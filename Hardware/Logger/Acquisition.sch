@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 3 6
+Sheet 3 7
 Title ""
 Date ""
 Rev ""
@@ -145,50 +145,50 @@ F 3 "~" H 3900 4150 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	3700 4150 3750 4150
-Text Notes 3300 4850 0    71   ~ 14
+Text Notes 3300 4950 0    71   ~ 14
 for future use
 $Comp
 L Connector:Conn_Coaxial J?
 U 1 1 60F715EB
-P 3500 5150
+P 3500 5250
 AR Path="/60F715EB" Ref="J?"  Part="1" 
 AR Path="/60F455B3/60F715EB" Ref="J4"  Part="1" 
-F 0 "J4" H 3600 5125 50  0000 L CNN
-F 1 "Conn_Coaxial" H 3600 5034 50  0000 L CNN
-F 2 "Connector_Coaxial:SMA_Molex_73251-2200_Horizontal" H 3500 5150 50  0001 C CNN
-F 3 " ~" H 3500 5150 50  0001 C CNN
-	1    3500 5150
+F 0 "J4" H 3600 5225 50  0000 L CNN
+F 1 "Conn_Coaxial" H 3600 5134 50  0000 L CNN
+F 2 "Connector_Coaxial:SMA_Molex_73251-2200_Horizontal" H 3500 5250 50  0001 C CNN
+F 3 " ~" H 3500 5250 50  0001 C CNN
+	1    3500 5250
 	-1   0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR016
 U 1 1 60F715F1
-P 3500 5400
-F 0 "#PWR016" H 3500 5150 50  0001 C CNN
-F 1 "GND" H 3505 5227 50  0000 C CNN
-F 2 "" H 3500 5400 50  0001 C CNN
-F 3 "" H 3500 5400 50  0001 C CNN
-	1    3500 5400
+P 3500 5500
+F 0 "#PWR016" H 3500 5250 50  0001 C CNN
+F 1 "GND" H 3505 5327 50  0000 C CNN
+F 2 "" H 3500 5500 50  0001 C CNN
+F 3 "" H 3500 5500 50  0001 C CNN
+	1    3500 5500
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	3500 5350 3500 5400
+	3500 5450 3500 5500
 $Comp
 L Device:R R?
 U 1 1 60F715F8
-P 3900 5150
+P 3900 5250
 AR Path="/60F715F8" Ref="R?"  Part="1" 
 AR Path="/60F39CF0/60F715F8" Ref="R?"  Part="1" 
 AR Path="/60F455B3/60F715F8" Ref="R12"  Part="1" 
-F 0 "R12" V 4107 5150 50  0000 C CNN
-F 1 "1k" V 4016 5150 50  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric" V 3830 5150 50  0001 C CNN
-F 3 "~" H 3900 5150 50  0001 C CNN
-	1    3900 5150
+F 0 "R12" V 4107 5250 50  0000 C CNN
+F 1 "1k" V 4016 5250 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 3830 5250 50  0001 C CNN
+F 3 "~" H 3900 5250 50  0001 C CNN
+	1    3900 5250
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
-	3700 5150 3750 5150
+	3700 5250 3750 5250
 $Comp
 L Connector:DB9_Female_MountingHoles J7
 U 1 1 60F515C7

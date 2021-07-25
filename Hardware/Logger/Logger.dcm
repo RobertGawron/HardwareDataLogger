@@ -1,5 +1,10 @@
 EESchema-DOCLIB  Version 2.0
 #
+$CMP LD1117ASTR
+D ldo programable stabilisator
+F https://www.tme.eu/Document/bad00e7fc591b73ff810af309b2bb7a4/LD1117A.pdf
+$ENDCMP
+#
 $CMP ST7735S
 F https://fr.aliexpress.com/item/32880822720.html?spm=a2g0s.9042311.0.0.27426c37dWDL7m
 $ENDCMP

@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 6
+Sheet 1 7
 Title ""
 Date ""
 Rev ""
@@ -44,5 +44,11 @@ F0 "DataProcessing" 50
 F1 "DataProcessing.sch" 50
 $EndSheet
 Text Notes 3800 4000 0    71   ~ 14
-TODO\npower supply external\npower supply for lcd\nesp \nnucleo\nno copper under esp
+TODO\npower supply external\npower supply for lcd\nesp \nnucleo\nno copper under esp\nstqcked design
+$Sheet
+S 6900 3850 500  150 
+U 6144CC5A
+F0 "PowerSupply" 50
+F1 "PowerSupply.sch" 50
+$EndSheet
 $EndSCHEMATC
