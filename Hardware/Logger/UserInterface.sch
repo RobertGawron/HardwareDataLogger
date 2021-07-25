@@ -1,0 +1,356 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 2 7
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Switch:SW_Push SW?
+U 1 1 60F43424
+P 1900 1950
+AR Path="/60F43424" Ref="SW?"  Part="1" 
+AR Path="/60F39CF0/60F43424" Ref="SW1"  Part="1" 
+F 0 "SW1" H 1900 2235 50  0000 C CNN
+F 1 "SW_Push" H 1900 2144 50  0000 C CNN
+F 2 "Button_Switch_SMD:SW_SPST_PTS645" H 1900 2150 50  0001 C CNN
+F 3 "~" H 1900 2150 50  0001 C CNN
+	1    1900 1950
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60F4342A
+P 1900 1500
+AR Path="/60F4342A" Ref="R?"  Part="1" 
+AR Path="/60F39CF0/60F4342A" Ref="R1"  Part="1" 
+F 0 "R1" H 1970 1546 50  0000 L CNN
+F 1 "1k" H 1970 1455 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 1830 1500 50  0001 C CNN
+F 3 "~" H 1900 1500 50  0001 C CNN
+	1    1900 1500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60F43430
+P 1900 2200
+AR Path="/60F43430" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/60F43430" Ref="#PWR03"  Part="1" 
+F 0 "#PWR03" H 1900 1950 50  0001 C CNN
+F 1 "GND" H 1905 2027 50  0000 C CNN
+F 2 "" H 1900 2200 50  0001 C CNN
+F 3 "" H 1900 2200 50  0001 C CNN
+	1    1900 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 60F43436
+P 1900 1300
+AR Path="/60F43436" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/60F43436" Ref="#PWR01"  Part="1" 
+F 0 "#PWR01" H 1900 1150 50  0001 C CNN
+F 1 "VCC" H 1915 1473 50  0000 C CNN
+F 2 "" H 1900 1300 50  0001 C CNN
+F 3 "" H 1900 1300 50  0001 C CNN
+	1    1900 1300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1900 1300 1900 1350
+Wire Wire Line
+	1900 1650 1900 1700
+Wire Wire Line
+	1900 1700 2000 1700
+Connection ~ 1900 1700
+Wire Wire Line
+	1900 1700 1900 1750
+Wire Wire Line
+	1900 2200 1900 2150
+$Comp
+L Switch:SW_Push SW?
+U 1 1 60F43459
+P 2850 1950
+AR Path="/60F43459" Ref="SW?"  Part="1" 
+AR Path="/60F39CF0/60F43459" Ref="SW2"  Part="1" 
+F 0 "SW2" H 2850 2235 50  0000 C CNN
+F 1 "SW_Push" H 2850 2144 50  0000 C CNN
+F 2 "Button_Switch_SMD:SW_SPST_PTS645" H 2850 2150 50  0001 C CNN
+F 3 "~" H 2850 2150 50  0001 C CNN
+	1    2850 1950
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60F4345F
+P 2850 1500
+AR Path="/60F4345F" Ref="R?"  Part="1" 
+AR Path="/60F39CF0/60F4345F" Ref="R2"  Part="1" 
+F 0 "R2" H 2920 1546 50  0000 L CNN
+F 1 "1k" H 2920 1455 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 2780 1500 50  0001 C CNN
+F 3 "~" H 2850 1500 50  0001 C CNN
+	1    2850 1500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60F43465
+P 2850 2200
+AR Path="/60F43465" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/60F43465" Ref="#PWR05"  Part="1" 
+F 0 "#PWR05" H 2850 1950 50  0001 C CNN
+F 1 "GND" H 2855 2027 50  0000 C CNN
+F 2 "" H 2850 2200 50  0001 C CNN
+F 3 "" H 2850 2200 50  0001 C CNN
+	1    2850 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 60F4346B
+P 2850 1300
+AR Path="/60F4346B" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/60F4346B" Ref="#PWR02"  Part="1" 
+F 0 "#PWR02" H 2850 1150 50  0001 C CNN
+F 1 "VCC" H 2865 1473 50  0000 C CNN
+F 2 "" H 2850 1300 50  0001 C CNN
+F 3 "" H 2850 1300 50  0001 C CNN
+	1    2850 1300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2850 1300 2850 1350
+Wire Wire Line
+	2850 2200 2850 2150
+$Comp
+L Switch:SW_Push SW?
+U 1 1 60F4348E
+P 3950 1950
+AR Path="/60F4348E" Ref="SW?"  Part="1" 
+AR Path="/60F39CF0/60F4348E" Ref="SW3"  Part="1" 
+F 0 "SW3" H 3950 2235 50  0000 C CNN
+F 1 "SW_Push" H 3950 2144 50  0000 C CNN
+F 2 "Button_Switch_SMD:SW_SPST_PTS645" H 3950 2150 50  0001 C CNN
+F 3 "~" H 3950 2150 50  0001 C CNN
+	1    3950 1950
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60F43494
+P 3950 1500
+AR Path="/60F43494" Ref="R?"  Part="1" 
+AR Path="/60F39CF0/60F43494" Ref="R5"  Part="1" 
+F 0 "R5" H 4020 1546 50  0000 L CNN
+F 1 "1k" H 4020 1455 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 3880 1500 50  0001 C CNN
+F 3 "~" H 3950 1500 50  0001 C CNN
+	1    3950 1500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60F4349A
+P 3950 2200
+AR Path="/60F4349A" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/60F4349A" Ref="#PWR09"  Part="1" 
+F 0 "#PWR09" H 3950 1950 50  0001 C CNN
+F 1 "GND" H 3955 2027 50  0000 C CNN
+F 2 "" H 3950 2200 50  0001 C CNN
+F 3 "" H 3950 2200 50  0001 C CNN
+	1    3950 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 60F434A0
+P 3950 1300
+AR Path="/60F434A0" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/60F434A0" Ref="#PWR07"  Part="1" 
+F 0 "#PWR07" H 3950 1150 50  0001 C CNN
+F 1 "VCC" H 3965 1473 50  0000 C CNN
+F 2 "" H 3950 1300 50  0001 C CNN
+F 3 "" H 3950 1300 50  0001 C CNN
+	1    3950 1300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3950 1300 3950 1350
+Wire Wire Line
+	3950 2200 3950 2150
+$Comp
+L Switch:SW_Push SW?
+U 1 1 60F434C3
+P 4950 1950
+AR Path="/60F434C3" Ref="SW?"  Part="1" 
+AR Path="/60F39CF0/60F434C3" Ref="SW4"  Part="1" 
+F 0 "SW4" H 4950 2235 50  0000 C CNN
+F 1 "SW_Push" H 4950 2144 50  0000 C CNN
+F 2 "Button_Switch_SMD:SW_SPST_PTS645" H 4950 2150 50  0001 C CNN
+F 3 "~" H 4950 2150 50  0001 C CNN
+	1    4950 1950
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60F434C9
+P 4950 1500
+AR Path="/60F434C9" Ref="R?"  Part="1" 
+AR Path="/60F39CF0/60F434C9" Ref="R6"  Part="1" 
+F 0 "R6" H 5020 1546 50  0000 L CNN
+F 1 "1k" H 5020 1455 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 4880 1500 50  0001 C CNN
+F 3 "~" H 4950 1500 50  0001 C CNN
+	1    4950 1500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60F434CF
+P 4950 2200
+AR Path="/60F434CF" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/60F434CF" Ref="#PWR011"  Part="1" 
+F 0 "#PWR011" H 4950 1950 50  0001 C CNN
+F 1 "GND" H 4955 2027 50  0000 C CNN
+F 2 "" H 4950 2200 50  0001 C CNN
+F 3 "" H 4950 2200 50  0001 C CNN
+	1    4950 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 60F434D5
+P 4950 1300
+AR Path="/60F434D5" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/60F434D5" Ref="#PWR08"  Part="1" 
+F 0 "#PWR08" H 4950 1150 50  0001 C CNN
+F 1 "VCC" H 4965 1473 50  0000 C CNN
+F 2 "" H 4950 1300 50  0001 C CNN
+F 3 "" H 4950 1300 50  0001 C CNN
+	1    4950 1300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4950 1300 4950 1350
+Wire Wire Line
+	4950 2200 4950 2150
+$Comp
+L Logger:ST7735S U2
+U 1 1 60F42698
+P 2950 4300
+F 0 "U2" H 3978 3951 50  0000 L CNN
+F 1 "ST7735S" H 3978 3860 50  0000 L CNN
+F 2 "Logger:ST7735S" H 2950 4450 50  0001 C CNN
+F 3 "https://fr.aliexpress.com/item/32880822720.html?spm=a2g0s.9042311.0.0.27426c37dWDL7m" H 2950 4450 50  0001 C CNN
+	1    2950 4300
+	1    0    0    -1  
+$EndComp
+Text GLabel 2000 1700 2    50   Input ~ 0
+KEY_UP
+Text GLabel 4100 1700 2    50   Input ~ 0
+KEY_LEFT
+Text GLabel 5100 1700 2    50   Input ~ 0
+KEY_RIGHT
+Text Notes 1700 5550 0    71   ~ 14
+NOTE: displays from difrent manufacturrers have different pinout.
+Text GLabel 3000 1700 2    50   Input ~ 0
+KEY_DOWN
+Wire Wire Line
+	2850 1650 2850 1700
+Wire Wire Line
+	3950 1650 3950 1700
+Wire Wire Line
+	4950 1650 4950 1700
+Wire Wire Line
+	2850 1700 3000 1700
+Connection ~ 2850 1700
+Wire Wire Line
+	2850 1700 2850 1750
+Wire Wire Line
+	4100 1700 3950 1700
+Connection ~ 3950 1700
+Wire Wire Line
+	3950 1700 3950 1750
+Wire Wire Line
+	5100 1700 4950 1700
+Connection ~ 4950 1700
+Wire Wire Line
+	4950 1700 4950 1750
+Text Notes 2150 2800 0    71   ~ 14
+NOTE: key debouncing will be done in firmware.
+$Comp
+L Device:R_PHOTO R4
+U 1 1 611788BC
+P 6950 4650
+F 0 "R4" H 7020 4696 50  0000 L CNN
+F 1 "R_PHOTO" H 7020 4605 50  0000 L CNN
+F 2 "OptoDevice:R_LDR_7x6mm_P5.1mm_Vertical" V 7000 4400 50  0001 L CNN
+F 3 "~" H 6950 4600 50  0001 C CNN
+	1    6950 4650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 6117D327
+P 6950 4250
+AR Path="/6117D327" Ref="R?"  Part="1" 
+AR Path="/60F39CF0/6117D327" Ref="R3"  Part="1" 
+F 0 "R3" H 7020 4296 50  0000 L CNN
+F 1 "1k" H 7020 4205 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 6880 4250 50  0001 C CNN
+F 3 "~" H 6950 4250 50  0001 C CNN
+	1    6950 4250
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 6117E012
+P 6950 4900
+AR Path="/6117E012" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/6117E012" Ref="#PWR06"  Part="1" 
+F 0 "#PWR06" H 6950 4650 50  0001 C CNN
+F 1 "GND" H 6955 4727 50  0000 C CNN
+F 2 "" H 6950 4900 50  0001 C CNN
+F 3 "" H 6950 4900 50  0001 C CNN
+	1    6950 4900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 6117ED9D
+P 6950 4050
+AR Path="/6117ED9D" Ref="#PWR?"  Part="1" 
+AR Path="/60F39CF0/6117ED9D" Ref="#PWR04"  Part="1" 
+F 0 "#PWR04" H 6950 3900 50  0001 C CNN
+F 1 "VCC" H 6965 4223 50  0000 C CNN
+F 2 "" H 6950 4050 50  0001 C CNN
+F 3 "" H 6950 4050 50  0001 C CNN
+	1    6950 4050
+	1    0    0    -1  
+$EndComp
+Text GLabel 7200 4450 2    50   Input ~ 0
+LIGHT_PROBE
+Wire Wire Line
+	6950 4050 6950 4100
+Wire Wire Line
+	6950 4400 6950 4450
+Wire Wire Line
+	6950 4450 7200 4450
+Connection ~ 6950 4450
+Wire Wire Line
+	6950 4450 6950 4500
+Wire Wire Line
+	6950 4900 6950 4800
+Text Notes 6300 5500 0    71   ~ 14
+NOTE: photoresistor is used to adjoust brightness of the LCD.
+$EndSCHEMATC
