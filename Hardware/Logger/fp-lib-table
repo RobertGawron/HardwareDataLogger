@@ -1,4 +1,4 @@
 (fp_lib_table
   (lib (name "Logger")(type "KiCad")(uri "${KIPRJMOD}/Logger.pretty")(options "")(descr ""))
-  (lib (name "Logger8")(type "KiCad")(uri "$(KIPRJMOD)/Logger8.pretty")(options "")(descr ""))
+  (lib (name "PCBLabels")(type "KiCad")(uri "${KIPRJMOD}/PCBLabels")(options "")(descr ""))
 )

@@ -8,7 +8,7 @@
   )
 
 
-  (text "TODO\n\nno copper under esp\nmale pins on top layer" (at 96.52 101.6 0)
+  (text "TODO\n\nmale pins on top layer" (at 96.52 101.6 0)
     (effects (font (size 1.8034 1.8034) (thickness 0.3607) bold) (justify left bottom))
     (uuid 6b3a9592-673e-4a30-8184-22121b8d5cba)
   )
