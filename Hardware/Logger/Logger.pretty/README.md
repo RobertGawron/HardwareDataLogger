@@ -1,0 +1,1 @@
+To improve UI, I wanted to have standard up/down/left/right icons on PCB to describe purpose of buttons. KiCad doesn't support Unicode, so I had to find some open source icons and convert them using image converter build-in in Kicad. Those icons are from [https://remixicon.com/](https://remixicon.com/), they were downloaded in 64px resolution.

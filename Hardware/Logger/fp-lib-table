@@ -1,3 +1,0 @@
-(fp_lib_table
-  (lib (name Logger)(type KiCad)(uri ${KIPRJMOD}/Logger.pretty)(options "")(descr ""))
-)
