@@ -402,7 +402,7 @@
     (path "/00000000-0000-0000-0000-000060f455b3/00000000-0000-0000-0000-000060f4f614"
       (reference "R9") (unit 1) (value "100R") (footprint "Resistor_SMD:R_0805_2012Metric")
     )
-    (path "/00000000-0000-0000-0000-000060f455b3/e0ee9585-4b1c-443c-a4b0-ee311f7c4b47"
+    (path "/00000000-0000-0000-0000-000060f455b3/5e419ff7-8c0c-4b49-af88-3cbff014e376"
       (reference "R10") (unit 1) (value "8k2") (footprint "Resistor_SMD:R_0805_2012Metric")
     )
     (path "/00000000-0000-0000-0000-000060f455b3/00000000-0000-0000-0000-000060f51c35"
@@ -492,8 +492,8 @@
     (path "/00000000-0000-0000-0000-000060f455b3/917921c5-2015-46aa-90c0-bf3e375e1a45"
       (reference "R39") (unit 1) (value "8k2") (footprint "Resistor_SMD:R_0805_2012Metric")
     )
-    (path "/00000000-0000-0000-0000-000060f455b3/00000000-0000-0000-0000-000060f515a7"
-      (reference "R100R1") (unit 1) (value "1k") (footprint "Resistor_SMD:R_0805_2012Metric")
+    (path "/00000000-0000-0000-0000-000060f455b3/72200103-b9ba-4dca-9323-bce11cfcabda"
+      (reference "R40") (unit 1) (value "100R") (footprint "Resistor_SMD:R_0805_2012Metric")
     )
     (path "/00000000-0000-0000-0000-000060f39cf0/00000000-0000-0000-0000-000060f43424"
       (reference "SW1") (unit 1) (value "SW_Push") (footprint "Button_Switch_SMD:SW_SPST_PTS645")
