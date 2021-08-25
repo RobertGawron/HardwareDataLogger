@@ -18,7 +18,7 @@ Features:
 - microSD card to permanently save logged data
 - WiFi to remotely transfer logged data.
 
-![Device Picture](https://raw.githubusercontent.com/RobertGawron/HardwareDataLogger/main/Documentation/Pictures/Device_25_08_2021.jpg)
+![Device Picture](./Documentation/Pictures/Device_25_08_2021.jpg)
 
 ## Hardware
 
@@ -28,7 +28,7 @@ The device is based on NUCLEO-F091RC evaluation board with added custom-made shi
 
 ## Software
 
-Firmware will be created in C, CubeMX was used to configure hardware peripherals. Eclipse will be used as IDE.
+Firmware is being developed in C, CubeMX was used to configure hardware peripherals. Eclipse will be used as IDE.
 
 ## Simulation
 
