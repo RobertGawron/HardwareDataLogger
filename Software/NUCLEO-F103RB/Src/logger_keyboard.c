@@ -14,4 +14,7 @@ void LoggerKeyboard_OnKeyPressDetection(
 		LoggerKeyboardKeys_Key_State_t keyRight)
 {
     //GMDisplayUpdater_ReactOnKeyPress(key);
+	// for debug to check if it is executed
+	volatile int x = 0;
+	x++;
 }
