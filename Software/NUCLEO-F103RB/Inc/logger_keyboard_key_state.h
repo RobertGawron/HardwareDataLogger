@@ -3,8 +3,8 @@
 
 typedef enum LoggerKeyboardKeys_Key_State_t
 {
-    LOGGER_KEYBOARD_KEY_SET = 0u,
-	LOGGER_KEYBOARD_KEY_NOT_SET = 1u
+    LOGGER_KEYBOARD_KEY_PRESS = 0u,
+	LOGGER_KEYBOARD_KEY_NO_PRESS = 1u
 } LoggerKeyboardKeys_Key_State_t;
 
 #endif

@@ -375,23 +375,11 @@
     (path "/00000000-0000-0000-0000-000060f455b3/e9e33c1b-ee7b-435d-b605-86b10281a372"
       (reference "Q8") (unit 1) (value "BC848") (footprint "Package_TO_SOT_SMD:SOT-23")
     )
-    (path "/00000000-0000-0000-0000-000060f39cf0/00000000-0000-0000-0000-000060f4342a"
-      (reference "R1") (unit 1) (value "1k") (footprint "Resistor_SMD:R_0805_2012Metric")
-    )
-    (path "/00000000-0000-0000-0000-000060f39cf0/00000000-0000-0000-0000-000060f4345f"
-      (reference "R2") (unit 1) (value "1k") (footprint "Resistor_SMD:R_0805_2012Metric")
-    )
     (path "/00000000-0000-0000-0000-000060f39cf0/00000000-0000-0000-0000-00006117d327"
       (reference "R3") (unit 1) (value "1k") (footprint "Resistor_SMD:R_0805_2012Metric")
     )
     (path "/00000000-0000-0000-0000-000060f39cf0/00000000-0000-0000-0000-0000611788bc"
       (reference "R4") (unit 1) (value "R_PHOTO") (footprint "OptoDevice:R_LDR_7x6mm_P5.1mm_Vertical")
-    )
-    (path "/00000000-0000-0000-0000-000060f39cf0/00000000-0000-0000-0000-000060f43494"
-      (reference "R5") (unit 1) (value "1k") (footprint "Resistor_SMD:R_0805_2012Metric")
-    )
-    (path "/00000000-0000-0000-0000-000060f39cf0/00000000-0000-0000-0000-000060f434c9"
-      (reference "R6") (unit 1) (value "1k") (footprint "Resistor_SMD:R_0805_2012Metric")
     )
     (path "/00000000-0000-0000-0000-00006144cc5a/00000000-0000-0000-0000-00006145baea"
       (reference "R7") (unit 1) (value "TBD") (footprint "Resistor_SMD:R_0805_2012Metric")

@@ -1,1 +1,3 @@
 Software/NUCLEO-F091RC/Drivers/* linguist-documentation
+# below is a HAL lib povided by STM, no project-specific code is there
+Software/NUCLEO-F103RB/Drivers/** linguist-documentation
