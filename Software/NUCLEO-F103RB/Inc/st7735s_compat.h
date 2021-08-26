@@ -5,9 +5,9 @@
 
 /* this may differ from the default 80x160 */
 #define defWIDTH   160
-#define defHEIGHT  80
+#define defHEIGHT  128
 #define defXSTART  1
-#define defYSTART  26
+#define defYSTART  1
 
 /* #define BUFFER */
 /* #define BUFFER1 */
