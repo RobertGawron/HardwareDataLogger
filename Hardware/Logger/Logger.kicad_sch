@@ -102,9 +102,6 @@
     (path "/00000000-0000-0000-0000-000060f39cf0/919f50e1-afb9-47ac-9532-fbb3973d9c50"
       (reference "#PWR01") (unit 1) (value "GND") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-000060f39cf0/351b8258-afd6-4971-9a3d-534151566a4c"
-      (reference "#PWR02") (unit 1) (value "GND") (footprint "")
-    )
     (path "/00000000-0000-0000-0000-000060f39cf0/00000000-0000-0000-0000-000060f43430"
       (reference "#PWR03") (unit 1) (value "GND") (footprint "")
     )
@@ -219,6 +216,12 @@
     (path "/00000000-0000-0000-0000-000060f455b3/7445f514-a825-41c0-ac30-c00f22523631"
       (reference "#PWR045") (unit 1) (value "GND") (footprint "")
     )
+    (path "/00000000-0000-0000-0000-000060f39cf0/4ad66f03-ba32-4989-a0b3-addbeb2c67d4"
+      (reference "#PWR046") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-000060f39cf0/df188f33-30ff-4f65-9f1a-2e38942d6622"
+      (reference "#PWR047") (unit 1) (value "GND") (footprint "")
+    )
     (path "/00000000-0000-0000-0000-000060f74854/00000000-0000-0000-0000-00006133fad5"
       (reference "#PWR0101") (unit 1) (value "GND") (footprint "")
     )
@@ -273,8 +276,11 @@
     (path "/00000000-0000-0000-0000-000060ef776c/00000000-0000-0000-0000-0000615a0e18"
       (reference "C14") (unit 1) (value "330n") (footprint "Capacitor_SMD:C_0805_2012Metric")
     )
-    (path "/00000000-0000-0000-0000-000060f39cf0/32c9b190-aa69-4b4d-9e72-7996ba605ba2"
-      (reference "C15") (unit 1) (value "330n") (footprint "Capacitor_SMD:C_0805_2012Metric")
+    (path "/00000000-0000-0000-0000-000060f39cf0/c5dff3c5-c7f0-412b-9a17-4870069ffe95"
+      (reference "C19") (unit 1) (value "330n") (footprint "Capacitor_SMD:C_0805_2012Metric")
+    )
+    (path "/00000000-0000-0000-0000-000060f39cf0/f94016ac-5b2e-4a6b-83b8-37a8e58ade5a"
+      (reference "C20") (unit 1) (value "330n") (footprint "Capacitor_SMD:C_0805_2012Metric")
     )
     (path "/00000000-0000-0000-0000-000060efe24a/00000000-0000-0000-0000-000060f8f2b7"
       (reference "CN1") (unit 1) (value "Conn_02x19_Odd_Even") (footprint "Connector_PinSocket_2.54mm:PinSocket_2x19_P2.54mm_Vertical_SMD")
@@ -309,7 +315,7 @@
     (path "/00000000-0000-0000-0000-00006144cc5a/00000000-0000-0000-0000-00006144e7c2"
       (reference "J5") (unit 1) (value "USB_B_Micro") (footprint "Connector_USB:USB_Micro-B_Molex-105017-0001")
     )
-    (path "/00000000-0000-0000-0000-000060ef776c/00000000-0000-0000-0000-00006157b901"
+    (path "/00000000-0000-0000-0000-000060ef776c/14998fbc-8610-47d3-ba17-3fb24bfbca8e"
       (reference "J6") (unit 1) (value "112K-TAA0-RA1_ATTEND") (footprint "Logger:104B-TAA0-R_ATTEND")
     )
     (path "/00000000-0000-0000-0000-000060f455b3/00000000-0000-0000-0000-000060f515c7"
@@ -342,11 +348,23 @@
     (path "/00000000-0000-0000-0000-000060f455b3/e9e33c1b-ee7b-435d-b605-86b10281a372"
       (reference "Q8") (unit 1) (value "BC848") (footprint "Package_TO_SOT_SMD:SOT-23")
     )
+    (path "/00000000-0000-0000-0000-000060ef776c/00000000-0000-0000-0000-000061589af9"
+      (reference "R1") (unit 1) (value "47R") (footprint "Resistor_SMD:R_0805_2012Metric")
+    )
+    (path "/00000000-0000-0000-0000-000060ef776c/92ae81f4-1c80-49ba-a86f-d9d6c0ebc8b3"
+      (reference "R2") (unit 1) (value "47R") (footprint "Resistor_SMD:R_0805_2012Metric")
+    )
     (path "/00000000-0000-0000-0000-000060f39cf0/00000000-0000-0000-0000-00006117d327"
       (reference "R3") (unit 1) (value "1k") (footprint "Resistor_SMD:R_0805_2012Metric")
     )
     (path "/00000000-0000-0000-0000-000060f39cf0/00000000-0000-0000-0000-0000611788bc"
       (reference "R4") (unit 1) (value "R_PHOTO") (footprint "OptoDevice:R_LDR_7x6mm_P5.1mm_Vertical")
+    )
+    (path "/00000000-0000-0000-0000-000060ef776c/5ac26368-0069-458f-8f3d-c5b025ae66cf"
+      (reference "R5") (unit 1) (value "47R") (footprint "Resistor_SMD:R_0805_2012Metric")
+    )
+    (path "/00000000-0000-0000-0000-000060ef776c/738562d6-3250-4236-bb71-e87bf7e29a35"
+      (reference "R6") (unit 1) (value "47R") (footprint "Resistor_SMD:R_0805_2012Metric")
     )
     (path "/00000000-0000-0000-0000-00006144cc5a/00000000-0000-0000-0000-00006145baea"
       (reference "R7") (unit 1) (value "TBD") (footprint "Resistor_SMD:R_0805_2012Metric")
@@ -366,9 +384,6 @@
     (path "/00000000-0000-0000-0000-000060f455b3/00000000-0000-0000-0000-000060f715f8"
       (reference "R12") (unit 1) (value "100R") (footprint "Resistor_SMD:R_0805_2012Metric")
     )
-    (path "/00000000-0000-0000-0000-000060ef776c/00000000-0000-0000-0000-000061589af9"
-      (reference "R13") (unit 1) (value "10k") (footprint "Resistor_SMD:R_0805_2012Metric")
-    )
     (path "/00000000-0000-0000-0000-000060f74854/00000000-0000-0000-0000-00005f02ca80"
       (reference "R14") (unit 1) (value "10k") (footprint "Resistor_SMD:R_0805_2012Metric")
     )
@@ -384,12 +399,6 @@
     (path "/00000000-0000-0000-0000-000060f74854/00000000-0000-0000-0000-00005f02c9d5"
       (reference "R18") (unit 1) (value "10k") (footprint "Resistor_SMD:R_0805_2012Metric")
     )
-    (path "/00000000-0000-0000-0000-000060ef776c/00000000-0000-0000-0000-000061589af2"
-      (reference "R19") (unit 1) (value "10k") (footprint "Resistor_SMD:R_0805_2012Metric")
-    )
-    (path "/00000000-0000-0000-0000-000060ef776c/00000000-0000-0000-0000-000061589aeb"
-      (reference "R20") (unit 1) (value "10k") (footprint "Resistor_SMD:R_0805_2012Metric")
-    )
     (path "/00000000-0000-0000-0000-000060f74854/00000000-0000-0000-0000-00005f02ca29"
       (reference "R21") (unit 1) (value "1k") (footprint "Resistor_SMD:R_0805_2012Metric")
     )
@@ -401,15 +410,6 @@
     )
     (path "/00000000-0000-0000-0000-000060f74854/00000000-0000-0000-0000-00005f02cac4"
       (reference "R24") (unit 1) (value "120R") (footprint "Resistor_SMD:R_0805_2012Metric")
-    )
-    (path "/00000000-0000-0000-0000-000060ef776c/00000000-0000-0000-0000-000061588356"
-      (reference "R25") (unit 1) (value "10k") (footprint "Resistor_SMD:R_0805_2012Metric")
-    )
-    (path "/00000000-0000-0000-0000-000060ef776c/00000000-0000-0000-0000-000061586635"
-      (reference "R26") (unit 1) (value "10k") (footprint "Resistor_SMD:R_0805_2012Metric")
-    )
-    (path "/00000000-0000-0000-0000-000060ef776c/00000000-0000-0000-0000-000061582ca6"
-      (reference "R27") (unit 1) (value "10k") (footprint "Resistor_SMD:R_0805_2012Metric")
     )
     (path "/00000000-0000-0000-0000-000060f455b3/fc7d69d9-c64b-4bf7-87ab-7a7d22558470"
       (reference "R35") (unit 1) (value "8k2") (footprint "Resistor_SMD:R_0805_2012Metric")
@@ -441,22 +441,22 @@
     (path "/00000000-0000-0000-0000-000060f39cf0/00000000-0000-0000-0000-000060f434c3"
       (reference "SW4") (unit 1) (value "SW_Push") (footprint "Button_Switch_SMD:SW_SPST_PTS645")
     )
-    (path "/00000000-0000-0000-0000-000060f39cf0/cb0a357c-1b8e-469d-8fbb-6efcac32281c"
+    (path "/00000000-0000-0000-0000-000060f39cf0/addf38e7-3bc0-40ac-be2d-004cd56dc7da"
       (reference "TP1") (unit 1) (value "TestPoint") (footprint "TestPoint:TestPoint_Pad_D1.5mm")
     )
-    (path "/00000000-0000-0000-0000-000060f39cf0/8f494dfe-14c7-4f1a-987b-b3cef202fe5a"
+    (path "/00000000-0000-0000-0000-000060f39cf0/0f45bb6e-1aba-4ac9-9a54-ec80b8d1daa8"
       (reference "TP2") (unit 1) (value "TestPoint") (footprint "TestPoint:TestPoint_Pad_D1.5mm")
     )
-    (path "/00000000-0000-0000-0000-000060f39cf0/06de89ed-f4cf-4c9f-9035-a352949aeede"
+    (path "/00000000-0000-0000-0000-000060f39cf0/2941641c-6138-4b12-9e55-d5f86b2a7725"
       (reference "TP3") (unit 1) (value "TestPoint") (footprint "TestPoint:TestPoint_Pad_D1.5mm")
     )
-    (path "/00000000-0000-0000-0000-000060f39cf0/457bf6ef-fb9d-49a9-9c87-c77d982bd6d2"
+    (path "/00000000-0000-0000-0000-000060f39cf0/2a9ceee6-3ab2-4b64-aa72-df4fdbf31ef3"
       (reference "TP4") (unit 1) (value "TestPoint") (footprint "TestPoint:TestPoint_Pad_D1.5mm")
     )
-    (path "/00000000-0000-0000-0000-000060f39cf0/d1d2c987-7538-43e8-a5c5-68ef96f1f46e"
+    (path "/00000000-0000-0000-0000-000060f39cf0/c1487c96-e41c-46d7-a760-8eece3412dbe"
       (reference "TP5") (unit 1) (value "TestPoint") (footprint "TestPoint:TestPoint_Pad_D1.5mm")
     )
-    (path "/00000000-0000-0000-0000-000060f39cf0/b2352ec6-d06e-4905-aede-645ec5159e00"
+    (path "/00000000-0000-0000-0000-000060f39cf0/0f0b4ff0-625c-4606-98b1-123d9c4a0c69"
       (reference "TP6") (unit 1) (value "TestPoint") (footprint "TestPoint:TestPoint_Pad_D1.5mm")
     )
     (path "/00000000-0000-0000-0000-000060f74854/00000000-0000-0000-0000-000060efb5b9"
