@@ -46,9 +46,8 @@
 #include "logger_keyboard.h"
 
 // lcd lib, TODO move it to module responsible for drawing on LCD
-#include "st7735s.h"
+#include "st7735.h"
 #include "fonts.h"
-#include "gfx.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -127,14 +126,14 @@ int main(void)
   LoggerKeyboardKeys_Key_State_t keyLeft = LOGGER_KEYBOARD_KEY_NO_PRESS;
   LoggerKeyboardKeys_Key_State_t keyRight = LOGGER_KEYBOARD_KEY_NO_PRESS;
 
-  while(hspi1.State != HAL_SPI_STATE_READY){}
-  ST7735S_Init();
-  setOrientation(R0);
+   ST7735_Init();
 
-  // below is copy-paste from lib example to check if lcd is working
-  setColor(0,0,0);
-  fillScreen();
-  flushBuffer();
+   // dummy way to check communication with LCD
+   ST7735_FillScreen(ST7735_GREEN);
+   ST7735_DrawPixel(20, 20, ST7735_RED);
+   ST7735_DrawPixel(21, 20, ST7735_RED);
+   ST7735_DrawPixel(22, 20, ST7735_RED);
+   //ST7735_WriteString(30, 30, "it is working", Font_7x10, ST7735_RED, ST7735_BLUE);
 
   while (1)
   {
@@ -146,16 +145,13 @@ int main(void)
 
 	  LoggerKeyboard_OnKeyPressDetection(keyUp, keyDown, keyLeft, keyRight);
 
+	  // this wis very crude way to verify if "PWM" from GPPIO can be used directly to change backlight level of LCD
+	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET);
+	  HAL_Delay (1);
+	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_RESET);
+	  HAL_Delay (20);
 
-/*
-    setColor(30,10,30);
-    drawCircle(4, 4, 50);
 
-    setColor(130,0,30);
-    drawLine(0,0,WIDTH-1,HEIGHT-1);
-
-    flushBuffer();
-*/
 /*
     // below is to check if keys are working
 	  //HAL_GPIO_TogglePin (GPIO, GPIO_PIN_5);
@@ -164,7 +160,7 @@ int main(void)
 		  HAL_GPIO_TogglePin (GPIOA, GPIO_PIN_5);
 	  }
 */
-	  HAL_Delay (100);   /* Insert delay 100 ms */
+	 // HAL_Delay (100);   /* Insert delay 100 ms */
 
     /* USER CODE END WHILE */
 
@@ -264,7 +260,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(SPI_CS_LCD_GPIO_Port, SPI_CS_LCD_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, SPI_CS_LCD_Pin|LCD_BACKLIGHT_PWM_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(SPI_RST_GPIO_Port, SPI_RST_Pin, GPIO_PIN_RESET);
@@ -290,12 +286,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : SPI_CS_LCD_Pin */
-  GPIO_InitStruct.Pin = SPI_CS_LCD_Pin;
+  /*Configure GPIO pins : SPI_CS_LCD_Pin LCD_BACKLIGHT_PWM_Pin */
+  GPIO_InitStruct.Pin = SPI_CS_LCD_Pin|LCD_BACKLIGHT_PWM_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(SPI_CS_LCD_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : SPI_RST_Pin */
   GPIO_InitStruct.Pin = SPI_RST_Pin;
