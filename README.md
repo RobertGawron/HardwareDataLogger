@@ -18,7 +18,7 @@ Features:
 - microSD card to permanently save logged data
 - WiFi to remotely transfer logged data.
 
-![Device Picture](./Documentation/Pictures/Device_25_08_2021.jpg)
+![Device Picture](./Documentation/Pictures/Device_30_08_2021.jpg)
 
 ## Hardware
 
