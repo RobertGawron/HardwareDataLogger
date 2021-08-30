@@ -89,6 +89,8 @@ void Error_Handler(void);
 #define USART_TX_GPIO_Port GPIOA
 #define USART_RX_Pin GPIO_PIN_3
 #define USART_RX_GPIO_Port GPIOA
+#define SD_CS_Pin GPIO_PIN_4
+#define SD_CS_GPIO_Port GPIOA
 #define SPI_CS_LCD_Pin GPIO_PIN_1
 #define SPI_CS_LCD_GPIO_Port GPIOB
 #define SPI_RST_Pin GPIO_PIN_7
