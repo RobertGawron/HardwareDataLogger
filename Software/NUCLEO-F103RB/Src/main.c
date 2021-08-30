@@ -39,6 +39,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "fatfs.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -66,6 +67,8 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+RTC_HandleTypeDef hrtc;
+
 SPI_HandleTypeDef hspi1;
 
 /* USER CODE BEGIN PV */
@@ -76,6 +79,7 @@ SPI_HandleTypeDef hspi1;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
+static void MX_RTC_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -114,6 +118,8 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_SPI1_Init();
+  MX_FATFS_Init();
+  MX_RTC_Init();
   /* USER CODE BEGIN 2 */
   LoggerKeyboard_Init();
   /* USER CODE END 2 */
@@ -135,8 +141,50 @@ int main(void)
    ST7735_DrawPixel(22, 20, ST7735_RED);
    //ST7735_WriteString(30, 30, "it is working", Font_7x10, ST7735_RED, ST7735_BLUE);
 
-  while (1)
-  {
+
+	  /////////// Poc of sdCard ////////////////
+		 char buffer[128];
+		 FATFS g_sFatFs;
+		 FRESULT fresult;
+		 FIL file;
+		 int len;
+		 WORD bytes_written;
+
+		  HAL_Delay(1000); //a short delay is important to let the SD card settle
+
+
+		//mount SD card
+		 fresult = f_mount(&g_sFatFs, "", 1);
+		 //while (f_mount(&g_sFatFs, "", 1) != FR_OK)
+		 if (fresult != FR_OK)
+		 {
+			 volatile int x = 0;
+			 x++;
+
+		 }
+
+		//open file on SD card
+   		 fresult = f_open(&file, "test.txt", FA_OPEN_ALWAYS | FA_WRITE);
+
+		//go to the end of the file
+		 fresult = f_lseek(&file, file.fsize);
+
+		//generate some string
+		 len = sprintf( buffer, "it is working!!!!\r\n");
+
+		//write data to the file
+		 fresult = f_write(&file, buffer, len, &bytes_written);
+
+		//close file
+		 fresult = f_close (&file);
+		  /////////// Poc of sdCard ////////////////
+
+
+		// robert: extra sync
+		f_sync(&file);
+
+   while (1)
+   {
 	  // avoid pollution of higher level modules by low level StdPeriph defines
 	  keyUp = (HAL_GPIO_ReadPin (GPIOC, GPIO_PIN_3) == GPIO_PIN_SET) ? LOGGER_KEYBOARD_KEY_NO_PRESS : LOGGER_KEYBOARD_KEY_PRESS;
 	  keyDown = (HAL_GPIO_ReadPin (GPIOC, GPIO_PIN_4) == GPIO_PIN_SET) ? LOGGER_KEYBOARD_KEY_NO_PRESS : LOGGER_KEYBOARD_KEY_PRESS;
@@ -150,6 +198,8 @@ int main(void)
 	  HAL_Delay (1);
 	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_RESET);
 	  HAL_Delay (20);
+
+
 
 
 /*
@@ -177,11 +227,13 @@ void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_LSE;
+  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
@@ -204,6 +256,42 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC;
+  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
+
+/**
+  * @brief RTC Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_RTC_Init(void)
+{
+
+  /* USER CODE BEGIN RTC_Init 0 */
+
+  /* USER CODE END RTC_Init 0 */
+
+  /* USER CODE BEGIN RTC_Init 1 */
+
+  /* USER CODE END RTC_Init 1 */
+  /** Initialize RTC Only
+  */
+  hrtc.Instance = RTC;
+  hrtc.Init.AsynchPrediv = RTC_AUTO_1_SECOND;
+  hrtc.Init.OutPut = RTC_OUTPUTSOURCE_ALARM;
+  if (HAL_RTC_Init(&hrtc) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN RTC_Init 2 */
+
+  /* USER CODE END RTC_Init 2 */
+
 }
 
 /**
@@ -224,7 +312,7 @@ static void MX_SPI1_Init(void)
   /* SPI1 parameter configuration*/
   hspi1.Instance = SPI1;
   hspi1.Init.Mode = SPI_MODE_MASTER;
-  hspi1.Init.Direction = SPI_DIRECTION_1LINE;
+  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
   hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
@@ -260,13 +348,13 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, SD_CS_Pin|SPI_DC_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, SPI_CS_LCD_Pin|LCD_BACKLIGHT_PWM_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(SPI_RST_GPIO_Port, SPI_RST_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(SPI_DC_GPIO_Port, SPI_DC_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
@@ -286,26 +374,33 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : SPI_CS_LCD_Pin LCD_BACKLIGHT_PWM_Pin */
-  GPIO_InitStruct.Pin = SPI_CS_LCD_Pin|LCD_BACKLIGHT_PWM_Pin;
+  /*Configure GPIO pins : SD_CS_Pin SPI_DC_Pin */
+  GPIO_InitStruct.Pin = SD_CS_Pin|SPI_DC_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : SPI_CS_LCD_Pin */
+  GPIO_InitStruct.Pin = SPI_CS_LCD_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(SPI_CS_LCD_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : SPI_RST_Pin */
   GPIO_InitStruct.Pin = SPI_RST_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(SPI_RST_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : SPI_DC_Pin */
-  GPIO_InitStruct.Pin = SPI_DC_Pin;
+  /*Configure GPIO pin : LCD_BACKLIGHT_PWM_Pin */
+  GPIO_InitStruct.Pin = LCD_BACKLIGHT_PWM_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(SPI_DC_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(LCD_BACKLIGHT_PWM_GPIO_Port, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
