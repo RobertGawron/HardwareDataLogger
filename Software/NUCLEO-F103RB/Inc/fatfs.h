@@ -28,7 +28,7 @@
 #include "user_diskio.h" /* defines USER_Driver as external */
 
 /* USER CODE BEGIN Includes */
-
+extern Diskio_drvTypeDef  spi_USER_Driver;
 /* USER CODE END Includes */
 
 extern uint8_t retUSER; /* Return value for USER */
