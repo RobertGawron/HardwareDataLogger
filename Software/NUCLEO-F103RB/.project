@@ -26,5 +26,5 @@
 	</natures>
 	<linkedResources>
 		
-	</linkedResources>
+	<link><name>FatFs/diskio.c</name><type>1</type><location>PARENT-2-PROJECT_LOC/Middlewares/Third_Party/FatFs/src/diskio.c</location></link><link><name>FatFs/ff.c</name><type>1</type><location>PARENT-2-PROJECT_LOC/Middlewares/Third_Party/FatFs/src/ff.c</location></link><link><name>FatFs/ff_gen_drv.c</name><type>1</type><location>PARENT-2-PROJECT_LOC/Middlewares/Third_Party/FatFs/src/ff_gen_drv.c</location></link><link><name>FatFs/syscall.c</name><type>1</type><location>PARENT-2-PROJECT_LOC/Middlewares/Third_Party/FatFs/src/option/syscall.c</location></link></linkedResources>
 </projectDescription>
