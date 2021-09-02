@@ -16,3 +16,4 @@ HeaderPath=C:/Users/robert/vm_common/HardwareDataLogger/Software/NUCLEO-F103RB/I
 HeaderFiles=ffconf.h;user_diskio.h;fatfs.h;stm32f1xx_it.h;stm32f1xx_hal_conf.h;main.h;
 SourcePath=C:/Users/robert/vm_common/HardwareDataLogger/Software/NUCLEO-F103RB/Src
 SourceFiles=user_diskio.c;fatfs.c;stm32f1xx_it.c;stm32f1xx_hal_msp.c;main.c;
+

@@ -93,8 +93,12 @@ void Error_Handler(void);
 #define SD_CS_GPIO_Port GPIOA
 #define SPI_CS_LCD_Pin GPIO_PIN_1
 #define SPI_CS_LCD_GPIO_Port GPIOB
+#define ESP32_FLASH_MODE_Pin GPIO_PIN_6
+#define ESP32_FLASH_MODE_GPIO_Port GPIOC
 #define SPI_RST_Pin GPIO_PIN_7
 #define SPI_RST_GPIO_Port GPIOC
+#define ESP32_RST_Pin GPIO_PIN_8
+#define ESP32_RST_GPIO_Port GPIOC
 #define SPI_DC_Pin GPIO_PIN_8
 #define SPI_DC_GPIO_Port GPIOA
 #define TMS_Pin GPIO_PIN_13

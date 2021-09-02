@@ -1,5 +1,4 @@
 #include "logger_keyboard.h"
-//#include "gm_display_updater.h"
 
 void LoggerKeyboard_Init()
 {
