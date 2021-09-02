@@ -142,6 +142,18 @@ int main(void)
    //ST7735_WriteString(30, 30, "it is working", Font_7x10, ST7735_RED, ST7735_BLUE);
 
 
+   // PoC of setting esp32 to flashing mode
+   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET); // gpio0 low
+
+   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_RESET); // rst low
+
+//   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET); // rst low
+   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET); // rst high
+
+
+
+
+
 	  /////////// Poc of sdCard ////////////////
 		 char buffer[128];
 		 FATFS g_sFatFs;
@@ -170,7 +182,7 @@ int main(void)
 		 fresult = f_lseek(&file, file.fsize);
 
 		//generate some string
-		 len = sprintf( buffer, "it is working!!!!\r\n");
+		 len = sprintf( buffer, "test before hot glue cables!!!!\r\n");
 
 		//write data to the file
 		 fresult = f_write(&file, buffer, len, &bytes_written);
@@ -354,7 +366,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOB, SPI_CS_LCD_Pin|LCD_BACKLIGHT_PWM_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(SPI_RST_GPIO_Port, SPI_RST_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, ESP32_FLASH_MODE_Pin|SPI_RST_Pin|ESP32_RST_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
@@ -387,6 +399,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(SPI_CS_LCD_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : ESP32_FLASH_MODE_Pin ESP32_RST_Pin */
+  GPIO_InitStruct.Pin = ESP32_FLASH_MODE_Pin|ESP32_RST_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pin : SPI_RST_Pin */
   GPIO_InitStruct.Pin = SPI_RST_Pin;
