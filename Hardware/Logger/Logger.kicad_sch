@@ -96,6 +96,15 @@
   )
 
   (symbol_instances
+    (path "/00000000-0000-0000-0000-000060ef776c/d2cf439e-c0f0-4f9e-ae0b-0398f10a22b6"
+      (reference "#FLG01") (unit 1) (value "PWR_FLAG") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-000060f39cf0/7a373a5b-e37f-4f3c-9e4f-612af811aaac"
+      (reference "#FLG02") (unit 1) (value "PWR_FLAG") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-000060f74854/c15bdde1-fcba-41dc-9ea2-71ca21877349"
+      (reference "#FLG03") (unit 1) (value "PWR_FLAG") (footprint "")
+    )
     (path "/00000000-0000-0000-0000-000060f39cf0/919f50e1-afb9-47ac-9532-fbb3973d9c50"
       (reference "#PWR01") (unit 1) (value "GND") (footprint "")
     )
@@ -330,17 +339,32 @@
     (path "/00000000-0000-0000-0000-000060f74854/00000000-0000-0000-0000-0000612ad68b"
       (reference "J10") (unit 1) (value "Conn_01x08_Female") (footprint "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical")
     )
+    (path "/00000000-0000-0000-0000-000060f74854/4d567370-4f26-479b-b25e-d18daaaa3b9c"
+      (reference "JP1") (unit 1) (value "Jumper_NO_Small") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-000060ef776c/0aef3689-0a8a-406c-becd-5286c9ac948e"
+      (reference "JP2") (unit 1) (value "Jumper_NO_Small") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-000060f39cf0/b64810bb-12d4-4523-8e75-c996f0220ad5"
+      (reference "JP3") (unit 1) (value "Jumper_NO_Small") (footprint "")
+    )
+    (path "/00000000-0000-0000-0000-000060f74854/41d2802a-4e75-4492-9f26-69dbf7e9cf5d"
+      (reference "JP4") (unit 1) (value "Jumper_NO_Small") (footprint "")
+    )
     (path "/00000000-0000-0000-0000-000060f455b3/f750c260-49bd-4bae-8e8e-7353aaff7a0a"
-      (reference "Q5") (unit 1) (value "BC848") (footprint "Package_TO_SOT_SMD:SOT-23")
+      (reference "Q1") (unit 1) (value "BC848") (footprint "Package_TO_SOT_SMD:SOT-23")
     )
     (path "/00000000-0000-0000-0000-000060f455b3/fed39d78-ceb6-493c-86d3-4139d19c9320"
-      (reference "Q6") (unit 1) (value "BC848") (footprint "Package_TO_SOT_SMD:SOT-23")
+      (reference "Q2") (unit 1) (value "BC848") (footprint "Package_TO_SOT_SMD:SOT-23")
     )
     (path "/00000000-0000-0000-0000-000060f455b3/b60cc97f-720a-42d9-9243-63fe8266a9b7"
-      (reference "Q7") (unit 1) (value "BC848") (footprint "Package_TO_SOT_SMD:SOT-23")
+      (reference "Q3") (unit 1) (value "BC848") (footprint "Package_TO_SOT_SMD:SOT-23")
     )
     (path "/00000000-0000-0000-0000-000060f455b3/e9e33c1b-ee7b-435d-b605-86b10281a372"
-      (reference "Q8") (unit 1) (value "BC848") (footprint "Package_TO_SOT_SMD:SOT-23")
+      (reference "Q4") (unit 1) (value "BC848") (footprint "Package_TO_SOT_SMD:SOT-23")
+    )
+    (path "/00000000-0000-0000-0000-000060f39cf0/36f88fe2-04a4-4a84-a8dd-601c0547437d"
+      (reference "Q5") (unit 1) (value "Q_Photo_NPN") (footprint "")
     )
     (path "/00000000-0000-0000-0000-000060ef776c/00000000-0000-0000-0000-000061589af9"
       (reference "R1") (unit 1) (value "47R") (footprint "Resistor_SMD:R_0805_2012Metric")
@@ -349,10 +373,7 @@
       (reference "R2") (unit 1) (value "47R") (footprint "Resistor_SMD:R_0805_2012Metric")
     )
     (path "/00000000-0000-0000-0000-000060f39cf0/00000000-0000-0000-0000-00006117d327"
-      (reference "R3") (unit 1) (value "1k") (footprint "Resistor_SMD:R_0805_2012Metric")
-    )
-    (path "/00000000-0000-0000-0000-000060f39cf0/00000000-0000-0000-0000-0000611788bc"
-      (reference "R4") (unit 1) (value "R_PHOTO") (footprint "OptoDevice:R_LDR_7x6mm_P5.1mm_Vertical")
+      (reference "R3") (unit 1) (value "2M") (footprint "Resistor_SMD:R_0805_2012Metric")
     )
     (path "/00000000-0000-0000-0000-000060ef776c/5ac26368-0069-458f-8f3d-c5b025ae66cf"
       (reference "R5") (unit 1) (value "47R") (footprint "Resistor_SMD:R_0805_2012Metric")
@@ -383,6 +404,9 @@
     )
     (path "/00000000-0000-0000-0000-000060f74854/00000000-0000-0000-0000-00005f02ca80"
       (reference "R14") (unit 1) (value "10k") (footprint "Resistor_SMD:R_0805_2012Metric")
+    )
+    (path "/00000000-0000-0000-0000-000060f74854/02480e65-0e9b-4494-a112-ee8d9b96c671"
+      (reference "R15") (unit 1) (value "470R") (footprint "Resistor_SMD:R_0805_2012Metric")
     )
     (path "/00000000-0000-0000-0000-000060f74854/00000000-0000-0000-0000-00005f02ca23"
       (reference "R17") (unit 1) (value "10k") (footprint "Resistor_SMD:R_0805_2012Metric")
