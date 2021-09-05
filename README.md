@@ -18,13 +18,15 @@ Features:
 - microSD card to permanently save logged data
 - WiFi to remotely transfer logged data.
 
-![Device Picture](./Documentation/Pictures/Device_30_08_2021.jpg)
+![Device Picture](./Documentation/Pictures/Device_03_09_2021.jpg)
 
 ## Hardware
 
 PCB was designed in Kicad6 and will be routed in TopoR, so it will look a bit weird, yes... take a look on Google Images how those PCB looks like :)
 
 The device is based on NUCLEO-F091RC evaluation board with added custom-made shield.
+
+[Here is the circuit exported into pdf document.](./Hardware/Logger/Logger.pdf)
 
 ## Software
 
