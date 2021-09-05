@@ -1,0 +1,90 @@
+@startuml
+
+class StoragesContainer {
+    +void init()
+    +void configure()
+}
+
+class BluetoothWifiStorage {
+}
+
+interface IStorageIO {
+    +void init()
+    +void deinit()
+    +void write()
+}
+
+interface IStorageDriver {
+    +void init()
+    +void deinit()
+    +void write()
+}
+
+class SDCardStorage {
+    -fileName
+}
+
+class UARTStorage {
+}
+
+class WifiStorage {
+    -login
+    -password
+}
+
+note right of BluetoothWifiStorage: ESP32 share same radio HW \nfor WiFi anfd Bloototh.
+class BluetoothStorage {
+}
+
+class SDCardDriver {
+    -void mountFileSystem()
+    -void unmountFileSystem()
+    -void openFile()
+    -void closeFile()
+    -void sync()
+    -void writeToFile()
+
+    - fileSystemHandler
+    - logFileHandler
+}
+
+class UARTDriver {
+    -void open()
+    -void close()
+}
+
+class WifiDriver {
+    -void connect()
+    -void disconnect()
+}
+
+class BluetoothDriver {
+}
+
+
+BluetoothWifiStorage *-- BluetoothStorage
+BluetoothWifiStorage *-- WifiStorage
+
+StoragesContainer *-- BluetoothWifiStorage
+StoragesContainer *-- SDCardStorage
+StoragesContainer *-- UARTStorage
+
+BluetoothWifiStorage --|> IStorageIO
+BluetoothStorage --|> IStorageIO
+SDCardStorage --|> IStorageIO
+WifiStorage --|> IStorageIO
+UARTStorage --|> IStorageIO
+BluetoothStorage --|> IStorageIO
+
+UARTStorage *-- UARTDriver
+SDCardStorage *-- SDCardDriver
+WifiStorage *-- WifiDriver
+BluetoothStorage *-- BluetoothDriver
+
+SDCardDriver --|> IStorageDriver
+UARTDriver --|> IStorageDriver
+BluetoothDriver --|> IStorageDriver
+WifiDriver --|> IStorageDriver
+
+
+@enduml

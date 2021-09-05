@@ -49,6 +49,10 @@
 // lcd lib, TODO move it to module responsible for drawing on LCD
 #include "st7735.h"
 #include "fonts.h"
+
+//  todo move it somewhere
+#include "logger_storages_container.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -158,10 +162,13 @@ int main(void)
 //   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET); // rst low
    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET); // rst high
 
+  LoggerStorageContainer_t loggerContainer;
+  LoggerStorageContainer_Create(&loggerContainer);
+  loggerContainer.init(&loggerContainer, (STORAGE_WIFI_ENABLE | STORAGE_SDCARD_ENABLE | STORAGE_UART_ENABLE));
+  loggerContainer.storeMeasurement(12);
 
 
-
-
+/*
 	  /////////// Poc of sdCard ////////////////
 		 char buffer[128];
 		 FATFS g_sFatFs;
@@ -202,7 +209,7 @@ int main(void)
 
 		// robert: extra sync
 		f_sync(&file);
-
+*/
    while (1)
    {
 	   /*
