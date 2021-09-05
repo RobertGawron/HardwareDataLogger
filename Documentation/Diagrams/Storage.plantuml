@@ -5,7 +5,10 @@ class StoragesContainer {
     +void configure()
 }
 
-interface IStorage {
+class BluetoothWifiStorage {
+}
+
+interface IStorageIO {
     +void init()
     +void deinit()
     +void write()
@@ -21,11 +24,17 @@ class SDCardStorage {
     -fileName
 }
 
+class UARTStorage {
+}
+
 class WifiStorage {
     -login
     -password
 }
 
+note right of BluetoothWifiStorage: ESP32 share same radio HW \nfor WiFi anfd Bloototh.
+class BluetoothStorage {
+}
 
 class SDCardDriver {
     -void mountFileSystem()
@@ -39,31 +48,43 @@ class SDCardDriver {
     - logFileHandler
 }
 
+class UARTDriver {
+    -void open()
+    -void close()
+}
+
 class WifiDriver {
     -void connect()
     -void disconnect()
 }
 
-class UARTDriver {
-    -void open()
-    -void close()
+class BluetoothDriver {
 }
-/'
-StoragesContainer  *-- SDCardStorage
-StoragesContainer  *-- WifiStorage
-StoragesContainer  *-- UARTStorage
-'/
-SDCardStorage --|> IStorage
-WifiStorage --|> IStorage
-UARTStorage--|> IStorage
-
-SDCardDriver --|> IStorageDriver
-WifiDriver --|> IStorageDriver
-UARTDriver --|> IStorageDriver
 
 
+BluetoothWifiStorage *-- BluetoothStorage
+BluetoothWifiStorage *-- WifiStorage
+
+StoragesContainer *-- BluetoothWifiStorage
+StoragesContainer *-- SDCardStorage
+StoragesContainer *-- UARTStorage
+
+BluetoothWifiStorage --|> IStorageIO
+BluetoothStorage --|> IStorageIO
+SDCardStorage --|> IStorageIO
+WifiStorage --|> IStorageIO
+UARTStorage --|> IStorageIO
+BluetoothStorage --|> IStorageIO
+
+UARTStorage *-- UARTDriver
 SDCardStorage *-- SDCardDriver
 WifiStorage *-- WifiDriver
-UARTStorage *-- UARTDriver
+BluetoothStorage *-- BluetoothDriver
+
+SDCardDriver --|> IStorageDriver
+UARTDriver --|> IStorageDriver
+BluetoothDriver --|> IStorageDriver
+WifiDriver --|> IStorageDriver
+
 
 @enduml
