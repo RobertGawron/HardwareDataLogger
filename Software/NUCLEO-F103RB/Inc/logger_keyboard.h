@@ -5,9 +5,9 @@
 
 void LoggerKeyboard_Init();
 void LoggerKeyboard_OnKeyPressDetection(
-		LoggerKeyboardKeys_Key_State_t keyUp,
-		LoggerKeyboardKeys_Key_State_t keyDown,
-		LoggerKeyboardKeys_Key_State_t keyLeft,
-		LoggerKeyboardKeys_Key_State_t keyRight);
+    LoggerKeyboardKeys_Key_State_t keyUp,
+    LoggerKeyboardKeys_Key_State_t keyDown,
+    LoggerKeyboardKeys_Key_State_t keyLeft,
+    LoggerKeyboardKeys_Key_State_t keyRight);
 
 #endif
