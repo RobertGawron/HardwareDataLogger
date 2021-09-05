@@ -71,9 +71,13 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+ADC_HandleTypeDef hadc1;
+
 RTC_HandleTypeDef hrtc;
 
 SPI_HandleTypeDef hspi1;
+
+USART_HandleTypeDef husart3;
 
 /* USER CODE BEGIN PV */
 
@@ -84,6 +88,8 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_RTC_Init(void);
+static void MX_ADC1_Init(void);
+static void MX_USART3_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -124,6 +130,8 @@ int main(void)
   MX_SPI1_Init();
   MX_FATFS_Init();
   MX_RTC_Init();
+  MX_ADC1_Init();
+  MX_USART3_Init();
   /* USER CODE BEGIN 2 */
   LoggerKeyboard_Init();
   /* USER CODE END 2 */
@@ -204,31 +212,35 @@ int main(void)
 */
    while (1)
    {
+	   /*
 	  // avoid pollution of higher level modules by low level StdPeriph defines
-	  keyUp = (HAL_GPIO_ReadPin (GPIOC, GPIO_PIN_3) == GPIO_PIN_SET) ? LOGGER_KEYBOARD_KEY_NO_PRESS : LOGGER_KEYBOARD_KEY_PRESS;
-	  keyDown = (HAL_GPIO_ReadPin (GPIOC, GPIO_PIN_4) == GPIO_PIN_SET) ? LOGGER_KEYBOARD_KEY_NO_PRESS : LOGGER_KEYBOARD_KEY_PRESS;
-	  keyLeft = /*(HAL_GPIO_ReadPin (GPIOC, GPIO_PIN_3) == GPIO_PIN_SET) ? LOGGER_KEYBOARD_KEY_SET :*/ LOGGER_KEYBOARD_KEY_PRESS; // TODO
-	  keyRight = /*(HAL_GPIO_ReadPin (GPIOC, GPIO_PIN_3) == GPIO_PIN_SET) ? LOGGER_KEYBOARD_KEY_SET :*/ LOGGER_KEYBOARD_KEY_PRESS; // TODO
+	  volatile keyUp = (HAL_GPIO_ReadPin (KEY_UP_GPIO_Port, KEY_UP_Pin) == GPIO_PIN_SET) ? LOGGER_KEYBOARD_KEY_NO_PRESS : LOGGER_KEYBOARD_KEY_PRESS;
+	  volatile keyDown = (HAL_GPIO_ReadPin (KEY_DOWN_GPIO_Port, KEY_DOWN_Pin) == GPIO_PIN_SET) ? LOGGER_KEYBOARD_KEY_NO_PRESS : LOGGER_KEYBOARD_KEY_PRESS;
+	  volatile keyLeft = (HAL_GPIO_ReadPin (KEY_LEFT_GPIO_Port, KEY_LEFT_Pin) == GPIO_PIN_SET) ? LOGGER_KEYBOARD_KEY_NO_PRESS : LOGGER_KEYBOARD_KEY_PRESS;
+	  volatile keyRight = (HAL_GPIO_ReadPin (KEY_RIGHT_GPIO_Port, KEY_RIGHT_Pin) == GPIO_PIN_SET) ? LOGGER_KEYBOARD_KEY_NO_PRESS : LOGGER_KEYBOARD_KEY_PRESS;
+*/
+
+	   volatile keyUp = (HAL_GPIO_ReadPin (KEY_UP_GPIO_Port, KEY_UP_Pin) == GPIO_PIN_SET) ? 1 : 0;
+	 	  volatile keyDown = (HAL_GPIO_ReadPin (KEY_DOWN_GPIO_Port, KEY_DOWN_Pin) == GPIO_PIN_SET) ? 1 : 0;
+	 	  volatile keyLeft = (HAL_GPIO_ReadPin (KEY_LEFT_GPIO_Port, KEY_LEFT_Pin) == GPIO_PIN_SET) ? 1 : 0;
+	 	  volatile keyRight = (HAL_GPIO_ReadPin (KEY_RIGHT_GPIO_Port, KEY_RIGHT_Pin) == GPIO_PIN_SET) ? 1 : 0;
+
+	  volatile int mask =  keyUp
+			  	  | (keyDown << 1)
+				  | (keyLeft << 2)
+				  | (keyRight << 3);
 
 	  LoggerKeyboard_OnKeyPressDetection(keyUp, keyDown, keyLeft, keyRight);
-
+/*
 	  // this wis very crude way to verify if "PWM" from GPPIO can be used directly to change backlight level of LCD
 	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET);
 	  HAL_Delay (1);
 	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_RESET);
 	  HAL_Delay (20);
-
-
-
-
-/*
-    // below is to check if keys are working
-	  //HAL_GPIO_TogglePin (GPIO, GPIO_PIN_5);
-	  if (GPIO_PIN_RESET == HAL_GPIO_ReadPin (GPIOC, GPIO_PIN_3))
-	  {
-		  HAL_GPIO_TogglePin (GPIOA, GPIO_PIN_5);
-	  }
 */
+
+
+
 	 // HAL_Delay (100);   /* Insert delay 100 ms */
 
     /* USER CODE END WHILE */
@@ -257,7 +269,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI_DIV2;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL16;
+  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL2;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -271,16 +283,62 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC|RCC_PERIPHCLK_ADC;
   PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
+  PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV2;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief ADC1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_ADC1_Init(void)
+{
+
+  /* USER CODE BEGIN ADC1_Init 0 */
+
+  /* USER CODE END ADC1_Init 0 */
+
+  ADC_ChannelConfTypeDef sConfig = {0};
+
+  /* USER CODE BEGIN ADC1_Init 1 */
+
+  /* USER CODE END ADC1_Init 1 */
+  /** Common config
+  */
+  hadc1.Instance = ADC1;
+  hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
+  hadc1.Init.ContinuousConvMode = DISABLE;
+  hadc1.Init.DiscontinuousConvMode = DISABLE;
+  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc1.Init.NbrOfConversion = 1;
+  if (HAL_ADC_Init(&hadc1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_15;
+  sConfig.Rank = ADC_REGULAR_RANK_1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN ADC1_Init 2 */
+
+  /* USER CODE END ADC1_Init 2 */
+
 }
 
 /**
@@ -352,6 +410,40 @@ static void MX_SPI1_Init(void)
 }
 
 /**
+  * @brief USART3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART3_Init(void)
+{
+
+  /* USER CODE BEGIN USART3_Init 0 */
+
+  /* USER CODE END USART3_Init 0 */
+
+  /* USER CODE BEGIN USART3_Init 1 */
+
+  /* USER CODE END USART3_Init 1 */
+  husart3.Instance = USART3;
+  husart3.Init.BaudRate = 115200;
+  husart3.Init.WordLength = USART_WORDLENGTH_8B;
+  husart3.Init.StopBits = USART_STOPBITS_1;
+  husart3.Init.Parity = USART_PARITY_NONE;
+  husart3.Init.Mode = USART_MODE_TX_RX;
+  husart3.Init.CLKPolarity = USART_POLARITY_LOW;
+  husart3.Init.CLKPhase = USART_PHASE_1EDGE;
+  husart3.Init.CLKLastBit = USART_LASTBIT_DISABLE;
+  if (HAL_USART_Init(&husart3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART3_Init 2 */
+
+  /* USER CODE END USART3_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -367,13 +459,13 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, SD_CS_Pin|SPI_DC_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, SD_CS_Pin|SPI1_DC_LCD_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, SPI_CS_LCD_Pin|LCD_BACKLIGHT_PWM_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, SPI1_CS_LCD_Pin|LCD_BACKLIGHT_PWM_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, ESP32_FLASH_MODE_Pin|SPI_RST_Pin|ESP32_RST_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, ESP32_FLASH_MODE_Pin|SPI1_RST_LCD_Pin|ESP32_RST_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
@@ -381,8 +473,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : BUTTON_UP_Pin BUTTON_DOWN_Pin */
-  GPIO_InitStruct.Pin = BUTTON_UP_Pin|BUTTON_DOWN_Pin;
+  /*Configure GPIO pins : KEY_LEFT_Pin KEY_RIGHT_Pin KEY_UP_Pin KEY_DOWN_Pin */
+  GPIO_InitStruct.Pin = KEY_LEFT_Pin|KEY_RIGHT_Pin|KEY_UP_Pin|KEY_DOWN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
@@ -393,19 +485,19 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : SD_CS_Pin SPI_DC_Pin */
-  GPIO_InitStruct.Pin = SD_CS_Pin|SPI_DC_Pin;
+  /*Configure GPIO pins : SD_CS_Pin SPI1_DC_LCD_Pin */
+  GPIO_InitStruct.Pin = SD_CS_Pin|SPI1_DC_LCD_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : SPI_CS_LCD_Pin */
-  GPIO_InitStruct.Pin = SPI_CS_LCD_Pin;
+  /*Configure GPIO pin : SPI1_CS_LCD_Pin */
+  GPIO_InitStruct.Pin = SPI1_CS_LCD_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(SPI_CS_LCD_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(SPI1_CS_LCD_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : ESP32_FLASH_MODE_Pin ESP32_RST_Pin */
   GPIO_InitStruct.Pin = ESP32_FLASH_MODE_Pin|ESP32_RST_Pin;
@@ -414,12 +506,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : SPI_RST_Pin */
-  GPIO_InitStruct.Pin = SPI_RST_Pin;
+  /*Configure GPIO pin : SPI1_RST_LCD_Pin */
+  GPIO_InitStruct.Pin = SPI1_RST_LCD_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(SPI_RST_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(SPI1_RST_LCD_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : LCD_BACKLIGHT_PWM_Pin */
   GPIO_InitStruct.Pin = LCD_BACKLIGHT_PWM_Pin;
