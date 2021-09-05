@@ -1,0 +1,29 @@
+@startuml
+
+class KeysHandler {
+    +void updateKeysState()
+}
+
+class KeysDebouncer {
+
+}
+
+enum Key_State_t {
+    LOGGER_KEYBOARD_KEY_PRESS
+    LOGGER_KEYBOARD_KEY_NO_PRESS
+}
+
+enum Keys_Key_Id_t {
+    LOGGER_KEYBOARD_KEY_UP
+    LOGGER_KEYBOARD_KEY_DOWN
+    LOGGER_KEYBOARD_KEY_LEFT
+    LOGGER_KEYBOARD_KEY_RIGHT
+}
+
+KeysHandler -- Keys_Key_Id_t
+KeysHandler -- Key_State_t
+
+KeysDebouncer -- Key_State_t
+
+KeysHandler *-- KeysDebouncer
+@enduml

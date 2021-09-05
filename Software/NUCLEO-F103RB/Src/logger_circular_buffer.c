@@ -1,10 +1,9 @@
 #include "logger_circular_buffer.h"
 #include "logger_circular_buffer_length.h"
 
-
 typedef struct logger_circular_buffer_t
 {
-    GMMeasurement_Value_t data[LOGGER_CIRCULAR_BUFFER_MAX_ELEMENTS];
+    LoggerMeasurement_Value_t data[LOGGER_CIRCULAR_BUFFER_MAX_ELEMENTS];
 
     uint16_t indexOfNextToInsert;
     uint16_t elementsInBuffer;
@@ -23,7 +22,7 @@ uint16_t Logger_CircularBuffer_GetElementCount()
     return buffer.elementsInBuffer;
 }
 
-void Logger_CircularBuffer_Insert(GMMeasurement_Value_t element)
+void Logger_CircularBuffer_Insert(LoggerMeasurement_Value_t element)
 {
     buffer.data[buffer.indexOfNextToInsert] = element;
 
@@ -36,11 +35,11 @@ void Logger_CircularBuffer_Insert(GMMeasurement_Value_t element)
     }
 }
 
-// Index is counted up from most recently inserted element, 
+// Index is counted up from most recently inserted element,
 // where 0 is index of the latest element, 1 is index of previous one etc.
 // Function will will return false on error, e.g. index is bigger than the buffer size
 // TODO: use enum instead of bool as return value
-Logger_CircularBuffer_GetElementStatus_t Logger_CircularBuffer_GetElement(GMMeasurement_Value_t* element, uint16_t index)
+Logger_CircularBuffer_GetElementStatus_t Logger_CircularBuffer_GetElement(LoggerMeasurement_Value_t* element, uint16_t index)
 {
     Logger_CircularBuffer_GetElementStatus_t retValue = LOGGER_CIRCULAR_BUFFER_GETELEMENT_INDEX_OUT_OF_RANGE;
 
@@ -64,8 +63,7 @@ Logger_CircularBuffer_GetElementStatus_t Logger_CircularBuffer_GetElement(GMMeas
     return retValue;
 }
 
-
-Logger_CircularBuffer_GetMinMaxElementStatus_t Logger_CircularBuffer_GetMinMaxElement(GMMeasurement_Value_t* minElement, GMMeasurement_Value_t* maxElement)
+Logger_CircularBuffer_GetMinMaxElementStatus_t Logger_CircularBuffer_GetMinMaxElement(LoggerMeasurement_Value_t* minElement, LoggerMeasurement_Value_t* maxElement)
 {
     Logger_CircularBuffer_GetMinMaxElementStatus_t retValue = LOGGER_CIRCULAR_BUFFER_GETMINMAXELEMENT_NO_MEASSUREMENTS;
 
@@ -76,7 +74,7 @@ Logger_CircularBuffer_GetMinMaxElementStatus_t Logger_CircularBuffer_GetMinMaxEl
 
         for(uint16_t i = 0; i < Logger_CircularBuffer_GetElementCount(); i++)
         {
-            GMMeasurement_Value_t currentElement;
+            LoggerMeasurement_Value_t currentElement;
             Logger_CircularBuffer_GetElementStatus_t status = Logger_CircularBuffer_GetElement(&currentElement, i);
 
             if(status == LOGGER_CIRCULAR_BUFFER_GETELEMENT_OK)

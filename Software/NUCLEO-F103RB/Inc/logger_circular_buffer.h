@@ -20,10 +20,10 @@ void Logger_CircularBuffer_Init();
 
 uint16_t Logger_CircularBuffer_GetElementCount();
 
-void Logger_CircularBuffer_Insert(GMMeasurement_Value_t element);
+void Logger_CircularBuffer_Insert(LoggerMeasurement_Value_t element);
 
-Logger_CircularBuffer_GetElementStatus_t Logger_CircularBuffer_GetElement(GMMeasurement_Value_t *element, uint16_t index);
+Logger_CircularBuffer_GetElementStatus_t Logger_CircularBuffer_GetElement(LoggerMeasurement_Value_t *element, uint16_t index);
 
-Logger_CircularBuffer_GetMinMaxElementStatus_t Logger_CircularBuffer_GetMinMaxElement(GMMeasurement_Value_t* minElement, GMMeasurement_Value_t* maxElement);
+Logger_CircularBuffer_GetMinMaxElementStatus_t Logger_CircularBuffer_GetMinMaxElement(LoggerMeasurement_Value_t* minElement, LoggerMeasurement_Value_t* maxElement);
 
 #endif
