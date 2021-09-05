@@ -5,6 +5,6 @@
 
 #define SAMPLE_STORAGE_ELEMENT_MAX_VALUE UINT16_MAX
 
-typedef uint16_t GMMeasurement_Value_t;
+typedef uint16_t LoggerMeasurement_Value_t;
 
 #endif

@@ -1,0 +1,69 @@
+@startuml
+
+class StoragesContainer {
+    +void init()
+    +void configure()
+}
+
+interface IStorage {
+    +void init()
+    +void deinit()
+    +void write()
+}
+
+interface IStorageDriver {
+    +void init()
+    +void deinit()
+    +void write()
+}
+
+class SDCardStorage {
+    -fileName
+}
+
+class WifiStorage {
+    -login
+    -password
+}
+
+
+class SDCardDriver {
+    -void mountFileSystem()
+    -void unmountFileSystem()
+    -void openFile()
+    -void closeFile()
+    -void sync()
+    -void writeToFile()
+
+    - fileSystemHandler
+    - logFileHandler
+}
+
+class WifiDriver {
+    -void connect()
+    -void disconnect()
+}
+
+class UARTDriver {
+    -void open()
+    -void close()
+}
+/'
+StoragesContainer  *-- SDCardStorage
+StoragesContainer  *-- WifiStorage
+StoragesContainer  *-- UARTStorage
+'/
+SDCardStorage --|> IStorage
+WifiStorage --|> IStorage
+UARTStorage--|> IStorage
+
+SDCardDriver --|> IStorageDriver
+WifiDriver --|> IStorageDriver
+UARTDriver --|> IStorageDriver
+
+
+SDCardStorage *-- SDCardDriver
+WifiStorage *-- WifiDriver
+UARTStorage *-- UARTDriver
+
+@enduml
