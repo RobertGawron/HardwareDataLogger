@@ -45,4 +45,4 @@ Current version is visible below, it's for testing purpose, the final one will h
 
 PC Simulation of Firmware was made using Python+Qt, it uses build .so variant of the firmware (Makefile is used for firmware variant generation).
 
- Details of [simulation are available here.](./Simulation/README.md)
+ Details of [simulation are available here.](./Simulation/FirmwarePCSimulator/README.md)
