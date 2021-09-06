@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="524px" preserveAspectRatio="none" style="width:787px;height:524px;background:#FFFFFF;" version="1.1" viewBox="0 0 787 524" width="787px" zoomAndPan="magnify"><defs><filter height="300%" id="fag788pt268fj" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[5ec5196b008ff820944bbdb125288ee7]
+cluster Data Logger Shield--><polygon fill="#FFFFFF" filter="url(#fag788pt268fj)" points="16,80,26,70,770,70,770,270,760,280,16,280,16,80" style="stroke:#000000;stroke-width:1.5;"/><line style="stroke:#000000;stroke-width:1.5;" x1="760" x2="770" y1="80" y2="70"/><line style="stroke:#000000;stroke-width:1.5;" x1="16" x2="760" y1="80" y2="80"/><line style="stroke:#000000;stroke-width:1.5;" x1="760" x2="760" y1="80" y2="280"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="133" x="322.5" y="97.5332">Data Logger Shield</text><!--MD5=[3b19ec0ec461c069876295abe3226569]
+cluster HMI--><polygon fill="#FFFFFF" filter="url(#fag788pt268fj)" points="272,137,282,127,598,127,598,238,588,248,272,248,272,137" style="stroke:#000000;stroke-width:1.5;"/><line style="stroke:#000000;stroke-width:1.5;" x1="588" x2="598" y1="137" y2="127"/><line style="stroke:#000000;stroke-width:1.5;" x1="272" x2="588" y1="137" y2="137"/><line style="stroke:#000000;stroke-width:1.5;" x1="588" x2="588" y1="137" y2="248"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="27" x="417.5" y="154.5332">HMI</text><!--MD5=[118efd4a5bf4a2e4501535ebf6b1885b]
+cluster NUCLEO-F103RB--><polygon fill="#FFFFFF" filter="url(#fag788pt268fj)" points="227,322,237,312,434,312,434,423,424,433,227,433,227,322" style="stroke:#000000;stroke-width:1.5;"/><line style="stroke:#000000;stroke-width:1.5;" x1="424" x2="434" y1="322" y2="312"/><line style="stroke:#000000;stroke-width:1.5;" x1="227" x2="424" y1="322" y2="322"/><line style="stroke:#000000;stroke-width:1.5;" x1="424" x2="424" y1="322" y2="433"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="116" x="268.5" y="339.5332">NUCLEO-F103RB</text><!--MD5=[32c075e43b22b1df3be93976122a0a94]
+entity Meassurement device #1...#5--><polygon fill="#FFFFFF" filter="url(#fag788pt268fj)" points="78,16,88,6,304,6,304,43.6094,294,53.6094,78,53.6094,78,16" style="stroke:#000000;stroke-width:1.5;"/><line style="stroke:#000000;stroke-width:1.5;" x1="294" x2="304" y1="16" y2="6"/><line style="stroke:#000000;stroke-width:1.5;" x1="78" x2="294" y1="16" y2="16"/><line style="stroke:#000000;stroke-width:1.5;" x1="294" x2="294" y1="16" y2="53.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="186" x="93" y="40.5332">Meassurement device #1...#5</text><!--MD5=[2a370f3f31e6704970c2f53d13102497]
+entity Acquisition--><polygon fill="#FFFFFF" filter="url(#fag788pt268fj)" points="137,186,147,176,245,176,245,213.6094,235,223.6094,137,223.6094,137,186" style="stroke:#000000;stroke-width:1.5;"/><line style="stroke:#000000;stroke-width:1.5;" x1="235" x2="245" y1="186" y2="176"/><line style="stroke:#000000;stroke-width:1.5;" x1="137" x2="235" y1="186" y2="186"/><line style="stroke:#000000;stroke-width:1.5;" x1="235" x2="235" y1="186" y2="223.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="68" x="152" y="210.5332">Acquisition</text><!--MD5=[c5396a85e19d44695048030f78b537c7]
+entity ESP8266MOD--><polygon fill="#FFFFFF" filter="url(#fag788pt268fj)" points="622.5,186,632.5,176,753.5,176,753.5,213.6094,743.5,223.6094,622.5,223.6094,622.5,186" style="stroke:#000000;stroke-width:1.5;"/><line style="stroke:#000000;stroke-width:1.5;" x1="743.5" x2="753.5" y1="186" y2="176"/><line style="stroke:#000000;stroke-width:1.5;" x1="622.5" x2="743.5" y1="186" y2="186"/><line style="stroke:#000000;stroke-width:1.5;" x1="743.5" x2="743.5" y1="186" y2="223.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="91" x="637.5" y="210.5332">ESP8266MOD</text><!--MD5=[299deecfe1b4b3eb8e0f9ad0ef3fbe08]
+entity ST7735 LCD--><polygon fill="#FFFFFF" filter="url(#fag788pt268fj)" points="452,186,462,176,574,176,574,213.6094,564,223.6094,452,223.6094,452,186" style="stroke:#000000;stroke-width:1.5;"/><line style="stroke:#000000;stroke-width:1.5;" x1="564" x2="574" y1="186" y2="176"/><line style="stroke:#000000;stroke-width:1.5;" x1="452" x2="564" y1="186" y2="186"/><line style="stroke:#000000;stroke-width:1.5;" x1="564" x2="564" y1="186" y2="223.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="82" x="467" y="210.5332">ST7735 LCD</text><!--MD5=[fb474a65459f7c6e90680d615206be56]
+entity Keyboard--><polygon fill="#FFFFFF" filter="url(#fag788pt268fj)" points="315.5,186,325.5,176,416.5,176,416.5,213.6094,406.5,223.6094,315.5,223.6094,315.5,186" style="stroke:#000000;stroke-width:1.5;"/><line style="stroke:#000000;stroke-width:1.5;" x1="406.5" x2="416.5" y1="186" y2="176"/><line style="stroke:#000000;stroke-width:1.5;" x1="315.5" x2="406.5" y1="186" y2="186"/><line style="stroke:#000000;stroke-width:1.5;" x1="406.5" x2="406.5" y1="186" y2="223.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="61" x="330.5" y="210.5332">Keyboard</text><!--MD5=[c3b61c15d375f7c900f7f880f3809b89]
+entity SDCard--><rect fill="#FFFFFF" filter="url(#fag788pt268fj)" height="37.6094" rx="35" ry="35" style="stroke:#000000;stroke-width:1.5;" width="70" x="32" y="181"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="50" x="42" y="205.5332">SDCard</text><!--MD5=[6c8e58736f3e41b0715f50eaa3050d99]
+entity UART over USB--><polygon fill="#FFFFFF" filter="url(#fag788pt268fj)" points="270,371,280,361,410,361,410,398.6094,400,408.6094,270,408.6094,270,371" style="stroke:#000000;stroke-width:1.5;"/><line style="stroke:#000000;stroke-width:1.5;" x1="400" x2="410" y1="371" y2="361"/><line style="stroke:#000000;stroke-width:1.5;" x1="270" x2="400" y1="371" y2="371"/><line style="stroke:#000000;stroke-width:1.5;" x1="400" x2="400" y1="371" y2="408.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="100" x="285" y="395.5332">UART over USB</text><!--MD5=[0d2f9dd512d9851e19b74e3749a4d3af]
+entity Remote Server--><polygon fill="#FFFFFF" filter="url(#fag788pt268fj)" points="620.5,371,630.5,361,755.5,361,755.5,398.6094,745.5,408.6094,620.5,408.6094,620.5,371" style="stroke:#000000;stroke-width:1.5;"/><line style="stroke:#000000;stroke-width:1.5;" x1="745.5" x2="755.5" y1="371" y2="361"/><line style="stroke:#000000;stroke-width:1.5;" x1="620.5" x2="745.5" y1="371" y2="371"/><line style="stroke:#000000;stroke-width:1.5;" x1="745.5" x2="745.5" y1="371" y2="408.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="95" x="635.5" y="395.5332">Remote Server</text><!--MD5=[4ecff8b7ee9c8bd9dd79dc40deb8b785]
+entity Local computer--><polygon fill="#FFFFFF" filter="url(#fag788pt268fj)" points="271.5,479,281.5,469,408.5,469,408.5,506.6094,398.5,516.6094,271.5,516.6094,271.5,479" style="stroke:#000000;stroke-width:1.5;"/><line style="stroke:#000000;stroke-width:1.5;" x1="398.5" x2="408.5" y1="479" y2="469"/><line style="stroke:#000000;stroke-width:1.5;" x1="271.5" x2="398.5" y1="479" y2="479"/><line style="stroke:#000000;stroke-width:1.5;" x1="398.5" x2="398.5" y1="479" y2="516.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="97" x="286.5" y="503.5332">Local computer</text><!--MD5=[aff08b1808c4e91ea7f2c3ebc63be1bb]
+entity Cloud (TBD)--><path d="M642.1671,477.5829 C645.7867,471.338 650.3768,471.2746 654.4801,477.089 C657.0492,470.5661 662.9609,470.0544 666.5591,476.0999 C669.4443,470.633 673.8677,470.2398 678.1171,474.4746 C680.2413,468.3006 685.7427,467.0486 689.7857,472.5584 C693.6372,467.1898 698.32,467.4631 701.1662,473.5566 C705.2085,469.8334 708.8744,469.5733 711.3095,475.2846 C715.7296,469.1462 721.0727,469.8214 723.6901,476.965 C728.404,471.1763 732.3685,472.4086 735.2843,478.6919 C744.0396,481.6626 745.1665,488.428 737.9907,494.1821 C744.6876,499.3459 742.2147,506.1998 735.4376,509.0499 C732.9128,515.067 728.0483,515.6617 724.2275,510.3302 C721.3911,516.5615 717.0687,516.0092 713.167,511.4191 C709.3161,516.8464 705.6325,516.9469 701.0489,512.3004 C697.2582,517.4666 692.2173,515.9084 689.7027,510.8802 C686.1539,517.0401 681.3683,517.6309 677.4645,511.2259 C674.0216,516.0423 670.2333,517.134 666.2717,511.7978 C661.7467,517.0232 657.5866,515.9574 654.1403,510.5653 C650.4751,515.1256 646.7598,515.3425 643.3117,510.32 C633.1145,509.7501 629.9057,501.0168 635.6297,493.2725 C631.0839,486.3741 632.4215,478.5265 642.1671,477.5829 " fill="#FFFFFF" filter="url(#fag788pt268fj)" style="stroke:#000000;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="79" x="648.5" y="498.5332">Cloud (TBD)</text><!--MD5=[cd843a7c25a2a9c0580d6d553b9c2aa8]
+link Meassurement device #1...#5 to Acquisition--><path d="M191,54.01 C191,86 191,143.6 191,175.73 " fill="none" id="Meassurement device #1...#5-Acquisition" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[a742d4d8f15a89c1db2ccd77d1d0b909]
+link SDCard to NUCLEO-F103RB--><path d="M75.55,219.17 C84.74,237.63 100.55,266.5 119,288 C140.445,313 168.88,336.6475 192.23,354.2175 C203.905,363.0025 214.3087,370.2681 221.9319,375.4238 C222.8848,376.0682 223.7942,376.6797 224.6573,377.257 C225.0888,377.5457 225.5087,377.8259 225.9167,378.0974 C226.1206,378.2331 226.3216,378.3667 226.5196,378.498 C226.6186,378.5637 226.7168,378.6289 226.8142,378.6935 " fill="none" id="SDCard-NUCLEO-F103RB" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[6f59027f1f3860b86e2cf4200bb4ec0b]
+link HMI to NUCLEO-F103RB--><path d="M287.3291,248.1175 C287.264,252.7754 286.9089,257.5007 286.1559,262.1505 C284.65,271.45 281.5525,280.4475 276,288 C269.84,296.38 260.84,288.16 254,296 C250.815,299.6513 248.1228,303.7086 245.8508,308.0201 C245.2828,309.098 244.741,310.1918 244.2244,311.2991 C244.1598,311.4375 244.0956,311.5761 244.0318,311.7149 " fill="none" id="HMI-NUCLEO-F103RB" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[dccbe250abcda9c0e79e5cc5742fdc93]
+link ESP8266MOD to NUCLEO-F103RB--><path d="M670.28,224.1 C652.57,245.16 623.24,274.92 590,288 C572.62,294.84 268.39,284.1 254,296 C250.2063,299.1375 247.0584,302.8353 244.455,306.908 C243.8042,307.9262 243.1874,308.9678 242.603,310.03 C242.3108,310.561 242.0267,311.0972 241.7505,311.6382 " fill="none" id="ESP8266MOD-NUCLEO-F103RB" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[1793de1fa9292ae5fb07ecdc7eb3513b]
+link Acquisition to NUCLEO-F103RB--><path d="M196.57,224.18 C202.4,248.415 211.8,287.51 219.8438,320.9663 C221.8547,329.3303 223.7809,337.342 225.5453,344.6809 C225.9864,346.5156 226.4174,348.3083 226.8371,350.0539 C226.8896,350.2721 226.9418,350.4896 226.9939,350.7063 " fill="none" id="Acquisition-NUCLEO-F103RB" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[cbbf7c4c68f7b6005e5b85efc9109525]
+link ESP8266MOD to Remote Server--><path d="M688,224.18 C688,259.28 688,325.56 688,360.72 " fill="none" id="ESP8266MOD-Remote Server" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[d35c42727044641bf4ca417eaaba8891]
+link Remote Server to Cloud (TBD)--><path d="M688,409 C688,426.66 688,450.94 688,468.68 " fill="none" id="Remote Server-Cloud (TBD)" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[f4ff99a92a189ef77c32c6b5af1198f2]
+link UART over USB to Local computer--><path d="M340,409 C340,426.66 340,450.94 340,468.68 " fill="none" id="UART over USB-Local computer" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[55f0b40ff37eecefc77040009c6fbe4a]
+@startuml
+
+node "Meassurement device #1...#5" {
+}
+
+node "Data Logger Shield" {
+    node Acquisition {
+    }
+
+    node ESP8266MOD {
+    }
+
+    node HMI {
+        node "ST7735 LCD" {
+        }
+
+        node Keyboard {
+        }
+    }
+
+    storage SDCard {
+    }
+}
+
+node NUCLEO-F103RB {
+    node "UART over USB" {
+    }
+}
+
+node "Remote Server" {
+}
+
+node "Local computer" {
+}
+
+cloud "Cloud (TBD)" {
+}
+
+"Meassurement device #1...#5" - - Acquisition
+
+
+"SDCard" - - "NUCLEO-F103RB"
+HMI - - "NUCLEO-F103RB"
+ESP8266MOD - - "NUCLEO-F103RB"
+Acquisition - - "NUCLEO-F103RB"
+
+ESP8266MOD - - "Remote Server"
+"Remote Server" - - "Cloud (TBD)"
+
+"UART over USB" - - "Local computer"
+
+@enduml
+
+PlantUML version 1.2021.7(Sun May 23 14:40:07 CEST 2021)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: Cp1250
+Language: pl
+Country: PL
+--></g></svg>
