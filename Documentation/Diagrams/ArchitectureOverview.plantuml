@@ -1,0 +1,52 @@
+@startuml
+
+node "Meassurement device #1...#5" {
+}
+
+node "Data Logger Shield" {
+    node Acquisition {
+    }
+
+    node ESP8266MOD {
+    }
+
+    node HMI {
+        node "ST7735 LCD" {
+        }
+
+        node Keyboard {
+        }
+    }
+
+    storage SDCard {
+    }
+}
+
+node NUCLEO-F103RB {
+    node "UART over USB" {
+    }
+}
+
+node "Remote Server" {
+}
+
+node "Local computer" {
+}
+
+cloud "Cloud (TBD)" {
+}
+
+"Meassurement device #1...#5" -- Acquisition
+
+
+"SDCard" -- "NUCLEO-F103RB"
+HMI -- "NUCLEO-F103RB"
+ESP8266MOD -- "NUCLEO-F103RB"
+Acquisition -- "NUCLEO-F103RB"
+
+ESP8266MOD -- "Remote Server"
+"Remote Server" -- "Cloud (TBD)"
+
+"UART over USB" -- "Local computer"
+
+@enduml
