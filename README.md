@@ -22,9 +22,9 @@ Data logging shield for NUCLEO-F103RB with following capabilities:
 
 ## Hardware
 
-[Circuit exported to .pdf is available here.](./Hardware/Logger/Logger.pdf)
+[Circuit exported to .pdf is available here](./Hardware/Logger/Logger.pdf), more [info can be found here](./Hardware/Logger/README.md).
 
-Current version is visible below, it's for testing purposes, the final one will have custom designed PCB.
+Current version is visible below, it's for testing purpose, the final one will have custom designed PCB.
 
 ![Device Picture](./Documentation/Pictures/Device_03_09_2021.jpg)
 
@@ -38,11 +38,11 @@ Current version is visible below, it's for testing purposes, the final one will 
 * Firmware is developed in C.
 * System Workbench for STM32 is used as IDE and flashing tool.
 
- Details of [software (including UML diagrams!) are available here.](./Software/README.m)
+ Details of [software (including UML diagrams!) are available here.](./Software/README.md)
 
 
 ## Simulation
 
 PC Simulation of Firmware was made using Python+Qt, it uses build .so variant of the firmware (Makefile is used for firmware variant generation).
 
- Details of [simulation are available here.](./Simulation/README.m)
+ Details of [simulation are available here.](./Simulation/FirmwarePCSimulator/README.md)
