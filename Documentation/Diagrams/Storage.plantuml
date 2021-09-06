@@ -5,8 +5,7 @@ class StoragesContainer {
     +void configure()
 }
 
-class BluetoothWifiStorage {
-}
+
 
 interface IStorageIO {
     +void init()
@@ -27,14 +26,17 @@ class SDCardStorage {
 class UARTStorage {
 }
 
+note left of WifiStorage
+ESP8266MOD has only Wifi support.
+In future it would be possible 
+to use ESP32 that has also Bloototh.
+end note
+
 class WifiStorage {
     -login
     -password
 }
 
-note right of BluetoothWifiStorage: ESP32 share same radio HW \nfor WiFi anfd Bloototh.
-class BluetoothStorage {
-}
 
 class SDCardDriver {
     -void mountFileSystem()
@@ -53,38 +55,41 @@ class UARTDriver {
     -void close()
 }
 
+note bottom of UARTDriverConfig
+On embedded systems, there is no such 
+identifier as COMx for serial port 
+(in contrary to e.g Windows or Linux).
+The config is added as a simple way
+to hide this low level thing from 
+high level UARTDriver. I didn't want
+to hardcode the UART device handler
+in the driver.
+end note
+class UARTDriverConfig {
+    +UARTHandler
+}
+
 class WifiDriver {
     -void connect()
     -void disconnect()
 }
 
-class BluetoothDriver {
-}
-
-
-BluetoothWifiStorage *-- BluetoothStorage
-BluetoothWifiStorage *-- WifiStorage
-
-StoragesContainer *-- BluetoothWifiStorage
 StoragesContainer *-- SDCardStorage
 StoragesContainer *-- UARTStorage
+StoragesContainer *-- WifiStorage
 
-BluetoothWifiStorage --|> IStorageIO
-BluetoothStorage --|> IStorageIO
 SDCardStorage --|> IStorageIO
 WifiStorage --|> IStorageIO
 UARTStorage --|> IStorageIO
-BluetoothStorage --|> IStorageIO
 
 UARTStorage *-- UARTDriver
 SDCardStorage *-- SDCardDriver
 WifiStorage *-- WifiDriver
-BluetoothStorage *-- BluetoothDriver
 
 SDCardDriver --|> IStorageDriver
 UARTDriver --|> IStorageDriver
-BluetoothDriver --|> IStorageDriver
 WifiDriver --|> IStorageDriver
 
+UARTDriver *-- UARTDriverConfig
 
 @enduml
