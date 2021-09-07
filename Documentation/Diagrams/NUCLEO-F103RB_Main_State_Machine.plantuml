@@ -1,0 +1,8 @@
+@startuml
+[*] --> Init
+
+Init --> Operational
+Operational -> Faulty
+Faulty  -> Operational
+Init --> Faulty
+@enduml

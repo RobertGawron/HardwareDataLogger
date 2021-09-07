@@ -1,52 +1,122 @@
 @startuml
 
-node "Meassurement device #1...#5" {
-}
+actor Local_User [
+    Local User
+]
 
-node "Data Logger Shield" {
-    node Acquisition {
-    }
+actor Phone_User [
+    Phone User
+]
 
-    node ESP8266MOD {
-    }
 
-    node HMI {
-        node "ST7735 LCD" {
+node Meassurement_Device_1 [
+    Meassurement device #1
+]
+
+node Meassurement_Device_2 [
+    Meassurement device #2
+]
+
+node Meassurement_Device_3 [
+    Meassurement device #3
+]
+
+node Meassurement_Device_4 [
+    Meassurement device #4
+]
+
+node Meassurement_Device_5 [
+    Meassurement device #5
+]
+
+node "Data Logger" {
+
+    node "Data Logger Shield" {
+        node Acquisition {
+            node Pulse_Counter [
+                Pulse Counter
+            ]
+            node UART_Receiver [
+                UART Receiver
+            ]
         }
 
-        node Keyboard {
+        node HMI {
+            node LCD {
+                node ST7735_LCD [
+                    ST7735 LCD
+                ]
+                node Ambient_Light_Level_Sensor [
+                    Ambient Light
+                    Level Sensor
+                ]
+            }
+            node Keyboard [
+                Keyboard
+                (4 buttons)
+            ]
         }
+
+        node ESP8266MOD {
+            artifact Software_ESP8266MOD [
+                Software/ESP8266MOD/
+            ]
+        }
+
+        storage SDCard
     }
 
-    storage SDCard {
+    node "NUCLEO-F103RB" {
+        artifact Software_NUCLEO_F103RB [
+            Software/NUCLEO-F103RB/
+        ]
     }
 }
 
-node NUCLEO-F103RB {
-    node "UART over USB" {
+node "Raspberry Pi" {
+    node  "Web Server" {
+        artifact Software_Raspberry_Pi [
+            Software/Raspberry Pi
+        ]
+        storage MongoDB
     }
 }
 
-node "Remote Server" {
+node Phone {
+    artifact Phone_App [
+        Phone Application
+    ]
 }
 
-node "Local computer" {
+node Local_Computer {
+    artifact Local_Computer_App [
+        Local Computer App
+    ]
 }
 
-cloud "Cloud (TBD)" {
-}
-
-"Meassurement device #1...#5" -- Acquisition
 
 
-"SDCard" -- "NUCLEO-F103RB"
-HMI -- "NUCLEO-F103RB"
-ESP8266MOD -- "NUCLEO-F103RB"
-Acquisition -- "NUCLEO-F103RB"
+Meassurement_Device_1 --- Pulse_Counter
+Meassurement_Device_2 --- Pulse_Counter
+Meassurement_Device_3 --- Pulse_Counter
+Meassurement_Device_4 --- Pulse_Counter
+Meassurement_Device_5 --- UART_Receiver
 
-ESP8266MOD -- "Remote Server"
-"Remote Server" -- "Cloud (TBD)"
+SDCard -- Software_NUCLEO_F103RB
+Software_ESP8266MOD -- Software_NUCLEO_F103RB
+Keyboard -- Software_NUCLEO_F103RB
+ST7735_LCD -- Software_NUCLEO_F103RB
+Ambient_Light_Level_Sensor -- Software_NUCLEO_F103RB
+Pulse_Counter -- Software_NUCLEO_F103RB
+UART_Receiver -- Software_NUCLEO_F103RB
 
-"UART over USB" -- "Local computer"
+Software_ESP8266MOD --- Software_Raspberry_Pi
+Software_Raspberry_Pi -- MongoDB
+Software_Raspberry_Pi ---- Phone_App
+
+Software_NUCLEO_F103RB -- Local_Computer_App
+
+Local_Computer_App -- Local_User
+Phone_App -- Phone_User
 
 @enduml
