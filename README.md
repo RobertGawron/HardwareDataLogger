@@ -18,11 +18,13 @@ Data logging shield for NUCLEO-F103RB with following capabilities:
 - microSD card to permanently save logged data
 - WiFi to remotely transfer logged data.
 
+## Architecture
 
+![architecture overview](./Documentation/Diagrams/ArchitectureOverview.svg)
 
 ## Hardware
 
-[Circuit exported to .pdf is available here](./Hardware/Logger/Logger.pdf), more [info can be found here](./Hardware/Logger/README.md).
+[Circuit exported to .pdf is available here](./Documentation/Circuit/Logger.pdf), more [info can be found here](./Hardware/Logger/README.md).
 
 Current version is visible below, it's for testing purpose, the final one will have custom designed PCB.
 
@@ -30,9 +32,6 @@ Current version is visible below, it's for testing purpose, the final one will h
 
 
 ## Software
-
-![architecture overview](./Documentation/Diagrams/ArchitectureOverview.svg)
-
 
 * CubeMX was used to configure hardware peripherals.
 * Firmware is developed in C.

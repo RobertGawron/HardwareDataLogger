@@ -6,6 +6,12 @@ The project has two build configurations:
 
 ## Architecture
 
+
+![main state machine](../../Documentation/Diagrams/NUCLEO-F103RB_Main_State_Machine.svg)
+
+
+![state machine for init state](../../Documentation/Diagrams/NUCLEO-F103RB_Init_State_Machine.svg)
+
 Below is a diagram of data storage, the same interface is used for all possible storage types - via UART, WiFi, Bluetooth and SDCard.
 
 ![storage architecture](../../Documentation/Diagrams/Storage.svg)
