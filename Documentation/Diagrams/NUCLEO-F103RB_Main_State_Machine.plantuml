@@ -1,8 +1,52 @@
 @startuml
 [*] --> Init
 
-Init --> Operational
-Operational -> Faulty
-Faulty  -> Operational
-Init --> Faulty
+
+
+state Init {
+  [*] --> HAL_Init
+  HAL_Init --> HMI_Init
+
+  state HMI_Init {
+    [*] -> Display_Init
+    Display_Init -> Backlight_Init
+    Backlight_Init -> Keyboard_Init
+  }
+
+  HMI_Init -->  UART_Init
+
+  state UART_Init {
+    [*] ->  Meassurement_Devices_UART_Init
+    Meassurement_Devices_UART_Init -> Local_User_UART_Init
+    Local_User_UART_Init -> Wifi_UART_Init
+  }
+}
+
+
+
+state Operational {
+    [*] --> Measurement_Tick
+    Measurement_Tick --> Storage_Tick
+    Storage_Tick --> HMI_Tick
+    HMI_Tick -> Measurement_Tick
+    ||
+    [*] --> Get_Meassurement_From_Device
+    Get_Meassurement_From_Device --> Get_Meassurement_From_Device
+}
+
+
+state Faulty {
+    [*] -->  Disable_Faulty_Device
+    Disable_Faulty_Device --> Log_Diagnostic_Data
+}
+
+Init --> Operational : initialization ok
+Operational --> Faulty : fault detected
+Faulty  --> Operational
+
+
+/'
+SDCard_Init
+Wifi_Init
+'/
 @enduml
