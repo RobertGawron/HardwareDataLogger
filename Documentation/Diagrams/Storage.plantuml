@@ -50,7 +50,7 @@ class SDCardDriver {
     - logFileHandler
 }
 
-class UARTDriver {
+class UARTStorageDriver {
     -void open()
     -void close()
 }
@@ -69,27 +69,50 @@ class UARTDriverConfig {
     +UARTHandler
 }
 
+note bottom of WifiDriver
+Communication with WiFi 
+module is done via UART
+end note
+
 class WifiDriver {
     -void connect()
     -void disconnect()
 }
 
+class UARTDriver {
+
+}
+
+interface IUARTDriver {
+    +void open()
+    +void close()
+    +void read()
+    +void write()
+}
+
+UARTDriver --|> IUARTDriver
+UARTStorageDriver o-- UARTDriver
+
 StoragesContainer *-- SDCardStorage
 StoragesContainer *-- UARTStorage
 StoragesContainer *-- WifiStorage
 
-SDCardStorage --|> IStorageIO
-WifiStorage --|> IStorageIO
-UARTStorage --|> IStorageIO
 
-UARTStorage *-- UARTDriver
+
+WifiStorage --|> IStorageIO
+SDCardStorage --|> IStorageIO
+UARTStorage--|> IStorageIO
+
+UARTStorage o-- UARTStorageDriver
 SDCardStorage *-- SDCardDriver
 WifiStorage *-- WifiDriver
 
 SDCardDriver --|> IStorageDriver
-UARTDriver --|> IStorageDriver
+UARTStorageDriver --|> IStorageDriver
 WifiDriver --|> IStorageDriver
 
-UARTDriver *-- UARTDriverConfig
+WifiDriver o-- UARTStorageDriver
+
+UARTStorageDriver *-- UARTDriverConfig
 
 @enduml
