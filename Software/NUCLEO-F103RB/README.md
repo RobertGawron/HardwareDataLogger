@@ -20,6 +20,9 @@ This is a draft of how the keyboard will  be handled.
 
 ![keyboard architecture](../../Documentation/Diagrams/Keyboard.svg)
 
+![keyboard class diagram](../../Documentation/Diagrams/NUCLEO-F103RB_HML_Class_Diagram.svg)
+
+
 
 ## Credits
 
