@@ -1,0 +1,25 @@
+@startuml
+
+note bottom of LCDDriver
+Uses external lib for ST7735 LCD
+end note
+class LCDDriver
+class AmbientLightLevelSensorDriver
+class LCD
+
+class KeyboardDriver
+class HMILayout
+
+class DataGateway
+
+LCD -- LCDDriver
+LCD -- AmbientLightLevelSensorDriver
+HMILayout -- LCD
+HMILayout-- KeyboardDriver
+HMILayout -- DataGateway
+
+
+
+
+
+@enduml

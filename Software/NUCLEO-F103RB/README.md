@@ -20,6 +20,9 @@ Below is a draft of HMI class diagram - note the part related to what and how to
 ![hmi class diagram](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/HMI_Class_Diagram.svg)
 
 
+![keyboard class diagram](../../Documentation/Diagrams/NUCLEO-F103RB_HML_Class_Diagram.svg)
+
+
 
 ## Credits
 
