@@ -1,8 +1,7 @@
-Software/NUCLEO-F091RC/Drivers/* linguist-documentation
-# below is a HAL lib povided by STM, no project-specific code is there
-Software/NUCLEO-F103RB/Drivers/** linguist-documentation
-Software/NUCLEO-F103RB/Middlewares/**
-Software/NUCLEO-F103RB/startup/**
-Software/NUCLEO-F103RB/FatFs/**
-Software/NUCLEO-F103RB/syscalls.c
-Software/NUCLEO-F103RB/STM32F103RBTx_FLASH.ld
+Software/NUCLEO-F103RB/Core/** linguist-documentation
+Software/NUCLEO-F103RB/Drivers/CMSIS/** linguist-documentation
+Software/NUCLEO-F103RB/Drivers/ST7735/** linguist-documentation
+Software/NUCLEO-F103RB/Drivers/STM32F1xx_HAL_Driver/** linguist-documentation
+Software/NUCLEO-F103RB/FATFS/** linguist-documentation
+Software/NUCLEO-F103RB/Middlewares/** linguist-documentation
+Software/NUCLEO-F103RB/STM32F103RBTx_FLASH.ld linguist-documentation
