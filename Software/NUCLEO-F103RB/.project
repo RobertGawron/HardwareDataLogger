@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>NUCLEO-F103RB</name>
-	<comment />
+	<comment></comment>
 	<projects>
+		<project>NUCLEO-F103RB</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -19,12 +20,15 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>com.st.stm32cube.ide.mcu.MCUProjectNature</nature>
+		<nature>com.st.stm32cube.ide.mcu.MCUCubeProjectNature</nature>
 		<nature>org.eclipse.cdt.core.cnature</nature>
+		<nature>org.eclipse.cdt.core.ccnature</nature>
+		<nature>com.st.stm32cube.ide.mcu.MCUCubeIdeServicesRevAev2ProjectNature</nature>
+		<nature>com.st.stm32cube.ide.mcu.MCUAdvancedStructureProjectNature</nature>
+		<nature>com.st.stm32cube.ide.mcu.MCUSingleCpuProjectNature</nature>
+		<nature>com.st.stm32cube.ide.mcu.MCURootProjectNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
-		<nature>fr.ac6.mcu.ide.core.MCUProjectNature</nature>
 	</natures>
-	<linkedResources>
-		
-	<link><name>FatFs/diskio.c</name><type>1</type><location>PARENT-2-PROJECT_LOC/Middlewares/Third_Party/FatFs/src/diskio.c</location></link><link><name>FatFs/ff.c</name><type>1</type><location>PARENT-2-PROJECT_LOC/Middlewares/Third_Party/FatFs/src/ff.c</location></link><link><name>FatFs/ff_gen_drv.c</name><type>1</type><location>PARENT-2-PROJECT_LOC/Middlewares/Third_Party/FatFs/src/ff_gen_drv.c</location></link><link><name>FatFs/syscall.c</name><type>1</type><location>PARENT-2-PROJECT_LOC/Middlewares/Third_Party/FatFs/src/option/syscall.c</location></link></linkedResources>
 </projectDescription>
