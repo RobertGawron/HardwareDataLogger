@@ -20,7 +20,7 @@ Data logging shield for NUCLEO-F103RB with following capabilities:
 
 ## Architecture
 
-![architecture overview](./Documentation/Diagrams/ArchitectureOverview.svg)
+![architecture overview](./Documentation/Diagrams/Export/Documentation/Diagrams/ArchitectureOverview.svg)
 
 ## Hardware
 
@@ -33,15 +33,14 @@ Current version is visible below, it's for testing purpose, the final one will h
 
 ## Software
 
-* CubeMX was used to configure hardware peripherals.
-* Firmware is developed in C.
-* System Workbench for STM32 is used as IDE and flashing tool.
-
- Details of [software (including UML diagrams!) are available here.](./Software/README.md)
+#### NUCLEO-F103RB
+* Firmware for Nucleo board is being developed in C++.
+* STM32CubeIDE was is used as IDE and as a tool for hardware peripherals configuration.
+* [More info.](./Software/NUCLEO-F103RB/README.md)
 
 
 ## Simulation
 
-PC Simulation of Firmware was made using Python+Qt, it uses build .so variant of the firmware (Makefile is used for firmware variant generation).
+PC Simulation of Firmware is being made using Python+Qt.
 
- Details of [simulation are available here.](./Simulation/FirmwarePCSimulator/README.md)
+Details of [simulation are available here.](./Simulation/FirmwarePCSimulator/README.md)
