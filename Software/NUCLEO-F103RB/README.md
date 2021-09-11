@@ -1,24 +1,24 @@
 # Firmware for NUCLEO-F103RB board
 
-The project has two build configurations:
-* for generating binary, this is used for flashing, use Eclipse project
-* for generating shared library, this is used for PC simulation, use Makefile
-
 ## Architecture
 
+Below is presented state machine diagram. It doesn't include SDCard hotplug, reconnection to WiFi, FOTA because I don't know how this will be done.
 
-![state machine](../../Documentation/Diagrams/NUCLEO-F103RB_Main_State_Machine.svg)
+![state machine](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/Main_State_Machine.svg)
 
-![component diagram](../../Documentation/Diagrams/NUCLEO-F103RB_Component_Diagram.svg)
+A very small diagram of components is presented here. I think it still is useful despite its simplicity because it shows the big picture.
+
+![component diagram](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/Main_Component_Diagram.svg)
 
 
 Below is a diagram of data storage, the same interface is used for all possible storage types - via UART, WiFi, Bluetooth and SDCard.
 
-![storage architecture](../../Documentation/Diagrams/Storage.svg)
+![storage class diagram](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/Storage_Class_Diagram.svg)
 
-This is a draft of how the keyboard will  be handled.
+Below is a draft of HMI class diagram - note the part related to what and how to present data is not yet decided.
 
-![keyboard architecture](../../Documentation/Diagrams/Keyboard.svg)
+![hmi class diagram](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/HMI_Class_Diagram.svg)
+
 
 
 ## Credits

@@ -1,0 +1,67 @@
+@startuml
+
+class Display
+
+class DisplayConfigurator {
+    - uint8_t brightness
+}
+
+class DisplayBacklight
+class AmbientLightSensorDriver
+class DisplayBacklightDriver
+
+note left of DisplayDriver
+Uses external lib 
+for ST7735 LCD
+end note
+class DisplayDriver
+
+
+
+class Keyboard
+class KeysDriver
+class KeysDebouncer {
+    -uint8_t period
+}
+
+note top of HMILayout
+1/ Based on MVC
+2/ Details TBD
+end note
+class HMILayout
+
+note top of DataGateway
+Has access to 
+measurement data
+end note
+class DataGateway
+
+
+Display *-- DisplayDriver
+DisplayConfigurator *-- DisplayBacklight
+DisplayBacklight *-- AmbientLightSensorDriver
+DisplayBacklight *-- DisplayBacklightDriver
+
+Keyboard *-- KeysDriver
+Keyboard *-- KeysDebouncer
+
+HMILayout *-- DisplayConfigurator
+HMILayout *-- Display
+HMILayout *-- Keyboard
+HMILayout - DataGateway
+
+/'
+enum Key_State_t {
+    LOGGER_KEYBOARD_KEY_PRESS
+    LOGGER_KEYBOARD_KEY_NO_PRESS
+}
+
+enum Keys_Key_Id_t {
+    LOGGER_KEYBOARD_KEY_UP
+    LOGGER_KEYBOARD_KEY_DOWN
+    LOGGER_KEYBOARD_KEY_LEFT
+    LOGGER_KEYBOARD_KEY_RIGHT
+}
+'/
+
+@enduml
