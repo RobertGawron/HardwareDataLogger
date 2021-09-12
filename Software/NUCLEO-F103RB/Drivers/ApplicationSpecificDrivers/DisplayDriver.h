@@ -10,7 +10,10 @@ public:
 	DisplayDriver();
 	virtual ~DisplayDriver();
 
-	void update();
+	void init();
+
+	// for debug
+	void tmp_displayBacklightConf(int adc_value, int pwm_value, int brightness);
 };
 
 }

@@ -9,7 +9,11 @@ class DisplayBacklightDriver
 public:
 	DisplayBacklightDriver();
 	virtual ~DisplayBacklightDriver();
-	void tick();
+	void init();
+	void setBrightness(int value);
+	int getBrightness();
+private:
+	int brightness;
 };
 
 }
