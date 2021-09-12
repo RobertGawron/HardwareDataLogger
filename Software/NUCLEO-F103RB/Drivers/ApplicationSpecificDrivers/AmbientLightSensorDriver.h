@@ -9,7 +9,8 @@ class AmbientLightSensorDriver
 public:
 	AmbientLightSensorDriver();
 	virtual ~AmbientLightSensorDriver();
-	void tick();
+	void init();
+	uint32_t getAmbientLight();
 };
 
 }
