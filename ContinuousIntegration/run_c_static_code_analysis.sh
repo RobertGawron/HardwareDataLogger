@@ -1,13 +1,2 @@
-cppcheck --enable=all --inline-suppr --force --quiet --error-exitcode=1  ../Software/NUCLEO-F103RB/Inc ../Software/NUCLEO-F103RB/Src 2>C_Lint_ReportFull.txt
+cppcheck --quiet --check-config --enable=all --error-exitcode=1 ../Software/NUCLEO-F103RB -i'Middlewares/Third_Party' -i'STM32F1xx_HAL_Driver' -i'FATFS' -i'Core' -i'ST7735'
 
-# look for errors in gm_* files (those are application files we are interested in)
-# store them to separate log ans show them on stdout
-grep -F '[../Software/NUCLEO-F103RB/Src/gm_' C_Lint_ReportFull.txt > C_Lint_ReportApplicationOnly.txt 
-cat C_Lint_ReportApplicationOnly.txt
-
-# set exit code to ok if no errors were found in application files 
-if [ $(cat C_Lint_ReportApplicationOnly.txt | wc -l) -eq 0 ]; then
-    true
-else
-    false
-fi

@@ -20,10 +20,6 @@ Below is a draft of HMI class diagram - note the part related to what and how to
 ![hmi class diagram](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/HMI_Class_Diagram.svg)
 
 
-![keyboard class diagram](../../Documentation/Diagrams/NUCLEO-F103RB_HML_Class_Diagram.svg)
-
-
-
 ## Credits
 
 * Library to communicate with ST7735S LCD [following files: st7735.h, fonts.h, st7735.c, fonts.c](https://github.com/afiskon/stm32-st7735).
