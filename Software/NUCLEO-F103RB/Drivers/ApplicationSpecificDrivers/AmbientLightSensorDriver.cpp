@@ -1,5 +1,4 @@
 #include "AmbientLightSensorDriver.h"
-#include "stm32f1xx_hal.h"
 
 extern ADC_HandleTypeDef hadc1;
 

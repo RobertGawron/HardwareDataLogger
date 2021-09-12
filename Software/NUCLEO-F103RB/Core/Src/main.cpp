@@ -25,6 +25,8 @@
 /* USER CODE BEGIN Includes */
 #include "DisplayConfigurator.h"
 #include "DisplayDriver.h"
+#include "Keyboard.h"
+
 
 /* USER CODE END Includes */
 
@@ -49,6 +51,7 @@ RTC_HandleTypeDef hrtc;
 
 SPI_HandleTypeDef hspi1;
 
+TIM_HandleTypeDef htim3;
 UART_HandleTypeDef huart2;
 USART_HandleTypeDef husart3;
 
@@ -64,6 +67,7 @@ static void MX_RTC_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_USART3_Init(void);
+static void MX_TIM3_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -107,18 +111,65 @@ int main(void)
   MX_SPI1_Init();
   MX_ADC1_Init();
   MX_USART3_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
-  Application::DisplayConfigurator mDisplayConfigurator;
+  //Application::DisplayConfigurator mDisplayConfigurator;
+  Device::DisplayBacklight mDisplayBacklight;
   Driver::DisplayDriver mDisplayDriver;
+  Device::Keyboard mKeyboard;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  KeboardKeyState prevUp = KeboardKeyState::NotPressed;
+  KeboardKeyState prevDown = KeboardKeyState::NotPressed;
+
+  int pwm_value = 0;
+  int adc_value = 0;
+  int brightness_value = 0;
+
+
+  mDisplayDriver.init();
+  mDisplayBacklight.init();
+  brightness_value = 25;
+  mDisplayBacklight.setBrightness(brightness_value);
+  mDisplayDriver.tmp_displayBacklightConf(adc_value, pwm_value, brightness_value);
+
   while (1)
   {
     /* USER CODE END WHILE */
-	  mDisplayConfigurator.tick();
-	  mDisplayDriver.update();
+	  //mDisplayConfigurator.tick();
+	  //mDisplayDriver.update();
+	  mKeyboard.tick();
+
+	  adc_value = mDisplayBacklight.getRawADCBrightness();
+	  pwm_value = mDisplayBacklight.getRawPWMBrightness();
+
+
+	  // OHH THIS CODE IS HORRIBLE, i dont have time this is to test background light
+	  KeboardKeyState currentUp = mKeyboard.getState(KeboardKeyId::Left);
+
+	  if ((currentUp == KeboardKeyState::NotPressed)
+			  && (prevUp == KeboardKeyState::Pressed))
+	  {
+		  brightness_value += 2;
+		  mDisplayBacklight.setBrightness(brightness_value);
+		  mDisplayDriver.tmp_displayBacklightConf(adc_value, pwm_value, brightness_value);
+	  }
+
+	  KeboardKeyState currentDown = mKeyboard.getState(KeboardKeyId::Right);
+
+	  if ((currentDown == KeboardKeyState::NotPressed)
+			  && (prevDown == KeboardKeyState::Pressed))
+	  {
+		  brightness_value -= 2;
+		  mDisplayBacklight.setBrightness(brightness_value);
+		  mDisplayDriver.tmp_displayBacklightConf(adc_value, pwm_value, brightness_value);
+	  }
+
+	  prevUp = currentUp;
+	  prevDown = currentDown;
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -284,6 +335,55 @@ static void MX_SPI1_Init(void)
 }
 
 /**
+  * @brief TIM3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM3_Init(void)
+{
+
+  /* USER CODE BEGIN TIM3_Init 0 */
+
+  /* USER CODE END TIM3_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
+
+  /* USER CODE BEGIN TIM3_Init 1 */
+
+  /* USER CODE END TIM3_Init 1 */
+  htim3.Instance = TIM3;
+  htim3.Init.Prescaler = 0;
+  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim3.Init.Period = 65535;
+  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_PWM_Init(&htim3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 0;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM3_Init 2 */
+
+  /* USER CODE END TIM3_Init 2 */
+  HAL_TIM_MspPostInit(&htim3);
+
+}
+
+/**
   * @brief USART2 Initialization Function
   * @param None
   * @retval None
@@ -369,7 +469,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, SD_CS_Pin|SPI1_DC_LCD_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, SPI1_CS_LCD_Pin|LCD_BACKLIGHT_PWM_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(SPI1_CS_LCD_GPIO_Port, SPI1_CS_LCD_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, ESP32_FLASH_MODE_Pin|SPI1_RST_LCD_Pin|ESP32_RST_Pin, GPIO_PIN_RESET);
@@ -414,12 +514,7 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(SPI1_RST_LCD_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : LCD_BACKLIGHT_PWM_Pin */
-  GPIO_InitStruct.Pin = LCD_BACKLIGHT_PWM_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LCD_BACKLIGHT_PWM_GPIO_Port, &GPIO_InitStruct);
+
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
