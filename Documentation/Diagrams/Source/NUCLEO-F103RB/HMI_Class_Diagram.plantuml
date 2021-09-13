@@ -1,52 +1,61 @@
 @startuml
 
-class Display
+package Application {
+    note top of HMILayout
+    1/ Based on MVC
+    2/ Details TBD
+    end note
+    class HMILayout
 
-class DisplayConfigurator {
-    - uint8_t brightness
+    note top of DataGateway
+    Has access to 
+    measurement data
+    end note
+    class DataGateway
+
 }
 
-class DisplayBacklight
-class AmbientLightSensorDriver
-class DisplayBacklightDriver
+package Device {
+    class DisplayBacklight
+    Interface IDisplay
 
-note left of DisplayDriver
-Uses external lib 
-for ST7735 LCD
-end note
-class DisplayDriver
+    class Keyboard
 
-
-
-class Keyboard
-class KeysDriver
-class KeysDebouncer {
-    -uint8_t period
+    class KeysDebouncer {
+        -uint8_t period
+    }
 }
 
-note top of HMILayout
-1/ Based on MVC
-2/ Details TBD
-end note
-class HMILayout
+package Driver {
+    interface IAmbientLightSensorDriver
+    class DummyAmbientLightSensorDriver
+    IAmbientLightSensorDriver <|-- DummyAmbientLightSensorDriver
 
-note top of DataGateway
-Has access to 
-measurement data
-end note
-class DataGateway
+    interface IDisplayBacklightDriver
+    class ST7735DisplayBacklightDriver
+    IDisplayBacklightDriver <|-- ST7735DisplayBacklightDriver
+
+    class ST7735Display
+    IDisplay <|-- ST7735Display
+
+    interface IKeysDriver
+    IKeysDriver <|-- KeysDriver
+    class KeysDriver
+}
 
 
-Display *-- DisplayDriver
-DisplayConfigurator *-- DisplayBacklight
-DisplayBacklight *-- AmbientLightSensorDriver
-DisplayBacklight *-- DisplayBacklightDriver
 
-Keyboard *-- KeysDriver
+
+
+
+DisplayBacklight *-- IAmbientLightSensorDriver
+DisplayBacklight *-- IDisplayBacklightDriver
+
+Keyboard *--- IKeysDriver
 Keyboard *-- KeysDebouncer
 
-HMILayout *-- DisplayConfigurator
-HMILayout *-- Display
+HMILayout *-- IDisplay
+HMILayout *-- DisplayBacklight
 HMILayout *-- Keyboard
 HMILayout - DataGateway
 
