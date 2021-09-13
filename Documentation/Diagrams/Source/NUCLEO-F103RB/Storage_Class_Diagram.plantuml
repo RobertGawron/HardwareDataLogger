@@ -1,103 +1,116 @@
 @startuml
 
-class Meassurement
+package Application {
+    class Meassurement
 
-class StoragesContainer {
-    +void init()
-    +void configure()
-    +void tick()
-    +void write(Meassurement)
+    class StoragesContainer {
+        +void init()
+        +void configure()
+        +void tick()
+        +void write(Meassurement)
+    }
+
+    Meassurement - StoragesContainer
 }
 
-Meassurement - StoragesContainer
+Package Device {
+    interface IStorage {
+        +void init()
+        +void deinit()
+        +void write()
+        -void serialize()
+    }
 
-interface IStorage {
-    +void init()
-    +void deinit()
-    +void write()
-    -void serialize()
+
+    class SDCardStorage {
+        -fileName
+    }
+
+    class UARTStorage {
+    }
+
+    note left of WifiStorage
+    ESP8266MOD has only Wifi support.
+    In future it would be possible 
+    to use ESP32 that has also Bloototh.
+    end note
+    class WifiStorage {
+        -login
+        -password
+    }
 }
 
-interface IStorageDriver {
-    +void init()
-    +void deinit()
-    +void write()
+Package Driver {
+    interface IStorageDriver {
+        +void init()
+        +void deinit()
+        +void write()
+    }
+
+    class SDCardDriver {
+        -void mountFileSystem()
+        -void unmountFileSystem()
+        -void openFile()
+        -void closeFile()
+        -void sync()
+        -void writeToFile()
+
+        - fileSystemHandler
+        - logFileHandler
+    }
+
+    class UARTStorageDriver {
+        -void open()
+        -void close()
+    }
+
+    note bottom of UARTDriverConfig
+    On embedded systems, there is no such 
+    identifier as COMx for serial port 
+    (in contrary to e.g Windows or Linux).
+    The config is added as a simple way
+    to hide this low level thing from 
+    high level UARTDriver. I didn't want
+    to hardcode the UART device handler
+    in the driver.
+    end note
+    class UARTDriverConfig {
+        +UARTHandler
+    }
+
+    note bottom of WifiDriver
+    Communication with WiFi 
+    module is done via UART
+    end note
+
+    class WifiDriver {
+        -void connect()
+        -void disconnect()
+    }
+
+    note left of UARTDriver
+    Used in other 
+    places too.
+    end note
+    class UARTDriver {
+
+    }
+
+    interface IUARTDriver {
+        +void open()
+        +void close()
+        +void read()
+        +void write()
+    }
 }
 
-class SDCardStorage {
-    -fileName
-}
-
-class UARTStorage {
-}
-
-note left of WifiStorage
-ESP8266MOD has only Wifi support.
-In future it would be possible 
-to use ESP32 that has also Bloototh.
-end note
-
-class WifiStorage {
-    -login
-    -password
-}
 
 
-class SDCardDriver {
-    -void mountFileSystem()
-    -void unmountFileSystem()
-    -void openFile()
-    -void closeFile()
-    -void sync()
-    -void writeToFile()
 
-    - fileSystemHandler
-    - logFileHandler
-}
 
-class UARTStorageDriver {
-    -void open()
-    -void close()
-}
 
-note bottom of UARTDriverConfig
-On embedded systems, there is no such 
-identifier as COMx for serial port 
-(in contrary to e.g Windows or Linux).
-The config is added as a simple way
-to hide this low level thing from 
-high level UARTDriver. I didn't want
-to hardcode the UART device handler
-in the driver.
-end note
-class UARTDriverConfig {
-    +UARTHandler
-}
 
-note bottom of WifiDriver
-Communication with WiFi 
-module is done via UART
-end note
 
-class WifiDriver {
-    -void connect()
-    -void disconnect()
-}
-
-note left of UARTDriver
-Used in other 
-places too.
-end note
-class UARTDriver {
-
-}
-
-interface IUARTDriver {
-    +void open()
-    +void close()
-    +void read()
-    +void write()
-}
 
 UARTDriver --|> IUARTDriver
 UARTStorageDriver o-- UARTDriver
@@ -114,7 +127,7 @@ UARTStorage--|> IStorage
 
 UARTStorage o-- UARTStorageDriver
 SDCardStorage *-- SDCardDriver
-WifiStorage *-- WifiDriver
+WifiStorage *--- WifiDriver
 
 SDCardDriver --|> IStorageDriver
 UARTStorageDriver --|> IStorageDriver
