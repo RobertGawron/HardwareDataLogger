@@ -1,7 +1,7 @@
-Software/NUCLEO-F103RB/Core/** linguist-documentation
-Software/NUCLEO-F103RB/Drivers/CMSIS/** linguist-documentation
-Software/NUCLEO-F103RB/Drivers/ST7735/** linguist-documentation
-Software/NUCLEO-F103RB/Drivers/STM32F1xx_HAL_Driver/** linguist-documentation
-Software/NUCLEO-F103RB/FATFS/** linguist-documentation
-Software/NUCLEO-F103RB/Middlewares/** linguist-documentation
-Software/NUCLEO-F103RB/STM32F103RBTx_FLASH.ld linguist-documentation
+Software/NUCLEO-F103RB/Core/** linguist-vendored
+Software/NUCLEO-F103RB/Drivers/CMSIS/** linguist-vendored
+Software/NUCLEO-F103RB/Drivers/ST7735/** linguist-vendored
+Software/NUCLEO-F103RB/Drivers/STM32F1xx_HAL_Driver/** linguist-vendored
+Software/NUCLEO-F103RB/FATFS/** linguist-vendored
+Software/NUCLEO-F103RB/Middlewares/** linguist-vendored
+Software/NUCLEO-F103RB/STM32F103RBTx_FLASH.ld linguist-vendored
