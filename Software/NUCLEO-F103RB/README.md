@@ -6,11 +6,6 @@ Below is presented state machine diagram. It doesn't include SDCard hotplug, rec
 
 ![state machine](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/Main_State_Machine.svg)
 
-A very small diagram of components is presented here. I think it still is useful despite its simplicity because it shows the big picture.
-
-![component diagram](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/Main_Component_Diagram.svg)
-
-
 Below is a diagram of data storage, the same interface is used for all possible storage types - via UART, WiFi, Bluetooth and SDCard.
 
 ![storage class diagram](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/Storage_Class_Diagram.svg)
@@ -18,6 +13,12 @@ Below is a diagram of data storage, the same interface is used for all possible 
 Below is a draft of HMI class diagram - note the part related to what and how to present data is not yet decided.
 
 ![hmi class diagram](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/HMI_Class_Diagram.svg)
+
+
+Finally, below is a diagram of reception of data from measurement devices.
+
+![measurement devices class diagram](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/Measurement_Device_Class_Diagram.svg)
+
 
 
 ## Credits
