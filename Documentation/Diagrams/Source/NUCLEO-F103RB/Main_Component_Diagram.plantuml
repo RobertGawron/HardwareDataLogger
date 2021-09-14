@@ -1,9 +1,0 @@
-@startuml
-
-[HMI]
-[Measurement]
-[Storage]
-
-[HMI] --> [Storage]
-[Measurement] --> [Storage]
-@enduml
