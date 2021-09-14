@@ -1,0 +1,43 @@
+@startuml
+
+package Application {
+    class Queue {
+    }
+}
+
+package Device {
+    interface IMeasurementDevice {
+    }
+
+
+    class PulesTransmitingDevice {
+    }
+
+    class UARTTransmitingDevice {
+    }
+}
+
+package Driver {
+    class GPIOCounterDevice {
+    }
+
+    interface IUARTDriver {
+    }
+
+    class UARTDriver {
+    }
+}
+
+
+Queue -- IMeasurementDevice
+Queue *-- PulesTransmitingDevice
+Queue *-- UARTTransmitingDevice
+IMeasurementDevice <|-- PulesTransmitingDevice
+IMeasurementDevice <|-- UARTTransmitingDevice
+
+UARTTransmitingDevice -- IUARTDriver
+PulesTransmitingDevice -- GPIOCounterDevice
+
+IUARTDriver --|> UARTDriver
+
+@enduml
