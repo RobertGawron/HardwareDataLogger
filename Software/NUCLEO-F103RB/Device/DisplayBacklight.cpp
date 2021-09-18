@@ -3,40 +3,37 @@
 namespace Device
 {
 
-DisplayBacklight::DisplayBacklight()
-{
-}
-
-DisplayBacklight::~DisplayBacklight()
+DisplayBacklight::DisplayBacklight(
+		Driver::IAmbientLightSensorDriver &_ambientLightSensorDriver,
+		Driver::IDisplayBacklightDriver &_displayBacklightDriver) :
+		ambientLightSensorDriver(_ambientLightSensorDriver), displayBacklightDriver(
+				_displayBacklightDriver)
 {
 }
 
 void DisplayBacklight::init()
 {
-	mDisplayBacklightDriver.init();
+	ambientLightSensorDriver.init();
+	displayBacklightDriver.init();
 }
 
 void DisplayBacklight::tick()
 {
-	//mAmbientLightSensorDriver.getAmbientLight();
-	//mDisplayBacklightDriver.tick();
 }
 
-void DisplayBacklight::setBrightness(int value)
+void DisplayBacklight::setBrightnessPercentage(uint8_t level)
 {
-	// todo check
-	mDisplayBacklightDriver.setBrightness(value);
+	if(level > 100)
+	{
+		level = 100;
+	}
+
+	displayBacklightDriver.setBrightness(level);
 }
 
-// TODO this is crap!!!!
-int DisplayBacklight::getRawADCBrightness()
+uint16_t DisplayBacklight::getAmbientLightLevel()
 {
-	return mAmbientLightSensorDriver.getAmbientLight();
-}
-
-int DisplayBacklight::getRawPWMBrightness()
-{
-	return mDisplayBacklightDriver.getBrightness();
+	return ambientLightSensorDriver.getAmbientLightLevel();
 }
 
 }

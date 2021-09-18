@@ -1,23 +1,16 @@
-#include "AmbientLightSensorDriver.h"
+#include "DummyAmbientLightSensorDriver.h"
+#include "stm32f1xx_hal.h"
 
 extern ADC_HandleTypeDef hadc1;
 
 namespace Driver
 {
 
-AmbientLightSensorDriver::AmbientLightSensorDriver()
+void DummyAmbientLightSensorDriver::init()
 {
 }
 
-AmbientLightSensorDriver::~AmbientLightSensorDriver()
-{
-}
-
-void AmbientLightSensorDriver::init()
-{
-}
-
-uint32_t AmbientLightSensorDriver::getAmbientLight()
+uint32_t DummyAmbientLightSensorDriver::getAmbientLightLevel()
 {
 	volatile uint32_t adcResult;
 
@@ -29,4 +22,5 @@ uint32_t AmbientLightSensorDriver::getAmbientLight()
 
 	return adcResult;
 }
+
 }

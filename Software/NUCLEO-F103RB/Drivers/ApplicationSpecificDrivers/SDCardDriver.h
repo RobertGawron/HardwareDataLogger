@@ -8,7 +8,7 @@ class SDCardDriver
 {
 public:
 	SDCardDriver();
-	virtual ~SDCardDriver();
+	virtual ~SDCardDriver() = default;
 };
 
 }

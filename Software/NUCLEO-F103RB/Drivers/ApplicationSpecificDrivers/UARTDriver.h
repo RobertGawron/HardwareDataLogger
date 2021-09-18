@@ -11,6 +11,6 @@ public:
 	virtual ~UARTDriver();
 };
 
-} /* namespace Driver */
+}
 
 #endif

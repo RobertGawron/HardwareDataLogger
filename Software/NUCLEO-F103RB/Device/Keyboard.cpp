@@ -2,6 +2,7 @@
 
 #include "stm32f1xx_hal.h"
 #include "main.h"
+
 namespace Device
 {
 
@@ -13,7 +14,7 @@ Keyboard::Keyboard() :
 {
 }
 
-Keyboard::~Keyboard()
+void Keyboard::init()
 {
 }
 
