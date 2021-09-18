@@ -72,16 +72,16 @@ package Driver {
 
 
 StoragesContainer -- IStorage
-StoragesContainer *--- SDCardStorage
-StoragesContainer *--- UARTStorage
-StoragesContainer *--- WifiStorage
+StoragesContainer *-- SDCardStorage
+StoragesContainer *-- UARTStorage
+StoragesContainer *-- WifiStorage
 
 IStorage <|-- WifiStorage
 IStorage <|-- SDCardStorage
 IStorage <|-- UARTStorage
 
 SDCardStorage *-- SDCardDriver
-WifiStorage *--- WifiDriver
+WifiStorage *-- WifiDriver
 
 UARTStorage -- IUARTDriver
 WifiDriver -- IUARTDriver

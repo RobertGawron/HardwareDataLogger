@@ -1,11 +1,11 @@
 @startuml
 
 package Application {
-    note top of HMILayout
+    note top of HMI
     1/ Based on MVC
     2/ Details TBD
     end note
-    class HMILayout
+    class HMI
 
     note top of DataGateway
     Has access to 
@@ -54,23 +54,9 @@ DisplayBacklight *-- IDisplayBacklightDriver
 Keyboard *--- IKeysDriver
 Keyboard *-- KeysDebouncer
 
-HMILayout *-- IDisplay
-HMILayout *-- DisplayBacklight
-HMILayout *-- Keyboard
-HMILayout - DataGateway
-
-/'
-enum Key_State_t {
-    LOGGER_KEYBOARD_KEY_PRESS
-    LOGGER_KEYBOARD_KEY_NO_PRESS
-}
-
-enum Keys_Key_Id_t {
-    LOGGER_KEYBOARD_KEY_UP
-    LOGGER_KEYBOARD_KEY_DOWN
-    LOGGER_KEYBOARD_KEY_LEFT
-    LOGGER_KEYBOARD_KEY_RIGHT
-}
-'/
+HMI *-- IDisplay
+HMI *-- DisplayBacklight
+HMI *-- Keyboard
+HMI - DataGateway
 
 @enduml
