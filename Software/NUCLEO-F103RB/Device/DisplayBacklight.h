@@ -1,8 +1,8 @@
 #ifndef DISPLAYBACKLIGHT_H_
 #define DISPLAYBACKLIGHT_H_
 
-#include "AmbientLightSensorDriver.h"
-#include "DisplayBacklightDriver.h"
+#include "IAmbientLightSensorDriver.h"
+#include "IDisplayBacklightDriver.h"
 
 namespace Device
 {
@@ -10,19 +10,20 @@ namespace Device
 class DisplayBacklight
 {
 public:
-	DisplayBacklight();
-	virtual ~DisplayBacklight();
+	DisplayBacklight(
+			Driver::IAmbientLightSensorDriver& _ambientLightSensorDriver,
+			Driver::IDisplayBacklightDriver& _displayBacklightDriver);
+	virtual ~DisplayBacklight() = default;
+
 	void init();
 	void tick();
-	void setBrightness(int value);
 
-	// TODO this is crap!!!!
-	int getRawADCBrightness();
-	int getRawPWMBrightness();
+	uint16_t getAmbientLightLevel();
+	void setBrightnessPercentage(uint8_t level);
 
 private:
-	Driver::AmbientLightSensorDriver mAmbientLightSensorDriver;
-	Driver::DisplayBacklightDriver mDisplayBacklightDriver;
+	Driver::IAmbientLightSensorDriver& ambientLightSensorDriver;
+	Driver::IDisplayBacklightDriver& displayBacklightDriver;
 };
 
 }

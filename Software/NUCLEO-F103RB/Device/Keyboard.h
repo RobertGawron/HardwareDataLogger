@@ -4,7 +4,6 @@
 #include "KeboardKeyState.h"
 #include "KeboardKeyId.h"
 
-
 namespace Device
 {
 
@@ -12,7 +11,9 @@ class Keyboard
 {
 public:
 	Keyboard();
-	virtual ~Keyboard();
+	virtual ~Keyboard() = default;
+
+	void init();
 	void tick();
 	KeboardKeyState getState(KeboardKeyId key);
 private:
@@ -20,7 +21,6 @@ private:
 	KeboardKeyState	keyDown;
 	KeboardKeyState	keyLeft;
 	KeboardKeyState	keyRight;
-
 };
 
 }

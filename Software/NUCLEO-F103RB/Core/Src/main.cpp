@@ -23,11 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "DisplayConfigurator.h"
-#include "DisplayDriver.h"
-#include "Keyboard.h"
-
-
+#include "ApplicationBuilder.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -113,64 +109,20 @@ int main(void)
   MX_USART3_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
-  //Application::DisplayConfigurator mDisplayConfigurator;
-  Device::DisplayBacklight mDisplayBacklight;
-  Driver::DisplayDriver mDisplayDriver;
-  Device::Keyboard mKeyboard;
+
+  Application::ApplicationBuilder builder;
+  builder.init();
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  KeboardKeyState prevUp = KeboardKeyState::NotPressed;
-  KeboardKeyState prevDown = KeboardKeyState::NotPressed;
-
-  int pwm_value = 0;
-  int adc_value = 0;
-  int brightness_value = 0;
-
-
-  mDisplayDriver.init();
-  mDisplayBacklight.init();
-  brightness_value = 25;
-  mDisplayBacklight.setBrightness(brightness_value);
-  mDisplayDriver.tmp_displayBacklightConf(adc_value, pwm_value, brightness_value);
-
   while (1)
   {
     /* USER CODE END WHILE */
-	  //mDisplayConfigurator.tick();
-	  //mDisplayDriver.update();
-	  mKeyboard.tick();
-
-	  adc_value = mDisplayBacklight.getRawADCBrightness();
-	  pwm_value = mDisplayBacklight.getRawPWMBrightness();
-
-
-	  // OHH THIS CODE IS HORRIBLE, i dont have time this is to test background light
-	  KeboardKeyState currentUp = mKeyboard.getState(KeboardKeyId::Left);
-
-	  if ((currentUp == KeboardKeyState::NotPressed)
-			  && (prevUp == KeboardKeyState::Pressed))
-	  {
-		  brightness_value += 2;
-		  mDisplayBacklight.setBrightness(brightness_value);
-		  mDisplayDriver.tmp_displayBacklightConf(adc_value, pwm_value, brightness_value);
-	  }
-
-	  KeboardKeyState currentDown = mKeyboard.getState(KeboardKeyId::Right);
-
-	  if ((currentDown == KeboardKeyState::NotPressed)
-			  && (prevDown == KeboardKeyState::Pressed))
-	  {
-		  brightness_value -= 2;
-		  mDisplayBacklight.setBrightness(brightness_value);
-		  mDisplayDriver.tmp_displayBacklightConf(adc_value, pwm_value, brightness_value);
-	  }
-
-	  prevUp = currentUp;
-	  prevDown = currentDown;
 
     /* USER CODE BEGIN 3 */
+	  builder.tick();
   }
   /* USER CODE END 3 */
 }
@@ -353,7 +305,7 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 0;
+  htim3.Init.Prescaler = 8;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 65535;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
