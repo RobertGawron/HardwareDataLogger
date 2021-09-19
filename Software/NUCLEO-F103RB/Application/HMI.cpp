@@ -1,4 +1,19 @@
 #include <HMI.h>
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+//#include "gos.h"
+
+uint_least32_t gfxSystemTicks(void){}
+uint_least32_t	 gfxMillisecondsToTicks(uint_least32_t ms){}
+
+#include "gfx.h"
+
+#ifdef __cplusplus
+}
+#endif
 
 namespace Application
 {
@@ -23,7 +38,9 @@ void HMI::init()
 	keyboard.init();
 	display.init();
 
-//	displayBacklight.setBrightnessPercentage(displayBrightnessDefault);
+	gfxInit();
+
+	//displayBacklight.setBrightnessPercentage(displayBrightnessDefault);
 }
 
 void HMI::tick()
