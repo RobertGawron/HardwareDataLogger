@@ -3,7 +3,6 @@
 	<name>NUCLEO-F103RB</name>
 	<comment></comment>
 	<projects>
-		<project>NUCLEO-F103RB</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
