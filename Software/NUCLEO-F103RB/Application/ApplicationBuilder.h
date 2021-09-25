@@ -1,7 +1,7 @@
 #ifndef APPLICATIONBUILDER_H_
 #define APPLICATIONBUILDER_H_
 
-#include <ST7735DisplayDriver.h>
+#include "ST7735DisplayDriver.h"
 #include "IAmbientLightSensorDriver.h"
 #include "IDisplayBacklightDriver.h"
 #include "DisplayBacklight.h"

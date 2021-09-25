@@ -5,11 +5,11 @@ extern "C"
 #endif
 
 //#include "gos.h"
-
+/*
 uint_least32_t gfxSystemTicks(void){}
 uint_least32_t	 gfxMillisecondsToTicks(uint_least32_t ms){}
-
-#include "gfx.h"
+*/
+//#include "gfx.h"
 
 #ifdef __cplusplus
 }
@@ -38,7 +38,7 @@ void HMI::init()
 	keyboard.init();
 	display.init();
 
-	gfxInit();
+	//gfxInit();
 
 	//displayBacklight.setBrightnessPercentage(displayBrightnessDefault);
 }
