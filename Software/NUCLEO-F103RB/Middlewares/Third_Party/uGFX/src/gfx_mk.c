@@ -15,7 +15,7 @@
 #include "gos/gos_mk.c"
 #include "gdriver/gdriver_mk.c"
 #include "gqueue/gqueue_mk.c"
-#include "gdisp/gdisp_mk.c"
+//#include "gdisp/gdisp_mk.c"
 #include "gevent/gevent_mk.c"
 #include "gtimer/gtimer_mk.c"
 #include "gwin/gwin_mk.c"
