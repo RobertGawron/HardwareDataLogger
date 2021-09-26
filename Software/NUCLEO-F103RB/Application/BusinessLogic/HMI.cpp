@@ -11,7 +11,7 @@ extern "C"
 }
 #endif
 
-namespace Application
+namespace BusinessLogic
 {
 
 HMI::HMI(
@@ -23,8 +23,8 @@ HMI::HMI(
     keyboard(_keyboard),
     display(_display),
     displayBrightnessActual(0),
-    prevUp(KeboardKeyState::NotPressed),
-    prevDown(KeboardKeyState::NotPressed)
+    prevUp(::Driver::KeboardKeyState::NotPressed),
+    prevDown(::Driver::KeboardKeyState::NotPressed)
 {
 }
 
@@ -68,16 +68,16 @@ void HMI::tick()
     // BELOW IS A HORIBLE CODE FOR TEMPORARY TESTING OF BACKLIGHT ADJOUSTMENT
     // IT WILL BE REMOVED IN FINAL VERSION.
 
-    KeboardKeyState currentUp = KeboardKeyState::NotPressed;
-    KeboardKeyState currentDown = KeboardKeyState::NotPressed;
+    ::Driver::KeboardKeyState currentUp = ::Driver::KeboardKeyState::NotPressed;
+    ::Driver::KeboardKeyState currentDown = ::Driver::KeboardKeyState::NotPressed;
 
     uint16_t ambientLight = displayBacklight.getAmbientLightLevel();
     display.showBacklightConf_ForDebugOnly(ambientLight, displayBrightnessActual);
 
-    currentUp = keyboard.getState(KeboardKeyId::Left);
+    currentUp = keyboard.getState(::Driver::KeboardKeyId::Left);
 
-    if ((currentUp == KeboardKeyState::NotPressed)
-        && (prevUp == KeboardKeyState::Pressed))
+    if ((currentUp == ::Driver::KeboardKeyState::NotPressed)
+        && (prevUp == ::Driver::KeboardKeyState::Pressed))
     {
         displayBrightnessActual += 1;
 
@@ -86,10 +86,10 @@ void HMI::tick()
 
     }
 
-    currentDown = keyboard.getState(KeboardKeyId::Right);
+    currentDown = keyboard.getState(::Driver::KeboardKeyId::Right);
 
-    if ((currentDown == KeboardKeyState::NotPressed)
-        && (prevDown == KeboardKeyState::Pressed))
+    if ((currentDown == ::Driver::KeboardKeyState::NotPressed)
+        && (prevDown == ::Driver::KeboardKeyState::Pressed))
     {
         displayBrightnessActual -= 20;
         displayBacklight.setBrightnessPercentage(displayBrightnessActual);
