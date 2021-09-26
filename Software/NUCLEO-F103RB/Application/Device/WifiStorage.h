@@ -6,15 +6,16 @@
 namespace Device
 {
 
-class WifiStorage : public IStorage
+class WifiStorage :
+    public IStorage
 {
 public:
-	WifiStorage();
-	virtual ~WifiStorage();
+    WifiStorage();
+    virtual ~WifiStorage();
 
-	void init();
-	void deinit();
-	void write();
+    void init();
+    void deinit();
+    void write();
 };
 
 }

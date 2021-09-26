@@ -7,12 +7,12 @@ namespace Application
 {
 
 ApplicationBuilder::ApplicationBuilder() :
-		ambientLightSensorDriver(new Driver::DummyAmbientLightSensorDriver()),
-		displayBacklightDriver(new Driver::ST7735DisplayBacklightDriver()),
-		displayBacklight(*ambientLightSensorDriver, *displayBacklightDriver),
-		keyboard(),
-		display(new Driver::ST7735DisplayDriver()),
-		hmi(displayBacklight, keyboard, *display)
+    ambientLightSensorDriver(new Driver::DummyAmbientLightSensorDriver()),
+    displayBacklightDriver(new Driver::ST7735DisplayBacklightDriver()),
+    displayBacklight(*ambientLightSensorDriver, *displayBacklightDriver),
+    keyboard(),
+    display(new Driver::ST7735DisplayDriver()),
+    hmi(displayBacklight, keyboard, *display)
 {
 }
 
@@ -20,17 +20,14 @@ ApplicationBuilder::~ApplicationBuilder()
 {
 }
 
-
 void ApplicationBuilder::init()
 {
-	hmi.init();
+    hmi.init();
 }
 
 void ApplicationBuilder::tick()
 {
-	hmi.tick();
+    hmi.tick();
 }
 
 }
-
-

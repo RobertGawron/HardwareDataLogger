@@ -10,17 +10,17 @@ namespace Device
 class Keyboard
 {
 public:
-	Keyboard();
-	virtual ~Keyboard() = default;
+    Keyboard();
+    virtual ~Keyboard() = default;
 
-	void init();
-	void tick();
-	KeboardKeyState getState(KeboardKeyId key);
+    void init();
+    void tick();
+    KeboardKeyState getState(KeboardKeyId key);
 private:
-	KeboardKeyState	keyUp;
-	KeboardKeyState	keyDown;
-	KeboardKeyState	keyLeft;
-	KeboardKeyState	keyRight;
+    KeboardKeyState keyUp;
+    KeboardKeyState keyDown;
+    KeboardKeyState keyLeft;
+    KeboardKeyState keyRight;
 };
 
 }

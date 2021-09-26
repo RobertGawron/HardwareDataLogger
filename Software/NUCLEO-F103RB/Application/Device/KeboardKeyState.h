@@ -3,7 +3,7 @@
 
 enum class KeboardKeyState
 {
-	Pressed, NotPressed
+    Pressed, NotPressed
 };
 
 #endif

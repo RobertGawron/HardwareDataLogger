@@ -1,14 +1,12 @@
 #ifndef ISTORAGE_H_
 #define ISTORAGE_H_
 
-
-class IStorage{
+class IStorage {
 public:
-	void init();
-	void deinit();
-	void write();
+    void init();
+    void deinit();
+    void write();
 
 };
-
 
 #endif

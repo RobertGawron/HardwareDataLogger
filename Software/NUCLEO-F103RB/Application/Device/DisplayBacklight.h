@@ -10,20 +10,20 @@ namespace Device
 class DisplayBacklight
 {
 public:
-	DisplayBacklight(
-			Driver::IAmbientLightSensorDriver& _ambientLightSensorDriver,
-			Driver::IDisplayBacklightDriver& _displayBacklightDriver);
-	virtual ~DisplayBacklight() = default;
+    DisplayBacklight(
+        Driver::IAmbientLightSensorDriver& _ambientLightSensorDriver,
+        Driver::IDisplayBacklightDriver& _displayBacklightDriver);
+    virtual ~DisplayBacklight() = default;
 
-	void init();
-	void tick();
+    void init();
+    void tick();
 
-	uint16_t getAmbientLightLevel();
-	void setBrightnessPercentage(uint8_t level);
+    uint16_t getAmbientLightLevel();
+    void setBrightnessPercentage(uint8_t level);
 
 private:
-	Driver::IAmbientLightSensorDriver& ambientLightSensorDriver;
-	Driver::IDisplayBacklightDriver& displayBacklightDriver;
+    Driver::IAmbientLightSensorDriver& ambientLightSensorDriver;
+    Driver::IDisplayBacklightDriver& displayBacklightDriver;
 };
 
 }

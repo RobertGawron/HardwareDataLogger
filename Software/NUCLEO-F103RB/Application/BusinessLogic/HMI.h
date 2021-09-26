@@ -11,26 +11,25 @@ namespace Application
 class HMI
 {
 public:
-	HMI(Device::DisplayBacklight &_displayBacklight,
-			Device::Keyboard &_keyboard,
-			Device::IDisplay &_display);
-	virtual ~HMI() = default;
+    HMI(Device::DisplayBacklight &_displayBacklight,
+        Device::Keyboard &_keyboard,
+        Device::IDisplay &_display);
+    virtual ~HMI() = default;
 
-	void init();
-	void tick();
+    void init();
+    void tick();
 
 private:
-	Device::DisplayBacklight &displayBacklight;
-	Device::Keyboard &keyboard;
-	Device::IDisplay &display;
+    Device::DisplayBacklight &displayBacklight;
+    Device::Keyboard &keyboard;
+    Device::IDisplay &display;
 
+    static const uint8_t displayBrightnessDefault = 50U;
+    uint8_t displayBrightnessActual;
 
-	static const uint8_t displayBrightnessDefault = 50U;
-	uint8_t displayBrightnessActual;
-
-	// this is temporary
-	KeboardKeyState prevUp;
-	KeboardKeyState prevDown;
+// this is temporary
+    KeboardKeyState prevUp;
+    KeboardKeyState prevDown;
 };
 
 }

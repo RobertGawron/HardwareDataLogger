@@ -10,7 +10,7 @@ Measurement::~Measurement()
 }
 int Measurement::getValue()
 {
-	return 1;
+    return 1;
 }
 
 }

@@ -15,19 +15,19 @@ namespace Application
 class ApplicationBuilder
 {
 public:
-	ApplicationBuilder();
-	~ApplicationBuilder();
+    ApplicationBuilder();
+    ~ApplicationBuilder();
 
-	void init();
-	void tick();
+    void init();
+    void tick();
 
 private:
-	Driver::IAmbientLightSensorDriver* ambientLightSensorDriver;
-	Driver::IDisplayBacklightDriver* displayBacklightDriver;
-	Device::DisplayBacklight displayBacklight;
-	Device::Keyboard keyboard;
-	Device::IDisplay *display;
-	Application::HMI hmi;
+    Driver::IAmbientLightSensorDriver* ambientLightSensorDriver;
+    Driver::IDisplayBacklightDriver* displayBacklightDriver;
+    Device::DisplayBacklight displayBacklight;
+    Device::Keyboard keyboard;
+    Device::IDisplay *display;
+    Application::HMI hmi;
 };
 
 }
