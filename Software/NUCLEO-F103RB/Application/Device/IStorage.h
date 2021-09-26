@@ -3,10 +3,11 @@
 
 class IStorage {
 public:
+	~IStorage() = default;
+
     void init();
     void deinit();
     void write();
-
 };
 
 #endif

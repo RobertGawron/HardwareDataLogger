@@ -1,4 +1,4 @@
-# Overview of software architecture
+# Software
 
-* [NUCLEO-F103RB](./NUCLEO-F103RB/README.md)
-* [ESP8266MOD](./ESP8266MOD/README.md)
+* [Details about **NUCLEO-F103RB** project.](./NUCLEO-F103RB/README.md)
+* [Details about **ESP8266MOD** project.](./ESP8266MOD/README.md)

@@ -110,7 +110,7 @@ int main(void)
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 
-  Application::ApplicationBuilder builder;
+  BusinessLogic::ApplicationBuilder builder;
   builder.init();
 
   /* USER CODE END 2 */

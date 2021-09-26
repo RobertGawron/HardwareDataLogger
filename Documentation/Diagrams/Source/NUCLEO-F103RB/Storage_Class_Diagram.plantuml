@@ -1,16 +1,8 @@
 @startuml
 
-package Application {
-    class Meassurement
+package BusinessLogic {
 
-    class StoragesContainer {
-        +void init()
-        +void configure()
-        +void tick()
-        +void write(Meassurement)
-    }
-
-    Meassurement - StoragesContainer
+     interface IMeasurementObserver
 }
 
 package Device {
@@ -71,10 +63,9 @@ package Driver {
 }
 
 
-StoragesContainer -- IStorage
-StoragesContainer *-- SDCardStorage
-StoragesContainer *-- UARTStorage
-StoragesContainer *-- WifiStorage
+IMeasurementObserver <|--- SDCardStorage
+IMeasurementObserver <|-- UARTStorage
+IMeasurementObserver <|-- WifiStorage
 
 IStorage <|-- WifiStorage
 IStorage <|-- SDCardStorage
