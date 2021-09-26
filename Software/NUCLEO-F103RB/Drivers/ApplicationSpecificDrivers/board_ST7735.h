@@ -5,12 +5,14 @@
  *              http://ugfx.io/license.html
  */
 
-
+/* It's bad to place body of functions in .h file, but this is what uGFX lib wants. */
 
 #ifndef BOARD_ST7735_H
 #define BOARD_ST7735_H
 
 #include "stm32f1xx_hal.h"
+#include "board_ST7736_os.h"
+
 
 // TODO remove it
 #define ST7735_SPI_PORT hspi1
@@ -53,12 +55,6 @@ static GFXINLINE void release_bus(GDisplay *g) {
 	(void) g;
     HAL_GPIO_WritePin(ST7735_CS_GPIO_Port, ST7735_CS_Pin, GPIO_PIN_SET);
 }
-/*
-static GFXINLINE void write_index(GDisplay *g, gU16 index) {
-	(void) g;
-
-}
-*/
 
 static GFXINLINE void write_data(GDisplay *g, gU16 data) {
 	(void) g;

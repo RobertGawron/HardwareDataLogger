@@ -6,10 +6,8 @@ extern "C"
 
 
 
-uint_least32_t gfxSystemTicks(void){}
-uint_least32_t	 gfxMillisecondsToTicks(uint_least32_t ms){}
 
-//#include "gdisp_lld_config.h"
+
 #include "gfx.h"
 
 #ifdef __cplusplus
@@ -44,7 +42,7 @@ void HMI::init()
 
 	gwinSetDefaultFont(gdispOpenFont("UI2"));
 	gwinSetDefaultStyle(&WhiteWidgetStyle, FALSE);
-	gdispClear(White);
+	gdispClear(Yellow);
 
 
 	static GHandle ghLabel1;
@@ -54,8 +52,8 @@ void HMI::init()
 
 	// Apply the label parameters
 	wi.g.show = gTrue;
-	wi.g.y = 10;
-	wi.g.x = 10;
+	wi.g.y = 1;
+	wi.g.x = 1;
 	wi.g.width = 100;
 	wi.g.height = 20;
 	wi.text = "Label 1";
