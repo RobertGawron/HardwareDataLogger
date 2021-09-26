@@ -6,12 +6,11 @@ namespace Application
 class Measurement
 {
 public:
-	Measurement();
-	~Measurement();
-	int getValue();
+    Measurement();
+    ~Measurement();
+    int getValue();
 private:
-	int value;
-
+    int value;
 };
 }
 
