@@ -1,7 +1,7 @@
 @startuml
 
 package BusinessLogic {
-    class Queue {
+    class MeasurementSubject {
     }
 }
 
@@ -29,9 +29,8 @@ package Driver {
 }
 
 
-Queue -- IMeasurementDevice
-Queue *-- PulesTransmitingDevice
-Queue *-- UARTTransmitingDevice
+MeasurementSubject *--- PulesTransmitingDevice
+MeasurementSubject *-- UARTTransmitingDevice
 IMeasurementDevice <|-- PulesTransmitingDevice
 IMeasurementDevice <|-- UARTTransmitingDevice
 
