@@ -55,11 +55,10 @@
 									<listOptionValue builtIn="false" value="../FATFS/Target"/>
 									<listOptionValue builtIn="false" value="../FATFS/App"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FatFs/src"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Device}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Core/Inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Drivers/ApplicationSpecificDrivers}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/uGFX}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/uGFX/drivers/gdisp/ST7735}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Application/Driver}&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1483236303" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -72,6 +71,9 @@
 									<listOptionValue builtIn="false" value="STM32F103xB"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.option.includepaths.1868860586" name="Include paths (-I)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.option.includepaths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Application/BusinessLogic}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Application/Device}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Application/Driver}&quot;"/>
 									<listOptionValue builtIn="false" value="../Drivers/STM32F1xx_HAL_Driver/Inc"/>
 									<listOptionValue builtIn="false" value="../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32F1xx/Include"/>
@@ -79,10 +81,7 @@
 									<listOptionValue builtIn="false" value="../FATFS/Target"/>
 									<listOptionValue builtIn="false" value="../FATFS/App"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FatFs/src"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Device}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Application}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Core/Inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Drivers/ApplicationSpecificDrivers}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/uGFX}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/uGFX/drivers/gdisp/ST7735}&quot;"/>
 								</option>
@@ -109,7 +108,6 @@
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Application"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Device"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="FATFS"/>
 						<entry excluding="Third_Party/uGFX/3rdparty/|Third_Party/uGFX/boards/|Third_Party/uGFX/demos/|Third_Party/uGFX/docs/|Third_Party/uGFX/tools/|Third_Party/uGFX/.gitignore|Third_Party/uGFX/changelog.txt|Third_Party/uGFX/Doxygenfile|Third_Party/uGFX/ffconf.h|Third_Party/uGFX/gfx.h|Third_Party/uGFX/gfx.mk|Third_Party/uGFX/gfxconf.example.h|Third_Party/uGFX/gfxconf.h|Third_Party/uGFX/license.html|Third_Party/uGFX/mf_bwfont.h|Third_Party/uGFX/mf_rlefont.h|Third_Party/uGFX/mf_scaledfont.h|Third_Party/uGFX/pffconf.h|Third_Party/uGFX/readme.txt|Third_Party/uGFX/src/gadc/|Third_Party/uGFX/src/gaudio/|Third_Party/uGFX/src/gdriver/|Third_Party/uGFX/src/gevent/|Third_Party/uGFX/src/gfile/|Third_Party/uGFX/src/ginput/|Third_Party/uGFX/src/gmisc/|Third_Party/uGFX/src/gos/|Third_Party/uGFX/src/gqueue/|Third_Party/uGFX/src/gtimer/|Third_Party/uGFX/src/gtrans/|Third_Party/uGFX/src/gwin/|Third_Party/uGFX/src/gfx_compilers.h|Third_Party/uGFX/src/gfx_options.h|Third_Party/uGFX/src/gfx_types.h|Third_Party/uGFX/src/gfx.c|Third_Party/uGFX/src/gfx.h|Third_Party/uGFX/drivers/gadc/|Third_Party/uGFX/drivers/gaudio/|Third_Party/uGFX/drivers/ginput/|Third_Party/uGFX/drivers/multiple/|Third_Party/uGFX/drivers/gdisp/AlteraFramereader/|Third_Party/uGFX/drivers/gdisp/ED060SC4/|Third_Party/uGFX/drivers/gdisp/Fb24bpp/|Third_Party/uGFX/drivers/gdisp/framebuffer/|Third_Party/uGFX/drivers/gdisp/HX8347D/|Third_Party/uGFX/drivers/gdisp/ILI9225/|Third_Party/uGFX/drivers/gdisp/ILI9320/|Third_Party/uGFX/drivers/gdisp/ILI9325/|Third_Party/uGFX/drivers/gdisp/ILI9341/|Third_Party/uGFX/drivers/gdisp/ILI9342/|Third_Party/uGFX/drivers/gdisp/ILI93xx/|Third_Party/uGFX/drivers/gdisp/ILI9481/|Third_Party/uGFX/drivers/gdisp/ILI9488/|Third_Party/uGFX/drivers/gdisp/KS0108/|Third_Party/uGFX/drivers/gdisp/LGDP4532/|Third_Party/uGFX/drivers/gdisp/Nokia6610GE12/|Third_Party/uGFX/drivers/gdisp/Nokia6610GE8/|Third_Party/uGFX/drivers/gdisp/PCD8544/|Third_Party/uGFX/drivers/gdisp/PCF8812/|Third_Party/uGFX/drivers/gdisp/QImage/|Third_Party/uGFX/drivers/gdisp/R61505U/|Third_Party/uGFX/drivers/gdisp/RA6963/|Third_Party/uGFX/drivers/gdisp/RA8875/|Third_Party/uGFX/drivers/gdisp/S6D1121/|Third_Party/uGFX/drivers/gdisp/SPFD54124B/|Third_Party/uGFX/drivers/gdisp/SSD1289/|Third_Party/uGFX/drivers/gdisp/SSD1306/|Third_Party/uGFX/drivers/gdisp/SSD1322/|Third_Party/uGFX/drivers/gdisp/SSD1331/|Third_Party/uGFX/drivers/gdisp/SSD1351/|Third_Party/uGFX/drivers/gdisp/SSD1848/|Third_Party/uGFX/drivers/gdisp/SSD1963/|Third_Party/uGFX/drivers/gdisp/SSD2119/|Third_Party/uGFX/drivers/gdisp/ST7565/|Third_Party/uGFX/drivers/gdisp/STM32LTDC/|Third_Party/uGFX/drivers/gdisp/TestStub/|Third_Party/uGFX/drivers/gdisp/TLS8204/|Third_Party/uGFX/drivers/gdisp/UC1601s/|Third_Party/uGFX/drivers/gdisp/UC1610/|Third_Party/uGFX/drivers/gdisp/UC8173/|Third_Party/uGFX/drivers/gdisp/WS29EPD/|Third_Party/uGFX/drivers/gdisp/readme.txt|Third_Party/uGFX/src/gdisp/fonts/|Third_Party/uGFX/src/gdisp/mcufont/|Third_Party/uGFX/src/gdisp/gdisp_colors.h|Third_Party/uGFX/src/gdisp/gdisp_driver.h|Third_Party/uGFX/src/gdisp/gdisp_fonts.c|Third_Party/uGFX/src/gdisp/gdisp_image_bmp.c|Third_Party/uGFX/src/gdisp/gdisp_image_gif.c|Third_Party/uGFX/src/gdisp/gdisp_image_jpg.c|Third_Party/uGFX/src/gdisp/gdisp_image_native.c|Third_Party/uGFX/src/gdisp/gdisp_image_png.c|Third_Party/uGFX/src/gdisp/gdisp_image_support.h|Third_Party/uGFX/src/gdisp/gdisp_image.c|Third_Party/uGFX/src/gdisp/gdisp_image.h|Third_Party/uGFX/src/gdisp/gdisp_options.h|Third_Party/uGFX/src/gdisp/gdisp_pixmap.c|Third_Party/uGFX/src/gdisp/gdisp_pixmap.h|Third_Party/uGFX/src/gdisp/gdisp_rules.h|Third_Party/uGFX/src/gdisp/gdisp.c|Third_Party/uGFX/src/gdisp/gdisp.h|Third_Party/uGFX/src/gdisp/gdisp.mk" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Middlewares"/>
