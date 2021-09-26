@@ -4,7 +4,7 @@
 #include "KeyboardKeysDriver.h"
 #include "DummyAmbientLightSensorDriver.h"
 
-namespace Application
+namespace BusinessLogic
 {
 
 ApplicationBuilder::ApplicationBuilder() :

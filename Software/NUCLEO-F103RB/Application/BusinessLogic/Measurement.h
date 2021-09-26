@@ -1,7 +1,7 @@
 #ifndef MEASUREMENT_H_
 #define MEASUREMENT_H_
 
-namespace Application
+namespace BusinessLogic
 {
 class Measurement
 {

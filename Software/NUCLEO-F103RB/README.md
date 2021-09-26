@@ -2,23 +2,34 @@
 
 ## Architecture
 
-Below is presented state machine diagram. It doesn't include SDCard hotplug, reconnection to WiFi, FOTA because I don't know how this will be done.
+### Diagram of measurement handling
 
-![state machine](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/Main_State_Machine.svg)
+This is the most important diagram because it shows flow of the data in the system.
 
-Below is a diagram of data storage, the same interface is used for all possible storage types - via UART, WiFi, Bluetooth and SDCard.
+![storage class diagram](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/Measurement_Handling_Class_Diagram.svg)
+
+
+### Diagram of data storage
+
+The same interface is used for all possible storage types - UART, WiFi and SDCard.
 
 ![storage class diagram](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/Storage_Class_Diagram.svg)
 
-Below is a draft of HMI class diagram - note the part related to what and how to present data is not yet decided.
+### Draft of HMI diagram
+
+It is not yet decided how to integrate uGFX lib here.
 
 ![hmi class diagram](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/HMI_Class_Diagram.svg)
 
-
-Finally, below is a diagram of reception of data from measurement devices.
+## Diagram of reception of data from measurement devices.
 
 ![measurement devices class diagram](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/Measurement_Device_Class_Diagram.svg)
 
+## State machine diagram
+
+It doesn't include SDCard hotplug, reconnection to WiFi, FOTA because I don't know how this will be done.
+
+![state machine](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/Main_State_Machine.svg)
 
 
 ## Credits

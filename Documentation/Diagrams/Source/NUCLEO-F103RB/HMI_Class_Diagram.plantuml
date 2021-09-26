@@ -1,17 +1,13 @@
 @startuml
 
-package Application {
+package BusinessLogic {
     note top of HMI
     1/ Based on MVC
     2/ Details TBD
     end note
     class HMI
 
-    note top of DataGateway
-    Has access to 
-    measurement data
-    end note
-    class DataGateway
+    interface IMeasurementObserver
 
 }
 
@@ -57,6 +53,6 @@ Keyboard *-- KeysDebouncer
 HMI *-- IDisplay
 HMI *-- DisplayBacklight
 HMI *-- Keyboard
-HMI - DataGateway
+HMI -|> IMeasurementObserver
 
 @enduml

@@ -10,7 +10,7 @@
 #include "IDisplay.h"
 #include "HMI.h"
 
-namespace Application
+namespace BusinessLogic
 {
 
 class ApplicationBuilder
@@ -31,7 +31,7 @@ private:
     Device::Keyboard keyboard;
 
     Device::IDisplay *display;
-    Application::HMI hmi;
+    BusinessLogic::HMI hmi;
 };
 
 }
