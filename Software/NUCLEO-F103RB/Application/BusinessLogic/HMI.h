@@ -27,9 +27,9 @@ private:
     static const uint8_t displayBrightnessDefault = 50U;
     uint8_t displayBrightnessActual;
 
-// this is temporary
-    KeboardKeyState prevUp;
-    KeboardKeyState prevDown;
+    // this is temporary
+    ::Driver::KeboardKeyState prevUp;
+    ::Driver::KeboardKeyState prevDown;
 };
 
 }
