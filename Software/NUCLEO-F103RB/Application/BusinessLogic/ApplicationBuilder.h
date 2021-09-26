@@ -4,6 +4,7 @@
 #include "ST7735DisplayDriver.h"
 #include "IAmbientLightSensorDriver.h"
 #include "IDisplayBacklightDriver.h"
+#include "IKeyboardKeysDriver.h"
 #include "DisplayBacklight.h"
 #include "Keyboard.h"
 #include "IDisplay.h"
@@ -25,7 +26,10 @@ private:
     Driver::IAmbientLightSensorDriver* ambientLightSensorDriver;
     Driver::IDisplayBacklightDriver* displayBacklightDriver;
     Device::DisplayBacklight displayBacklight;
+
+    Driver::IKeyboardKeysDriver* keyboardKeysDriver;
     Device::Keyboard keyboard;
+
     Device::IDisplay *display;
     Application::HMI hmi;
 };
