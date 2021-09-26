@@ -1,6 +1,6 @@
 @startuml
 
-package Application {
+package BusinessLogic {
     note top of HMI
     1/ Based on MVC
     2/ Details TBD

@@ -1,6 +1,6 @@
 #include "Measurement.h"
 
-namespace Application
+namespace BusinessLogic
 {
 Measurement::Measurement()
 {

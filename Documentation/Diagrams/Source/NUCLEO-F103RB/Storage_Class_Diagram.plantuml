@@ -1,6 +1,6 @@
 @startuml
 
-package Application {
+package BusinessLogic {
     class Meassurement
 
     class StoragesContainer {

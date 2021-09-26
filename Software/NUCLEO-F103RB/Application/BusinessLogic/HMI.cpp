@@ -11,7 +11,7 @@ extern "C"
 }
 #endif
 
-namespace Application
+namespace BusinessLogic
 {
 
 HMI::HMI(

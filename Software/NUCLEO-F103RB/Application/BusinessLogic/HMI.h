@@ -5,7 +5,7 @@
 #include "Keyboard.h"
 #include "IDisplay.h"
 
-namespace Application
+namespace BusinessLogic
 {
 
 class HMI
