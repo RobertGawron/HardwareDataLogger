@@ -13,6 +13,8 @@
 #include "stm32f1xx_hal.h"
 #include "board_ST7736_os.h"
 
+#define ST7735_TYPE BOARD_TYPE_B
+
 
 // TODO remove it
 #define ST7735_SPI_PORT hspi1
@@ -27,7 +29,6 @@ extern SPI_HandleTypeDef ST7735_SPI_PORT;
 
 
 static GFXINLINE void init_board(GDisplay *g) {
-
 }
 
 static GFXINLINE void post_init_board(GDisplay *g) {
@@ -36,9 +37,11 @@ static GFXINLINE void post_init_board(GDisplay *g) {
 
 static GFXINLINE void setpin_reset(GDisplay *g, gBool state) {
 	(void) g;
-    HAL_GPIO_WritePin(ST7735_RES_GPIO_Port, ST7735_RES_Pin, GPIO_PIN_RESET);
-    HAL_Delay(5);
-    HAL_GPIO_WritePin(ST7735_RES_GPIO_Port, ST7735_RES_Pin, GPIO_PIN_SET);
+
+	if (!state)
+		HAL_GPIO_WritePin(ST7735_RES_GPIO_Port, ST7735_RES_Pin, GPIO_PIN_RESET);
+	else
+		HAL_GPIO_WritePin(ST7735_RES_GPIO_Port, ST7735_RES_Pin, GPIO_PIN_SET);
 }
 
 static GFXINLINE void set_backlight(GDisplay *g, gU8 percent) {
@@ -59,7 +62,7 @@ static GFXINLINE void release_bus(GDisplay *g) {
 static GFXINLINE void write_data(GDisplay *g, gU16 data) {
 	(void) g;
 	HAL_GPIO_WritePin(ST7735_DC_GPIO_Port, ST7735_DC_Pin, GPIO_PIN_SET);
-	HAL_SPI_Transmit(&ST7735_SPI_PORT, data, 1, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(&ST7735_SPI_PORT, &data, sizeof(data), HAL_MAX_DELAY);
 }
 
 static GFXINLINE void write_cmd(GDisplay *g, gU8 cmd) {
@@ -68,7 +71,7 @@ static GFXINLINE void write_cmd(GDisplay *g, gU8 cmd) {
 }
 
 
-static GFXINLINE void write_data_byte(GDisplay *g, const gU8 data){
+static GFXINLINE void write_data_byte(GDisplay *g, gU8 data){
 	HAL_GPIO_WritePin(ST7735_DC_GPIO_Port, ST7735_DC_Pin, GPIO_PIN_SET);
 	HAL_SPI_Transmit(&ST7735_SPI_PORT, &data, 1, HAL_MAX_DELAY);
 }

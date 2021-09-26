@@ -35,6 +35,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Drivers/ApplicationSpecificDrivers}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/uGFX}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/uGFX/drivers/gdisp/ST7735}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/ST7735}&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input.1544462018" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input"/>
 							</tool>
@@ -59,6 +60,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/uGFX}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/uGFX/drivers/gdisp/ST7735}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Application/Driver}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/ST7735}&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1483236303" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -84,6 +86,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Core/Inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/uGFX}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/uGFX/drivers/gdisp/ST7735}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/ST7735}&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.input.cpp.1262844716" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.input.cpp"/>
 							</tool>
@@ -147,6 +150,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Drivers/ApplicationSpecificDrivers}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/uGFX}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/uGFX/drivers/gdisp/ST7735}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/ST7735}&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input.1225145281" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input"/>
 							</tool>
@@ -171,6 +175,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Drivers/ApplicationSpecificDrivers}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/uGFX}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/uGFX/drivers/gdisp/ST7735}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/ST7735}&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.2013296160" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -195,6 +200,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Drivers/ApplicationSpecificDrivers}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/uGFX}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/uGFX/drivers/gdisp/ST7735}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NUCLEO-F103RB/Middlewares/Third_Party/ST7735}&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.input.cpp.1854677455" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.input.cpp"/>
 							</tool>

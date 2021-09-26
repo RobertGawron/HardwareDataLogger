@@ -1,10 +1,11 @@
-#include <HMI.h>
+#include "HMI.h"
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-#include "gfx.h"
+//#include "gfx.h"
 
 #ifdef __cplusplus
 }
@@ -32,7 +33,7 @@ void HMI::init()
     displayBacklight.init();
     keyboard.init();
     display.init();
-
+/*
     gfxInit();
 
     gwinSetDefaultFont(gdispOpenFont("UI2"));
@@ -56,7 +57,7 @@ void HMI::init()
     ghLabel1 = gwinLabelCreate(NULL, &wi);
 
     gwinSetText(ghLabel1, "This is some text", gTrue);
-
+*/
     //displayBacklight.setBrightnessPercentage(displayBrightnessDefault);
 }
 

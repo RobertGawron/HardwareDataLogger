@@ -11,7 +11,6 @@ public:
     int getValue();
 private:
     int value;
-
 };
 }
 

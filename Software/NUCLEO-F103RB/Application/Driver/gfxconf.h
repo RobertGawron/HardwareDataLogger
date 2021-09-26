@@ -181,7 +181,7 @@
 //        #define GDISP_HARDWARE_QUERY                 GFXOFF
 //        #define GDISP_HARDWARE_CLIP                  GFXOFF
 
-        #define GDISP_PIXELFORMAT                    GDISP_PIXELFORMAT_RGB888
+//        #define GDISP_PIXELFORMAT                    GDISP_PIXELFORMAT_RGB888
 //    #endif
 
 //#define GDISP_USE_GFXNET                             GFXOFF
