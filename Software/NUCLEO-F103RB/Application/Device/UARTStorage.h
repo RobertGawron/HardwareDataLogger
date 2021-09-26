@@ -9,12 +9,12 @@ namespace Device
 class UARTStorage
 {
 public:
-	UARTStorage();
-	virtual ~UARTStorage();
+    UARTStorage();
+    virtual ~UARTStorage();
 
-	void init();
-	void deinit();
-	void write();
+    void init();
+    void deinit();
+    void write();
 };
 
 }

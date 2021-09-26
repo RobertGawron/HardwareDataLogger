@@ -1,24 +1,3 @@
-uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Src/logger_circular_buffer.c
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Src/logger_sd_card_storage_driver.c
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Src/logger_uart_storage_driver.c
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Src/logger_keyboard.c
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Src/logger_storages_container.c
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Src/logger_wifi_storage.c
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Src/logger_sd_card_storage.c
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Src/logger_uart_storage.c
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Src/logger_wifi_storage_driver.c
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Inc/logger_circular_buffer.h
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Inc/logger_sd_card_storage.h
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Inc/logger_circular_buffer_length.h
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Inc/logger_sd_card_storage_driver.h
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Inc/logger_istorage.h
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Inc/logger_storages_container.h
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Inc/logger_istorage_driver.h
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Inc/logger_uart_storage.h
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Inc/logger_keyboard.h
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Inc/logger_uart_storage_driver.h
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Inc/logger_keyboard_key_id.h
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Inc/logger_wifi_storage.h
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Inc/logger_keyboard_key_state.h
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Inc/logger_wifi_storage_driver.h
-&& uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Inc/logger_measurement.h
+uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Application/BusinessLogic/*
+uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Application/Device//*
+uncrustify -c uncrustify.cfg --no-backup --replace ../Software/NUCLEO-F103RB/Application/Device//*

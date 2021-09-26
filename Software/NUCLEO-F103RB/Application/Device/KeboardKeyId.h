@@ -3,7 +3,7 @@
 
 enum class KeboardKeyId
 {
-	Up, Down, Left, Right
+    Up, Down, Left, Right
 };
 
 #endif

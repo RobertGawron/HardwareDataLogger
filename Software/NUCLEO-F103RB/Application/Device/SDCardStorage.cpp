@@ -5,15 +5,14 @@ namespace Device
 
 SDCardStorage::SDCardStorage()
 {
-	// TODO Auto-generated constructor stub
+    // TODO Auto-generated constructor stub
 
 }
 
 SDCardStorage::~SDCardStorage()
 {
-	// TODO Auto-generated destructor stub
+    // TODO Auto-generated destructor stub
 }
-
 
 void SDCardStorage::init()
 {
