@@ -1,0 +1,35 @@
+@startuml
+
+package BusinessLogic {
+    class MeasurementSubject {
+        +notifyObservers()
+    }
+
+    Interface IMeasurementObserver {
+        +notify()
+    }
+
+
+    class HMI
+}
+
+package Device {
+    class SDCardStorage
+    class UARTStorage
+    class WifiStorage
+
+    class PulesTransmitingDevice
+    class UARTTransmitingDevice
+}
+
+MeasurementSubject o- IMeasurementObserver
+
+IMeasurementObserver <|--- SDCardStorage
+IMeasurementObserver <|-- UARTStorage
+IMeasurementObserver <|-- WifiStorage
+IMeasurementObserver <|-- HMI
+
+
+MeasurementSubject -- PulesTransmitingDevice
+MeasurementSubject -- UARTTransmitingDevice
+@enduml
