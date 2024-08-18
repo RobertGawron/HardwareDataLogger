@@ -1,0 +1,5 @@
+C:/Users/rober/Documents/HardwareDataLogger/Software/NUCLEO-F103RB/CMakeFiles/NUCLEO-F103RB.dir
+C:/Users/rober/Documents/HardwareDataLogger/Software/NUCLEO-F103RB/CMakeFiles/edit_cache.dir
+C:/Users/rober/Documents/HardwareDataLogger/Software/NUCLEO-F103RB/CMakeFiles/rebuild_cache.dir
+C:/Users/rober/Documents/HardwareDataLogger/Software/NUCLEO-F103RB/cmake/stm32cubemx/CMakeFiles/edit_cache.dir
+C:/Users/rober/Documents/HardwareDataLogger/Software/NUCLEO-F103RB/cmake/stm32cubemx/CMakeFiles/rebuild_cache.dir

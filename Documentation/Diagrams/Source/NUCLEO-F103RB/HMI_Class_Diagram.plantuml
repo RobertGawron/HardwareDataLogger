@@ -1,17 +1,13 @@
 @startuml
 
-package Application {
+package BusinessLogic {
     note top of HMI
     1/ Based on MVC
     2/ Details TBD
     end note
     class HMI
 
-    note top of DataGateway
-    Has access to 
-    measurement data
-    end note
-    class DataGateway
+    interface IMeasurementObserver
 
 }
 
@@ -38,9 +34,9 @@ package Driver {
     class ST7735Display
     IDisplay <|-- ST7735Display
 
-    interface IKeysDriver
-    IKeysDriver <|-- KeysDriver
-    class KeysDriver
+    interface IKeyboardKeysDriver
+    IKeyboardKeysDriver <|-- KeyboardKeysDriver
+    class KeyboardKeysDriver
 }
 
 
@@ -51,12 +47,12 @@ package Driver {
 DisplayBacklight *-- IAmbientLightSensorDriver
 DisplayBacklight *-- IDisplayBacklightDriver
 
-Keyboard *--- IKeysDriver
+Keyboard *--- IKeyboardKeysDriver
 Keyboard *-- KeysDebouncer
 
 HMI *-- IDisplay
 HMI *-- DisplayBacklight
 HMI *-- Keyboard
-HMI - DataGateway
+HMI -|> IMeasurementObserver
 
 @enduml
