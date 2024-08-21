@@ -1,0 +1,56 @@
+# Use an official Ubuntu base image
+FROM ubuntu:20.04
+
+# Set the working directory
+WORKDIR /app
+
+# Avoid prompts from apt
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install build essentials and other dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    git \
+    valgrind \
+    gcovr \
+    clang \
+    clang-tidy \
+    clang-tools \
+    python3 \
+    python3-pip \
+    graphviz \
+    doxygen \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+
+RUN apt-get update
+RUN apt-get install -y libgtest-dev libgmock-dev
+RUN apt-get install -y vim
+RUN apt-get install -y googletest
+RUN apt-get install -y cppcheck
+RUN apt-get install -y doxygen
+
+
+# Install Python-based tools
+RUN pip3 install cpplint
+RUN pip3 install gprof2dot
+RUN pip3 install coverxygen
+
+
+# Copy project files into the container
+COPY Simulation/ /app/Simulation/
+COPY Software/ /app/Software/
+COPY Test/ /app/Test/
+COPY CMakeLists.txt /app
+COPY Doxyfile /app
+COPY Doxyfile.in /app
+# Build the project (Assumes CMake)
+RUN echo "====================="
+RUN echo "In build you can run:"
+RUN echo "cmake -DENABLE_VALGRIND=ON .. ; make -j 23" 
+RUN echo "cmake -DCMAKE_BUILD_TYPE=Debug .. ; make -j 23 ; make coverage"
+RUN echo "cmake -DCMAKE_BUILD_TYPE=Debug .. ; make -j 23 ; make static_analyse"
+RUN echo "cmake -DENABLE_VALGRIND=ON .. ; make -j 23 ; make dynamic_analyse"
+RUN mkdir build && cd build && bash

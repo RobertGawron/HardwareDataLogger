@@ -2,39 +2,29 @@
 
 ## Architecture
 
-### Diagram of measurement handling
+TODO UML diagrams.
 
-This is the most important diagram because it shows flow of the data in the system.
+## Prequises
+* ST32CubeMX
+* Visual STudio Code
+* STM32 VS Code Extension
+* Docker (in the future)
 
-![storage class diagram](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/Measurement_Handling_Class_Diagram.svg)
+Note: Some people argue that using STM32CubeMX is a bad idea and that everything should be coded manually. I disagree, especially for personal projects. STM32CubeMX is a great time-saver and offers a more visual way to configure the project, making it easier to understand and modify. However, the GUI can be somewhat primitive and could definitely be improve
 
+## Building
+* Generate the project in STM32CubeMX, which will create the CMake setup.
+* Configure the STM32 VS Code Extension.
 
-### Diagram of data storage
+Note: The generated CMake setup is not integrated with the main CMake configuration.   
 
-The same interface is used for all possible storage types - UART, WiFi and SDCard.
+## Open points
+* Code formatting standard.
 
-![storage class diagram](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/Storage_Class_Diagram.svg)
+## Third party libraries used
 
-### Draft of HMI diagram
+I chose not to include third-party libraries as a git subtree because it would significantly complicate the project structure.
 
-It is not yet decided how to integrate uGFX lib here.
-
-![hmi class diagram](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/HMI_Class_Diagram.svg)
-
-## Diagram of reception of data from measurement devices.
-
-![measurement devices class diagram](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/Measurement_Device_Class_Diagram.svg)
-
-## State machine diagram
-
-It doesn't include SDCard hotplug, reconnection to WiFi, FOTA because I don't know how this will be done.
-
-![state machine](../../Documentation/Diagrams/Export/Documentation/Diagrams/Source/NUCLEO-F103RB/Main_State_Machine.svg)
-
-
-## Credits
-
-* Library to communicate with ST7735S LCD [following files: st7735.h, fonts.h, st7735.c, fonts.c](https://github.com/afiskon/stm32-st7735).
-* Library to communicate with  SD card [following files: fatfs.h, user_diskio_spi.h, user_diskio.h, fatfs.c, user_diskio_spi.c, user_diskio.c](https://github.com/kiwih/cubemx-mmc-sd-card/).
-
-I didn't include them as a git subtree, because it would complicate a lot a structure of the project.
+Libraries used:
+* ST7735S LCD [following files: st7735.h, fonts.h, st7735.c, fonts.c](https://github.com/afiskon/stm32-st7735).
+* SD card [following files: fatfs.h, user_diskio_spi.h, user_diskio.h, fatfs.c, user_diskio_spi.c, user_diskio.c](https://github.com/kiwih/cubemx-mmc-sd-card/).
