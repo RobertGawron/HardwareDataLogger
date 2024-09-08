@@ -4,130 +4,215 @@ on:
   push:
     branches:
       - main
-      - feature/*
+      - 'feature/*'
   pull_request:
     branches:
       - main
 
 jobs:
-  build-and-push:
+  # Step 1: Build Docker image and push to registry
+  build:
+    name: Build Docker Image
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-    - name: Log in to GitHub Container Registry
-      uses: docker/login-action@v1
-      with:
-        registry: ghcr.io
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Build Docker image for CI
-      run: docker build -f Docker/Dockerfile.ci -t ghcr.io/robertgawron/hardwaredatalogger:v1.1 .
-
-    - name: Push Docker image to GitHub Container Registry
-      run: docker push ghcr.io/robertgawron/hardwaredatalogger:v1.1
-
-  run-unit-tests:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Log in to GitHub Container Registry
-      uses: docker/login-action@v1
-      with:
-        registry: ghcr.io
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Run Unit Tests
-      run: docker run --rm ghcr.io/robertgawron/hardwaredatalogger:v1.1 /bin/bash -c "cd /app && mkdir -p build && cd build && cmake .. && make && cd /app/build/Test/UT/ && ctest --output-on-failure"
-
-  run-code-coverage:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Log in to GitHub Container Registry
-      uses: docker/login-action@v1
-      with:
-        registry: ghcr.io
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Run Code Coverage
-      run: docker run --rm -v ${{ github.workspace }}/coverage:/app/build/coverage ghcr.io/robertgawron/hardwaredatalogger:v1.1 /bin/bash -c "cd /app/build && cmake -DCMAKE_BUILD_TYPE=Debug .. ; make -j 23 ; make coverage"
-
-    - name: Upload Coverage Report
-      uses: actions/upload-artifact@v2
-      with:
-        name: code-coverage-report
-        path: code_coverage/*
-
-  run-docs-coverage:
-      needs: build-and-push
-      runs-on: ubuntu-latest
-  
-      steps:
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
+          username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-  
-      - name: Run Docs Coverage
-        run: docker run --rm -v ${{ github.workspace }}/coverage:/app/build/coverage ghcr.io/robertgawron/hardwaredatalogger:v1.1 /bin/bash -c "cd /app/build && cmake -DCMAKE_BUILD_TYPE=Debug .. ; make -j 23 ; make missing_docs"
-  
-      - name: Upload Coverage Report
-        uses: actions/upload-artifact@v2
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ghcr.io/robertgawron/hardwaredatalogger:${{ github.sha }} -f DevOps/Docker/Dockerfile .
+          docker push ghcr.io/robertgawron/hardwaredatalogger:${{ github.sha }}
+
+  # Parallel Jobs: Unit Tests, Code Coverage, etc.
+  unit-tests:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
         with:
-          name: docs-coverage-report
-          path: docs_coverage/*
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-  run-static-analysis:
-    needs: build-and-push
+      - name: Pull Docker Image
+        run: |
+          docker pull ghcr.io/robertgawron/hardwaredatalogger:${{ github.sha }}
+          docker tag ghcr.io/robertgawron/hardwaredatalogger:${{ github.sha }} hardwaredatalogger:latest
+
+      - name: Run Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
+
+      - name: Run Unit Tests
+        run: |
+          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake .. && make -j24 && cd /workspace/build/Test/UT/ && ctest --output-on-failure"
+
+      - name: Clean up Docker containers
+        run: |
+          docker-compose -f docker-compose.yml -f docker-compose.ci.yml down
+
+  code-coverage:
+    name: Run Code Coverage
     runs-on: ubuntu-latest
-
+    needs: build
     steps:
-    - name: Log in to GitHub Container Registry
-      uses: docker/login-action@v1
-      with:
-        registry: ghcr.io
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Run Static Analysis
-      run: docker run --rm -v ${{ github.workspace }}/static_analyse:/app/build/static_analyse ghcr.io/robertgawron/hardwaredatalogger:v1.1 /bin/bash -c "cd /app/build && cmake -DCMAKE_BUILD_TYPE=Debug .. ; make -j 23 ; make static_analyse"
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-    - name: Upload Static Analysis Report
-      uses: actions/upload-artifact@v2
-      with:
-        name: static-analysis-report
-        path: static_analyse/*
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
 
-  run-dynamic-analysis:
-    needs: build-and-push
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull Docker Image
+        run: |
+          docker pull ghcr.io/robertgawron/hardwaredatalogger:${{ github.sha }}
+          docker tag ghcr.io/robertgawron/hardwaredatalogger:${{ github.sha }} hardwaredatalogger:latest
+
+      - name: Run Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
+
+      - name: Run Code Coverage
+        run: |
+          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace/build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j$(nproc) && make coverage"
+
+      - name: Upload Code Coverage Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage-results
+          path: DevOps/BuildArtifacts/CodeCoverage
+
+      - name: Clean up Docker containers
+        run: |
+          docker-compose -f docker-compose.yml -f docker-compose.ci.yml down
+
+  docs-coverage:
+    name: Run Docs Coverage
     runs-on: ubuntu-latest
-
+    needs: build
     steps:
-    - name: Log in to GitHub Container Registry
-      uses: docker/login-action@v1
-      with:
-        registry: ghcr.io
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Run Dynamic Analysis
-      run: docker run --rm -v ${{ github.workspace }}/dynamic_analyse:/app/build/dynamic_analyse ghcr.io/robertgawron/hardwaredatalogger:v1.1 /bin/bash -c "cd /app/build && cmake -DENABLE_VALGRIND=ON .. && make -j 23 && make dynamic_analyse ; chmod -R 777 /app/build/dynamic_analyse"
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-    - name: Upload Dynamic Analysis Report
-      uses: actions/upload-artifact@v2
-      with:
-        name: dynamic-analysis-report
-        path: dynamic_analyse/*
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull Docker Image
+        run: |
+          docker pull ghcr.io/robertgawron/hardwaredatalogger:${{ github.sha }}
+          docker tag ghcr.io/robertgawron/hardwaredatalogger:${{ github.sha }} hardwaredatalogger:latest
+
+      - name: Run Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
+
+      - name: Run Docs Coverage
+        run: |
+          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace/build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j$(nproc) && make docs"
+
+      - name: Upload Docs Coverage Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-coverage-results
+          path: DevOps/BuildArtifacts/DocsCoverage
+        
+      - name: Clean up Docker containers
+        run: |
+          docker-compose -f docker-compose.yml -f docker-compose.ci.yml down
+
+  static-analysis:
+    name: Run Static Analysis
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull Docker Image
+        run: |
+          docker pull ghcr.io/robertgawron/hardwaredatalogger:${{ github.sha }}
+          docker tag ghcr.io/robertgawron/hardwaredatalogger:${{ github.sha }} hardwaredatalogger:latest
+
+      - name: Run Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
+
+      - name: Run Static Analysis
+        run: |
+          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "\
+            set -e; \
+            cd /workspace/build && \
+            cmake -DCMAKE_BUILD_TYPE=Debug .. && \
+            make -j$(nproc) && \
+            make static"
+
+      - name: Upload Static Analysis Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-analysis-results
+          path: DevOps/BuildArtifacts/StaticAnalyse
+
+      - name: Clean up Docker containers
+        run: |
+          docker-compose -f docker-compose.yml -f docker-compose.ci.yml down

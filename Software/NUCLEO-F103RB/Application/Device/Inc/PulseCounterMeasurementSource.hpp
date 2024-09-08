@@ -7,8 +7,8 @@
 #ifndef PulseCounterMeasurementSource_H_
 #define PulseCounterMeasurementSource_H_
 
-#include "IMeasurementSource.hpp"
-#include "PulseCounterDriver.hpp"
+#include "Device/Interfaces/IMeasurementSource.hpp"
+#include "Driver/Inc/PulseCounterDriver.hpp"
 
 namespace Device
 {

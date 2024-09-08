@@ -6,9 +6,9 @@
 #ifndef DRIVER_IKEYBOARDKEYSDRIVER_H_
 #define DRIVER_IKEYBOARDKEYSDRIVER_H_
 
-#include "KeyboardKeyState.hpp"
-#include "KeyboardKeyIdentifier.hpp"
-#include "DriverState.hpp"
+#include "Driver/Inc/KeyboardKeyState.hpp"
+#include "Driver/Inc/KeyboardKeyIdentifier.hpp"
+#include "Driver/Inc/DriverState.hpp"
 #include <stdint.h>
 
 namespace Driver

@@ -1,8 +1,8 @@
 #ifndef HmiViewHistogram_h
 #define HmiViewHistogram_h
 
-#include "IHmiView.hpp"
-#include "IDisplayDriver.hpp"
+#include "BusinessLogic/Interfaces/IHmiView.hpp"
+#include "Driver/Interfaces/IDisplayDriver.hpp"
 
 namespace BusinessLogic
 {

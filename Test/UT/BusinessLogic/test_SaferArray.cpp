@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "SaferArray.hpp"
+#include "BusinessLogic/Inc/SaferArray.hpp"
 
 // Sample class for use with SaferArray
 class TestClass
@@ -17,11 +17,11 @@ template <typename T, int MaxSize>
 class SaferArrayTest : public ::testing::Test
 {
 protected:
-    SaferArray<T, MaxSize> array;
+    BusinessLogic::SaferArray<T, MaxSize> array;
 };
 
 // Define test types and sizes
-using SaferArrayInt = SaferArray<TestClass, 5>;
+using SaferArrayInt = BusinessLogic::SaferArray<TestClass, 5>;
 
 using SaferArrayTestInt = SaferArrayTest<TestClass, 5>;
 

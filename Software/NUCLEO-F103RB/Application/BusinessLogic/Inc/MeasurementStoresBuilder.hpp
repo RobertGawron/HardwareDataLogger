@@ -7,16 +7,32 @@
 #define MeasurementStoresBuilder_h
 
 #include <stdint.h>
-#include "IApplicationComponentBuilder.hpp"
+#include "BusinessLogic/Interfaces/IApplicationComponentBuilder.hpp"
 
 // Driver
-#include "IUartDriver.hpp"
-#include "ISdCardDriver.hpp"
+#include "Driver/Interfaces/IUartDriver.hpp"
+#include "Driver/Interfaces/ISdCardDriver.hpp"
 // Device
-#include "WiFiMeasurementRecorder.hpp"
-#include "SdCardMeasurementRecorder.hpp"
+#include "Device/Inc/WiFiMeasurementRecorder.hpp"
+#include "Device/Inc/SdCardMeasurementRecorder.hpp"
 // High-level components
-#include "MeasurementDataStore.hpp"
+#include "BusinessLogic/Inc/MeasurementDataStore.hpp"
+
+#include "BusinessLogic/Interfaces/IApplicationComponentBuilder.hpp"
+#include "Device/Inc/SdCardMeasurementRecorder.hpp"
+#include "Device/Inc/WiFiMeasurementRecorder.hpp"
+namespace BusinessLogic
+{
+    class MeasurementDataStore;
+}
+namespace Driver
+{
+    class ISdCardDriver;
+}
+namespace Driver
+{
+    class IUartDriver;
+}
 
 namespace BusinessLogic
 {

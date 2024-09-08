@@ -1,4 +1,4 @@
-#include "HmiViewMain.hpp"
+#include "BusinessLogic/Inc/HmiViewMain.hpp"
 
 namespace BusinessLogic
 {

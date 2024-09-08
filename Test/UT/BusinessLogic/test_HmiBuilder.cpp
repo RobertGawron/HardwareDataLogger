@@ -1,23 +1,35 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include "HmiBuilder.hpp"
-#include "IHmiFactory.hpp"
-#include "IHmiInputController.hpp"
-#include "IHmiViewManager.hpp"
-#include "IHmiDataModel.hpp"
+#include "BusinessLogic/Inc/HmiBuilder.hpp"
+#include "BusinessLogic/Interfaces/IHmiFactory.hpp"
+#include "BusinessLogic/Interfaces/IHmiInputController.hpp"
+#include "BusinessLogic/Interfaces/IHmiViewManager.hpp"
+#include "BusinessLogic/Interfaces/IHmiDataModel.hpp"
 
 namespace BusinessLogic
 {
     class MockHmiDataModel : public IHmiDataModel
     {
+        MOCK_METHOD(bool, initialize, (), (override));
+        MOCK_METHOD(bool, start, (), (override));
+        MOCK_METHOD(bool, stop, (), (override));
+        MOCK_METHOD(bool, tick, (), (override));
     };
 
     class MockHmiInputController : public IHmiInputController
     {
+        MOCK_METHOD(bool, initialize, (), (override));
+        MOCK_METHOD(bool, start, (), (override));
+        MOCK_METHOD(bool, stop, (), (override));
+        MOCK_METHOD(bool, tick, (), (override));
     };
 
     class MockHmiViewManager : public IHmiViewManager
     {
+        MOCK_METHOD(bool, initialize, (), (override));
+        MOCK_METHOD(bool, start, (), (override));
+        MOCK_METHOD(bool, stop, (), (override));
+        MOCK_METHOD(bool, tick, (), (override));
     };
 
     class MockHmiFactory : public IHmiFactory

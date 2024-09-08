@@ -1,12 +1,12 @@
 #ifndef IHmiFactory_h
 #define IHmiFactory_h
 
-#include "IKeyboard.hpp"
-#include "IDisplayDriver.hpp"
-#include "IDisplayBrightnessRegulator.hpp"
-#include "IHmiDataModel.hpp"
-#include "IHmiInputController.hpp"
-#include "IHmiViewManager.hpp"
+#include "Device/Interfaces/IKeyboard.hpp"
+#include "Driver/Interfaces/IDisplayDriver.hpp"
+#include "Device/Interfaces/IDisplayBrightnessRegulator.hpp"
+#include "BusinessLogic/Interfaces/IHmiDataModel.hpp"
+#include "BusinessLogic/Interfaces/IHmiInputController.hpp"
+#include "BusinessLogic/Interfaces/IHmiViewManager.hpp"
 
 namespace BusinessLogic
 {

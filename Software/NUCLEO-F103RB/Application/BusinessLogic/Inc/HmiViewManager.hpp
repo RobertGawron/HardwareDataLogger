@@ -1,8 +1,8 @@
 #ifndef HmiViewManager_h
 #define HmiViewManager_h
 
-#include "IHmiViewManager.hpp"
-#include "IDisplayDriver.hpp"
+#include "BusinessLogic/Interfaces/IHmiViewManager.hpp"
+#include "Driver/Interfaces/IDisplayDriver.hpp"
 
 namespace BusinessLogic
 {

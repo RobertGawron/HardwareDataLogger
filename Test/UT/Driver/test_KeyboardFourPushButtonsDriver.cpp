@@ -2,7 +2,7 @@
 #include <gmock/gmock.h>
 #include "main.h"
 #include "stm32f1xx_hal_gpio.h"
-#include "KeyboardFourPushButtonsDriver.hpp"
+#include "Driver/Inc/KeyboardFourPushButtonsDriver.hpp"
 
 using namespace testing;
 using namespace Driver;

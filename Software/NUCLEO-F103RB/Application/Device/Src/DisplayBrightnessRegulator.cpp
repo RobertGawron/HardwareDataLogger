@@ -1,4 +1,4 @@
-#include "DisplayBrightnessRegulator.hpp"
+#include "Device/Inc/DisplayBrightnessRegulator.hpp"
 
 namespace Device
 {

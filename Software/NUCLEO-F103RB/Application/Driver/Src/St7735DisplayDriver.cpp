@@ -1,5 +1,5 @@
-#include "St7735DisplayDriver.hpp"
-#include "DisplayPixelColor.hpp"
+#include "Driver/Inc/St7735DisplayDriver.hpp"
+#include "Driver/Inc/DisplayPixelColor.hpp"
 #include "stm32f1xx_hal.h" // st7735.h needs
 #include "st7735.h"
 
@@ -11,7 +11,7 @@ namespace Driver
         //  ST7735_Unselect();
 
         ST7735_Init();
-        fillScreen(DisplayPixelColor::getColor(0xff, 0xff, 0));
+        // fillScreen(DisplayPixelColor::getColor(0xff, 0xff, 0));
 
         return true;
     }

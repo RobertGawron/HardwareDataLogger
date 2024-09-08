@@ -12,15 +12,15 @@
  */
 
 // Interface includes for various drivers, specific implementations are not included here.
-#include "IAmbientLightSensorDriver.hpp"
-#include "IDisplayBrightnessDriver.hpp"
-#include "IDisplayDriver.hpp"
-#include "IKeyboardDriver.hpp"
-#include "ISdCardDriver.hpp"
-#include "UartIdentifier.hpp"
-#include "IUartDriver.hpp"
-#include "PulseCounterIdentifier.hpp"
-#include "IPulseCounterDriver.hpp"
+#include "Driver/Interfaces/IAmbientLightSensorDriver.hpp"
+#include "Driver/Interfaces/IDisplayBrightnessDriver.hpp"
+#include "Driver/Interfaces/IDisplayDriver.hpp"
+#include "Driver/Interfaces/IKeyboardDriver.hpp"
+#include "Driver/Interfaces/ISdCardDriver.hpp"
+#include "Driver/Inc/UartIdentifier.hpp"
+#include "Driver/Interfaces/IUartDriver.hpp"
+#include "Driver/Inc/PulseCounterIdentifier.hpp"
+#include "Driver/Interfaces/IPulseCounterDriver.hpp"
 
 namespace BusinessLogic
 {

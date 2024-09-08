@@ -1,4 +1,4 @@
-#include "HmiDataModel.hpp"
+#include "BusinessLogic/Inc/HmiDataModel.hpp"
 
 namespace BusinessLogic
 {

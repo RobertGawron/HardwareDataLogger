@@ -2,7 +2,7 @@
 #include <gmock/gmock.h>
 #include "main.h"
 #include "stm32f1xx_hal_tim.h"
-#include "St7735DisplayBrightnessDriver.hpp"
+#include "Driver/Inc/St7735DisplayBrightnessDriver.hpp"
 
 using namespace testing;
 using namespace Driver;

@@ -1,28 +1,23 @@
-# For PCBs designed using KiCad: http://www.kicad-pcb.org/
-# Format documentation: http://kicad-pcb.org/help/file-formats/
+# Ignore backup folder
+Logger-backups/
 
-# Temporary files
-*.000
-*.bak
-*.bck
-*.kicad_pcb-bak
-*.sch-bak
-*~
-_autosave-*
-*.tmp
-*-save.pro
-*-save.kicad_pcb
+# Ignore session/prl files (stores UI layout, last open tabs, etc.)
+*.kicad_prl
+
+# Ignore cache files (footprint cache)
 fp-info-cache
 
-# Netlist files (exported from Eeschema)
-*.net
+# Ignore KiCad swap files (temporary files when editing)
+*.kicad_swp
 
-# Autorouter files (exported from Pcbnew)
-*.dsn
-*.ses
+# Ignore KiCad lock files (prevents multiple instances of the file from being opened)
+~Logger.kicad_sch.lck
+~Logger.kicad_pcb.lck
 
-# Exported BOM files
-*.xml
-*.csv
+# Ignore auto-saved schematic files (created by KiCad for recovery)
+_autosave-*.kicad_sch
 
-Logger-backups/
+# Ignore auto-saved files folder (temporary files generated during editing)
+\#auto_saved_files#
+
+*autosave*

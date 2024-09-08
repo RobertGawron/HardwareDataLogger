@@ -1,8 +1,8 @@
 #ifndef IHmiView_h
 #define IHmiView_h
 
-#include "HmiDataModel.hpp"
-#include "IDisplayDriver.hpp"
+#include "BusinessLogic/Inc/HmiDataModel.hpp"
+#include "Driver/Interfaces/IDisplayDriver.hpp"
 
 namespace BusinessLogic
 {

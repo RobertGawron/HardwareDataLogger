@@ -7,7 +7,7 @@
 #define IAMBIENTLIGHTSENSORDRIVER_H_
 
 #include <stdint.h>
-#include "DriverState.hpp"
+#include "Driver/Inc/DriverState.hpp"
 
 namespace Driver
 {

@@ -1,8 +1,8 @@
 #ifndef IDisplayBrightnessRegulator_h
 #define IDisplayBrightnessRegulator_h
 
-#include "IAmbientLightSensorDriver.hpp"
-#include "IDisplayBrightnessDriver.hpp"
+#include "Driver/Interfaces/IAmbientLightSensorDriver.hpp"
+#include "Driver/Interfaces/IDisplayBrightnessDriver.hpp"
 
 namespace Device
 {

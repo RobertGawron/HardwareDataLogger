@@ -7,8 +7,9 @@
 #define IDISPLAYDRIVER_H_
 
 #include <stdint.h>
-#include "DriverState.hpp"
+#include "Driver/Inc/DriverState.hpp"
 #include "fonts.h" // This is probably wrong, but good enough for now.
+// struct FontDef;
 
 namespace Driver
 {

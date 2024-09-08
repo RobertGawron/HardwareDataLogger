@@ -1,4 +1,4 @@
-#include "HmiInputController.hpp"
+#include "BusinessLogic/Inc/HmiInputController.hpp"
 
 namespace BusinessLogic
 {

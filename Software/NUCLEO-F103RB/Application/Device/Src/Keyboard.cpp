@@ -1,6 +1,6 @@
-#include "Keyboard.hpp"
-#include "KeyboardKeyState.hpp"
-#include "KeyboardKeyActionState.hpp"
+#include "Device/Inc/Keyboard.hpp"
+#include "Driver/Inc/KeyboardKeyState.hpp"
+#include "Device/Inc/KeyboardKeyActionState.hpp"
 
 namespace Device
 {

@@ -1,4 +1,4 @@
-#include "PulseCounterMeasurementSource.hpp"
+#include "Device/Inc/PulseCounterMeasurementSource.hpp"
 
 namespace Device
 {

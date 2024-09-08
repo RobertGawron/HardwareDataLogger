@@ -1,4 +1,4 @@
-#include "UartDriver.hpp"
+#include "Driver/Inc/UartDriver.hpp"
 
 namespace Driver
 {
@@ -35,14 +35,20 @@ namespace Driver
 
         UartExchangeStatus status = UartExchangeStatus::DriverInIncorrectMode;
 
-        //  if (getState() == DriverState::State::Running)
+        if (getState() == DriverState::State::Running)
         {
-            uint8_t xdata[] = {'z', 'r', '\r', '\n'};
-            // char message[] = "r\r\n";
-            auto len = sizeof(xdata) / sizeof(xdata[0]);
-            timeout = 3000;
+            /*
+                // dummy for debug
 
-            HAL_StatusTypeDef halStatus = HAL_UART_Transmit(&uartHandler, xdata, len, timeout);
+                uint8_t xdata[] = {'z', 'r', '\r', '\n'};
+                // char message[] = "r\r\n";
+                auto len = sizeof(xdata) / sizeof(xdata[0]);
+                timeout = 3000;
+
+                HAL_StatusTypeDef halStatus = HAL_UART_Transmit(&uartHandler, xdata, len, timeout);
+            */
+
+            HAL_StatusTypeDef halStatus = HAL_UART_Transmit(&uartHandler, data, size, timeout);
             status = getExchangeStatus(halStatus);
         }
 
@@ -53,14 +59,19 @@ namespace Driver
     {
         UartExchangeStatus status = UartExchangeStatus::DriverInIncorrectMode;
 
-        // if (getState() == DriverState::State::Running)
+        if (getState() == DriverState::State::Running)
         {
+            /*
+            // dummy for debug only
+
             static uint8_t data_rx[30];
             uint16_t len = 3;
             timeout = timeout;
 
             HAL_StatusTypeDef halStatus = HAL_UART_Receive(&uartHandler, data_rx, len, timeout);
-            // HAL_StatusTypeDef halStatus = HAL_UART_Receive(&uartHandler, data, size, timeout);
+            */
+
+            HAL_StatusTypeDef halStatus = HAL_UART_Receive(&uartHandler, data, size, timeout);
             status = getExchangeStatus(halStatus);
         }
 

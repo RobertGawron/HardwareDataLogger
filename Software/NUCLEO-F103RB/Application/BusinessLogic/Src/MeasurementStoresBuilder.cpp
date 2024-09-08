@@ -1,5 +1,5 @@
-#include "MeasurementStoresBuilder.hpp"
-#include "IMeasurementRecorder.hpp"
+#include "BusinessLogic/Inc/MeasurementStoresBuilder.hpp"
+#include "Device/Interfaces/IMeasurementRecorder.hpp"
 namespace BusinessLogic
 {
 

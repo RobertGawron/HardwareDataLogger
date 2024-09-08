@@ -6,7 +6,7 @@
 #ifndef DRIVER_KeyboardFourPushButtonsDriver_H_
 #define DRIVER_KeyboardFourPushButtonsDriver_H_
 
-#include "IKeyboardDriver.hpp"
+#include "Driver/Interfaces/IKeyboardDriver.hpp"
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_gpio.h"
 #include "main.h" // for KEY_UP_*_Port, KEY_*_Pin

@@ -12,6 +12,7 @@ namespace Driver
     class DisplayPixelColor
     {
     public:
+        using DisplayPixel = uint16_t;
         /**
          * @brief Converts 8-bit RGB values to a 16-bit RGB565 format.
          *

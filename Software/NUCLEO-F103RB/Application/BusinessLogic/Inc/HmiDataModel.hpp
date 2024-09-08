@@ -2,8 +2,8 @@
 #define HmiDataModel_h
 
 #include <cstdint>
-#include "IHmiDataModel.hpp"
-#include "DisplayBrightnessRegulator.hpp"
+#include "BusinessLogic/Interfaces/IHmiDataModel.hpp"
+#include "Device/Inc/DisplayBrightnessRegulator.hpp"
 
 namespace BusinessLogic
 {

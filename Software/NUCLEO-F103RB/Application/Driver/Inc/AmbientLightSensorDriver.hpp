@@ -1,10 +1,13 @@
 #ifndef AMBIENTLIGHTSENSORDRIVER_H_
 #define AMBIENTLIGHTSENSORDRIVER_H_
 
-#include "IAmbientLightSensorDriver.hpp"
+#include "Driver/Interfaces/IAmbientLightSensorDriver.hpp"
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_adc.h"
 #include <stdint.h>
+
+// struct ADC_HandleTypeDef;
+// enum HAL_StatusTypeDef;
 
 namespace Driver
 {

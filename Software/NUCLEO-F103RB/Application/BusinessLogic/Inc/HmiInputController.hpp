@@ -1,8 +1,8 @@
 #ifndef HmiInputController_h
 #define HmiInputController_h
 
-#include "IHmiInputController.hpp"
-#include "IKeyboard.hpp"
+#include "BusinessLogic/Interfaces/IHmiInputController.hpp"
+#include "Device/Interfaces/IKeyboard.hpp"
 
 namespace BusinessLogic
 {

@@ -1,8 +1,8 @@
-#include "HmiViewManager.hpp"
+#include "BusinessLogic/Inc/HmiViewManager.hpp"
 
 // for test
-#include "DisplayPixelColor.hpp"
-#include "IPlatformFactory.hpp"
+#include "Driver/Inc/DisplayPixelColor.hpp"
+#include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
 namespace BusinessLogic
 {
     HmiViewManager::HmiViewManager(Driver::IDisplayDriver &_display)

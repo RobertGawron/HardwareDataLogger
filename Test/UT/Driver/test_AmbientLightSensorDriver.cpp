@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include "AmbientLightSensorDriver.hpp"
+#include "Driver/Inc/AmbientLightSensorDriver.hpp"
 #include "main.h"
 #include "stm32f1xx_hal_adc.h"
 

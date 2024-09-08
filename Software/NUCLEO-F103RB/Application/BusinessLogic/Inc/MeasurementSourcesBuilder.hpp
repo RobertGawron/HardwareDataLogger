@@ -7,15 +7,15 @@
 #define MeasurementSourcesBuilder_h
 
 #include <stdint.h>
-#include "IApplicationComponentBuilder.hpp"
+#include "BusinessLogic/Interfaces/IApplicationComponentBuilder.hpp"
 // Driver
-#include "IPulseCounterDriver.hpp"
-#include "IUartDriver.hpp"
+#include "Driver/Interfaces/IPulseCounterDriver.hpp"
+#include "Driver/Interfaces/IUartDriver.hpp"
 // Device
-#include "PulseCounterMeasurementSource.hpp"
-#include "UartMeasurementSource.hpp"
+#include "Device/Inc/PulseCounterMeasurementSource.hpp"
+#include "Device/Inc/UartMeasurementSource.hpp"
 // High-level components
-#include "MeasurementCoordinator.hpp"
+#include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
 
 namespace BusinessLogic
 {

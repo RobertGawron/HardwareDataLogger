@@ -7,7 +7,7 @@
 #ifndef St7735DisplayBrightnessDriver_H_
 #define St7735DisplayBrightnessDriver_H_
 
-#include "IDisplayBrightnessDriver.hpp"
+#include "Driver/Interfaces/IDisplayBrightnessDriver.hpp"
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_tim.h"
 

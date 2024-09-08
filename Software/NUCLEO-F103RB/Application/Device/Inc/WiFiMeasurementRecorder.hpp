@@ -7,8 +7,8 @@
 #ifndef WiFiMeasurementRecorder_H_
 #define WiFiMeasurementRecorder_H_
 
-#include "IMeasurementRecorder.hpp"
-#include "IUartDriver.hpp"
+#include "Device/Interfaces/IMeasurementRecorder.hpp"
+#include "Driver/Interfaces/IUartDriver.hpp"
 
 namespace Device
 {

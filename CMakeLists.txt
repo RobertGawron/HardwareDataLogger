@@ -5,8 +5,13 @@ project(HardwareDataLogger)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_subdirectory(Software/NUCLEO-F103RB/Application)
-add_subdirectory(Test/UT)
-add_subdirectory(Simulation/FirmwarePCSimulator)
+# Define the flag to choose between X86 and ARM headers
+set(USE_X86_HEADERS TRUE)  # Set this to TRUE for X86, FALSE for ARM
 
-include(Software/NUCLEO-F103RB/Application/MissingDoxygen.cmake)
+add_subdirectory(Software/NUCLEO-F103RB/Application)
+add_subdirectory(Simulation/FirmwarePCSimulator)
+add_subdirectory(Test/UT)
+
+include(Software/StaticAnalysis.cmake)
+include(Software/ClassDiagram.cmake)
+include(Software/DocsCoverage.cmake)

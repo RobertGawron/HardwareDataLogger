@@ -7,8 +7,8 @@
 #ifndef MeasurementDataStore_H_
 #define MeasurementDataStore_H_
 
-#include "IMeasurementRecorder.hpp"
-#include "SaferArray.hpp"
+#include "Device/Interfaces/IMeasurementRecorder.hpp"
+#include "BusinessLogic/Inc/SaferArray.hpp"
 #include <stdint.h>
 
 namespace BusinessLogic
