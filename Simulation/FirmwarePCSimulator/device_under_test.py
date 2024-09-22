@@ -1,25 +1,31 @@
 import ctypes
 import os.path
 
-
 class DeviceUnderTest:
+    # PixelValue corresponds to the struct used in the lib.
+    class PixelValue(ctypes.Structure):
+        _fields_ = [("red", ctypes.c_uint8),
+                    ("green", ctypes.c_uint8),
+                    ("blue", ctypes.c_uint8)]
+        
     def __init__(self):
-        dll_name = "simulation.so"
+        dll_name = "libdata_logger_firmware_pc_variant.so"
         dllabspath = \
             os.path.dirname(os.path.abspath(os.path.abspath(__file__))) \
-            + os.path.sep + ".." + os.path.sep + ".." \
-            + os.path.sep + "Software" + os.path.sep + "NUCLEO-F091RC" \
+            + os.path.sep + "build" + os.path.sep + "lib" \
             + os.path.sep + dll_name
 
         self.dut = ctypes.CDLL(dllabspath)
-        self.dut.Lib_Simulation_Init()
+ 
+    def init(self):
+       # this is the init for library, it's an embedded project 
+       # so it doesn't start automatically.
+       self.dut.Simulation_Init()
 
-    def generateGMPulse(self):
-        self.dut.Lib_GMMeasurementCalculator_OnGMPulseObserved()
+    def tick(self):
+        self.dut.Simulation_Tick()
 
-    def generateEndOfSampleCollecting(self):
-        self.dut.Lib_GMMeasurementCalculator_OnSamplingDone()
-
+    """
     def getLoggedData(self):
         self.dut.Lib_GMLoggerSIM_GetLoggedData.argtypes = \
             [ctypes.POINTER(ctypes.POINTER(ctypes.c_uint8)),
@@ -41,33 +47,25 @@ class DeviceUnderTest:
 
     def pressKey(self):
         self.dut.Lib_GMLoggerSIM_KeyPress()
+    """
 
-    def getDisplayLength(self):
-        self.dut.Lib_GMLoggerSIM_GetDisplayLength.restype = ctypes.c_uint8
-        return self.dut.Lib_GMLoggerSIM_GetDisplayLength()
+    def getDisplayWidth(self) -> int:
+        self.dut.Simulation_GetDisplayWidth.restype = ctypes.c_uint8
+        return self.dut.Simulation_GetDisplayWidth()
 
-    def getDisplayHeight(self):
-        self.dut.Lib_GMLoggerSIM_GetDisplayHeight.restype = ctypes.c_uint8
-        return self.dut.Lib_GMLoggerSIM_GetDisplayHeight()
+    def getDisplayHeight(self) -> int:
+        self.dut.Simulation_GetDisplayHeight.restype = ctypes.c_uint8
+        return self.dut.Simulation_GetDisplayHeight()
+    
+    def getDisplayPixelValue(self, x: int, y: int) -> PixelValue:
+        """
+        Calls the C function Simulation_GetDisplayHeight and returns the PixelValue.
+        
+        :param x: X-coordinate (uint8_t)
+        :param y: Y-coordinate (uint8_t)
+        :return: PixelValue struct with red, green, and blue attributes
+        """
+        self.dut.Simulation_GetPixelValue.restype = self.PixelValue
+        self.dut.Simulation_GetPixelValue.argtypes = [ctypes.c_uint8, ctypes.c_uint8]
 
-    def getDisplayData(self):
-        self.dut.Lib_GMLoggerSIM_GetDisplayContent.restype =\
-            ctypes.POINTER(ctypes.c_uint8)
-
-        return self.dut.Lib_GMLoggerSIM_GetDisplayContent()
-
-    def getDisplayPixelValue(self, x, y):
-        # note: this is not optimal data is fetched multiple times
-
-        display_length = self.getDisplayLength()
-
-        self.dut.Lib_GMLoggerSIM_GetDisplayContent.restype =\
-            ctypes.POINTER(ctypes.c_uint8)
-        display_data = self.dut.Lib_GMLoggerSIM_GetDisplayContent()
-
-        # formula from SSD1306_DrawPixel()
-        # SSD1306_Buffer[x + (y / 8) * SSD1306_WIDTH] |= 1 << (y % 8);
-        cell = display_data[x + int(y / 8) * display_length]
-        value = cell & (1 << (y % 8))
-
-        return value
+        return self.dut.Simulation_GetPixelValue(ctypes.c_uint8(x), ctypes.c_uint8(y))
