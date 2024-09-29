@@ -1,0 +1,89 @@
+(kicad_sch
+	(version 20231120)
+	(generator "eeschema")
+	(generator_version "8.0")
+	(uuid "2dac91f6-5de1-492e-9a04-36ab71ef854f")
+	(paper "A4")
+	(lib_symbols)
+	(sheet
+		(at 68.58 85.09)
+		(size 12.7 3.81)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "00000000-0000-0000-0000-00006144cc5a")
+		(property "Sheetname" "PowerSupply"
+			(at 68.58 84.4545 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "PowerSupply.kicad_sch"
+			(at 68.58 89.4085 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "MainBoard"
+				(path "/2dac91f6-5de1-492e-9a04-36ab71ef854f"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 114.3 85.09)
+		(size 12.7 3.81)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "d112965a-54b8-4ea2-8796-1645e3e30e85")
+		(property "Sheetname" "ModuleConnector"
+			(at 114.3 84.3784 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "ModuleConnector.kicad_sch"
+			(at 114.3 89.4846 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "MainBoard"
+				(path "/2dac91f6-5de1-492e-9a04-36ab71ef854f"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+)

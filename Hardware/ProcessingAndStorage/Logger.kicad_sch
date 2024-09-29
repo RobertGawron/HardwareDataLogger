@@ -5,21 +5,8 @@
 	(uuid "2dac91f6-5de1-492e-9a04-36ab71ef854f")
 	(paper "A4")
 	(lib_symbols)
-	(text "TODO\n\nmale pins on top layer"
-		(exclude_from_sim no)
-		(at 96.52 101.6 0)
-		(effects
-			(font
-				(size 1.8034 1.8034)
-				(thickness 0.3607)
-				(bold yes)
-			)
-			(justify left bottom)
-		)
-		(uuid "6b3a9592-673e-4a30-8184-22121b8d5cba")
-	)
 	(sheet
-		(at 207.01 62.23)
+		(at 100.33 49.53)
 		(size 12.7 3.81)
 		(fields_autoplaced yes)
 		(stroke
@@ -31,7 +18,7 @@
 		)
 		(uuid "00000000-0000-0000-0000-000060ef776c")
 		(property "Sheetname" "DataStorage"
-			(at 207.01 61.5945 0)
+			(at 100.33 48.8945 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -40,7 +27,7 @@
 			)
 		)
 		(property "Sheetfile" "DataStorage.kicad_sch"
-			(at 207.01 66.5485 0)
+			(at 100.33 53.8485 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -57,7 +44,7 @@
 		)
 	)
 	(sheet
-		(at 173.99 74.93)
+		(at 67.31 62.23)
 		(size 12.7 3.81)
 		(fields_autoplaced yes)
 		(stroke
@@ -69,7 +56,7 @@
 		)
 		(uuid "00000000-0000-0000-0000-000060efe24a")
 		(property "Sheetname" "DataProcessing"
-			(at 173.99 74.2945 0)
+			(at 67.31 61.5945 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -78,7 +65,7 @@
 			)
 		)
 		(property "Sheetfile" "DataProcessing.kicad_sch"
-			(at 173.99 79.2485 0)
+			(at 67.31 66.5485 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -95,7 +82,7 @@
 		)
 	)
 	(sheet
-		(at 207.01 74.93)
+		(at 100.33 62.23)
 		(size 12.7 3.81)
 		(fields_autoplaced yes)
 		(stroke
@@ -107,7 +94,7 @@
 		)
 		(uuid "00000000-0000-0000-0000-000060f39cf0")
 		(property "Sheetname" "UserInterface"
-			(at 207.01 74.2945 0)
+			(at 100.33 61.5945 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -116,7 +103,7 @@
 			)
 		)
 		(property "Sheetfile" "UserInterface.kicad_sch"
-			(at 207.01 79.2485 0)
+			(at 100.33 66.5485 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -133,7 +120,7 @@
 		)
 	)
 	(sheet
-		(at 144.78 74.93)
+		(at 38.1 62.23)
 		(size 12.7 3.81)
 		(fields_autoplaced yes)
 		(stroke
@@ -145,7 +132,7 @@
 		)
 		(uuid "00000000-0000-0000-0000-000060f455b3")
 		(property "Sheetname" "Acquisition"
-			(at 144.78 74.2945 0)
+			(at 38.1 61.5945 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -154,7 +141,7 @@
 			)
 		)
 		(property "Sheetfile" "Acquisition.kicad_sch"
-			(at 144.78 79.2485 0)
+			(at 38.1 66.5485 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -171,7 +158,7 @@
 		)
 	)
 	(sheet
-		(at 207.01 87.63)
+		(at 100.33 74.93)
 		(size 12.7 3.81)
 		(fields_autoplaced yes)
 		(stroke
@@ -183,7 +170,7 @@
 		)
 		(uuid "00000000-0000-0000-0000-000060f74854")
 		(property "Sheetname" "WiFiInterface"
-			(at 207.01 86.9945 0)
+			(at 100.33 74.2945 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -192,7 +179,7 @@
 			)
 		)
 		(property "Sheetfile" "WiFiInterface.kicad_sch"
-			(at 207.01 91.9485 0)
+			(at 100.33 79.2485 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -209,7 +196,7 @@
 		)
 	)
 	(sheet
-		(at 175.26 97.79)
+		(at 68.58 85.09)
 		(size 12.7 3.81)
 		(fields_autoplaced yes)
 		(stroke
@@ -221,7 +208,7 @@
 		)
 		(uuid "00000000-0000-0000-0000-00006144cc5a")
 		(property "Sheetname" "PowerSupply"
-			(at 175.26 97.1545 0)
+			(at 68.58 84.4545 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -230,7 +217,7 @@
 			)
 		)
 		(property "Sheetfile" "PowerSupply.kicad_sch"
-			(at 175.26 102.1085 0)
+			(at 68.58 89.4085 0)
 			(effects
 				(font
 					(size 1.27 1.27)

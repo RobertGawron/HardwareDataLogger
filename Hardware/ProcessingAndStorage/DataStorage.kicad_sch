@@ -1376,7 +1376,7 @@
 		)
 		(uuid "8e63c17a-b22b-40b7-bcc9-442fe55c2a87")
 	)
-	(text "NOTE: \n1/ Resistors in series with SPI pins of microSD are used for ESD protection.\n2/ Jumper on V3V is for measuring of power consumption."
+	(text "NOTE:\n\nResistors in series with the SPI pins of the microSD are used for ESD protection.\nThe jumper on 3V3 is for measuring power consumption."
 		(exclude_from_sim no)
 		(at 107.95 146.05 0)
 		(effects
