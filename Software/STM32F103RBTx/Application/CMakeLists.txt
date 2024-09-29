@@ -24,7 +24,7 @@ if(USE_X86_HEADERS)
     # If USE_X86_HEADERS is true, include X86 headers for unit testing
     include_directories("${CMAKE_SOURCE_DIR}/Test/UT/System")
 else()
-    # Else, include STM32-specific headers for the NUCLEO-F103RB
+    # Else, include STM32-specific headers for the STM32F103RBTx
     include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/STM32F1xx_HAL_Driver/Inc/")
    
     include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/CMSIS/Include")

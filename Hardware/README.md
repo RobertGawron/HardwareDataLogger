@@ -23,3 +23,6 @@
  https://www.tme.eu/pl/details/zl212-40kg/listwy-i-gniazda-kolkowe/connfly/ds1022-2-20rf11/
 
  https://www.tme.eu/pl/details/ds1065-03-2x20s8bv/listwy-i-gniazda-kolkowe/connfly/ds1065-03-2-20s8bv/
+
+
+ https://www.tme.eu/pl/details/stm32f103rbt6/mikrokontrolery-st/stmicroelectronics/

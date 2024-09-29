@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 
 # Set the project name
-set(CMAKE_PROJECT_NAME NUCLEO-F103RB)
+set(CMAKE_PROJECT_NAME STM32F103RBTx)
 
 # Setup compiler settings
 set(CMAKE_C_STANDARD 11)
@@ -29,7 +29,7 @@ enable_language(C CXX ASM)
 project(${CMAKE_PROJECT_NAME})
 message("Build type: ${CMAKE_BUILD_TYPE}")
 
-# Define STM32F103xB device (specific to the NUCLEO-F103RB board)
+# Define STM32F103xB device (specific to the STM32F103RBTx board)
 add_compile_definitions(STM32F103xB)
 
 # Create the executable target
@@ -82,6 +82,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 
 # Add project symbols (macros)
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
-    STM32F103xB   # Correct STM32F1 device macro for NUCLEO-F103RB
+    STM32F103xB   # Correct STM32F1 device macro for STM32F103RBTx
 )
  

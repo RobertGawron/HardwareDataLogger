@@ -1,4 +1,4 @@
-# Firmware for NUCLEO-F103RB board
+# Firmware for STM32F103RBTx board
 
 ## Architecture
 

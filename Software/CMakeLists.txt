@@ -25,11 +25,11 @@ include_directories("/usr/include/newlib/c++/9.2.1")
 include_directories("/usr/include/newlib/c++/9.2.1/arm-none-eabi/thumb/v7-m/nofp")
 
 # Include STM32 HAL headers
-include_directories("${CMAKE_SOURCE_DIR}/NUCLEO-F103RB/Drivers/STM32F1xx_HAL_Driver/Inc/")
+include_directories("${CMAKE_SOURCE_DIR}/STM32F103RBTx/Drivers/STM32F1xx_HAL_Driver/Inc/")
 
-include_directories("${CMAKE_SOURCE_DIR}/NUCLEO-F103RB/Middlewares/Third_Party/FatFs/src/")
+include_directories("${CMAKE_SOURCE_DIR}/STM32F103RBTx/Middlewares/Third_Party/FatFs/src/")
 
-message(STATUS "${CMAKE_SOURCE_DIR}/NUCLEO-F103RB/Drivers/STM32F1xx_HAL_Driver/Inc/")
+message(STATUS "${CMAKE_SOURCE_DIR}/STM32F103RBTx/Drivers/STM32F1xx_HAL_Driver/Inc/")
 
 
 # Compiler flags for ARM Cortex-M3 with the arm-none-eabi toolchain
@@ -48,7 +48,7 @@ if(IWYU_PATH)
     message(STATUS "include-what-you-use (IWYU) found at: ${IWYU_PATH}")
     
     # Add the subdirectory for the application
-    add_subdirectory(NUCLEO-F103RB/Application)
+    add_subdirectory(STM32F103RBTx/Application)
 else()
     message(WARNING "include-what-you-use (IWYU) not found!")
 endif()
