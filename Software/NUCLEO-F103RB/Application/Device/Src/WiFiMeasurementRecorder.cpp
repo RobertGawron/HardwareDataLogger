@@ -1,4 +1,4 @@
-#include "WiFiMeasurementRecorder.hpp"
+#include "Device/Inc/WiFiMeasurementRecorder.hpp"
 
 namespace Device
 {

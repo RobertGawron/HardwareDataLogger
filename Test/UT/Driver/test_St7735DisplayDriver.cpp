@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "st7735.h"
-#include "St7735DisplayDriver.hpp"
+#include "Driver/Inc/St7735DisplayDriver.hpp"
 
 // Define the global mock instance
 MockLibST7735 *mockLibST7735;

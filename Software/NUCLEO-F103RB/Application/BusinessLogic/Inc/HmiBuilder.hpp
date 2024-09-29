@@ -6,10 +6,10 @@
 #ifndef HmiBuilder_h
 #define HmiBuilder_h
 
-#include "IApplicationComponentBuilder.hpp"
-#include "IHmiInputController.hpp"
-#include "IHmiViewManager.hpp"
-#include "IHmiFactory.hpp"
+#include "BusinessLogic/Interfaces/IApplicationComponentBuilder.hpp"
+#include "BusinessLogic/Interfaces/IHmiInputController.hpp"
+#include "BusinessLogic/Interfaces/IHmiViewManager.hpp"
+#include "BusinessLogic/Interfaces/IHmiFactory.hpp"
 
 namespace BusinessLogic
 {

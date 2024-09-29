@@ -2,7 +2,7 @@
 #include <gmock/gmock.h>
 #include "main.h"
 #include "stm32f1xx_hal_uart.h"
-#include "UartDriver.hpp"
+#include "Driver/Inc/UartDriver.hpp"
 
 using namespace testing;
 using namespace Driver;

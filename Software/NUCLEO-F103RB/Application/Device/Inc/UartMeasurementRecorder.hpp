@@ -7,8 +7,8 @@
 #ifndef UartMeasurementRecorder_H_
 #define UartMeasurementRecorder_H_
 
-#include "IMeasurementRecorder.hpp"
-#include "IUartDriver.hpp"
+#include "Device/Interfaces/IMeasurementRecorder.hpp"
+#include "Driver/Interfaces/IUartDriver.hpp"
 
 namespace Device
 {

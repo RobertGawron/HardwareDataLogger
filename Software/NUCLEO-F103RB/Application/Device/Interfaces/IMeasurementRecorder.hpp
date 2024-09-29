@@ -1,7 +1,7 @@
 #ifndef MeasurementRecorder_h
 #define MeasurementRecorder_h
 
-#include "DriverState.hpp"
+#include "Driver/Inc/DriverState.hpp"
 /**
  * @file MeasurementRecorder.h
  * @brief Declaration of the IMeasurementRecorder interface class for storing measurement data.

@@ -1,8 +1,8 @@
 #ifndef IHmiViewManager_h
 #define IHmiViewManager_h
 
-#include "IApplicationComponentBuilder.hpp"
-#include "IDisplayDriver.hpp"
+#include "BusinessLogic/Interfaces/IApplicationComponentBuilder.hpp"
+#include "Driver/Interfaces/IDisplayDriver.hpp"
 
 namespace BusinessLogic
 {

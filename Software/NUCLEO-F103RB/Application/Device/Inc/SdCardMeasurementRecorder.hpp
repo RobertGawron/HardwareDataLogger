@@ -6,8 +6,8 @@
 #ifndef SdCardMeasurementRecorder_H_
 #define SdCardMeasurementRecorder_H_
 
-#include "IMeasurementRecorder.hpp"
-#include "ISdCardDriver.hpp"
+#include "Device/Interfaces/IMeasurementRecorder.hpp"
+#include "Driver/Interfaces/ISdCardDriver.hpp"
 
 namespace Device
 {

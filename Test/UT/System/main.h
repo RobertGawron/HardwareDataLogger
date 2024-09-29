@@ -1,10 +1,9 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
-// Mock definitions for GPIO_TypeDef and GPIO-related functions
+#include <cstdint>
 
-#include <stdint.h>
-#include <gmock/gmock.h>
+// Mock definitions for GPIO_TypeDef and GPIO-related functions
 
 typedef enum
 {

@@ -1,7 +1,7 @@
 #ifndef IHmiDataModel_h
 #define IHmiDataModel_h
 
-#include "IApplicationComponentBuilder.hpp"
+#include "BusinessLogic/Interfaces/IApplicationComponentBuilder.hpp"
 
 #include <cstdint>
 

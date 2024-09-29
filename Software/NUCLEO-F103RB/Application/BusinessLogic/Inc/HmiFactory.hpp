@@ -1,8 +1,8 @@
 #ifndef HmiFactory_h
 #define HmiFactory_h
 
-#include "IHmiFactory.hpp"
-#include "IPlatformFactory.hpp"
+#include "BusinessLogic/Interfaces/IHmiFactory.hpp"
+#include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
 
 namespace BusinessLogic
 {

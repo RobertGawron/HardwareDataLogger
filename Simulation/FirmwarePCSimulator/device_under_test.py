@@ -9,10 +9,11 @@ class DeviceUnderTest:
                     ("blue", ctypes.c_uint8)]
         
     def __init__(self):
-        dll_name = "libdata_logger_firmware_pc_variant.so"
+        dll_name = "libFirmwarePCSimulator.so"
         dllabspath = \
             os.path.dirname(os.path.abspath(os.path.abspath(__file__))) \
-            + os.path.sep + "build" + os.path.sep + "lib" \
+            + "/../.." \
+            + os.path.sep + "build" + os.path.sep + "Simulation/FirmwarePCSimulator/" \
             + os.path.sep + dll_name
 
         self.dut = ctypes.CDLL(dllabspath)

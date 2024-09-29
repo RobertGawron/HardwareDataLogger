@@ -1,13 +1,13 @@
-#include "HmiFactory.hpp"
+#include "BusinessLogic/Inc/HmiFactory.hpp"
 
-#include "St7735DisplayDriver.hpp"
+#include "Driver/Inc/St7735DisplayDriver.hpp"
 
-#include "Keyboard.hpp"
-#include "DisplayBrightnessRegulator.hpp"
+#include "Device/Inc/Keyboard.hpp"
+#include "Device/Inc/DisplayBrightnessRegulator.hpp"
 
-#include "HmiDataModel.hpp"
-#include "HmiViewManager.hpp"
-#include "HmiInputController.hpp"
+#include "BusinessLogic/Inc/HmiDataModel.hpp"
+#include "BusinessLogic/Inc/HmiViewManager.hpp"
+#include "BusinessLogic/Inc/HmiInputController.hpp"
 
 namespace BusinessLogic
 {

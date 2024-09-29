@@ -1,4 +1,4 @@
-#include "UartMeasurementRecorder.hpp"
+#include "Device/Inc/UartMeasurementRecorder.hpp"
 
 namespace Device
 {

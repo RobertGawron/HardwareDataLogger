@@ -1,7 +1,7 @@
 #ifndef HmiViewMain_h
 #define HmiViewMain_h
 
-#include "IHmiView.hpp"
+#include "BusinessLogic/Interfaces/IHmiView.hpp"
 
 namespace BusinessLogic
 {

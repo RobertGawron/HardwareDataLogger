@@ -6,8 +6,8 @@
 #ifndef IUartDriver_h
 #define IUartDriver_h
 
-#include "UartExchangeStatus.hpp"
-#include "DriverState.hpp"
+#include "Driver/Inc/UartExchangeStatus.hpp"
+#include "Driver/Inc/DriverState.hpp"
 #include <stdint.h>
 
 namespace Driver

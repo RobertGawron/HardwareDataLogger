@@ -1,6 +1,6 @@
-#include "HmiBuilder.hpp"
+#include "BusinessLogic/Inc/HmiBuilder.hpp"
 
-#include "DisplayPixelColor.hpp"
+#include "Driver/Inc/DisplayPixelColor.hpp"
 
 namespace BusinessLogic
 {

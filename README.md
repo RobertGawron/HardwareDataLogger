@@ -15,7 +15,7 @@ This project realizes a shield for the NUCLEO-F103RB with the following features
 * microSD card for permanent data storage.
 * WiFi capability for remote data transfer.
 
-![Picture of Hardware Data Logger](./Documentation/Pictures/Device_03_09_2024.jpg)
+![Picture of Hardware Data Logger](./Documentation/Pictures/Device_09_09_2024.jpg)
 
 ## Software
 
@@ -36,6 +36,9 @@ The ESP8266 is currently used for data transfer via WiFi and will support FOTA (
 It's good to let the machine handle the tedious work of checking code quality, freeing up more time for the useful and interesting parts of software development.
 
 * Toolchain: Unit tests (Google Test, Google Mock), code coverage (LCOV), static code analysis (Cppcheck), dynamic code analysis (Valgrind), Docker (for both local development and CI), GitHub Actions (CI).
+
+* [Info how to use Docker to build the project.](./DevOps/README.md)
+
 
 ## Hardware
 

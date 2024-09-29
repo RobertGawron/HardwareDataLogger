@@ -1,7 +1,7 @@
 #ifndef IHmiInputController_h
 #define IHmiInputController_h
 
-#include "IApplicationComponentBuilder.hpp"
+#include "BusinessLogic/Interfaces/IApplicationComponentBuilder.hpp"
 namespace BusinessLogic
 {
     /**

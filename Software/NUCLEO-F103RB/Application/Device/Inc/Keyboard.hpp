@@ -9,10 +9,10 @@
  * debouncing key presses and detecting long and short key press actions.
  */
 
-#include "IKeyboard.hpp"
-#include "IKeyboardDriver.hpp"
-#include "KeyboardKeyActionState.hpp"
-#include "KeyboardKeyIdentifier.hpp"
+#include "Device/Interfaces/IKeyboard.hpp"
+#include "Driver/Interfaces/IKeyboardDriver.hpp"
+#include "Device/Inc/KeyboardKeyActionState.hpp"
+#include "Driver/Inc/KeyboardKeyIdentifier.hpp"
 
 #include <cstdint>
 

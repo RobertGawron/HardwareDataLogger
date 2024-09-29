@@ -1,4 +1,4 @@
-#include "AmbientLightSensorDriver.hpp"
+#include "Driver/Inc/AmbientLightSensorDriver.hpp"
 
 // declare a buffer to hold ADC values
 static const uint8_t AdcBufferSize{10};

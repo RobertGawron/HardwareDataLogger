@@ -8,9 +8,9 @@
  * This file contains the declaration of the DisplayBrightnessRegulator class, which adjusts the
  * backlight of an LCD display based on ambient light levels and user preferences.
  */
-#include "IDisplayBrightnessRegulator.hpp"
-#include "IAmbientLightSensorDriver.hpp"
-#include "IDisplayBrightnessDriver.hpp"
+#include "Device/Interfaces/IDisplayBrightnessRegulator.hpp"
+#include "Driver/Interfaces/IAmbientLightSensorDriver.hpp"
+#include "Driver/Interfaces/IDisplayBrightnessDriver.hpp"
 
 namespace Device
 {

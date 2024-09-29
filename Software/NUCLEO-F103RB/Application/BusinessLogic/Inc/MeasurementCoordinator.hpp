@@ -8,9 +8,9 @@
 #define MeasurementCoordinator_h
 
 #include <stdint.h>
-#include "IMeasurementSource.hpp"
-#include "MeasurementDataStore.hpp"
-#include "SaferArray.hpp"
+#include "Device/Interfaces/IMeasurementSource.hpp"
+#include "BusinessLogic/Inc/MeasurementDataStore.hpp"
+#include "BusinessLogic/Inc/SaferArray.hpp"
 
 namespace BusinessLogic
 {

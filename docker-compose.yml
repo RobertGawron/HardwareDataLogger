@@ -1,0 +1,21 @@
+services:
+  dev:
+    image:  logger-dev:latest 
+    build:
+      context: .
+      dockerfile: DevOps/Docker/Dockerfile
+    privileged: true
+    stdin_open: true  # Keep stdin open for interaction
+    tty: true         # Allocate a TTY for interactive Bash
+    volumes:
+      - ./Software:/workspace/Software
+      - ./Simulation:/workspace/Simulation
+      - ./Test:/workspace/Test
+      - ./DevOps/BuildArtifacts:/workspace/build/BuildArtifacts
+      - ./DevOps/Doxygen/Doxyfile:/workspace/Doxyfile
+      - ./DevOps/Doxygen/Doxyfile.in:/workspace/Doxyfile.in
+      - ./CMakeLists.txt:/workspace/CMakeLists.txt
+      - ./DevOps/Scripts/.bashrc:/root/.bashrc
+      - ./DevOps/Scripts/ClassTemplate.puml:/workspace/ClassTemplate.puml
+    working_dir: /workspace
+    # Do not override the CMD from Dockerfile

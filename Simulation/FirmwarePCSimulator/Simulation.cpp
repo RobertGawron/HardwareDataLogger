@@ -5,6 +5,7 @@
 #include "MyApplication.hpp"
 
 #include "DisplayDriverStub.hpp"
+#include "DisplayPixelColor.hpp"
 
 extern Driver::DisplayDriverStub displayDriver;
 
@@ -20,6 +21,15 @@ void Simulation_Tick()
 
 // I need display, key presses, BNC pulses and output from uart, wifi and sd card
 
+bool Simulation_PressKey()
+{
+    // return displayDriver.getDisplayWidth();
+
+    return true;
+}
+
+// bool
+
 uint8_t Simulation_GetDisplayWidth()
 {
     return displayDriver.getDisplayWidth();
@@ -32,8 +42,8 @@ uint8_t Simulation_GetDisplayHeight()
 
 PixelValue Simulation_GetPixelValue(uint8_t x, uint8_t y)
 {
-    Driver::DisplayDriverStub::PixelRGBP value = displayDriver.getPixel(x, y);
+    Driver::DisplayPixelColor value = displayDriver.getPixel(x, y);
 
-    PixelValue pixel{value.red, value.green, value.blue};
+    PixelValue pixel{value.RED, value.GREEN, value.BLUE};
     return pixel;
 }

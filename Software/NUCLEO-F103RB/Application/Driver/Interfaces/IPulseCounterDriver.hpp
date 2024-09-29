@@ -6,7 +6,7 @@
 #ifndef IPulseCounterDriver_h
 #define IPulseCounterDriver_h
 
-#include "DriverState.hpp"
+#include "Driver/Inc/DriverState.hpp"
 
 namespace Driver
 {

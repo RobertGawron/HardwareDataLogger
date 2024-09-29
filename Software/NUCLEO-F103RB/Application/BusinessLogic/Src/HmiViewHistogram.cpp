@@ -1,4 +1,4 @@
-#include "HmiViewHistogram.hpp"
+#include "BusinessLogic/Inc/HmiViewHistogram.hpp"
 
 namespace BusinessLogic
 {

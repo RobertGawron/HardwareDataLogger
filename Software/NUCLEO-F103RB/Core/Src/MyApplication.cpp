@@ -1,6 +1,6 @@
 #include "MyApplication.hpp"
 #include "PlatformFactoryStm32.hpp"
-#include "ApplicationBuilder.hpp"
+#include "BusinessLogic/Inc/ApplicationBuilder.hpp"
 
 BusinessLogic::PlatformFactoryStm32 platform;
 BusinessLogic::ApplicationBuilder builder{platform};

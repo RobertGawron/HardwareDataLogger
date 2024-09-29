@@ -7,17 +7,17 @@
 #ifndef APPLICATIONBUILDER_H_
 #define APPLICATIONBUILDER_H_
 
-#include "IApplicationComponentBuilder.hpp"
-#include "IPlatformFactory.hpp"
+#include "BusinessLogic/Interfaces/IApplicationComponentBuilder.hpp"
+#include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
 
-#include "MeasurementCoordinator.hpp"
-#include "MeasurementDataStore.hpp"
+#include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
+#include "BusinessLogic/Inc/MeasurementDataStore.hpp"
 
-#include "MeasurementSourcesBuilder.hpp"
-#include "MeasurementStoresBuilder.hpp"
+#include "BusinessLogic/Inc/MeasurementSourcesBuilder.hpp"
+#include "BusinessLogic/Inc/MeasurementStoresBuilder.hpp"
 
-#include "HmiFactory.hpp"
-#include "HmiBuilder.hpp"
+#include "BusinessLogic/Inc/HmiFactory.hpp"
+#include "BusinessLogic/Inc/HmiBuilder.hpp"
 
 namespace BusinessLogic
 {

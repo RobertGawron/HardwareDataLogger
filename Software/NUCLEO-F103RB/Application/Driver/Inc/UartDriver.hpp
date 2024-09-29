@@ -6,7 +6,7 @@
 #ifndef UartDriver_h
 #define UartDriver_h
 
-#include "IUartDriver.hpp"
+#include "Driver/Interfaces/IUartDriver.hpp"
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_uart.h"
 

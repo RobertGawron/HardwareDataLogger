@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "DisplayPixelColor.hpp"
+#include "Driver/Inc/DisplayPixelColor.hpp"
 
 namespace Driver
 {

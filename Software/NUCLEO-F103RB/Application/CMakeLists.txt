@@ -1,83 +1,59 @@
-# BusinessLogic/CMakeLists.txt
 cmake_minimum_required(VERSION 3.10)
-project(BusinessLogic)
+project(ApplicationLib)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-
+ 
+# Enable coverage flags if in Debug mode and ENABLE_COVERAGE is defined
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND ENABLE_COVERAGE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fprofile-arcs -ftest-coverage")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lgcov --coverage")
 endif()
 
-# Include directories for all modules
-include_directories(${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/BusinessLogic/Inc)
-include_directories(${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/Device/Inc)
-include_directories(${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/Driver/Inc)
+# Compiler flags for ARM target and CPU (Cortex-M3) using the arm-none-eabi toolchain
 
-include_directories(${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/BusinessLogic/Interfaces)
-include_directories(${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/Device/Interfaces)
-include_directories(${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/Driver/Interfaces)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${TARGET_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TARGET_FLAGS}")
 
-# Some files in Driver/ use platform related headers, those are mocks for it.
-# In generall I dont want any stm32 relted headers in unit tests.
-include_directories(${CMAKE_SOURCE_DIR}/Test/UT/System/)
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 
-include_directories(${CMAKE_PROJECT_NAME} PRIVATE
-    # Add user defined include paths
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Middlewares/Third_Party/stm32-st7735/st7735/
+#include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/STM32F1xx_HAL_Driver/Inc/")
+# Check if USE_X86_HEADERS is defined
+if(USE_X86_HEADERS)
+    # If USE_X86_HEADERS is true, include X86 headers for unit testing
+    include_directories("${CMAKE_SOURCE_DIR}/Test/UT/System")
+else()
+    # Else, include STM32-specific headers for the NUCLEO-F103RB
+    include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/STM32F1xx_HAL_Driver/Inc/")
+   
+    include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/CMSIS/Include")
+   
     
-) 
+   # include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/FatFs/src/")
+endif()
 
 
-# Source files for each module
-set(BUSINESS_LOGIC_SRC
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/BusinessLogic/Src/ApplicationBuilder.cpp
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/BusinessLogic/Src/HmiBuilder.cpp
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/BusinessLogic/Src/HmiDataModel.cpp
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/BusinessLogic/Src/HmiInputController.cpp
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/BusinessLogic/Src/HmiViewHistogram.cpp
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/BusinessLogic/Src/HmiViewMain.cpp
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/BusinessLogic/Src/HmiViewManager.cpp
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/BusinessLogic/Src/MeasurementCoordinator.cpp
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/BusinessLogic/Src/MeasurementDataStore.cpp
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/BusinessLogic/Src/MeasurementSourcesBuilder.cpp
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/BusinessLogic/Src/MeasurementStoresBuilder.cpp
-)
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/stm32-st7735/st7735/")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Core/Inc/")
+#include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../FATFS/Target/")
+#include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../cubeide-sd-card/cubeide-sd-card/Drivers/CMSIS/Include/")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/CMSIS/Device/ST/STM32F1xx/Include/")
 
-set(DEVICE_SRC
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/Device/Src/DisplayBrightnessRegulator.cpp
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/Device/Src/Keyboard.cpp
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/Device/Src/PulseCounterMeasurementSource.cpp
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/Device/Src/SdCardMeasurementRecorder.cpp
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/Device/Src/UartMeasurementRecorder.cpp
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/Device/Src/UartMeasurementSource.cpp
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/Device/Src/WiFiMeasurementRecorder.cpp
-)
+#include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../FATFS/App/")
 
-set(DRIVER_SRC
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/Driver/Src/AmbientLightSensorDriver.cpp
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/Driver/Src/KeyboardFourPushButtonsDriver.cpp
-#    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/Driver/Src/SdCardDriver.cpp
-   ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/Driver/Src/St7735DisplayBrightnessDriver.cpp
-#    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/Driver/Src/St7735DisplayDriver.cpp
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/Driver/Src/UartDriver.cpp
-)
+
+file(GLOB BUSINESS_LOGIC_SRC "${CMAKE_CURRENT_SOURCE_DIR}/BusinessLogic/Src/*.cpp")
+file(GLOB DEVICE_SRC "${CMAKE_CURRENT_SOURCE_DIR}/Device/Src/*.cpp")
+file(GLOB DRIVER_SRC "${CMAKE_CURRENT_SOURCE_DIR}/Driver/Src/*.cpp")
 
 # Add library target for each module
-add_library(BusinessLogic ${BUSINESS_LOGIC_SRC})
-add_library(Device ${DEVICE_SRC})
-add_library(Driver ${DRIVER_SRC})
+add_library(BusinessLogic STATIC ${BUSINESS_LOGIC_SRC})
+add_library(Device STATIC ${DEVICE_SRC})
+add_library(Driver STATIC ${DRIVER_SRC})
 
-# If libraries use threading, link them with pthread
-find_package(Threads REQUIRED)  # Find the threads package
-target_link_libraries(BusinessLogic Threads::Threads)
-target_link_libraries(Device Threads::Threads)
-target_link_libraries(Driver Threads::Threads)
+# Add the main ApplicationLib shared library and link the individual module libraries
+add_library(${PROJECT_NAME} STATIC ${BUSINESS_LOGIC_SRC} ${DEVICE_SRC} ${DRIVER_SRC})
 
-# Enable testing
-enable_testing()
-
-
-
+# Link the individual libraries to the main library
+#target_link_libraries(${PROJECT_NAME} PRIVATE BusinessLogic Device Driver)

@@ -6,8 +6,8 @@
 #ifndef UartMeasurementSource_H_
 #define UartMeasurementSource_H_
 
-#include "IMeasurementSource.hpp"
-#include "IUartDriver.hpp"
+#include "Device/Interfaces/IMeasurementSource.hpp"
+#include "Driver/Interfaces/IUartDriver.hpp"
 
 namespace Device
 {
