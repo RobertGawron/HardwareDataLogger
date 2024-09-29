@@ -1,54 +1,63 @@
 # HardwareDataLogger
 
-[![Static Code Analysis](https://github.com/RobertGawron/HardwareDataLogger/workflows/Static%20Code%20Analysis/badge.svg)](https://github.com/RobertGawron/HardwareDataLogger/actions?query=workflow%3A%22Static+Code+Analysis%22)
-
-<!-- Tests were removed
- [![Unit Tests](https://github.com/RobertGawron/HardwareDataLogger/workflows/Unit%20Tests/badge.svg)](https://github.com/RobertGawron/HardwareDataLogger/actions?query=workflow%3A%22Unit+Tests%22)
--->
-
+[![CI Pipeline](https://github.com/RobertGawron/HardwareDataLogger/actions/workflows/ci.yaml/badge.svg)](https://github.com/RobertGawron/HardwareDataLogger/actions/workflows/ci.yaml)
 
 ## Summary
 
-**_TL;DR simple device that can collect and display data from other devices. It's more flexible than similar boards._**
+**_TL;DR It can collect, display, and store data locally and remotely, interfacing with various other devices._**
 
-The idea is to create a shield for NUCLEO-F103RB with following capabilities:
-- Pulse counting from four different devices (e.g. Geiger Counters)
-    - Logic level from 3V3 to 16V
-    - SMA connectors are used
-- Gathering data from a measurement device via UART
-    - DB9 connector is used
-- user interface
-    - LCD 128*160 RGB
-    - four push button to manipulate the GUI, standard button layout - up/down/left/right
-    - dimming LCD when it's getting dark
-- UART over USB to transfer logged data to external PC
-- microSD card to permanently save logged data
-- WiFi to remotely transfer logged data.
+This project realizes a shield for the NUCLEO-F103RB with the following features:
+
+* Pulse counting from up to four devices (e.g., Geiger counters) with logic levels from 3.3V to 16V, using SMA connectors.
+* Data acquisition from measurement devices via UART, utilizing a DB9 connector.
+* User interface with a 128x160 RGB LCD, four navigation buttons (up/down/left/right), and automatic LCD dimming in low light.
+* UART over USB for transferring logged data to an external PC.
+* microSD card for permanent data storage.
+* WiFi capability for remote data transfer.
+
+![Picture of Hardware Data Logger](./Documentation/Pictures/Device_09_09_2024.jpg)
+
+## Software
+
+#### NUCLEO-F103RB Board
+The NUCLEO-F103RB serves as the main microcontroller, handling data acquisition, processing, storage, and user interaction. In future iterations, the NUCLEO-F103RB will be replaced by an STM32 chip directly integrated onto the PCB.
+
+* Toolchain: C++17, C, STM32 VS Code Extension, CMake.
+* [More info.](./Software/NUCLEO-F103RB/README.md)
+
+#### ESP8266
+The ESP8266 is currently used for data transfer via WiFi and will support FOTA (Firmware Over-The-Air) in the future.
+
+* Toolchain: TBD, currently using Arduino IDE.
+* [More info.](./Software/ESP8266MOD/README.md)
+
+#### DevOps
+
+It's good to let the machine handle the tedious work of checking code quality, freeing up more time for the useful and interesting parts of software development.
+
+* Toolchain: Unit tests (Google Test, Google Mock), code coverage (LCOV), static code analysis (Cppcheck), dynamic code analysis (Valgrind), Docker (for both local development and CI), GitHub Actions (CI).
+
+* [Info how to use Docker to build the project.](./DevOps/README.md)
+
 
 ## Hardware
 
-Prototype is visible below, PS. the final one will have custom designed PCB.
-
-![Picture of Hardware Data Logger](./Documentation/Pictures/Device_03_09_2021.jpg)
+Due to the availability of low-cost, high-quality PCB manufacturing, home-etched PCBs have become largely obsolete. While the PCB design for this project may be difficult to etch at home, it is still possible. [Subparts of the circuit can be assembled on a breadboard, making the process much easier](./Documentation/Pictures/Device_30_08_2021.jpg), and the modular software design allows for easy reuse of these components.
 
 * [Circuit exported to .pdf is available here](./Documentation/Circuit/Logger.pdf)
 * Toolchain: KiCad
 * [More info.](./Hardware/Logger/README.md)
 
-## Software
-
-#### NUCLEO-F103RB
-* Toolchain: STM32 VS Code Extension, C
-* [More info (Including fancy UML diagrams!!!).](./Software/NUCLEO-F103RB/README.md)
-
 
 ## Simulation
 
-In order to be able to test GUI and other high level parts without need to constantly flash the device, a PC simulation will be created.
+Embedded development is cool, but constantly flashing the target device for non-hardware-related logic, like the human-machine interface, can be time-consuming and frustrating. To streamline this, a simulation was developed that isolates the firmware not directly tied to hardware, adds stubs for drivers, and includes a GUI. This allows all high-level aspects, such as what’s displayed on the LCD, user interaction via buttons, and data parsing, to be tested without the need for hardware.
 
-* Toolchain: Python, Qt.
+While this simulation handles the firmware, speed of execution isn't a concern since it focuses solely on high-level logic. For hardware or driver-related issues, traditional methods like using an oscilloscope or logic analyzer are still necessary, as the simulation cannot be used.
+
+* Toolchain: pyqt6, cmake.
 * [More info.](./Simulation/FirmwarePCSimulator/README.md)
 
-## Licence
+## Documentation
 
-The project is developed under the MIT License, but firmware uses uGFX library, so it's impossible to use it in commercial products without paying licence to the author of the library.
+TBD UML diagrams.
