@@ -26,3 +26,6 @@
 
 
  https://www.tme.eu/pl/details/stm32f103rbt6/mikrokontrolery-st/stmicroelectronics/
+
+
+ kicad grid is 0.5 mmm

@@ -1042,6 +1042,16 @@
 		)
 		(uuid "0d38017e-26d3-4c7a-b76d-67cb79d4de85")
 	)
+	(text "check usb footprint\n"
+		(exclude_from_sim no)
+		(at 73.66 67.818 0)
+		(effects
+			(font
+				(size 2 2)
+			)
+		)
+		(uuid "b3e28a6e-9793-4434-8bfa-e43b80a67b7b")
+	)
 	(global_label "3V3"
 		(shape input)
 		(at 135.89 72.39 0)

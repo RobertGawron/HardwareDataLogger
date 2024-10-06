@@ -616,11 +616,23 @@
     ],
     [
       "d112965a-54b8-4ea2-8796-1645e3e30e85",
-      "ModuleConnector"
+      "ModuleConnector1"
+    ],
+    [
+      "ea014db6-aad8-4afe-975e-296ba9dc182a",
+      "Mechanic"
     ],
     [
       "00000000-0000-0000-0000-00006144cc5a",
       "PowerSupply"
+    ],
+    [
+      "a53e760b-11f7-4b4f-9f40-4c11ccbc4751",
+      "ModuleConnector2"
+    ],
+    [
+      "d24f3a3f-142b-4a5f-9e4c-0496fb7bac44",
+      "Breadboard"
     ]
   ],
   "text_variables": {}
