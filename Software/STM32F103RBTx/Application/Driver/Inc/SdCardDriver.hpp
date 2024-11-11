@@ -1,17 +1,17 @@
 /**
- * @file SdCardDriverStub.hpp
- * @brief Defines the SdCardDriverStub class for interacting with SD cards.
+ * @file SdCardDriver.hpp
+ * @brief Defines the SdCardDriver class for interacting with SD cards.
  */
 
-#ifndef SdCardDriverStub_H_
-#define SdCardDriverStub_H_
+#ifndef SDCARDDRIVER_H_
+#define SDCARDDRIVER_H_
 
 #include "Driver/Interfaces/ISdCardDriver.hpp"
 
 namespace Driver
 {
     /**
-     * @class SdCardDriverStub
+     * @class SdCardDriver
      * @brief Low-level driver for SD card operations.
      *
      * This class implements the `ISdCardDriver` interface to handle low-level
@@ -21,31 +21,62 @@ namespace Driver
      * Note: This class does not manage the content or metadata of the files. Its
      * primary concern is to provide low-level access to the SD card.
      */
-    class SdCardDriverStub : public ISdCardDriver
+    class SdCardDriver : public ISdCardDriver
     {
     public:
         /**
-         * @brief Default constructor for SdCardDriverStub.
+         * @brief Default constructor for SdCardDriver.
          */
-        explicit SdCardDriverStub();
+        explicit SdCardDriver();
 
         /**
-         * @brief Virtual destructor for SdCardDriverStub.
+         * @brief Virtual destructor for SdCardDriver.
          *
          * Ensures proper cleanup of derived classes.
          */
-        virtual ~SdCardDriverStub() = default;
+        virtual ~SdCardDriver() = default;
 
-        // Delete copy constructor and assignment operator
-        SdCardDriverStub(const SdCardDriverStub &) = delete;
-        SdCardDriverStub &operator=(const SdCardDriverStub &) = delete;
+        /**
+         * @brief Deleted copy constructor to prevent copying.
+         */
+        SdCardDriver(const SdCardDriver &) = delete;
 
+        /**
+         * @brief Deleted assignment operator to prevent assignment.
+         * @return SdCardDriver& The assigned object.
+         */
+        SdCardDriver &operator=(const SdCardDriver &) = delete;
+
+        /**
+         * @brief Initializes the SD card driver.
+         *
+         * Prepares the SD card for use.
+         * @return True if initialization was successful, false otherwise.
+         */
         bool onInitialize() override;
 
+        /**
+         * @brief Starts the SD card driver.
+         *
+         * Begins the operation of the SD card for reading and writing.
+         * @return True if the driver started successfully, false otherwise.
+         */
         bool onStart() override;
 
+        /**
+         * @brief Stops the SD card driver.
+         *
+         * Stops SD card operations.
+         * @return True if the driver stopped successfully, false otherwise.
+         */
         bool onStop() override;
 
+        /**
+         * @brief Resets the SD card driver.
+         *
+         * Resets the SD card hardware and reinitializes the system if needed.
+         * @return True if the driver reset successfully, false otherwise.
+         */
         bool onReset() override;
 
         /**
@@ -106,4 +137,4 @@ namespace Driver
 
 }
 
-#endif // SdCardDriverStub_H_
+#endif // SDCARDDRIVER_H_

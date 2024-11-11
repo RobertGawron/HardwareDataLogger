@@ -8,18 +8,17 @@ The reasons for using a simulator are explained in the main [README](../../READM
 
 Simulation consists of:
 - Firmware (.so file)
-  - High-level logic is used as-is, without modification for simulation mode. This code is located in the [Application/BuissnesLogic/](../../Software/NUCLEO-F103RB/Application/BusinessLogic) and [Application/Device/](../../Software/NUCLEO-F103RB/Application/Device) folders within the firmware directory.
+  - High-level logic is used as-is, without modification for simulation mode. This code is located in the [Application/BusinessLogic/](../../Software/STM32F103RBTx/Application/BusinessLogic) and [Application/Device/](../../Software/STM32F103RBTx/Application/Device) folders within the firmware directory.
   - The [Stub folder](./Stub) replaces low-level classes (Driver folder within the firmware directory).
-  - The exception is LCD driver which uses already existing monoliticall library, this driver is not stubbed because it contains a lot of high level logic 
   - An exception is the LCD driver, which uses an existing monolithic library. This driver is not stubbed because it contains a significant amount of high-level logic.
 - device_under_test.py: Loads the firmware .so file and provides a Python API interface.
 - hmi.py: Provides the graphical interface.
 
 # Remarks
 
-* Do Not Inherit from [Firmware Driver Headers](../Software/NUCLEO-F103RB/Application/Driver), as they include many HAL dependencies that are difficult to stub and not needed in simulation mode. Instead, use driver interface headers and create stub drivers based on inheritance from those interfaces. The only exception to this rule is the Display driver.
+* Do Not Inherit from [Firmware Driver Headers](../Software/STM32F103RBTx/Application/Driver), as they include many HAL dependencies that are difficult to stub and not needed in simulation mode. Instead, use driver interface headers and create stub drivers based on inheritance from those interfaces. The only exception to this rule is the Display driver.
 
-* No Stubs for [Business Logic](../../Software/NUCLEO-F103RB/Application/BusinessLogic) or [Device](../../Software/NUCLEO-F103RB/Application/Device) Layers. Having a stub in these layers would indicate that the classes are too tightly coupled with low-level code. If a stub is required, it means the firmware code needs refactoring to better separate concerns.
+* No Stubs for [Business Logic](../../Software/STM32F103RBTx/Application/BusinessLogic) or [Device](../../Software/STM32F103RBTx/Application/Device) Layers. A stub in these layers suggests the classes are too tightly coupled with low-level code, indicating a need to refactor the firmware for better separation of concerns.
 
 ## How to use it
 

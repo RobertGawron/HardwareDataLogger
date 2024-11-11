@@ -21,10 +21,10 @@ class DeviceUnderTest:
     def init(self):
        # this is the init for library, it's an embedded project 
        # so it doesn't start automatically.
-       self.dut.Simulation_Init()
+       self.dut.LibWrapper_Init()
 
     def tick(self):
-        self.dut.Simulation_Tick()
+        self.dut.LibWrapper_Tick()
 
     """
     def getLoggedData(self):
@@ -51,12 +51,12 @@ class DeviceUnderTest:
     """
 
     def getDisplayWidth(self) -> int:
-        self.dut.Simulation_GetDisplayWidth.restype = ctypes.c_uint8
-        return self.dut.Simulation_GetDisplayWidth()
+        self.dut.LibWrapper_GetDisplayWidth.restype = ctypes.c_uint8
+        return self.dut.LibWrapper_GetDisplayWidth()
 
     def getDisplayHeight(self) -> int:
-        self.dut.Simulation_GetDisplayHeight.restype = ctypes.c_uint8
-        return self.dut.Simulation_GetDisplayHeight()
+        self.dut.LibWrapper_GetDisplayHeight.restype = ctypes.c_uint8
+        return self.dut.LibWrapper_GetDisplayHeight()
     
     def getDisplayPixelValue(self, x: int, y: int) -> PixelValue:
         """
@@ -66,7 +66,7 @@ class DeviceUnderTest:
         :param y: Y-coordinate (uint8_t)
         :return: PixelValue struct with red, green, and blue attributes
         """
-        self.dut.Simulation_GetPixelValue.restype = self.PixelValue
-        self.dut.Simulation_GetPixelValue.argtypes = [ctypes.c_uint8, ctypes.c_uint8]
+        self.dut.LibWrapper_GetPixelValue.restype = self.PixelValue
+        self.dut.LibWrapper_GetPixelValue.argtypes = [ctypes.c_uint8, ctypes.c_uint8]
 
-        return self.dut.Simulation_GetPixelValue(ctypes.c_uint8(x), ctypes.c_uint8(y))
+        return self.dut.LibWrapper_GetPixelValue(ctypes.c_uint8(x), ctypes.c_uint8(y))

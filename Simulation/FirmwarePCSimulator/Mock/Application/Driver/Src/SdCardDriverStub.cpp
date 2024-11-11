@@ -7,6 +7,26 @@ namespace Driver
     {
     }
 
+    bool SdCardDriverStub::onInitialize()
+    {
+        return true;
+    }
+
+    bool SdCardDriverStub::onStart()
+    {
+        return true;
+    }
+
+    bool SdCardDriverStub::onStop()
+    {
+        return true;
+    }
+
+    bool SdCardDriverStub::onReset()
+    {
+        return true;
+    }
+
     void SdCardDriverStub::mountFileSystem()
     {
     }

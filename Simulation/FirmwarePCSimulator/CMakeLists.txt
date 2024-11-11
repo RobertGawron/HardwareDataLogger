@@ -4,47 +4,53 @@ cmake_minimum_required(VERSION 3.10)
 # Project name and language
 project(FirmwarePCSimulator LANGUAGES C CXX)
 
+# Enable position-independent code for compatibility with shared libraries
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-include_directories(
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/Driver/Inc/
-
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Middlewares/Third_Party/stm32-st7735/st7735
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Core/Inc
-    ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/Mock/Application/Driver/
+# Include directories scoped to each target
+set(INCLUDE_DIRS
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Inc/
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Interfaces/
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Middlewares/Third_Party/stm32-st7735/st7735
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Core/Inc
     ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/Mock/Application/Driver/Inc
     ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/Mock/System/
 )
 
-
+# Gather source files for the Driver and Platform components
 file(GLOB SIMULATOR_DRIVER_SRC
     "${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/Mock/Application/Driver/Src/*.cpp"
-
-    "${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/Driver/Src/DriverState.cpp"
+    "${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/St7735DisplayDriver.cpp"
+    "${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp"
+    "${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DisplayPixelColor.cpp"
 )
 
-# Manually specify the additional .cpp files to include
-set(SIMULATOR_SRC
-    ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/Simulation.cpp
-    #  ../../Software/NUCLEO-F103RB/Application/Driver/St7735DisplayDriver.cpp
-    #${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Core/Src/MyApplication.cpp
-    # ../Mocks/System/stm32f1xx_hal.c
-    #${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/Mock/Driver/Src/*cpp
-    ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/Mock/System/stm32f1xx_hal.c
-    ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/Mock/System/PlatformFactoryStm32.cpp
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Middlewares/Third_Party/stm32-st7735/st7735/fonts.c
-    ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Middlewares/Third_Party/stm32-st7735/st7735/st7735.c
+file(GLOB SIMULATOR_PLATFORM_SRC
+    "${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Core/Src/MyApplication.cpp"
+    "${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/Mock/System/stm32f1xx_hal.c"
+    "${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/Mock/System/PlatformFactoryStm32.cpp"
+    "${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Middlewares/Third_Party/stm32-st7735/st7735/fonts.c"
+    "${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Middlewares/Third_Party/stm32-st7735/st7735/st7735.c" 
 )
 
+# Define DriverForSimulation as a shared library
+add_library(DriverForSimulation SHARED ${SIMULATOR_DRIVER_SRC})
+target_include_directories(DriverForSimulation PRIVATE ${INCLUDE_DIRS})
 
-# Create the executable for the firmware simulator
-add_library(FirmwarePCSimulator SHARED ${SIMULATOR_SRC} ${SIMULATOR_DRIVER_SRC})
+# Define PlatformForSimulation as a shared library
+add_library(PlatformForSimulation SHARED ${SIMULATOR_PLATFORM_SRC})
+target_include_directories(PlatformForSimulation PRIVATE ${INCLUDE_DIRS})
 
+# Define FirmwarePCSimulator as the main shared library
+set(SIMULATOR_SRC ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/LibWrapper.cpp)
+add_library(FirmwarePCSimulator SHARED ${SIMULATOR_SRC})
+target_include_directories(FirmwarePCSimulator PRIVATE ${INCLUDE_DIRS})
 
-# Link the libraries from the Application project
+# Link dependencies for FirmwarePCSimulator
 target_link_libraries(FirmwarePCSimulator
+    PlatformForSimulation
     BusinessLogic
     Device
+    DriverForSimulation
 )
-
-

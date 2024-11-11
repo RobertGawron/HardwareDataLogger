@@ -2,7 +2,6 @@
 
 #include "AmbientLightSensorDriverStub.hpp"
 #include "BrightnessDriverStub.hpp"
-#include "DisplayDriverStub.hpp"
 #include "KeyboardDriverStub.hpp"
 #include "UartIdentifier.hpp"
 #include "UartDriverStub.hpp"
@@ -10,14 +9,7 @@
 #include "PulseCounterIdentifier.hpp"
 #include "PulseCounterDriverStub.hpp"
 
-#include "stm32f1xx_hal.h"
-#include "stm32f1xx_hal_uart.h"
-
-// I'm not sure if it should be here.
-// extern UART_HandleTypeDef huart3;
-
-// I's not really nice to do it this way (global objects accessible via "extern" but this is just for simulation).
-Driver::DisplayDriverStub displayDriver{};
+#include "St7735DisplayDriver.hpp"
 
 namespace BusinessLogic
 {
@@ -36,7 +28,8 @@ namespace BusinessLogic
 
     Driver::IDisplayDriver &PlatformFactoryStm32::createDisplayDriver()
     {
-        return displayDriver;
+        static Driver::St7735DisplayDriver driver;
+        return driver;
     }
 
     Driver::IKeyboardDriver &PlatformFactoryStm32::createKeyboardDriver()

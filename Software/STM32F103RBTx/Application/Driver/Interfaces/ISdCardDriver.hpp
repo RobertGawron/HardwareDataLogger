@@ -1,52 +1,43 @@
-/**
- * @file SdCardDriverStub.hpp
- * @brief Defines the SdCardDriverStub class for interacting with SD cards.
- */
+#ifndef ISdCardDriver_H_
+#define ISdCardDriver_H_
 
-#ifndef SdCardDriverStub_H_
-#define SdCardDriverStub_H_
-
-#include "Driver/Interfaces/ISdCardDriver.hpp"
+#include "Driver/Inc/DriverState.hpp"
 
 namespace Driver
 {
     /**
-     * @class SdCardDriverStub
-     * @brief Low-level driver for SD card operations.
+     * @class ISdCardDriver
+     * @brief Interface for SD card drivers.
      *
-     * This class implements the `ISdCardDriver` interface to handle low-level
-     * operations related to storing data on an SD card. This includes tasks like
-     * mounting/unmounting the file system, opening/closing files, and writing data.
-     *
-     * Note: This class does not manage the content or metadata of the files. Its
-     * primary concern is to provide low-level access to the SD card.
+     * This interface provides a set of pure virtual functions that must be implemented
+     * by any SD card driver. It is designed to handle operations related to storing
+     * measurement data on an SD card.
      */
-    class SdCardDriverStub : public ISdCardDriver
+    class ISdCardDriver : public DriverState
     {
     public:
         /**
-         * @brief Default constructor for SdCardDriverStub.
+         * @brief Default constructor for ISdCardDriver.
          */
-        explicit SdCardDriverStub();
+        ISdCardDriver() = default;
 
         /**
-         * @brief Virtual destructor for SdCardDriverStub.
+         * @brief Virtual destructor for ISdCardDriver.
          *
          * Ensures proper cleanup of derived classes.
          */
-        virtual ~SdCardDriverStub() = default;
+        virtual ~ISdCardDriver() = default;
 
-        // Delete copy constructor and assignment operator
-        SdCardDriverStub(const SdCardDriverStub &) = delete;
-        SdCardDriverStub &operator=(const SdCardDriverStub &) = delete;
+        /**
+         * @brief Deleted copy constructor to prevent copying.
+         */
+        ISdCardDriver(const ISdCardDriver &) = delete;
 
-        bool onInitialize() override;
-
-        bool onStart() override;
-
-        bool onStop() override;
-
-        bool onReset() override;
+        /**
+         * @brief Deleted assignment operator to prevent assignment.
+         * @return ISdCardDriver& The assigned object.
+         */
+        ISdCardDriver &operator=(const ISdCardDriver &) = delete;
 
         /**
          * @brief Mounts the file system on the SD card.
@@ -55,7 +46,7 @@ namespace Driver
          *
          * @note This method is currently a placeholder and should ideally return a status.
          */
-        virtual void mountFileSystem() override;
+        virtual void mountFileSystem() = 0;
 
         /**
          * @brief Unmounts the file system from the SD card.
@@ -65,7 +56,7 @@ namespace Driver
          *
          * @note This method is currently a placeholder and should ideally return a status.
          */
-        virtual void unmountFileSystem() override;
+        virtual void unmountFileSystem() = 0;
 
         /**
          * @brief Opens a file on the SD card.
@@ -74,7 +65,7 @@ namespace Driver
          *
          * @note This method is currently a placeholder and should ideally return a status.
          */
-        virtual void openFile() override;
+        virtual void openFile() = 0;
 
         /**
          * @brief Closes a file on the SD card.
@@ -83,7 +74,7 @@ namespace Driver
          *
          * @note This method is currently a placeholder and should ideally return a status.
          */
-        virtual void closeFile() override;
+        virtual void closeFile() = 0;
 
         /**
          * @brief Synchronizes the file system.
@@ -92,7 +83,7 @@ namespace Driver
          *
          * @note This method is currently a placeholder and should ideally return a status.
          */
-        virtual void sync() override;
+        virtual void sync() = 0;
 
         /**
          * @brief Writes data to a file on the SD card.
@@ -101,9 +92,9 @@ namespace Driver
          *
          * @note This method is currently a placeholder and should ideally return a status.
          */
-        virtual void writeToFile() override;
+        virtual void writeToFile() = 0;
     };
 
 }
 
-#endif // SdCardDriverStub_H_
+#endif // ISdCardDriver_H_
