@@ -95,14 +95,6 @@ set(TEST_DISPLAYPIXELCOLOR_SRC
     ${CMAKE_SOURCE_DIR}/Test/UT/Driver/test_DisplayPixelColor.cpp
 )
 
-set(TEST_ST7735DISPLAY_SRC
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/St7735DisplayDriver.cpp
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
-    ${CMAKE_SOURCE_DIR}/Test/UT/System/fonts.c
-    ${CMAKE_SOURCE_DIR}/Test/UT/System/st7735.cpp
-    ${CMAKE_SOURCE_DIR}/Test/UT/Driver/test_St7735DisplayDriver.cpp
-)
-
 set(TEST_ST7735BRIGHTNESS_SRC
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/St7735DisplayBrightnessDriver.cpp
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
@@ -124,7 +116,6 @@ create_test_exec(test_DriverState "${TEST_DRIVERSTATE_SRC}")
 create_test_exec(test_KeyboardFourPushButtonsDriver "${TEST_KEYBOARD_SRC}")
 create_test_exec(test_AmbientLightSensorDriver "${TEST_AMBIENTLIGHT_SRC}")
 create_test_exec(test_DisplayPixelColor "${TEST_DISPLAYPIXELCOLOR_SRC}")
-create_test_exec(test_St7735DisplayDriver "${TEST_ST7735DISPLAY_SRC}")
 create_test_exec(test_St7735DisplayBrightnessDriver "${TEST_ST7735BRIGHTNESS_SRC}")
 create_test_exec(test_UartDriver "${TEST_UART_SRC}")
 

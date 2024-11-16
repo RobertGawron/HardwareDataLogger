@@ -41,21 +41,24 @@ add_subdirectory(Application)
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
 
+
+
 # Add include paths
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/Application/
     ${CMAKE_CURRENT_SOURCE_DIR}/Application/Driver/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/Inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/Middlewares/Third_Party/stm32-st7735/st7735/
+    ${CMAKE_CURRENT_SOURCE_DIR}/Middlewares/Third_Party/stm32-st7735
     #${CMAKE_CURRENT_SOURCE_DIR}/cubeide-sd-card/cubeide-sd-card/Core/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Inc  # Corrected STM32F1xx driver include
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Device/ST/STM32F1xx/Include  # Corrected CMSIS for STM32F1xx
     ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Include
 )
 
+
 # Gather C source files
 file(GLOB C_SOURCES
-    "${CMAKE_CURRENT_SOURCE_DIR}/Middlewares/Third_Party/stm32-st7735/st7735/*.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Middlewares/Third_Party/stm32-st7735/*.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/*.c"  # Include C source files
 )
 

@@ -1,6 +1,6 @@
 #include "BusinessLogic/Inc/HmiFactory.hpp"
 
-#include "Driver/Inc/St7735DisplayDriver.hpp"
+// #include "Driver/Inc/St7735DisplayDriver.hpp"
 
 #include "Device/Inc/Keyboard.hpp"
 #include "Device/Inc/DisplayBrightnessRegulator.hpp"
@@ -43,9 +43,8 @@ namespace BusinessLogic
 
     Driver::IDisplayDriver &HmiFactory::getDisplay()
     {
-        static Driver::St7735DisplayDriver display;
-
-        return display;
+        // TODO change name of createDisplayDriver, its called twice
+        return platformFactory.createDisplayDriver();
     }
 
     Device::IDisplayBrightnessRegulator &HmiFactory::getDisplayBrightnessRegulator()

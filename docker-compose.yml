@@ -5,6 +5,8 @@ services:
       context: .
       dockerfile: DevOps/Docker/Dockerfile
     privileged: true
+    environment:
+      - DISPLAY=${DISPLAY}   # Forward the host's display
     stdin_open: true  # Keep stdin open for interaction
     tty: true         # Allocate a TTY for interactive Bash
     volumes:
@@ -17,5 +19,6 @@ services:
       - ./CMakeLists.txt:/workspace/CMakeLists.txt
       - ./DevOps/Scripts/.bashrc:/root/.bashrc
       - ./DevOps/Scripts/ClassTemplate.puml:/workspace/ClassTemplate.puml
+      - /tmp/.X11-unix:/tmp/.X11-unix   # Mount X server socket
     working_dir: /workspace
     # Do not override the CMD from Dockerfile

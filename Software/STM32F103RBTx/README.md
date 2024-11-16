@@ -19,12 +19,10 @@ Note: Some people argue that using STM32CubeMX is a bad idea and that everything
 Note: The generated CMake setup is not integrated with the main CMake configuration.   
 
 ## Open points
+
 * Code formatting standard.
 
 ## Third party libraries used
 
-I chose not to include third-party libraries as a git subtree because it would significantly complicate the project structure.
+* ST7735S LCD [STMicroelectronics/stm32-st7735](https://github.com/STMicroelectronics/stm32-st7735).
 
-Libraries used:
-* ST7735S LCD [following files: st7735.h, fonts.h, st7735.c, fonts.c](https://github.com/afiskon/stm32-st7735).
-* SD card [following files: fatfs.h, user_diskio_spi.h, user_diskio.h, fatfs.c, user_diskio_spi.c, user_diskio.c](https://github.com/kiwih/cubemx-mmc-sd-card/).

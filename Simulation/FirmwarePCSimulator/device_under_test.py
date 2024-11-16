@@ -1,72 +1,62 @@
 import ctypes
 import os.path
 
+
 class DeviceUnderTest:
-    # PixelValue corresponds to the struct used in the lib.
-    class PixelValue(ctypes.Structure):
-        _fields_ = [("red", ctypes.c_uint8),
-                    ("green", ctypes.c_uint8),
-                    ("blue", ctypes.c_uint8)]
-        
-    def __init__(self):
-        dll_name = "libFirmwarePCSimulator.so"
-        dllabspath = \
-            os.path.dirname(os.path.abspath(os.path.abspath(__file__))) \
-            + "/../.." \
-            + os.path.sep + "build" + os.path.sep + "Simulation/FirmwarePCSimulator/" \
+    def __init__(self) -> None:
+        """
+        Initializes the DeviceUnderTest class by loading the shared library for the simulation.
+        The library path is dynamically constructed based on the script's location.
+        """
+        dll_name: str = "libFirmwarePCSimulator.so"
+        dll_abs_path: str = (
+            os.path.dirname(os.path.abspath(__file__))
+            + "/../.."
+            + os.path.sep + "build" + os.path.sep + "Simulation/FirmwarePCSimulator/"
             + os.path.sep + dll_name
+        )
+        self.dut: ctypes.CDLL = ctypes.CDLL(dll_abs_path)
 
-        self.dut = ctypes.CDLL(dllabspath)
- 
-    def init(self):
-       # this is the init for library, it's an embedded project 
-       # so it doesn't start automatically.
-       self.dut.LibWrapper_Init()
+    def init(self) -> None:
+        """
+        Initializes the embedded library. This is required for the library to start functioning.
+        """
+        self.dut.LibWrapper_Init()
 
-    def tick(self):
+    def tick(self) -> None:
+        """
+        Triggers the `LibWrapper_Tick` function in the shared library. This simulates a single
+        tick or step in the device's processing cycle.
+        """
         self.dut.LibWrapper_Tick()
 
-    """
-    def getLoggedData(self):
-        self.dut.Lib_GMLoggerSIM_GetLoggedData.argtypes = \
-            [ctypes.POINTER(ctypes.POINTER(ctypes.c_uint8)),
-                ctypes.POINTER(ctypes.c_uint8)]
+    def get_display_width(self) -> int:
+        """
+        Retrieves the display width from the library.
 
-        data = ctypes.POINTER(ctypes.c_uint8)()
-        size = ctypes.c_uint8()
-
-        self.dut.Lib_GMLoggerSIM_GetLoggedData(
-            ctypes.byref(data), ctypes.byref(size))
-
-        logged_data = ""
-        for i in range(size.value):
-            logged_data += chr(data[i])
-
-        # it is expected that log  end with new line,
-        # this should be stripped application
-        return logged_data[:-3]
-
-    def pressKey(self):
-        self.dut.Lib_GMLoggerSIM_KeyPress()
-    """
-
-    def getDisplayWidth(self) -> int:
+        :return: The width of the display in pixels.
+        """
         self.dut.LibWrapper_GetDisplayWidth.restype = ctypes.c_uint8
         return self.dut.LibWrapper_GetDisplayWidth()
 
-    def getDisplayHeight(self) -> int:
+    def get_display_height(self) -> int:
+        """
+        Retrieves the display height from the library.
+
+        :return: The height of the display in pixels.
+        """
         self.dut.LibWrapper_GetDisplayHeight.restype = ctypes.c_uint8
         return self.dut.LibWrapper_GetDisplayHeight()
-    
-    def getDisplayPixelValue(self, x: int, y: int) -> PixelValue:
-        """
-        Calls the C function Simulation_GetDisplayHeight and returns the PixelValue.
-        
-        :param x: X-coordinate (uint8_t)
-        :param y: Y-coordinate (uint8_t)
-        :return: PixelValue struct with red, green, and blue attributes
-        """
-        self.dut.LibWrapper_GetPixelValue.restype = self.PixelValue
-        self.dut.LibWrapper_GetPixelValue.argtypes = [ctypes.c_uint8, ctypes.c_uint8]
 
+    def get_display_pixel(self, x: int, y: int) -> int:
+        """
+        Retrieves the pixel value at the specified coordinates from the display.
+        The pixel value is returned in RGB565 format.
+
+        :param x: The x-coordinate of the pixel.
+        :param y: The y-coordinate of the pixel.
+        :return: The pixel value in RGB565 format as a 16-bit integer.
+        """
+        self.dut.LibWrapper_GetPixelValue.restype = ctypes.c_uint16
+        self.dut.LibWrapper_GetPixelValue.argtypes = [ctypes.c_uint8, ctypes.c_uint8]
         return self.dut.LibWrapper_GetPixelValue(ctypes.c_uint8(x), ctypes.c_uint8(y))

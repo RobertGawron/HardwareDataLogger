@@ -12,7 +12,7 @@ namespace Driver
     class DisplayPixelColor
     {
     public:
-        using DisplayPixel = uint16_t;
+        using PixelColor = uint16_t;
         /**
          * @brief Converts 8-bit RGB values to a 16-bit RGB565 format.
          *
@@ -25,24 +25,24 @@ namespace Driver
          * @param blue The blue component of the color, ranging from 0 to 255.
          * @return The 16-bit RGB565 color representation.
          */
-        static uint16_t getColor(uint8_t red, uint8_t green, uint8_t blue);
+        static PixelColor getColor(uint8_t red, uint8_t green, uint8_t blue);
 
         /// Predefined color: black in RGB565 format.
-        static const uint16_t BLACK;
+        static const PixelColor BLACK;
         /// Predefined color: blue in RGB565 format.
-        static const uint16_t BLUE;
+        static const PixelColor BLUE;
         /// Predefined color: red in RGB565 format.
-        static const uint16_t RED;
+        static const PixelColor RED;
         /// Predefined color: green in RGB565 format.
-        static const uint16_t GREEN;
+        static const PixelColor GREEN;
         /// Predefined color: cyan in RGB565 format.
-        static const uint16_t CYAN;
+        static const PixelColor CYAN;
         /// Predefined color: magenta in RGB565 format.
-        static const uint16_t MAGENTA;
+        static const PixelColor MAGENTA;
         /// Predefined color: yellow in RGB565 format.
-        static const uint16_t YELLOW;
+        static const PixelColor YELLOW;
         /// Predefined color: white in RGB565 format.
-        static const uint16_t WHITE;
+        static const PixelColor WHITE;
 
     protected:
         /**
@@ -57,7 +57,7 @@ namespace Driver
          * @param blue The blue component of the color, ranging from 0 to 255.
          * @return The 16-bit RGB565 color representation.
          */
-        static uint16_t getColorRGB565(uint8_t red, uint8_t green, uint8_t blue);
+        static PixelColor getColorRGB565(uint8_t red, uint8_t green, uint8_t blue);
 
         /// Bit position shift for the red component in RGB565 format.
         static constexpr int RED_SHIFT = 11;
