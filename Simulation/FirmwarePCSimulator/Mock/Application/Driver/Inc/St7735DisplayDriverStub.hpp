@@ -1,80 +1,88 @@
 /**
- * @file St7735DisplayDriver.hpp
- * @brief Defines the St7735DisplayDriver class for interacting with ST7735 LCD displays.
-
+ * @file St7735DisplayDriverStub.hpp
+ * @brief Defines the St7735DisplayDriverStub class for interacting with ST7735 LCD displays.
+ * *
+ * This is a class used in simulation, for simplicity then for get its state  via c wrapper and then in python HMI, all fields that contains its state are public.
  */
 
 #ifndef ST7735DisplayDISPLAY_H_
 #define ST7735DisplayDISPLAY_H_
 
 #include "Driver/Interfaces/IDisplayDriver.hpp"
-
+#include "Driver/Inc/DisplayPixelColor.hpp"
 namespace Driver
 {
 
     /**
-     * @class St7735DisplayDriver
-     * @brief Driver class for the ST7735 LCD display
+     * @class St7735DisplayDriverStub
+     * @brief Driver class for the ST7735 LCD display.
      *
+     * This class provides implementation for controlling the ST7735 LCD display. It includes functions
+     * to initialize the display, draw pixels, write text, fill rectangles, draw images, and invert colors.
+     * ST7735 is a low cost popular 128x160 RGB LCD display.
      */
-    class St7735DisplayDriver : public Driver::IDisplayDriver
+    class St7735DisplayDriverStub : public Driver::IDisplayDriver
     {
     public:
         /**
-         * @brief Default constructor for St7735DisplayDriver.
+         * @brief Default constructor for St7735DisplayDriverStub.
          */
-        explicit St7735DisplayDriver() = default;
+        explicit St7735DisplayDriverStub() = default;
 
         /**
-         * @brief Virtual destructor for St7735DisplayDriver.
+         * @brief Virtual destructor for St7735DisplayDriverStub.
          *
          * Ensures proper cleanup of derived classes.
          */
-        virtual ~St7735DisplayDriver() = default;
+        virtual ~St7735DisplayDriverStub() = default;
 
         // Delete copy constructor and assignment operator
         /**
          * @brief Deleted copy constructor to prevent copying.
          */
-        St7735DisplayDriver(const St7735DisplayDriver &) = delete;
+        St7735DisplayDriverStub(const St7735DisplayDriverStub &) = delete;
 
         /**
          * @brief Deleted assignment operator to prevent assignment.
          */
-        St7735DisplayDriver &operator=(const St7735DisplayDriver &) = delete;
+        St7735DisplayDriverStub &operator=(const St7735DisplayDriverStub &) = delete;
 
-        virtual Status displayOn();
-        virtual Status displayOff();
-        virtual Status setOrientation(Orientation orientation);
-        virtual Status getOrientation(Orientation &orientation) const;
-        virtual Status setCursor(uint8_t x, uint8_t y);
-        virtual Status drawBitmap(uint8_t x, uint8_t y, uint8_t &bitmap);
+        virtual Status displayOn() override;
+        virtual Status displayOff() override;
+        virtual Status setOrientation(Orientation orientation) override;
+        virtual Status getOrientation(Orientation &orientation) const override;
+        virtual Status setCursor(uint8_t x, uint8_t y) override;
+        virtual Status drawBitmap(uint8_t x, uint8_t y, uint8_t &bitmap) override;
         virtual Status fillRGBRectangle(uint8_t x,
                                         uint8_t y,
                                         uint8_t &data,
                                         uint8_t width,
-                                        uint8_t height);
+                                        uint8_t height) override;
         virtual Status drawHorizontalLine(uint8_t x,
                                           uint8_t y,
-                                          uint8_t length,
-                                          DisplayPixelColor::PixelColor color);
+                                          uint8_t length, DisplayPixelColor::PixelColor color) override;
         virtual Status drawVerticalLine(uint8_t x,
                                         uint8_t y,
                                         uint8_t length,
-                                        DisplayPixelColor::PixelColor color);
+                                        DisplayPixelColor::PixelColor color) override;
         virtual Status fillRectangle(uint8_t x,
                                      uint8_t y,
                                      uint8_t width,
                                      uint8_t height,
-                                     DisplayPixelColor::PixelColor color);
+                                     DisplayPixelColor::PixelColor color) override;
         virtual Status setPixel(uint8_t x,
                                 uint8_t y,
-                                DisplayPixelColor::PixelColor color);
+                                DisplayPixelColor::PixelColor color) override;
         virtual Status getPixel(uint8_t x,
                                 uint8_t y,
-                                DisplayPixelColor::PixelColor &color) const;
-        virtual Status getXSize(uint8_t &size) const;
-        virtual Status getYSize(uint8_t &size) const;
+                                DisplayPixelColor::PixelColor &color) const override;
+        virtual Status getXSize(uint8_t &size) const override;
+        virtual Status getYSize(uint8_t &size) const override;
+
+        static const uint16_t MAX_WIDTH = 300;
+        static const uint16_t MAX_HEIGHT = 300;
+
+        DisplayPixelColor::PixelColor content[MAX_WIDTH][MAX_HEIGHT] = {0u};
 
     protected:
         /**

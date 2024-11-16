@@ -1,18 +1,11 @@
 #include "Driver/Inc/St7735DisplayDriver.hpp"
 #include "Driver/Inc/DisplayPixelColor.hpp"
-#include "stm32f1xx_hal.h" // st7735.h needs
 #include "st7735.h"
 
 namespace Driver
 {
     bool St7735DisplayDriver::onInitialize()
     {
-        // This can fail but the lib is implemented in a way that everything returns void.
-        //  ST7735_Unselect();
-
-        ST7735_Init();
-        // fillScreen(DisplayPixelColor::getColor(0xff, 0xff, 0));
-
         return true;
     }
 
@@ -35,38 +28,91 @@ namespace Driver
         return true;
     }
 
-    bool St7735DisplayDriver::drawPixel(uint16_t x, uint16_t y, uint16_t color)
+    IDisplayDriver::Status St7735DisplayDriver::displayOn()
     {
-        ST7735_DrawPixel(x, y, color);
-
-        return true;
+        return IDisplayDriver::Status::Ok;
     }
-    bool St7735DisplayDriver::writeString(uint16_t x, uint16_t y, const char *str, DisplayFont font, uint16_t color, uint16_t bgcolor)
-    {
-        ST7735_WriteString(x, y, str, font, color, bgcolor);
 
-        return true;
-    }
-    bool St7735DisplayDriver::fillRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
+    IDisplayDriver::Status St7735DisplayDriver::displayOff()
     {
-        ST7735_FillRectangle(x, y, w, h, color);
+        return IDisplayDriver::Status::Ok;
+    }
 
-        return true;
-    }
-    bool St7735DisplayDriver::fillScreen(uint16_t color)
+    IDisplayDriver::Status St7735DisplayDriver::setOrientation(IDisplayDriver::Orientation orientation)
     {
-        ST7735_FillScreen(color);
+        return IDisplayDriver::Status::Ok;
+    }
 
-        return true;
-    }
-    bool St7735DisplayDriver::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t *data)
+    IDisplayDriver::Status St7735DisplayDriver::getOrientation(IDisplayDriver::Orientation &orientation) const
     {
-        ST7735_DrawImage(x, y, w, h, data);
+        return IDisplayDriver::Status::Ok;
+    }
 
-        return true;
-    }
-    void St7735DisplayDriver::invertColors(bool invert)
+    IDisplayDriver::Status St7735DisplayDriver::setCursor(uint8_t x, uint8_t y)
     {
-        ST7735_InvertColors(invert);
+        return IDisplayDriver::Status::Ok;
+    }
+
+    IDisplayDriver::Status St7735DisplayDriver::drawBitmap(uint8_t x, uint8_t y, uint8_t &bitmap)
+    {
+        return IDisplayDriver::Status::Ok;
+    }
+
+    IDisplayDriver::Status St7735DisplayDriver::fillRGBRectangle(uint8_t x,
+                                                                 uint8_t y,
+                                                                 uint8_t &data,
+                                                                 uint8_t width,
+                                                                 uint8_t height)
+    {
+        return IDisplayDriver::Status::Ok;
+    }
+
+    IDisplayDriver::Status St7735DisplayDriver::drawHorizontalLine(uint8_t x,
+                                                                   uint8_t y,
+                                                                   uint8_t length,
+                                                                   DisplayPixelColor::PixelColor color)
+    {
+        return IDisplayDriver::Status::Ok;
+    }
+
+    IDisplayDriver::Status St7735DisplayDriver::drawVerticalLine(uint8_t x,
+                                                                 uint8_t y,
+                                                                 uint8_t length,
+                                                                 DisplayPixelColor::PixelColor color)
+    {
+        return IDisplayDriver::Status::Ok;
+    }
+
+    IDisplayDriver::Status St7735DisplayDriver::fillRectangle(uint8_t x,
+                                                              uint8_t y,
+                                                              uint8_t width,
+                                                              uint8_t height,
+                                                              DisplayPixelColor::PixelColor color)
+    {
+        return IDisplayDriver::Status::Ok;
+    }
+
+    IDisplayDriver::Status St7735DisplayDriver::setPixel(uint8_t x,
+                                                         uint8_t y,
+                                                         DisplayPixelColor::PixelColor color)
+    {
+        return IDisplayDriver::Status::Ok;
+    }
+
+    IDisplayDriver::Status St7735DisplayDriver::getPixel(uint8_t x,
+                                                         uint8_t y,
+                                                         DisplayPixelColor::PixelColor &color) const
+    {
+        return IDisplayDriver::Status::Ok;
+    }
+
+    IDisplayDriver::Status St7735DisplayDriver::getXSize(uint8_t &size) const
+    {
+        return IDisplayDriver::Status::Ok;
+    }
+
+    IDisplayDriver::Status St7735DisplayDriver::getYSize(uint8_t &size) const
+    {
+        return IDisplayDriver::Status::Ok;
     }
 }

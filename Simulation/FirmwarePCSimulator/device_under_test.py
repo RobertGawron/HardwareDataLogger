@@ -2,11 +2,7 @@ import ctypes
 import os.path
 
 class DeviceUnderTest:
-    # PixelValue corresponds to the struct used in the lib.
-    class PixelValue(ctypes.Structure):
-        _fields_ = [("red", ctypes.c_uint8),
-                    ("green", ctypes.c_uint8),
-                    ("blue", ctypes.c_uint8)]
+ 
         
     def __init__(self):
         dll_name = "libFirmwarePCSimulator.so"
@@ -58,15 +54,15 @@ class DeviceUnderTest:
         self.dut.LibWrapper_GetDisplayHeight.restype = ctypes.c_uint8
         return self.dut.LibWrapper_GetDisplayHeight()
     
-    def getDisplayPixelValue(self, x: int, y: int) -> PixelValue:
+    def getDisplayPixelValue(self, x: int, y: int) -> int:
         """
         Calls the C function Simulation_GetDisplayHeight and returns the PixelValue.
         
         :param x: X-coordinate (uint8_t)
         :param y: Y-coordinate (uint8_t)
-        :return: PixelValue struct with red, green, and blue attributes
+        :return: RGB565 (uint16_t)
         """
-        self.dut.LibWrapper_GetPixelValue.restype = self.PixelValue
+        self.dut.LibWrapper_GetPixelValue.restype = ctypes.c_uint16
         self.dut.LibWrapper_GetPixelValue.argtypes = [ctypes.c_uint8, ctypes.c_uint8]
 
         return self.dut.LibWrapper_GetPixelValue(ctypes.c_uint8(x), ctypes.c_uint8(y))

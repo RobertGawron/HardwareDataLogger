@@ -10,7 +10,6 @@ Simulation consists of:
 - Firmware (.so file)
   - High-level logic is used as-is, without modification for simulation mode. This code is located in the [Application/BusinessLogic/](../../Software/STM32F103RBTx/Application/BusinessLogic) and [Application/Device/](../../Software/STM32F103RBTx/Application/Device) folders within the firmware directory.
   - The [Stub folder](./Stub) replaces low-level classes (Driver folder within the firmware directory).
-  - An exception is the LCD driver, which uses an existing monolithic library. This driver is not stubbed because it contains a significant amount of high-level logic.
 - device_under_test.py: Loads the firmware .so file and provides a Python API interface.
 - hmi.py: Provides the graphical interface.
 

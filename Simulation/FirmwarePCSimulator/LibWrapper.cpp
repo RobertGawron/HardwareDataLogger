@@ -4,10 +4,10 @@
 #include "PlatformFactoryStm32.hpp"
 #include "MyApplication.hpp"
 
-// #include "DisplayDriverStub.hpp"
+#include "St7735DisplayDriverStub.hpp"
 #include "DisplayPixelColor.hpp"
 
-// extern Driver::DisplayDriverStub displayDriver;
+extern Driver::St7735DisplayDriverStub st7735DisplayDriverStub;
 
 void LibWrapper_Init()
 {
@@ -16,6 +16,7 @@ void LibWrapper_Init()
 
 void LibWrapper_Tick()
 {
+
     app_tick();
 }
 
@@ -28,25 +29,35 @@ bool LibWrapper_PressKey()
     return true;
 }
 
-// bool
-
 uint8_t LibWrapper_GetDisplayWidth()
 {
-    // return displayDriver.getDisplayWidth();
-    return 5;
+    uint8_t width = 0u;
+
+    st7735DisplayDriverStub.getXSize(width);
+    return width;
 }
 
 uint8_t LibWrapper_GetDisplayHeight()
 {
-    //  return displayDriver.getDisplayHeight();
-    return 5;
+    uint8_t height = 0u;
+
+    st7735DisplayDriverStub.getYSize(height);
+    return height;
 }
 
 PixelValue LibWrapper_GetPixelValue(uint8_t x, uint8_t y)
 {
     //    Driver::DisplayPixelColor value = displayDriver.getPixel(x, y);
-
-    // PixelValue pixel{value.RED, value.GREEN, value.BLUE};
-    PixelValue pixel{5, 5, 5};
-    return pixel;
+    if (st7735DisplayDriverStub.content[x][y] > 0)
+    {
+        // PixelValue pixel{value.RED, value.GREEN, value.BLUE};
+        PixelValue pixel{0, 0, 0};
+        return pixel;
+    }
+    else
+    {
+        // PixelValue pixel{value.RED, value.GREEN, value.BLUE};
+        PixelValue pixel{5, 5, 5};
+        return pixel;
+    }
 }

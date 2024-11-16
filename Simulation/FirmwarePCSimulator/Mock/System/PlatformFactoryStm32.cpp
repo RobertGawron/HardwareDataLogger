@@ -8,8 +8,9 @@
 #include "SdCardDriverStub.hpp"
 #include "PulseCounterIdentifier.hpp"
 #include "PulseCounterDriverStub.hpp"
+#include "St7735DisplayDriverStub.hpp"
 
-#include "St7735DisplayDriver.hpp"
+Driver::St7735DisplayDriverStub st7735DisplayDriverStub;
 
 namespace BusinessLogic
 {
@@ -28,8 +29,7 @@ namespace BusinessLogic
 
     Driver::IDisplayDriver &PlatformFactoryStm32::createDisplayDriver()
     {
-        static Driver::St7735DisplayDriver driver;
-        return driver;
+        return st7735DisplayDriverStub;
     }
 
     Driver::IKeyboardDriver &PlatformFactoryStm32::createKeyboardDriver()
