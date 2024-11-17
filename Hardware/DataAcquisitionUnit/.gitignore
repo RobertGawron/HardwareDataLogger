@@ -1,5 +1,5 @@
-# Ignore backup folder
-Logger-backups/
+# Ignore backup folders
+*-backups/
 
 # Ignore session/prl files (stores UI layout, last open tabs, etc.)
 *.kicad_prl
@@ -11,8 +11,7 @@ fp-info-cache
 *.kicad_swp
 
 # Ignore KiCad lock files (prevents multiple instances of the file from being opened)
-~Logger.kicad_sch.lck
-~Logger.kicad_pcb.lck
+*.lck
 
 # Ignore auto-saved schematic files (created by KiCad for recovery)
 _autosave-*.kicad_sch
@@ -20,4 +19,14 @@ _autosave-*.kicad_sch
 # Ignore auto-saved files folder (temporary files generated during editing)
 \#auto_saved_files#
 
+# Ignore any file with "autosave" in the name
 *autosave*
+
+# Ignore KiCad backup files
+*.bak
+
+# Optional: Ignore project backup and temporary files
+*.tmp
+
+# KiCad to Blender export files
+*.pcb3d

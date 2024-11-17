@@ -5,211 +5,8 @@
 	(uuid "2dac91f6-5de1-492e-9a04-36ab71ef854f")
 	(paper "A4")
 	(lib_symbols)
-	(text "TODO\n\nmale pins on top layer"
-		(exclude_from_sim no)
-		(at 96.52 101.6 0)
-		(effects
-			(font
-				(size 1.8034 1.8034)
-				(thickness 0.3607)
-				(bold yes)
-			)
-			(justify left bottom)
-		)
-		(uuid "6b3a9592-673e-4a30-8184-22121b8d5cba")
-	)
 	(sheet
-		(at 207.01 62.23)
-		(size 12.7 3.81)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0.0000)
-		)
-		(uuid "00000000-0000-0000-0000-000060ef776c")
-		(property "Sheetname" "DataStorage"
-			(at 207.01 61.5945 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "DataStorage.kicad_sch"
-			(at 207.01 66.5485 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "Logger"
-				(path "/2dac91f6-5de1-492e-9a04-36ab71ef854f"
-					(page "4")
-				)
-			)
-		)
-	)
-	(sheet
-		(at 173.99 74.93)
-		(size 12.7 3.81)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0.0000)
-		)
-		(uuid "00000000-0000-0000-0000-000060efe24a")
-		(property "Sheetname" "DataProcessing"
-			(at 173.99 74.2945 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "DataProcessing.kicad_sch"
-			(at 173.99 79.2485 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "Logger"
-				(path "/2dac91f6-5de1-492e-9a04-36ab71ef854f"
-					(page "3")
-				)
-			)
-		)
-	)
-	(sheet
-		(at 207.01 74.93)
-		(size 12.7 3.81)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0.0000)
-		)
-		(uuid "00000000-0000-0000-0000-000060f39cf0")
-		(property "Sheetname" "UserInterface"
-			(at 207.01 74.2945 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "UserInterface.kicad_sch"
-			(at 207.01 79.2485 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "Logger"
-				(path "/2dac91f6-5de1-492e-9a04-36ab71ef854f"
-					(page "6")
-				)
-			)
-		)
-	)
-	(sheet
-		(at 144.78 74.93)
-		(size 12.7 3.81)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0.0000)
-		)
-		(uuid "00000000-0000-0000-0000-000060f455b3")
-		(property "Sheetname" "Acquisition"
-			(at 144.78 74.2945 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "Acquisition.kicad_sch"
-			(at 144.78 79.2485 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "Logger"
-				(path "/2dac91f6-5de1-492e-9a04-36ab71ef854f"
-					(page "2")
-				)
-			)
-		)
-	)
-	(sheet
-		(at 207.01 87.63)
-		(size 12.7 3.81)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0.0000)
-		)
-		(uuid "00000000-0000-0000-0000-000060f74854")
-		(property "Sheetname" "WiFiInterface"
-			(at 207.01 86.9945 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "WiFiInterface.kicad_sch"
-			(at 207.01 91.9485 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "Logger"
-				(path "/2dac91f6-5de1-492e-9a04-36ab71ef854f"
-					(page "7")
-				)
-			)
-		)
-	)
-	(sheet
-		(at 175.26 97.79)
+		(at 68.58 85.09)
 		(size 12.7 3.81)
 		(fields_autoplaced yes)
 		(stroke
@@ -221,7 +18,7 @@
 		)
 		(uuid "00000000-0000-0000-0000-00006144cc5a")
 		(property "Sheetname" "PowerSupply"
-			(at 175.26 97.1545 0)
+			(at 68.58 84.4545 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -230,7 +27,7 @@
 			)
 		)
 		(property "Sheetfile" "PowerSupply.kicad_sch"
-			(at 175.26 102.1085 0)
+			(at 68.58 89.4085 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -239,9 +36,170 @@
 			)
 		)
 		(instances
-			(project "Logger"
+			(project "MainBoard"
 				(path "/2dac91f6-5de1-492e-9a04-36ab71ef854f"
 					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 119.38 101.6)
+		(size 12.7 3.81)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "a53e760b-11f7-4b4f-9f40-4c11ccbc4751")
+		(property "Sheetname" "ModuleConnector2"
+			(at 119.38 100.8884 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "ModuleConnector2.kicad_sch"
+			(at 119.38 105.9946 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "MainBoard"
+				(path "/2dac91f6-5de1-492e-9a04-36ab71ef854f"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 114.3 85.09)
+		(size 12.7 3.81)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "d112965a-54b8-4ea2-8796-1645e3e30e85")
+		(property "Sheetname" "ModuleConnector1"
+			(at 114.3 84.3784 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "ModuleConnector1.kicad_sch"
+			(at 114.3 89.4846 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "MainBoard"
+				(path "/2dac91f6-5de1-492e-9a04-36ab71ef854f"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 63.5 125.73)
+		(size 12.7 3.81)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "d24f3a3f-142b-4a5f-9e4c-0496fb7bac44")
+		(property "Sheetname" "Breadboard"
+			(at 63.5 125.0184 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Breadboard.kicad_sch"
+			(at 63.5 130.1246 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(property "Field2" ""
+			(at 63.5 125.73 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "MainBoard"
+				(path "/2dac91f6-5de1-492e-9a04-36ab71ef854f"
+					(page "6")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 80.01 104.14)
+		(size 12.7 3.81)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "ea014db6-aad8-4afe-975e-296ba9dc182a")
+		(property "Sheetname" "Mechanic"
+			(at 80.01 103.4284 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Mechanic.kicad_sch"
+			(at 80.01 108.5346 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "MainBoard"
+				(path "/2dac91f6-5de1-492e-9a04-36ab71ef854f"
+					(page "4")
 				)
 			)
 		)

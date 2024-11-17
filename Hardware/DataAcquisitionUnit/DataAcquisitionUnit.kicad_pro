@@ -453,7 +453,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "Logger.kicad_pro",
+    "filename": "DataAcquisitionUnit.kicad_pro",
     "version": 1
   },
   "net_settings": {
@@ -490,7 +490,7 @@
       "netlist": "",
       "plot": "plots/",
       "pos_files": "",
-      "specctra_dsn": "Logger1.dsn",
+      "specctra_dsn": "DataAcquisitionUnit1.dsn",
       "step": "",
       "svg": "",
       "vrml": ""
@@ -615,28 +615,20 @@
       "Root"
     ],
     [
-      "00000000-0000-0000-0000-000060f455b3",
-      "Acquisition"
+      "aa1d059a-d1f1-41b8-9a79-3e265566ceec",
+      "PulseCounter"
     ],
     [
-      "00000000-0000-0000-0000-000060efe24a",
-      "DataProcessing"
-    ],
-    [
-      "00000000-0000-0000-0000-000060ef776c",
-      "DataStorage"
-    ],
-    [
-      "00000000-0000-0000-0000-00006144cc5a",
+      "d316a48d-5cd3-4820-9bb3-4a62111e2c61",
       "PowerSupply"
     ],
     [
-      "00000000-0000-0000-0000-000060f39cf0",
-      "UserInterface"
+      "09bf9bff-ec83-480a-9560-32811821a5d9",
+      "UART"
     ],
     [
-      "00000000-0000-0000-0000-000060f74854",
-      "WiFiInterface"
+      "425124f7-0d85-436e-b9bf-10ba2c96dbc7",
+      "MainBoardConnector"
     ]
   ],
   "text_variables": {}
