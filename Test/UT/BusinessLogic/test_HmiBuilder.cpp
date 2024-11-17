@@ -61,12 +61,6 @@ namespace Driver
 {
     class MockDisplayDriver : public Driver::IDisplayDriver
     {
-        MOCK_METHOD(bool, drawPixel, (uint16_t x, uint16_t y, uint16_t color), (override));
-        MOCK_METHOD(bool, writeString, (uint16_t x, uint16_t y, const char *str, FontDef font, uint16_t color, uint16_t bgcolor), (override));
-        MOCK_METHOD(bool, fillRectangle, (uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color), (override));
-        MOCK_METHOD(bool, fillScreen, (uint16_t color), (override));
-        MOCK_METHOD(bool, drawImage, (uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t *data), (override));
-        MOCK_METHOD(void, invertColors, (bool invert), (override));
         MOCK_METHOD(bool, onInitialize, (), (override));
         MOCK_METHOD(bool, onStart, (), (override));
         MOCK_METHOD(bool, onStop, (), (override));

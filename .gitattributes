@@ -1,34 +1,23 @@
 # Files excluded manually
-Software/NUCLEO-F103RB/STM32F103RBTx_FLASH.ld linguist-vendored
+Software/STM32F103RBTx/STM32F103RBTx_FLASH.ld linguist-vendored
 
 #
 # Folder/file matching for those files is a joke.
 # Finally I made it using brute-force script:
 # ls -lDR | grep ':$' | grep -e Middlewares -e Core -e FATFS -e CMSIS -eSTM32F1xx_HAL_Driver -e ST7735 | sed 's/:/\/* linguist-vendored/g' | sed 's/\.\///g'
 #
-Software/NUCLEO-F103RB/Core/* linguist-vendored
-Software/NUCLEO-F103RB/Core/Inc/* linguist-vendored
-Software/NUCLEO-F103RB/Core/Src/* linguist-vendored
-Software/NUCLEO-F103RB/Core/Startup/* linguist-vendored
-Software/NUCLEO-F103RB/Drivers/CMSIS/* linguist-vendored
-Software/NUCLEO-F103RB/Drivers/CMSIS/Device/* linguist-vendored
-Software/NUCLEO-F103RB/Drivers/CMSIS/Device/ST/* linguist-vendored
-Software/NUCLEO-F103RB/Drivers/CMSIS/Device/ST/STM32F1xx/* linguist-vendored
-Software/NUCLEO-F103RB/Drivers/CMSIS/Device/ST/STM32F1xx/Include/* linguist-vendored
-Software/NUCLEO-F103RB/Drivers/CMSIS/Device/ST/STM32F1xx/Source/* linguist-vendored
-Software/NUCLEO-F103RB/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/* linguist-vendored
-Software/NUCLEO-F103RB/Drivers/CMSIS/Include/* linguist-vendored
-Software/NUCLEO-F103RB/Drivers/ST7735/* linguist-vendored
-Software/NUCLEO-F103RB/Drivers/STM32F1xx_HAL_Driver/* linguist-vendored
-Software/NUCLEO-F103RB/Drivers/STM32F1xx_HAL_Driver/Inc/* linguist-vendored
-Software/NUCLEO-F103RB/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy/* linguist-vendored
-Software/NUCLEO-F103RB/Drivers/STM32F1xx_HAL_Driver/Src/* linguist-vendored
-Software/NUCLEO-F103RB/FATFS/* linguist-vendored
-Software/NUCLEO-F103RB/FATFS/App/* linguist-vendored
-Software/NUCLEO-F103RB/FATFS/Target/* linguist-vendored
-Software/NUCLEO-F103RB/Middlewares/* linguist-vendored
-Software/NUCLEO-F103RB/Middlewares/Third_Party/* linguist-vendored
-Software/NUCLEO-F103RB/Middlewares/Third_Party/FatFs/* linguist-vendored
-Software/NUCLEO-F103RB/Middlewares/Third_Party/FatFs/src/* linguist-vendored
-Software/NUCLEO-F103RB/Middlewares/Third_Party/FatFs/src/option/* linguist-vendored
-
+Software/STM32F103RBTx/Core/* linguist-vendored
+Software/STM32F103RBTx/Core/Inc/* linguist-vendored
+Software/STM32F103RBTx/Core/Src/* linguist-vendored
+Software/STM32F103RBTx/Drivers/CMSIS/* linguist-vendored
+Software/STM32F103RBTx/Drivers/CMSIS/Device/* linguist-vendored
+Software/STM32F103RBTx/Drivers/CMSIS/Device/ST/* linguist-vendored
+Software/STM32F103RBTx/Drivers/CMSIS/Device/ST/STM32F1xx/* linguist-vendored
+Software/STM32F103RBTx/Drivers/CMSIS/Device/ST/STM32F1xx/Include/* linguist-vendored
+Software/STM32F103RBTx/Drivers/CMSIS/Device/ST/STM32F1xx/Source/* linguist-vendored
+Software/STM32F103RBTx/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/* linguist-vendored
+Software/STM32F103RBTx/Drivers/CMSIS/Include/* linguist-vendored
+Software/STM32F103RBTx/Drivers/STM32F1xx_HAL_Driver/* linguist-vendored
+Software/STM32F103RBTx/Drivers/STM32F1xx_HAL_Driver/Inc/* linguist-vendored
+Software/STM32F103RBTx/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy/* linguist-vendored
+Software/STM32F103RBTx/Drivers/STM32F1xx_HAL_Driver/Src/* linguist-vendored

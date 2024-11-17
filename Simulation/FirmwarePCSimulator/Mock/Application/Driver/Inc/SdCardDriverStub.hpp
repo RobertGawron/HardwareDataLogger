@@ -48,7 +48,6 @@ namespace Driver
 
         bool onReset() override;
 
-    protected:
         /**
          * @brief Mounts the file system on the SD card.
          *
@@ -56,7 +55,7 @@ namespace Driver
          *
          * @note This method is currently a placeholder and should ideally return a status.
          */
-        virtual void mountFileSystem();
+        virtual void mountFileSystem() override;
 
         /**
          * @brief Unmounts the file system from the SD card.
@@ -66,7 +65,7 @@ namespace Driver
          *
          * @note This method is currently a placeholder and should ideally return a status.
          */
-        virtual void unmountFileSystem();
+        virtual void unmountFileSystem() override;
 
         /**
          * @brief Opens a file on the SD card.
@@ -75,7 +74,7 @@ namespace Driver
          *
          * @note This method is currently a placeholder and should ideally return a status.
          */
-        virtual void openFile();
+        virtual void openFile() override;
 
         /**
          * @brief Closes a file on the SD card.
@@ -84,7 +83,7 @@ namespace Driver
          *
          * @note This method is currently a placeholder and should ideally return a status.
          */
-        virtual void closeFile();
+        virtual void closeFile() override;
 
         /**
          * @brief Synchronizes the file system.
@@ -93,7 +92,7 @@ namespace Driver
          *
          * @note This method is currently a placeholder and should ideally return a status.
          */
-        virtual void sync();
+        virtual void sync() override;
 
         /**
          * @brief Writes data to a file on the SD card.
@@ -102,7 +101,7 @@ namespace Driver
          *
          * @note This method is currently a placeholder and should ideally return a status.
          */
-        virtual void writeToFile();
+        virtual void writeToFile() override;
     };
 
 }

@@ -6,7 +6,7 @@
 
 **_TL;DR It can collect, display, and store data locally and remotely, interfacing with various other devices._**
 
-This project realizes a shield for the NUCLEO-F103RB with the following features:
+This project realizes a shield for the STM32F103RBTx with the following features:
 
 * Pulse counting from up to four devices (e.g., Geiger counters) with logic levels from 3.3V to 16V, using SMA connectors.
 * Data acquisition from measurement devices via UART, utilizing a DB9 connector.
@@ -19,11 +19,11 @@ This project realizes a shield for the NUCLEO-F103RB with the following features
 
 ## Software
 
-#### NUCLEO-F103RB Board
-The NUCLEO-F103RB serves as the main microcontroller, handling data acquisition, processing, storage, and user interaction. In future iterations, the NUCLEO-F103RB will be replaced by an STM32 chip directly integrated onto the PCB.
+#### STM32F103RBTx Board
+The STM32F103RBTx serves as the main microcontroller, handling data acquisition, processing, storage, and user interaction.
 
 * Toolchain: C++17, C, STM32 VS Code Extension, CMake.
-* [More info.](./Software/NUCLEO-F103RB/README.md)
+* [More info.](./Software/STM32F103RBTx/README.md)
 
 #### ESP8266
 The ESP8266 is currently used for data transfer via WiFi and will support FOTA (Firmware Over-The-Air) in the future.

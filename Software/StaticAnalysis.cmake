@@ -4,7 +4,7 @@ find_program(CPPCHECK_HTMLREPORT_EXECUTABLE cppcheck-htmlreport)
 
 if(CPPCHECK_EXECUTABLE)
     # Define the source directories to check
-    set(CPPCHECK_SOURCE_DIRS ${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/)
+    set(CPPCHECK_SOURCE_DIRS ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/)
 
     # Define the output directory for the XML and HTML report
     set(CPPCHECK_REPORT_DIR ${CMAKE_BINARY_DIR}/BuildArtifacts/StaticAnalyse)
