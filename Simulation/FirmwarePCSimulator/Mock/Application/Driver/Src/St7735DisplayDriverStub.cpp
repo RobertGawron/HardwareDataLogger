@@ -61,6 +61,7 @@ namespace Driver
                                                                uint8_t y,
                                                                uint8_t &bitmap)
     {
+
         return IDisplayDriver::Status::Ok;
     }
 
@@ -109,6 +110,7 @@ namespace Driver
                                                              uint8_t y,
                                                              DisplayPixelColor::PixelColor color)
     {
+        content[x][y] = color;
         return IDisplayDriver::Status::Ok;
     }
 

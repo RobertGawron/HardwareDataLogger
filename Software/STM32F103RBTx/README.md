@@ -18,6 +18,11 @@ Note: Some people argue that using STM32CubeMX is a bad idea and that everything
 
 Note: The generated CMake setup is not integrated with the main CMake configuration.   
 
+## Architecture
+
+Sequence diagram of the display.
+![sequence diagram of the display](../../Documentation/Diagrams/DisplaySequenceDiagram.svg)
+
 ## Open points
 
 * Code formatting standard.

@@ -44,6 +44,10 @@ namespace Driver
          */
         virtual ~IDisplayDriver() = default;
 
+        //    IDisplayDriver(const IDisplayDriver &) = delete;
+
+        //     IDisplayDriver &operator=(const IDisplayDriver &) = delete;
+
         virtual Status displayOn() = 0;
         virtual Status displayOff() = 0;
         virtual Status setOrientation(Orientation orientation) = 0;

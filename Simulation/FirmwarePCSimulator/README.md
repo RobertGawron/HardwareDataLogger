@@ -4,7 +4,11 @@
 
 The reasons for using a simulator are explained in the [main README](../../README.md).
 
+![PC Simulation Screenshot](../../Documentation/Pictures/PCSimulation_17_11_2024.png)
+
 ## Architecture
+
+![PC Simulation Component Diagram](../../Documentation/Diagrams/PCSimulationComponentDiagram.svg)
 
 Simulation consists of:
 - Firmware (.so file)
@@ -32,3 +36,23 @@ main_window.py: Main window of the application.
 ## Compilation and usage
 
 [This part is covered in the DevOps section.](../../DevOps/README.md).
+
+cd /workspace/build/ && cmake .. && make -j24 && cd /workspace/Simulation/FirmwarePCSimulator/ && python3 main.py
+
+## Troubleshooting
+
+Check if Core Dumps Are Enabled Core dumps might be disabled by default on your system. Check the current core dump settings using:
+
+ulimit -c
+
+If it shows 0, core dumps are disabled, enable core dumps by running:
+
+ulimit -c unlimited
+
+On WSL (Docker runs in Windows), disable wsl-capture-crash for Core Dumps:
+
+echo "/tmp/core.%e.%p" | tee /proc/sys/kernel/core_pattern
+
+
+debug core:
+gdb /workspace/venv/bin/python3 /tmp/core.python3.2430

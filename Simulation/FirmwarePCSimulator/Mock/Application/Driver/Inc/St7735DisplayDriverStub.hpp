@@ -121,7 +121,8 @@ namespace Driver
          */
         bool onReset() override;
 
-    private:
+        // todo uncomment
+        // private:
         // No mater if the dispaly is configured as horisontal or vertical, ST7735_HEIGHT is the longer dimention so it will always fit
         static const uint8_t MAX_WIDTH = ST7735_HEIGHT;
         static const uint8_t MAX_HEIGHT = ST7735_HEIGHT;

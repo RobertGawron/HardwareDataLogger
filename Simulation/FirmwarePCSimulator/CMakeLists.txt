@@ -56,4 +56,5 @@ target_link_libraries(FirmwarePCSimulator
     BusinessLogic
     Device
     DriverForSimulation
+    u8g2
 )
