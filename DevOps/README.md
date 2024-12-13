@@ -69,3 +69,20 @@ xclock
 If a small window with a clock is visible, it means everything is set up correctly.
 
 Note: If using Windows, [MobaXterm](https://mobaxterm.mobatek.net/download-home-edition.html) (or another tool capable of displaying X11 windows) is required. The Visual Studio terminal will not work.
+
+
+# Pi
+
+Build the image with 
+
+docker compose build raspberry-logger
+
+Run with 
+
+docker compose up raspberry-logger -d
+
+Connect:
+
+docker-compose exec raspberry-logger bash
+
+For cross-platform usage, use Buildx to produce a multi-arch image.
