@@ -79,7 +79,7 @@ namespace BusinessLogic
          *
          * @return true if the components started successfully, false otherwise.
          */
-        virtual bool start() override;
+        virtual bool start();
 
         /**
          * @brief Stops the application and its components.
@@ -88,7 +88,7 @@ namespace BusinessLogic
          *
          * @return true if the components stopped successfully, false otherwise.
          */
-        virtual bool stop() override;
+        virtual bool stop();
 
         /**
          * @brief Ticks the application, providing periodic updates.
@@ -97,7 +97,7 @@ namespace BusinessLogic
          *
          * @return true if the tick operation was successful, false otherwise.
          */
-        virtual bool tick() override;
+        virtual bool tick();
 
     private:
         /** @brief Object responsible for building measurement sources. */

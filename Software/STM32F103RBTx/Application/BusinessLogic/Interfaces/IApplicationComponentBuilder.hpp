@@ -34,24 +34,6 @@ namespace BusinessLogic
          * @return true if initialization was successful, false otherwise.
          */
         virtual bool initialize() = 0;
-
-        /**
-         * @brief Starts the application components.
-         * @return true if components started successfully, false otherwise.
-         */
-        virtual bool start() = 0;
-
-        /**
-         * @brief Stops the application components.
-         * @return true if components stopped successfully, false otherwise.
-         */
-        virtual bool stop() = 0;
-
-        /**
-         * @brief Ticks the application components for periodic updates.
-         * @return true if the tick operation was successful, false otherwise.
-         */
-        virtual bool tick() = 0;
     };
 
 }

@@ -23,21 +23,6 @@ namespace BusinessLogic
         return true;
     }
 
-    bool MeasurementSourcesBuilder::start()
-    {
-        return true;
-    }
-
-    bool MeasurementSourcesBuilder::stop()
-    {
-        return true;
-    }
-
-    bool MeasurementSourcesBuilder::tick()
-    {
-        return true;
-    }
-
     bool MeasurementSourcesBuilder::registerSources(MeasurementCoordinator &coordinator)
     {
         bool status = true;

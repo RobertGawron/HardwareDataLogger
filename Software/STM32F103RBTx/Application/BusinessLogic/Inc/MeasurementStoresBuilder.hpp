@@ -83,24 +83,6 @@ namespace BusinessLogic
         virtual bool initialize() override;
 
         /**
-         * @brief Starts the measurement data stores.
-         * @return true if the components started successfully, false otherwise.
-         */
-        virtual bool start() override;
-
-        /**
-         * @brief Stops the measurement data stores.
-         * @return true if the components stopped successfully, false otherwise.
-         */
-        virtual bool stop() override;
-
-        /**
-         * @brief Ticks the measurement data stores for periodic updates.
-         * @return true if the tick operation was successful, false otherwise.
-         */
-        virtual bool tick() override;
-
-        /**
          * @brief Registers the measurement data stores with a data coordinator.
          *
          * This function registers the WiFi and SD card measurement recorders with the provided

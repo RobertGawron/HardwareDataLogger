@@ -18,28 +18,6 @@ namespace BusinessLogic
         return true;
     }
 
-    bool MeasurementStoresBuilder::start()
-    {
-        wifiRecorder.start();
-        sdCardRecorder.start();
-
-        // for debug
-        wifiRecorder.notify();
-
-        return true;
-    }
-
-    bool MeasurementStoresBuilder::stop()
-    {
-        return true;
-    }
-
-    bool MeasurementStoresBuilder::tick()
-    {
-
-        return true;
-    }
-
     bool MeasurementStoresBuilder::registerStores(MeasurementDataStore &coordinator)
     {
 

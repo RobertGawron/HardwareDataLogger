@@ -72,24 +72,6 @@ namespace BusinessLogic
         virtual bool initialize() override;
 
         /**
-         * @brief Starts the measurement sources.
-         * @return true if the components started successfully, false otherwise.
-         */
-        virtual bool start() override;
-
-        /**
-         * @brief Stops the measurement sources.
-         * @return true if the components stopped successfully, false otherwise.
-         */
-        virtual bool stop() override;
-
-        /**
-         * @brief Ticks the measurement sources for periodic updates.
-         * @return true if the tick operation was successful, false otherwise.
-         */
-        virtual bool tick() override;
-
-        /**
          * @brief Registers the measurement sources with a data coordinator.
          *
          * This function registers the pulse counter and UART measurement sources with the provided
