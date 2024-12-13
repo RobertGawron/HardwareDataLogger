@@ -2,45 +2,65 @@
 
 // #include "Driver/Inc/St7735DisplayDriver.hpp"
 
+#include "BusinessLogic/Inc/HmiMui.hpp"
+
 #include "Device/Inc/Keyboard.hpp"
 #include "Device/Inc/DisplayBrightnessRegulator.hpp"
 
-#include "BusinessLogic/Inc/HmiDataModel.hpp"
-#include "BusinessLogic/Inc/HmiViewManager.hpp"
-#include "BusinessLogic/Inc/HmiInputController.hpp"
-
 namespace BusinessLogic
 {
-    HmiFactory::HmiFactory(IPlatformFactory &_platformFactory)
-        : platformFactory(_platformFactory)
+    HmiFactory::HmiFactory(IPlatformFactory &platformFactory)
+        : display(platformFactory.createDisplayDriver()),
+          brightnessRegulator(
+              platformFactory.createAmbientLightSensorDriver(),
+              platformFactory.createDisplayBrightnessDriver()),
+          keyboard(platformFactory.createKeyboardDriver()),
+          hmi(display,
+              brightnessRegulator,
+              keyboard)
     {
     }
 
-    IHmiDataModel &HmiFactory::getDataModel()
+    bool HmiFactory::initialize()
     {
-        static Device::DisplayBrightnessRegulator brightnessRegulator(
-            platformFactory.createAmbientLightSensorDriver(),
-            platformFactory.createDisplayBrightnessDriver());
-
-        // static Device::DisplayBrightnessRegulator brightnessRegulator = getDisplayBrightnessRegulator();
-        static HmiDataModel model(brightnessRegulator);
-        return model;
+        return hmi.initialize();
     }
 
-    IHmiInputController &HmiFactory::getInputController()
+    bool HmiFactory::start()
     {
-        static Device::IKeyboard &keyboard = getKeyboard();
-        static HmiInputController controller(keyboard);
-        return controller;
+        return hmi.start();
     }
 
-    IHmiViewManager &HmiFactory::getHmiViewManager()
+    bool HmiFactory::tick()
     {
-        static Driver::IDisplayDriver &display = getDisplay();
-        static HmiViewManager view(display);
-        return view;
+        return hmi.tick();
     }
+    /*
+        IHmiDataModel &HmiFactory::getDataModel()
+        {
+            static Device::DisplayBrightnessRegulator brightnessRegulator(
+                platformFactory.createAmbientLightSensorDriver(),
+                platformFactory.createDisplayBrightnessDriver());
 
+            // static Device::DisplayBrightnessRegulator brightnessRegulator = getDisplayBrightnessRegulator();
+            static HmiDataModel model(brightnessRegulator);
+            return model;
+        }
+
+        IHmiInputController &HmiFactory::getInputController()
+        {
+            static Device::IKeyboard &keyboard = getKeyboard();
+            static HmiInputController controller(keyboard);
+            return controller;
+        }
+
+        IHmiViewManager &HmiFactory::getHmiViewManager()
+        {
+            static Driver::IDisplayDriver &display = getDisplay();
+            static HmiViewManager view(display);
+            return view;
+        }*/
+#if 0 
     Driver::IDisplayDriver &HmiFactory::getDisplay()
     {
         // TODO change name of createDisplayDriver, its called twice
@@ -64,5 +84,5 @@ namespace BusinessLogic
         static Device::Keyboard keyboard(platformFactory.createKeyboardDriver());
         return keyboard;
     }
-
+#endif
 }

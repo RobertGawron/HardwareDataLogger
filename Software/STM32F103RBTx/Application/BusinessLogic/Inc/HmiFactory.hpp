@@ -1,8 +1,14 @@
 #ifndef HmiFactory_h
 #define HmiFactory_h
 
-#include "BusinessLogic/Interfaces/IHmiFactory.hpp"
 #include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
+#include "BusinessLogic/Interfaces/IHmiFactory.hpp"
+
+#include "BusinessLogic/Inc/HmiMui.hpp"
+#include "Device/Inc/Display.hpp"
+#include "Device/Inc/Keyboard.hpp"
+
+// #include "BusinessLogic/Interfaces/IHmi.hpp"
 
 namespace BusinessLogic
 {
@@ -37,34 +43,15 @@ namespace BusinessLogic
          */
         HmiFactory() = delete;
         virtual ~HmiFactory() = default;
-        /**
-         * @brief Gets the data model component.
-         *
-         * Provides access to the IHmiDataModel instance used in the HMI system.
-         *
-         * @return Reference to the IHmiDataModel instance.
-         */
-        virtual IHmiDataModel &getDataModel() override;
 
-        /**
-         * @brief Gets the input controller component.
-         *
-         * Provides access to the IHmiInputController instance used in the HMI system.
-         *
-         * @return Reference to the IHmiInputController instance.
-         */
-        virtual IHmiInputController &getInputController() override;
+        virtual bool initialize() override;
 
-        /**
-         * @brief Gets the view manager component.
-         *
-         * Provides access to the IHmiViewManager instance used in the HMI system.
-         *
-         * @return Reference to the IHmiViewManager instance.
-         */
-        virtual IHmiViewManager &getHmiViewManager() override;
+        virtual bool start() override;
 
-    protected:
+        virtual bool tick() override;
+
+    private:
+#if 0 
         /**
          * @brief Gets the display driver component.
          *
@@ -92,9 +79,12 @@ namespace BusinessLogic
          * @return Reference to the Device::IKeyboard instance.
          */
         virtual Device::IKeyboard &getKeyboard() override;
-
-    private:
-        IPlatformFactory &platformFactory; /**< Reference to the platform factory used for creating platform-specific components. */
+#endif
+        HmiMui hmi;
+        Device::Display display;
+        Device::Keyboard keyboard;
+        Device::DisplayBrightnessRegulator brightnessRegulator;
+        // IPlatformFactory &platformFactory; /**< Reference to the platform factory used for creating platform-specific components. */
     };
 }
 

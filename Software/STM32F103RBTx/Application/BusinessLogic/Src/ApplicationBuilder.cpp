@@ -18,8 +18,9 @@ namespace BusinessLogic
           dataStore(),
           measurementCoordinator(dataStore),
 
-          hmiFactory(platformFactory),
-          hmiBuilder(hmiFactory)
+          hmiFactory(platformFactory)
+    //,
+    // hmiBuilder(hmiFactory)
 
     {
     }
@@ -34,8 +35,7 @@ namespace BusinessLogic
                     && storesBuilder.initialize()
                     && dataStore.initialize()
                     && measurementCoordinator.initialize()
-                    && hmiBuilder.initialize()
-                    /*&& */)
+                    && hmiFactory.initialize())
         // clang-format on
         {
             status = true;
@@ -53,7 +53,7 @@ namespace BusinessLogic
         bool status = false;
 
         dataStore.start();
-        hmiBuilder.start();
+        hmiFactory.start();
         /*
                 // clang-format off
                 if (
@@ -80,7 +80,7 @@ namespace BusinessLogic
         dataStore.notifyObservers();
         // clang-format off
                 if (/*measurementCoordinator.tick()
-                    &&*/ hmiBuilder.tick())
+                    &&*/ hmiFactory.tick())
         // clang-format on
         {
             status = true;

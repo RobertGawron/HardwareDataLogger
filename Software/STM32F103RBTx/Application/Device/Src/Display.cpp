@@ -198,7 +198,7 @@ namespace Device
         displayMap[0].display = this;
     }
 
-    bool Display::init()
+    bool Display::initialize()
     {
         const u8g2_cb_t *rotation = U8G2_R0;
         u8g2_Setup_st7735(&u8g2, rotation, u8x8_byte_dummy_callback, u8x8_gpio_and_delay_dummy_callback);

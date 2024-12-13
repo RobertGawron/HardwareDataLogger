@@ -10,7 +10,7 @@ namespace Device
     public:
         explicit Display(Driver::IDisplayDriver &displayDriver);
 
-        bool init();
+        virtual bool initialize() override;
         uint8_t u8x8DSt7735Impl(u8x8_t *u8x8, uint8_t msg, uint8_t argInt, void *argPtr);
 
     private:

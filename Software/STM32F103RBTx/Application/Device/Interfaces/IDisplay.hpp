@@ -11,7 +11,7 @@ namespace Device
         // todo
         IDisplay() : U8G2() {};
 
-        bool init();
+        virtual bool initialize() = 0;
     };
 
 };

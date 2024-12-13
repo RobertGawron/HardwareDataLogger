@@ -1,35 +1,37 @@
-#include "BusinessLogic/Inc/HmiViewManager.hpp"
-
-// for test of muiminimal lib
+#include "BusinessLogic/Inc/HmiFactory.hpp"
 #include "U8g2lib.h"
 #include "MUIU8g2.h"
-#include "Device/Inc/Display.hpp"
 
 // for test of driver lib
 #include <stdio.h>
-#include "Driver/Inc/DisplayPixelColor.hpp"
-#include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
 
 namespace BusinessLogic
 {
-    HmiViewManager::HmiViewManager(Driver::IDisplayDriver &_display)
-        : display(_display)
+    HmiMui::HmiMui(Device::IDisplay &_display,
+                   Device::IDisplayBrightnessRegulator &_displayBrightnessRegulator,
+                   Device::IKeyboard &_keyboard) : display(_display),
+                                                   displayBrightnessRegulator(_displayBrightnessRegulator),
+                                                   keyboard(_keyboard),
+                                                   IHmi(_display,
+                                                        _displayBrightnessRegulator,
+                                                        _keyboard)
     {
     }
 
-    bool HmiViewManager::initialize()
+    bool HmiMui::initialize()
     {
+
         volatile int x = 0;
-        display.initialize();
+        // display.initialize();
 
         // for tests
         auto color = Driver::DisplayPixelColor::getColor(0x2f, 0xff, 0xff);
         // display.drawHorizontalLine(1, 1, 20, color);
         printf("hello drawHorizontalLine\n");
 
-        Device::Display u8g2(display);
+        // Device::Display u8g2(display);
 
-        u8g2.init();
+        display.initialize();
 
         MUIU8G2 mui;
 
@@ -48,36 +50,30 @@ namespace BusinessLogic
 
         printf("%s %d\n", __FILE__, __LINE__);
 
-        u8g2.begin(/* menu_select_pin= */ 5, /* menu_next_pin= */ 4, /* menu_prev_pin= */ 2, /* menu_up_pin= */ U8X8_PIN_NONE, /* menu_down_pin= */ U8X8_PIN_NONE, /* menu_home_pin= */ 3);
+        display.begin(/* menu_select_pin= */ 5, /* menu_next_pin= */ 4, /* menu_prev_pin= */ 2, /* menu_up_pin= */ U8X8_PIN_NONE, /* menu_down_pin= */ U8X8_PIN_NONE, /* menu_home_pin= */ 3);
 
         printf("%s %d\n", __FILE__, __LINE__);
 
-        mui.begin(u8g2, fds_data, muif_list, sizeof(muif_list) / sizeof(muif_t));
+        mui.begin(display, fds_data, muif_list, sizeof(muif_list) / sizeof(muif_t));
         mui.gotoForm(/* form_id= */ 1, /* initial_cursor_position= */ 0);
-        u8g2.firstPage();
-        u8g2.setCursor(0, 0);
+        display.firstPage();
+        display.setCursor(0, 0);
 
         do
         {
             mui.draw();
-        } while (u8g2.nextPage());
+        } while (display.nextPage());
 
         return true;
     }
-    bool HmiViewManager::start()
+
+    bool HmiMui::start()
     {
-        display.start();
-        return true;
-    }
-    bool HmiViewManager::stop()
-    {
-        display.stop();
         return true;
     }
 
-    bool HmiViewManager::tick()
+    bool HmiMui::tick()
     {
-
         return true;
     }
 

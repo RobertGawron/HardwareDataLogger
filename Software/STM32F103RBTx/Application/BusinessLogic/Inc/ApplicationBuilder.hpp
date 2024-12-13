@@ -17,7 +17,6 @@
 #include "BusinessLogic/Inc/MeasurementStoresBuilder.hpp"
 
 #include "BusinessLogic/Inc/HmiFactory.hpp"
-#include "BusinessLogic/Inc/HmiBuilder.hpp"
 
 namespace BusinessLogic
 {
@@ -114,9 +113,6 @@ namespace BusinessLogic
         MeasurementCoordinator measurementCoordinator;
 
         HmiFactory hmiFactory;
-
-        /** @brief Object responsible for building and managing the HMI (Human Machine Interface). */
-        HmiBuilder hmiBuilder;
     };
 }
 
