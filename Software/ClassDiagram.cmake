@@ -4,7 +4,7 @@ find_program(PLANTUML_EXECUTABLE plantuml)
 
 if(HPP2PLANTUML_EXECUTABLE AND PLANTUML_EXECUTABLE)
     # Set the source directory and output directory for the HPP2PlantUML analysis
-    set(HPP2PLANTUML_INPUT_DIR "${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB")
+    set(HPP2PLANTUML_INPUT_DIR "${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx")
     set(HPP2PLANTUML_OUTPUT_DIR "${CMAKE_BINARY_DIR}/BuildArtifacts/ClassDiagram")
 
     # Ensure the output directory exists

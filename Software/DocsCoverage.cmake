@@ -5,7 +5,7 @@ find_program(GENHTML_EXECUTABLE genhtml)
 
 if(DOXYGEN_EXECUTABLE)
     # Set the source directory and output directory for the Doxygen analysis
-    set(DOXYGEN_INPUT_DIR "${CMAKE_SOURCE_DIR}/Software/NUCLEO-F103RB/Application/")
+    set(DOXYGEN_INPUT_DIR "${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/")
     set(DOXYGEN_OUTPUT_DIR "${CMAKE_BINARY_DIR}/BuildArtifacts/DocsCoverage")
 
     # Ensure the output directory exists

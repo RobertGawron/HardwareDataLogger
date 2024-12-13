@@ -1,0 +1,54 @@
+@startuml
+abstract U8G2
+class Display
+class St7735DisplayDriver
+class "stm32-st7735"
+class "CubeMX HAL"
+class MUIU8G2
+class "User Defined Layouts"
+class Hardware
+
+U8G2 <|-- Display
+
+Display *-- St7735DisplayDriver
+
+St7735DisplayDriver ..> "CubeMX HAL" : uses
+
+"stm32-st7735" .up.> St7735DisplayDriver : uses
+
+"CubeMX HAL" --> Hardware : communicates via SPI
+
+MUIU8G2 ..> U8G2 : uses
+
+"User Defined Layouts" ..> MUIU8G2 : uses
+
+"User Defined Layouts" ..> Display : uses
+
+note on link
+U8G2 and MUIU8G2 libraries are monochrome by default. 
+As a workaround, the color can be changed 
+directly through the Display class.
+end note
+
+' Note for "stm32-st7735"
+note bottom of "stm32-st7735"
+Library from STMicroelectronics 
+(not the commonly used stm32-st7735 library). 
+Implements communication with the ST7735 via SPI.
+end note
+
+' Note for "CubeMX HAL"
+note as CubeMX_NOTE
+Generated with CubeMX.
+end note
+"CubeMX HAL" .right. CubeMX_NOTE
+
+' Note for U8G2 and MUIU8G2
+note as U8G2_NOTE
+Part of the u8g2 library, 
+providing GUI and fonts.
+end note
+
+MUIU8G2 .left. U8G2_NOTE
+U8G2 .left. U8G2_NOTE
+@enduml
