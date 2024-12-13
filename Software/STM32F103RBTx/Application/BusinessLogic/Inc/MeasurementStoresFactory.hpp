@@ -1,13 +1,13 @@
 /**
- * @file MeasurementStoresBuilder.hpp
- * @brief Declares the MeasurementStoresBuilder class responsible for constructing and managing measurement data stores.
+ * @file MeasurementStoresFactory.hpp
+ * @brief Declares the MeasurementStoresFactory class responsible for constructing and managing measurement data stores.
  */
 
-#ifndef MeasurementStoresBuilder_h
-#define MeasurementStoresBuilder_h
+#ifndef MeasurementStoresFactory_h
+#define MeasurementStoresFactory_h
 
 #include <stdint.h>
-#include "BusinessLogic/Interfaces/IApplicationComponentBuilder.hpp"
+#include "BusinessLogic/Interfaces/IApplicationComponentFactory.hpp"
 
 // Driver
 #include "Driver/Interfaces/IUartDriver.hpp"
@@ -18,7 +18,7 @@
 // High-level components
 #include "BusinessLogic/Inc/MeasurementDataStore.hpp"
 
-#include "BusinessLogic/Interfaces/IApplicationComponentBuilder.hpp"
+#include "BusinessLogic/Interfaces/IApplicationComponentFactory.hpp"
 #include "Device/Inc/SdCardMeasurementRecorder.hpp"
 #include "Device/Inc/WiFiMeasurementRecorder.hpp"
 namespace BusinessLogic
@@ -37,18 +37,18 @@ namespace Driver
 namespace BusinessLogic
 {
     /**
-     * @class MeasurementStoresBuilder
+     * @class MeasurementStoresFactory
      * @brief Responsible for building and managing measurement data stores.
      *
-     * The MeasurementStoresBuilder class constructs and manages components related to storing measurement data.
+     * The MeasurementStoresFactory class constructs and manages components related to storing measurement data.
      * It requires drivers for the UART and SD card interfaces and constructs other components by itself.
      * This class is configurable based on the platform, whether it's running on firmware or in a simulation.
      */
-    class MeasurementStoresBuilder : public IApplicationComponentBuilder
+    class MeasurementStoresFactory : public IApplicationComponentFactory
     {
     public:
         /**
-         * @brief Constructs the MeasurementStoresBuilder with platform-specific drivers.
+         * @brief Constructs the MeasurementStoresFactory with platform-specific drivers.
          *
          * This constructor requires a UART driver for WiFi communication and an SD card driver to handle data storage.
          * The class constructs the measurement recorders and other components by itself.
@@ -56,49 +56,31 @@ namespace BusinessLogic
          * @param uartForWiFi Reference to the UART driver used for WiFi communication.
          * @param sdCard Reference to the SD card driver used for data storage.
          */
-        explicit MeasurementStoresBuilder(
+        explicit MeasurementStoresFactory(
             Driver::IUartDriver &uartForWiFi,
             Driver::ISdCardDriver &sdCard);
 
         /**
          * @brief Default destructor.
          */
-        virtual ~MeasurementStoresBuilder() = default;
+        virtual ~MeasurementStoresFactory() = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
          */
-        MeasurementStoresBuilder(const MeasurementStoresBuilder &) = delete;
+        MeasurementStoresFactory(const MeasurementStoresFactory &) = delete;
 
         /**
          * @brief Deleted assignment operator to prevent assignment.
-         * @return MeasurementStoresBuilder& The assigned object.
+         * @return MeasurementStoresFactory& The assigned object.
          */
-        MeasurementStoresBuilder &operator=(const MeasurementStoresBuilder &) = delete;
+        MeasurementStoresFactory &operator=(const MeasurementStoresFactory &) = delete;
 
         /**
          * @brief Initializes the measurement data stores.
          * @return true if initialization was successful, false otherwise.
          */
         virtual bool initialize() override;
-
-        /**
-         * @brief Starts the measurement data stores.
-         * @return true if the components started successfully, false otherwise.
-         */
-        virtual bool start() override;
-
-        /**
-         * @brief Stops the measurement data stores.
-         * @return true if the components stopped successfully, false otherwise.
-         */
-        virtual bool stop() override;
-
-        /**
-         * @brief Ticks the measurement data stores for periodic updates.
-         * @return true if the tick operation was successful, false otherwise.
-         */
-        virtual bool tick() override;
 
         /**
          * @brief Registers the measurement data stores with a data coordinator.
@@ -120,4 +102,4 @@ namespace BusinessLogic
     };
 }
 
-#endif // MeasurementStoresBuilder_h
+#endif // MeasurementStoresFactory_h

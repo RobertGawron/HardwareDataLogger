@@ -1,16 +1,16 @@
-#include "BusinessLogic/Inc/MeasurementStoresBuilder.hpp"
+#include "BusinessLogic/Inc/MeasurementStoresFactory.hpp"
 #include "Device/Interfaces/IMeasurementRecorder.hpp"
 namespace BusinessLogic
 {
 
-    MeasurementStoresBuilder::MeasurementStoresBuilder(Driver::IUartDriver &uartForWiFi,
+    MeasurementStoresFactory::MeasurementStoresFactory(Driver::IUartDriver &uartForWiFi,
                                                        Driver::ISdCardDriver &sdCard)
         : wifiRecorder(uartForWiFi),
           sdCardRecorder(sdCard)
     {
     }
 
-    bool MeasurementStoresBuilder::initialize()
+    bool MeasurementStoresFactory::initialize()
     {
         wifiRecorder.initialize();
         sdCardRecorder.initialize();
@@ -18,29 +18,7 @@ namespace BusinessLogic
         return true;
     }
 
-    bool MeasurementStoresBuilder::start()
-    {
-        wifiRecorder.start();
-        sdCardRecorder.start();
-
-        // for debug
-        wifiRecorder.notify();
-
-        return true;
-    }
-
-    bool MeasurementStoresBuilder::stop()
-    {
-        return true;
-    }
-
-    bool MeasurementStoresBuilder::tick()
-    {
-
-        return true;
-    }
-
-    bool MeasurementStoresBuilder::registerStores(MeasurementDataStore &coordinator)
+    bool MeasurementStoresFactory::registerStores(MeasurementDataStore &coordinator)
     {
 
         bool status = false;

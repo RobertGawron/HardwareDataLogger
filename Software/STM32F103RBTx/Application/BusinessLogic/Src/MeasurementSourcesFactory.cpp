@@ -1,9 +1,9 @@
-#include "BusinessLogic/Inc/MeasurementSourcesBuilder.hpp"
+#include "BusinessLogic/Inc/MeasurementSourcesFactory.hpp"
 
 namespace BusinessLogic
 {
 
-    MeasurementSourcesBuilder::MeasurementSourcesBuilder(Driver::IPulseCounterDriver &_pulseCounterDriver1,
+    MeasurementSourcesFactory::MeasurementSourcesFactory(Driver::IPulseCounterDriver &_pulseCounterDriver1,
                                                          Driver::IPulseCounterDriver &_pulseCounterDriver2,
                                                          Driver::IPulseCounterDriver &_pulseCounterDriver3,
                                                          Driver::IPulseCounterDriver &_pulseCounterDriver4,
@@ -17,28 +17,13 @@ namespace BusinessLogic
     {
     }
 
-    bool MeasurementSourcesBuilder::initialize()
+    bool MeasurementSourcesFactory::initialize()
     {
 
         return true;
     }
 
-    bool MeasurementSourcesBuilder::start()
-    {
-        return true;
-    }
-
-    bool MeasurementSourcesBuilder::stop()
-    {
-        return true;
-    }
-
-    bool MeasurementSourcesBuilder::tick()
-    {
-        return true;
-    }
-
-    bool MeasurementSourcesBuilder::registerSources(MeasurementCoordinator &coordinator)
+    bool MeasurementSourcesFactory::registerSources(MeasurementCoordinator &coordinator)
     {
         bool status = true;
         for (uint8_t i = 0u; (i < PulseCounterAmount) && status; i++)

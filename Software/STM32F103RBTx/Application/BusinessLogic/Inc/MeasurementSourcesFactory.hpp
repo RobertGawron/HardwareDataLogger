@@ -1,13 +1,13 @@
 /**
- * @file MeasurementSourcesBuilder.hpp
- * @brief Declares the MeasurementSourcesBuilder class responsible for building and managing measurement sources.
+ * @file MeasurementSourcesFactory.hpp
+ * @brief Declares the MeasurementSourcesFactory class responsible for building and managing measurement sources.
  */
 
-#ifndef MeasurementSourcesBuilder_h
-#define MeasurementSourcesBuilder_h
+#ifndef MeasurementSourcesFactory_h
+#define MeasurementSourcesFactory_h
 
 #include <stdint.h>
-#include "BusinessLogic/Interfaces/IApplicationComponentBuilder.hpp"
+#include "BusinessLogic/Interfaces/IApplicationComponentFactory.hpp"
 // Driver
 #include "Driver/Interfaces/IPulseCounterDriver.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
@@ -20,18 +20,18 @@
 namespace BusinessLogic
 {
     /**
-     * @class MeasurementSourcesBuilder
+     * @class MeasurementSourcesFactory
      * @brief Responsible for building and managing measurement sources.
      *
-     * The MeasurementSourcesBuilder class constructs and manages components related to measurement sources.
+     * The MeasurementSourcesFactory class constructs and manages components related to measurement sources.
      * It requires drivers for pulse counters and UART to build the measurement sources, which can be platform-specific,
      * depending on whether the application is running in firmware or simulation.
      */
-    class MeasurementSourcesBuilder : public IApplicationComponentBuilder
+    class MeasurementSourcesFactory : public IApplicationComponentFactory
     {
     public:
         /**
-         * @brief Constructs the MeasurementSourcesBuilder with platform-specific drivers.
+         * @brief Constructs the MeasurementSourcesFactory with platform-specific drivers.
          *
          * The constructor requires pulse counter drivers for measurement collection and a UART driver for UART-based
          * measurements. Other components are constructed internally.
@@ -42,7 +42,7 @@ namespace BusinessLogic
          * @param pulseCounterDriver4 Reference to the fourth pulse counter driver.
          * @param uart Reference to the UART driver for receiving measurement data.
          */
-        explicit MeasurementSourcesBuilder(
+        explicit MeasurementSourcesFactory(
             Driver::IPulseCounterDriver &pulseCounterDriver1,
             Driver::IPulseCounterDriver &pulseCounterDriver2,
             Driver::IPulseCounterDriver &pulseCounterDriver3,
@@ -52,42 +52,24 @@ namespace BusinessLogic
         /**
          * @brief Default destructor.
          */
-        virtual ~MeasurementSourcesBuilder() = default;
+        virtual ~MeasurementSourcesFactory() = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
          */
-        MeasurementSourcesBuilder(const MeasurementSourcesBuilder &) = delete;
+        MeasurementSourcesFactory(const MeasurementSourcesFactory &) = delete;
 
         /**
          * @brief Deleted assignment operator to prevent assignment.
-         * @return MeasurementSourcesBuilder& The assigned object.
+         * @return MeasurementSourcesFactory& The assigned object.
          */
-        MeasurementSourcesBuilder &operator=(const MeasurementSourcesBuilder &) = delete;
+        MeasurementSourcesFactory &operator=(const MeasurementSourcesFactory &) = delete;
 
         /**
          * @brief Initializes the measurement sources.
          * @return true if initialization was successful, false otherwise.
          */
         virtual bool initialize() override;
-
-        /**
-         * @brief Starts the measurement sources.
-         * @return true if the components started successfully, false otherwise.
-         */
-        virtual bool start() override;
-
-        /**
-         * @brief Stops the measurement sources.
-         * @return true if the components stopped successfully, false otherwise.
-         */
-        virtual bool stop() override;
-
-        /**
-         * @brief Ticks the measurement sources for periodic updates.
-         * @return true if the tick operation was successful, false otherwise.
-         */
-        virtual bool tick() override;
 
         /**
          * @brief Registers the measurement sources with a data coordinator.
@@ -115,4 +97,4 @@ namespace BusinessLogic
     };
 }
 
-#endif // MeasurementSourcesBuilder_h
+#endif // MeasurementSourcesFactory_h
