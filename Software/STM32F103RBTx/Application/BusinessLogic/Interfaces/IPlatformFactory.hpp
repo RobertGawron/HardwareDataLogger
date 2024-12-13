@@ -1,8 +1,5 @@
-#ifndef IPlatformFactory_h
-#define IPlatformFactory_h
-
 /**
- * @file IPlatformFactory.h
+ * @file IPlatformFactory.hpp
  * @brief Declaration of the IPlatformFactory interface for creating platform-specific drivers.
  *
  * This file contains the declaration of the IPlatformFactory interface, which provides methods
@@ -11,7 +8,9 @@
  * keyboard drivers, UART drivers, and SD card drivers.
  */
 
-// Interface includes for various drivers, specific implementations are not included here.
+#ifndef IPlatformFactory_h
+#define IPlatformFactory_h
+
 #include "Driver/Interfaces/IAmbientLightSensorDriver.hpp"
 #include "Driver/Interfaces/IDisplayBrightnessDriver.hpp"
 #include "Driver/Interfaces/IDisplayDriver.hpp"
@@ -29,22 +28,30 @@ namespace BusinessLogic
      * @brief Interface for creating platform-specific driver instances.
      *
      * The IPlatformFactory class provides an interface for creating various driver instances that
-     * are platform-specific. These drivers are used to interact with different hardware components
-     * such as ambient light sensors, displays, keyboards, UART communication interfaces, and SD cards.
-     * This interface is intended to be implemented by platform-specific factories that supply the
-     * appropriate driver instances for the platform.
+     * are platform-specific. These drivers interact with different hardware components, such as
+     * ambient light sensors, displays, keyboards, UART communication interfaces, and SD cards.
+     * Platform-specific factories implement this interface to supply appropriate driver instances
+     * for the target platform.
      */
     class IPlatformFactory
     {
     public:
+        /**
+         * @brief Default constructor for IPlatformFactory.
+         */
         IPlatformFactory() = default;
+
+        /**
+         * @brief Virtual destructor for IPlatformFactory.
+         *
+         * Ensures proper cleanup of resources for derived classes.
+         */
         virtual ~IPlatformFactory() = default;
 
         /**
          * @brief Creates an instance of the ambient light sensor driver.
          *
-         * This method should be implemented to return a reference to a platform-specific instance of
-         * the IAmbientLightSensorDriver, which handles interaction with an ambient light sensor.
+         * Provides a platform-specific implementation of the ambient light sensor driver.
          *
          * @return A reference to the platform-specific ambient light sensor driver.
          */
@@ -53,8 +60,7 @@ namespace BusinessLogic
         /**
          * @brief Creates an instance of the display brightness driver.
          *
-         * This method should be implemented to return a reference to a platform-specific instance of
-         * the IDisplayBrightnessDriver, which handles controlling the brightness of a display.
+         * Provides a platform-specific implementation of the display brightness driver.
          *
          * @return A reference to the platform-specific display brightness driver.
          */
@@ -63,8 +69,7 @@ namespace BusinessLogic
         /**
          * @brief Creates an instance of the display driver.
          *
-         * This method should be implemented to return a reference to a platform-specific instance of
-         * the IDisplayDriver, which handles display operations.
+         * Provides a platform-specific implementation of the display driver.
          *
          * @return A reference to the platform-specific display driver.
          */
@@ -73,8 +78,7 @@ namespace BusinessLogic
         /**
          * @brief Creates an instance of the keyboard driver.
          *
-         * This method should be implemented to return a reference to a platform-specific instance of
-         * the IKeyboardDriver, which handles keyboard input.
+         * Provides a platform-specific implementation of the keyboard driver.
          *
          * @return A reference to the platform-specific keyboard driver.
          */
@@ -83,10 +87,9 @@ namespace BusinessLogic
         /**
          * @brief Creates an instance of the UART driver.
          *
-         * This method should be implemented to return a reference to a platform-specific instance of
-         * the IUartDriver, which handles UART communication.
+         * Provides a platform-specific implementation of the UART driver.
          *
-         * @param id The identifier for the UART to create.
+         * @param id The identifier for the specific UART instance to create.
          * @return A reference to the platform-specific UART driver.
          */
         virtual Driver::IUartDriver &createUartDriver(const Driver::UartIdentifier id) = 0;
@@ -94,8 +97,7 @@ namespace BusinessLogic
         /**
          * @brief Creates an instance of the SD card driver.
          *
-         * This method should be implemented to return a reference to a platform-specific instance of
-         * the ISdCardDriver, which handles SD card operations.
+         * Provides a platform-specific implementation of the SD card driver.
          *
          * @return A reference to the platform-specific SD card driver.
          */
@@ -104,10 +106,9 @@ namespace BusinessLogic
         /**
          * @brief Creates an instance of the pulse counter driver.
          *
-         * This method should be implemented to return a reference to a platform-specific instance of
-         * the IPulseCounterDriver, which handles pulse counting for a specific pulse counter.
+         * Provides a platform-specific implementation of the pulse counter driver.
          *
-         * @param id The identifier for the pulse counter to create.
+         * @param id The identifier for the specific pulse counter instance to create.
          * @return A reference to the platform-specific pulse counter driver.
          */
         virtual Driver::IPulseCounterDriver &createPulseCounterDriver(const Driver::PulseCounterIdentifier id) = 0;

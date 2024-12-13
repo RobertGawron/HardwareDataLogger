@@ -35,6 +35,9 @@ if(DOXYGEN_EXECUTABLE)
                 --xml-dir "${DOXYGEN_OUTPUT_DIR}/xml" 
                 --src-dir "${DOXYGEN_INPUT_DIR}" 
                 --output "${DOXYGEN_OUTPUT_DIR}/doc-coverage.info"
+             COMMAND ${GENHTML_EXECUTABLE} --no-function-coverage 
+                --no-branch-coverage "${DOXYGEN_OUTPUT_DIR}/doc-coverage.info" 
+                -o "${DOXYGEN_OUTPUT_DIR}"
             WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
             COMMENT "Generating Coverxygen documentation coverage report..."
             VERBATIM

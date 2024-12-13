@@ -74,6 +74,8 @@ namespace Device
          *
          * Updates the keyboard state machine to handle debouncing of key presses and update key states.
          * This method should be called periodically.
+         *
+         * @return true if the tick operation was successful, false otherwise.
          */
         virtual bool tick() override;
 
@@ -88,20 +90,34 @@ namespace Device
         virtual KeyboardKeyActionState getKeyState(Driver::KeyboardKeyIdentifier key) const override;
 
     private:
-        Driver::IKeyboardDriver &keyboardDriver; /**< Reference to the platform-specific keyboard driver. */
+        /** @brief Reference to the platform-specific keyboard driver. */
+        Driver::IKeyboardDriver &keyboardDriver;
 
-        static constexpr uint8_t AmountOfKeys = static_cast<uint8_t>(Driver::KeyboardKeyIdentifier::LastNotUsed); /**< Number of keys supported by the keyboard. */
+        /** @brief Number of keys supported by the keyboard. */
+        static constexpr uint8_t AmountOfKeys = static_cast<uint8_t>(Driver::KeyboardKeyIdentifier::LastNotUsed);
 
-        uint8_t pressDurationTicks[AmountOfKeys];                 // counts number of tick() calls while key is pressed
+        /**
+         * @brief Array for tracking the duration (in ticks) each key has been pressed.
+         *
+         * Each entry counts the number of `tick()` calls while the key is pressed.
+         */
+        uint8_t pressDurationTicks[AmountOfKeys];
+
+        /** @brief Threshold for determining a long press (in ticks). */
         static constexpr uint8_t LONG_PRESS_THRESHOLD_TICKS = 10; // 10 ticks * 100ms = 1 second
 
+        /**
+         * @brief Array storing the action states for all keys.
+         *
+         * Each key's action state indicates whether it is pressed, held, or not pressed.
+         */
         KeyboardKeyActionState keyActionState[AmountOfKeys]{
             KeyboardKeyActionState::PressNot,
             KeyboardKeyActionState::PressNot,
             KeyboardKeyActionState::PressNot,
-            KeyboardKeyActionState::PressNot}; /**< Array storing the action states for all keys. */
+            KeyboardKeyActionState::PressNot};
     };
 
-}
+} // namespace Device
 
-#endif
+#endif // Keyboard_h

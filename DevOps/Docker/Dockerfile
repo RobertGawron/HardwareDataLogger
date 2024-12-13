@@ -104,6 +104,12 @@ ENV QT_PLUGIN_PATH="/workspace/venv/lib/python3.12/site-packages/PyQt6/Qt6/plugi
 # workaround for cppcheck html generator that needs older version 
 RUN pip uninstall -y pygments && pip install pygments==2.7.4
 
+
+RUN apt-get update && apt-get install -y \
+    lcov \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
 RUN mkdir -p /workspace/build
 WORKDIR /workspace/build
 

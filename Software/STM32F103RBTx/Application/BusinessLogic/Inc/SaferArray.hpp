@@ -8,20 +8,19 @@
  * A safer array class template that does not crash when trying to access more elements than its capacity.
  */
 
-/**
- * @class SaferArray
- * @brief A class template for managing a fixed-size array of pointers safely.
- *
- * This class provides a way to manage a static array of pointers with bounds checking
- * to prevent out-of-bounds access. The array does not allow adding more elements
- * than its maximum size and provides methods for adding, removing, and accessing elements.
- *
- * @tparam T The type of the elements (pointers) stored in the array.
- * @tparam MaxSize The maximum number of elements (pointers) the array can hold.
- */
 namespace BusinessLogic
 {
-
+    /**
+     * @class SaferArray
+     * @brief A class template for managing a fixed-size array of pointers safely.
+     *
+     * This class provides a way to manage a static array of pointers with bounds checking
+     * to prevent out-of-bounds access. The array does not allow adding more elements
+     * than its maximum size and provides methods for adding, removing, and accessing elements.
+     *
+     * @tparam T The type of the elements (pointers) stored in the array.
+     * @tparam MaxSize The maximum number of elements (pointers) the array can hold.
+     */
     template <typename T, int MaxSize>
     class SaferArray
     {

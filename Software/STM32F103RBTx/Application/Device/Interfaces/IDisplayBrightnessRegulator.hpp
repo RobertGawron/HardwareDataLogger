@@ -1,6 +1,14 @@
 #ifndef IDisplayBrightnessRegulator_h
 #define IDisplayBrightnessRegulator_h
 
+/**
+ * @file IDisplayBrightnessRegulator.hpp
+ * @brief Declaration of the IDisplayBrightnessRegulator interface for managing display brightness.
+ *
+ * This file contains the declaration of the IDisplayBrightnessRegulator interface, which defines methods
+ * for controlling and regulating the brightness of a display based on ambient light levels and user preferences.
+ */
+
 #include "Driver/Interfaces/IAmbientLightSensorDriver.hpp"
 #include "Driver/Interfaces/IDisplayBrightnessDriver.hpp"
 
@@ -47,7 +55,16 @@ namespace Device
          * @return IDisplayBrightnessRegulator& Reference to this object.
          */
         IDisplayBrightnessRegulator &operator=(const IDisplayBrightnessRegulator &) = delete;
+
+        /**
+         * @brief Initializes the brightness regulator.
+         *
+         * Sets up necessary configurations for the brightness regulator.
+         *
+         * @return True if initialization is successful; false otherwise.
+         */
         virtual bool init() = 0;
+
         /**
          * @brief Ticks the brightness regulator state machine.
          *
@@ -75,6 +92,6 @@ namespace Device
         virtual void setBrightnessPercentage(uint8_t level) = 0;
     };
 
-}
+} // namespace Device
 
-#endif //  IDisplayBrightnessRegulator_h
+#endif // IDisplayBrightnessRegulator_h

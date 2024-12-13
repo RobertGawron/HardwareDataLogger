@@ -1,73 +1,67 @@
+/**
+ * @file IHmiFactory.hpp
+ * @brief Defines the IHmiFactory interface for creating HMI-related components.
+ */
+
 #ifndef IHmiFactory_h
 #define IHmiFactory_h
 
 #include "Device/Interfaces/IKeyboard.hpp"
 #include "Driver/Interfaces/IDisplayDriver.hpp"
-// #include "Device/Interfaces/IDisplayBrightnessRegulator.hpp"
 #include "Device/Inc/DisplayBrightnessRegulator.hpp"
 
 namespace BusinessLogic
 {
     /**
      * @class IHmiFactory
-     * @brief Interface for creating HMI-related components.
+     * @brief Interface for creating Human-Machine Interface (HMI)-related components.
      *
-
+     * The IHmiFactory class provides an interface for creating and initializing various
+     * HMI-related components such as displays, keyboards, and brightness regulators.
+     * This abstraction allows for flexible and modular creation of platform-specific
+     * HMI components.
      */
     class IHmiFactory
     {
     public:
         /**
-         * @brief Default constructor.
-         *
-         * Initializes a new instance of the IHmiFactory interface.
+         * @brief Constructs an IHmiFactory instance.
          */
         IHmiFactory() = default;
 
         /**
-         * @brief Virtual destructor.
+         * @brief Virtual destructor for IHmiFactory.
          *
-         * Ensures proper cleanup of derived classes.
+         * Ensures proper cleanup of resources for derived classes.
          */
         virtual ~IHmiFactory() = default;
 
+        /**
+         * @brief Initializes the HMI factory.
+         *
+         * This method prepares the factory to create and manage HMI components.
+         *
+         * @return True if initialization was successful; false otherwise.
+         */
         virtual bool initialize() = 0;
+
+        /**
+         * @brief Starts the HMI factory.
+         *
+         * This method starts the operation of all HMI components created by the factory.
+         *
+         * @return True if the operation started successfully; false otherwise.
+         */
         virtual bool start() = 0;
 
+        /**
+         * @brief Periodic update function for the HMI factory.
+         *
+         * This method should be called periodically to update the state of HMI components.
+         *
+         * @return True if the update operation was successful; false otherwise.
+         */
         virtual bool tick() = 0;
-
-#if 0 
-    private:
-        /**
-         * @brief Retrieves the display driver.
-         *
-         * This method returns a reference to the display driver. The display driver is responsible for rendering
-         * graphical content on the display.
-         *
-         * @return Driver::IDisplayDriver& Reference to the display driver.
-         */
-        virtual Driver::IDisplayDriver &getDisplay() = 0;
-
-        /**
-         * @brief Retrieves the display brightness regulator.
-         *
-         * This method returns a reference to the display brightness regulator. The brightness regulator manages
-         * the brightness settings of the display.
-         *
-         * @return Device::IDisplayBrightnessRegulator& Reference to the display brightness regulator.
-         */
-        virtual Device::IDisplayBrightnessRegulator &getDisplayBrightnessRegulator() = 0;
-
-        /**
-         * @brief Retrieves the keyboard.
-         *
-         * This method returns a reference to the keyboard component. The keyboard component is responsible for
-         * handling keyboard input.
-         *
-         * @return Device::IKeyboard& Reference to the keyboard.
-         */
-        virtual Device::IKeyboard &getKeyboard() = 0;
-#endif
     };
 }
 

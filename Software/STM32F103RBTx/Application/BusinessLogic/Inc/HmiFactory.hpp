@@ -8,8 +8,6 @@
 #include "Device/Inc/Display.hpp"
 #include "Device/Inc/Keyboard.hpp"
 
-// #include "BusinessLogic/Interfaces/IHmi.hpp"
-
 namespace BusinessLogic
 {
     /**
@@ -21,9 +19,9 @@ namespace BusinessLogic
      * for the HMI system. This includes components such as data models, input controllers, view managers,
      * and platform-specific drivers.
      *
-     * The factory pattern is used to centralize the creation logic of these components and manage their
-     * lifecycle. This class is an implementation of the IHmiFactory interface and provides high-level methods
-     * for obtaining the required components.
+     * The factory pattern centralizes the creation logic of these components and manages their lifecycle.
+     * This class implements the IHmiFactory interface and provides high-level methods for initializing
+     * and managing the HMI system.
      */
     class HmiFactory : public IHmiFactory
     {
@@ -42,22 +40,73 @@ namespace BusinessLogic
          * Prevents the creation of HmiFactory instances without a platformFactory.
          */
         HmiFactory() = delete;
+
+        /**
+         * @brief Default destructor for HmiFactory.
+         */
         virtual ~HmiFactory() = default;
 
+        /**
+         * @brief Deleted copy constructor to prevent copying of HmiFactory.
+         */
         HmiFactory(const HmiFactory &) = delete;
 
+        /**
+         * @brief Deleted assignment operator to prevent assignment of HmiFactory.
+         *
+         * @return Reference to the HmiFactory instance.
+         */
         HmiFactory &operator=(const HmiFactory &) = delete;
 
+        /**
+         * @brief Initializes the HMI system components.
+         *
+         * This method sets up all necessary components and prepares the HMI system for operation.
+         *
+         * @return true if initialization is successful, false otherwise.
+         */
         virtual bool initialize() override;
 
+        /**
+         * @brief Starts the HMI system.
+         *
+         * This method begins the operation of the HMI system and its components.
+         *
+         * @return true if the system starts successfully, false otherwise.
+         */
         virtual bool start() override;
 
+        /**
+         * @brief Provides periodic updates to the HMI system.
+         *
+         * This method is called periodically to update the HMI state.
+         *
+         * @return true if the tick operation is successful, false otherwise.
+         */
         virtual bool tick() override;
 
     private:
+        /**
+         * @brief Instance of HMI implementation using the MUI library.
+         *
+         * Note: While directly exposing the use of the MUI library in the header file is not ideal, it is
+         * necessary here due to design constraints.
+         */
         HmiMui hmi;
+
+        /**
+         * @brief Display driver used by the HMI system.
+         */
         Device::Display display;
+
+        /**
+         * @brief Keyboard driver used for input in the HMI system.
+         */
         Device::Keyboard keyboard;
+
+        /**
+         * @brief Display brightness regulator for managing screen brightness.
+         */
         Device::DisplayBrightnessRegulator brightnessRegulator;
     };
 }

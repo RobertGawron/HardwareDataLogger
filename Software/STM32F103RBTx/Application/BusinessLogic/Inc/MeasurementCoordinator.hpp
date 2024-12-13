@@ -22,7 +22,7 @@ namespace BusinessLogic
      * The MeasurementCoordinator class is responsible for registering input devices that provide
      * measurement data, periodically querying them for new data, and then notifying the storage
      * system to store this data. This class employs an observer pattern to manage multiple input
-     * devices.
+     * devices and ensure data is processed and stored efficiently.
      */
     class MeasurementCoordinator
     {
@@ -44,8 +44,16 @@ namespace BusinessLogic
          */
         virtual ~MeasurementCoordinator() = default;
 
+        /**
+         * @brief Deleted copy constructor to prevent copying of MeasurementCoordinator.
+         */
         MeasurementCoordinator(const MeasurementCoordinator &) = delete;
 
+        /**
+         * @brief Deleted assignment operator to prevent assignment of MeasurementCoordinator.
+         *
+         * @return Reference to the MeasurementCoordinator instance.
+         */
         MeasurementCoordinator &operator=(const MeasurementCoordinator &) = delete;
 
         /**

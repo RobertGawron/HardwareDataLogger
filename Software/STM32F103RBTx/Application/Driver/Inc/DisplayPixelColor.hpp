@@ -1,3 +1,8 @@
+/**
+ * @file DisplayPixelColor.hpp
+ * @brief Provides utilities for converting RGB values to the RGB565 color format used by certain displays.
+ */
+
 #ifndef DisplayPixelColor_h
 #define DisplayPixelColor_h
 
@@ -7,18 +12,24 @@ namespace Driver
 {
     /**
      * @class DisplayPixelColor
-     * @brief Provides utilities to convert RGB values to the RGB565 color format used by certain displays.
+     * @brief A utility class for handling colors in RGB565 format.
+     *
+     * The `DisplayPixelColor` class provides methods for converting standard 8-bit RGB values
+     * into the 16-bit RGB565 format, commonly used in embedded systems for display drivers.
+     * It also includes predefined color constants for convenience.
      */
     class DisplayPixelColor
     {
     public:
+        /// Alias for the RGB565 color representation.
         using PixelColor = uint16_t;
+
         /**
          * @brief Converts 8-bit RGB values to a 16-bit RGB565 format.
          *
-         * This function converts 8-bit red, green, and blue color values (ranging from 0 to 255)
-         * into a 16-bit color value following the RGB565 format, where red is 5 bits, green is 6 bits,
-         * and blue is 5 bits.
+         * Converts 8-bit red, green, and blue components into a single 16-bit value
+         * using the RGB565 format. This format allocates 5 bits for red, 6 bits for green,
+         * and 5 bits for blue.
          *
          * @param red The red component of the color, ranging from 0 to 255.
          * @param green The green component of the color, ranging from 0 to 255.
@@ -46,11 +57,11 @@ namespace Driver
 
     protected:
         /**
-         * @brief Converts 8-bit RGB values to a 16-bit RGB565 format.
+         * @brief Internal method to convert 8-bit RGB values to RGB565 format.
          *
-         * This is an internal utility function used by the class to perform the actual conversion.
-         * It takes into account the extra bit for the green component due to the human eye's
-         * higher sensitivity to green light.
+         * This method performs the actual bitwise operations to create the RGB565
+         * representation of the provided RGB components. It is used internally by
+         * `getColor` for the conversion process.
          *
          * @param red The red component of the color, ranging from 0 to 255.
          * @param green The green component of the color, ranging from 0 to 255.
@@ -82,4 +93,4 @@ namespace Driver
     };
 }
 
-#endif
+#endif // DisplayPixelColor_h
