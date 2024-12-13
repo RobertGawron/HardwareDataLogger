@@ -1,12 +1,59 @@
 #include "BusinessLogic/Inc/HmiFactory.hpp"
-#include "U8g2lib.h"
-#include "MUIU8g2.h"
+// #include "Device/Inc/KeyboardKeyActionState.hpp"
+#include "Driver/Inc/KeyboardKeyIdentifier.hpp"
 
 // for test of driver lib
 #include <stdio.h>
 
 namespace BusinessLogic
 {
+    // Define fonts/styles and UI elements
+    muif_t muif_list[] = {
+        MUIF_U8G2_FONT_STYLE(0, u8g2_font_helvR08_tr), /* style 0: small regular font */
+        MUIF_U8G2_FONT_STYLE(1, u8g2_font_helvB10_tr), /* style 1: larger bold font for headings */
+        MUIF_U8G2_LABEL(),                             /* allow MUI_LABEL command */
+        MUIF_BUTTON("BN", mui_u8g2_btn_exit_wm_fi),    /* simple exit button definition */
+        MUIF_BUTTON("BG", mui_u8g2_btn_goto_wm_fi),    /* assume a callback to go to a given form */
+        //  Add more UI elements or callbacks as needed
+    };
+
+    // Define multiple forms
+    fds_t fds_data[] =
+        /* ----------- Form 1: A list of selectable items ----------- */
+        MUI_FORM(1)
+            MUI_STYLE(0)
+                MUI_LABEL(5, 10, "Select an Item")
+                    MUI_XYT("BN", 64, 20, "Item 1")
+                        MUI_XYT("BN", 64, 30, "Item 2")
+                            MUI_XYT("BN", 64, 40, "Item 3")
+
+        /* ----------- Form 2: A more complex layout ----------- */
+        MUI_FORM(2)
+        // Use a larger font style for the heading
+        MUI_STYLE(1)
+            MUI_LABEL(5, 10, "Complex Layout")
+        // Switch back to smaller font for details
+        MUI_STYLE(0)
+            MUI_LABEL(5, 25, "Choose an Option:")
+                MUI_XYT("BN", 64, 35, "Option A")
+                    MUI_XYT("BN", 64, 45, "Option B")
+                        MUI_XYT("BN", 64, 55, "Option C")
+
+        // A separator or additional label
+        MUI_LABEL(5, 70, "Navigation:")
+        // Buttons to navigate to other forms (using a goto callback defined in MUIF_BUTTON "BG")
+        // For example, pass form ID as a parameter with the string or implement logic in callback
+        MUI_XYT("BG", 64, 90, "Go to Form 1")  /* The callback could interpret "Go to Form 1" as MUI_GOTO(1) */
+        MUI_XYT("BG", 64, 110, "Go to Form 3") /* Similarly, callback sends user to Form 3 */
+
+        /* ----------- Form 3: Another simple form ----------- */
+        MUI_FORM(3)
+            MUI_STYLE(0)
+                MUI_LABEL(5, 15, "You are on Form 3")
+                    MUI_XYT("BG", 64, 30, "Go Back") /* A button that returns to Form 1, again handled by callback */
+
+        ; // end of fds_data array
+
     HmiMui::HmiMui(Device::IDisplay &_display,
                    Device::IDisplayBrightnessRegulator &_displayBrightnessRegulator,
                    Device::IKeyboard &_keyboard) : display(_display),
@@ -20,7 +67,7 @@ namespace BusinessLogic
 
     bool HmiMui::initialize()
     {
-
+        /*
         volatile int x = 0;
         // display.initialize();
 
@@ -28,31 +75,20 @@ namespace BusinessLogic
         auto color = Driver::DisplayPixelColor::getColor(0x2f, 0xff, 0xff);
         // display.drawHorizontalLine(1, 1, 20, color);
         printf("hello drawHorizontalLine\n");
-
-        // Device::Display u8g2(display);
+        */
+        keyboard.init();
+        displayBrightnessRegulator.init();
 
         display.initialize();
 
-        MUIU8G2 mui;
+        return true;
+    }
 
-        muif_t muif_list[] = {
-            MUIF_U8G2_FONT_STYLE(0, u8g2_font_helvR08_tr), /* define style 0 */
-            MUIF_U8G2_LABEL(),                             /* allow MUI_LABEL command */
-            MUIF_BUTTON("BN", mui_u8g2_btn_exit_wm_fi)     /* define exit button */
-        };
-
-        fds_t fds_data[] =                       /* Don't use comma between the commands! */
-            MUI_FORM(1)                          /* This will start the definition of form 1 */
-            MUI_STYLE(0)                         /* select the font defined with style 0 */
-            MUI_LABEL(5, 15, "Hello U8g2")       /* place text at postion x=5, y=15 */
-            MUI_XYT("BN", 64, 30, " Select Me ") /* place a button at pos x=64, y=30 */
-            ;
-
-        printf("%s %d\n", __FILE__, __LINE__);
+    bool HmiMui::start()
+    {
+        printf("START %s %d\n", __FILE__, __LINE__);
 
         display.begin(/* menu_select_pin= */ 5, /* menu_next_pin= */ 4, /* menu_prev_pin= */ 2, /* menu_up_pin= */ U8X8_PIN_NONE, /* menu_down_pin= */ U8X8_PIN_NONE, /* menu_home_pin= */ 3);
-
-        printf("%s %d\n", __FILE__, __LINE__);
 
         mui.begin(display, fds_data, muif_list, sizeof(muif_list) / sizeof(muif_t));
         mui.gotoForm(/* form_id= */ 1, /* initial_cursor_position= */ 0);
@@ -67,13 +103,56 @@ namespace BusinessLogic
         return true;
     }
 
-    bool HmiMui::start()
-    {
-        return true;
-    }
-
     bool HmiMui::tick()
     {
+        keyboard.tick();
+        displayBrightnessRegulator.tick();
+
+        /*
+        Maping between MUI and hw pins:
+
+        menu_select_pin = right
+        menu_next_pin   = down
+        menu_prev_pin   = up
+        menu_home_pin   = left
+        */
+
+        if ((keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up) == Device::KeyboardKeyActionState::PressEndLong))
+        {
+            mui.prevField();
+        }
+
+        if ((keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Down) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Down) == Device::KeyboardKeyActionState::PressEndLong))
+        {
+            mui.nextField();
+        }
+
+        if ((keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Left) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Left) == Device::KeyboardKeyActionState::PressEndLong))
+        {
+            mui.leaveForm();
+        }
+
+        if ((keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Right) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Right) == Device::KeyboardKeyActionState::PressEndLong))
+        {
+            mui.sendSelect();
+        }
+
+        // display.clear();
+        // mui.gotoForm(2, 0);
+        // mui.nextField();
+        // mui.sendSelect();
+        display.clear();
+        do
+        {
+            mui.draw();
+        } while (display.nextPage());
+
+        /*    printf("key state: %d %d %d %d\n",
+                   keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up),
+                   keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Down),
+                   keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Left),
+                   keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Right));
+          */
         return true;
     }
 

@@ -44,6 +44,10 @@ namespace BusinessLogic
          */
         virtual ~MeasurementCoordinator() = default;
 
+        MeasurementCoordinator(const MeasurementCoordinator &) = delete;
+
+        MeasurementCoordinator &operator=(const MeasurementCoordinator &) = delete;
+
         /**
          * @brief Initializes the MeasurementCoordinator and its registered measurement sources.
          *
@@ -62,17 +66,6 @@ namespace BusinessLogic
          * @return True if the tick operation was successful, false otherwise.
          */
         virtual bool tick();
-
-        /**
-         * @brief Deleted copy constructor to prevent copying.
-         */
-        MeasurementCoordinator(const MeasurementCoordinator &) = delete;
-
-        /**
-         * @brief Deleted assignment operator to prevent assignment.
-         * @return MeasurementCoordinator& The assigned object.
-         */
-        MeasurementCoordinator &operator=(const MeasurementCoordinator &) = delete;
 
         /**
          * @brief Updates measurements from all registered input devices.

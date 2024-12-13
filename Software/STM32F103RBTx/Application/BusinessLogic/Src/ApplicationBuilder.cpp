@@ -2,6 +2,9 @@
 #include "Driver/Inc/PulseCounterIdentifier.hpp"
 #include "Driver/Inc/UartIdentifier.hpp"
 
+// for test of driver lib
+#include <stdio.h>
+
 namespace BusinessLogic
 {
 

@@ -44,6 +44,10 @@ namespace BusinessLogic
         HmiFactory() = delete;
         virtual ~HmiFactory() = default;
 
+        HmiFactory(const HmiFactory &) = delete;
+
+        HmiFactory &operator=(const HmiFactory &) = delete;
+
         virtual bool initialize() override;
 
         virtual bool start() override;
@@ -51,40 +55,10 @@ namespace BusinessLogic
         virtual bool tick() override;
 
     private:
-#if 0 
-        /**
-         * @brief Gets the display driver component.
-         *
-         * Provides access to the Driver::IDisplayDriver instance used for interacting with the display hardware.
-         *
-         * @return Reference to the Driver::IDisplayDriver instance.
-         */
-        virtual Driver::IDisplayDriver &getDisplay() override;
-
-        /**
-         * @brief Gets the display brightness regulator component.
-         *
-         * Provides access to the Device::IDisplayBrightnessRegulator instance used for managing the display's
-         * brightness settings.
-         *
-         * @return Reference to the Device::IDisplayBrightnessRegulator instance.
-         */
-        virtual Device::IDisplayBrightnessRegulator &getDisplayBrightnessRegulator() override;
-
-        /**
-         * @brief Gets the keyboard component.
-         *
-         * Provides access to the Device::IKeyboard instance used for handling keyboard input.
-         *
-         * @return Reference to the Device::IKeyboard instance.
-         */
-        virtual Device::IKeyboard &getKeyboard() override;
-#endif
         HmiMui hmi;
         Device::Display display;
         Device::Keyboard keyboard;
         Device::DisplayBrightnessRegulator brightnessRegulator;
-        // IPlatformFactory &platformFactory; /**< Reference to the platform factory used for creating platform-specific components. */
     };
 }
 

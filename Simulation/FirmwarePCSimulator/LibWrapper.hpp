@@ -54,6 +54,19 @@ extern "C"
      */
     uint16_t LibWrapper_GetPixelValue(uint8_t x, uint8_t y);
 
+    typedef enum KeyboardKeyIdentifier
+    {
+        Up = 0u,         /**< Represents the 'Up' key, assigned with value 0. */
+        Down = 1u,       /**< Represents the 'Down' key, assigned with value 1. */
+        Left = 2u,       /**< Represents the 'Left' key, assigned with value 2. */
+        Right = 3u,      /**< Represents the 'Right' key, assigned with value 3. */
+        LastNotUsed = 4u /**< Represents the last enum value, used to determine the size of the enum. */
+    } KeyboardKeyIdentifier;
+
+    void LibWrapper_KeyPressed(KeyboardKeyIdentifier keyId);
+
+    void LibWrapper_KeyReleased(KeyboardKeyIdentifier keyId);
+
 #ifdef __cplusplus
 }
 #endif

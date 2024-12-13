@@ -21,11 +21,11 @@ namespace Device
      */
     enum class KeyboardKeyActionState : uint8_t
     {
-        PressStart,    /**< The user started pressing the key. */
-        PressEndShort, /**< The press has ended and is considered a short-duration press. */
-        PressEndLong,  /**< The press has ended and is considered a long-duration press. */
-        PressNot,      /**< The key is not currently pressed. */
-        Fail           /**< The key is in a fail mode, indicating an error or invalid state. */
+        PressStart = 0u,    /**< The user started pressing the key. */
+        PressEndShort = 1u, /**< The press has ended and is considered a short-duration press. */
+        PressEndLong = 2u,  /**< The press has ended and is considered a long-duration press. */
+        PressNot = 3u,      /**< The key is not currently pressed. */
+        Fail = 4u           /**< The key is in a fail mode, indicating an error or invalid state. */
     };
 
 }

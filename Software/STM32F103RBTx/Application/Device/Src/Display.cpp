@@ -123,16 +123,20 @@ namespace Device
                     uint8_t col_data = tile->tile_ptr[col]; // This is a vertical column
                     for (uint8_t bit = 0; bit < 8; bit++)
                     {
+                        Driver::DisplayPixelColor::PixelColor color = Driver::DisplayPixelColor::getColor(0x00, 0x00, 0x00);
+                        uint8_t x = tile_x_start + col;
+                        uint8_t y = tile_y_start + bit;
+
                         if (col_data & (1 << bit))
                         {
                             // Now (col, bit) corresponds to (x, y) pixel offsets within the tile:
                             // x = tile_x_start + col
                             // y = tile_y_start + bit
-                            printf("Pixel ON at x=%d, y=%d\n", tile_x_start + col, tile_y_start + bit);
-                            uint8_t x = tile_x_start + col;
-                            uint8_t y = tile_y_start + bit;
-                            displayDriver.setPixel(x, y, Driver::DisplayPixelColor::getColor(0x2f, 0xff, 0xff));
+                            // printf("Pixel ON at x=%d, y=%d\n", tile_x_start + col, tile_y_start + bit);
+                            color = Driver::DisplayPixelColor::getColor(0x2f, 0xff, 0xff);
                         }
+
+                        displayDriver.setPixel(x, y, color);
                     }
                 }
 

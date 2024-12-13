@@ -4,6 +4,9 @@
 #include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
 #include "BusinessLogic/Interfaces/IHmi.hpp"
 
+#include "U8g2lib.h"
+#include "MUIU8g2.h"
+
 namespace BusinessLogic
 {
 
@@ -17,6 +20,10 @@ namespace BusinessLogic
         HmiMui() = delete;
         virtual ~HmiMui() = default;
 
+        HmiMui(const HmiMui &) = delete;
+
+        HmiMui &operator=(const HmiMui &) = delete;
+
         virtual bool initialize() override;
         virtual bool start() override;
 
@@ -26,6 +33,8 @@ namespace BusinessLogic
         Device::IDisplay &display;
         Device::IDisplayBrightnessRegulator &displayBrightnessRegulator;
         Device::IKeyboard &keyboard;
+
+        MUIU8G2 mui;
     };
 }
 

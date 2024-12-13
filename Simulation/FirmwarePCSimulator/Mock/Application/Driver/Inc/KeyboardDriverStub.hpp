@@ -7,6 +7,7 @@
 #define KeyboardDriverStub_H_
 
 #include "Driver/Interfaces/IKeyboardDriver.hpp"
+#include "Driver/Inc/KeyboardKeyState.hpp"
 
 namespace Driver
 {
@@ -59,6 +60,8 @@ namespace Driver
          * It is derived from the last unused key identifier.
          */
         static constexpr uint8_t AmountOfKeys = static_cast<uint8_t>(Driver::KeyboardKeyIdentifier::LastNotUsed);
+
+        KeyboardKeyState keyState[AmountOfKeys] = {KeyboardKeyState::NotPressed};
 
     protected:
         /**

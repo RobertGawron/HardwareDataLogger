@@ -30,7 +30,7 @@ namespace Driver
 
     KeyboardKeyState KeyboardDriverStub::getKeyState(const KeyboardKeyIdentifier key) const
     {
-        KeyboardKeyState state = KeyboardKeyState::NotPressed;
+        KeyboardKeyState state = keyState[static_cast<uint8_t>(key)];
 
         return state;
     }
