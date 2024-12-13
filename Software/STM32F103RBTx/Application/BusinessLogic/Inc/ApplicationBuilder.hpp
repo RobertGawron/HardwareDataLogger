@@ -7,14 +7,14 @@
 #ifndef APPLICATIONBUILDER_H_
 #define APPLICATIONBUILDER_H_
 
-#include "BusinessLogic/Interfaces/IApplicationComponentBuilder.hpp"
+#include "BusinessLogic/Interfaces/IApplicationComponentFactory.hpp"
 #include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
 
 #include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
 #include "BusinessLogic/Inc/MeasurementDataStore.hpp"
 
-#include "BusinessLogic/Inc/MeasurementSourcesBuilder.hpp"
-#include "BusinessLogic/Inc/MeasurementStoresBuilder.hpp"
+#include "BusinessLogic/Inc/MeasurementSourcesFactory.hpp"
+#include "BusinessLogic/Inc/MeasurementStoresFactory.hpp"
 
 #include "BusinessLogic/Inc/HmiFactory.hpp"
 
@@ -30,7 +30,7 @@ namespace BusinessLogic
      * It does not create any objects by itself but relies on objects passed through the
      * IPlatformFactory interface.
      */
-    class ApplicationBuilder : public IApplicationComponentBuilder
+    class ApplicationBuilder : public IApplicationComponentFactory
     {
     public:
         /**
@@ -101,10 +101,10 @@ namespace BusinessLogic
 
     private:
         /** @brief Object responsible for building measurement sources. */
-        MeasurementSourcesBuilder sourceBuilder;
+        MeasurementSourcesFactory sourceBuilder;
 
         /** @brief Object responsible for building measurement stores. */
-        MeasurementStoresBuilder storesBuilder;
+        MeasurementStoresFactory storesBuilder;
 
         /** @brief Object responsible for storing measurement data. */
         MeasurementDataStore dataStore;
