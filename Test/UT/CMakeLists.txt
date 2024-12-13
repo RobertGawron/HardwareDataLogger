@@ -62,10 +62,6 @@ function(create_test_exec TARGET_NAME SRC_FILES)
 endfunction()
 
 # Define source files for each test
-set(TEST_HMIBUILDER_SRC
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic/Src/HmiBuilder.cpp
-    ${CMAKE_SOURCE_DIR}/Test/UT/BusinessLogic/test_HmiBuilder.cpp
-)
 
 set(TEST_SAFERARRAY_SRC
     ${CMAKE_SOURCE_DIR}/Test/UT/BusinessLogic/test_SaferArray.cpp
@@ -110,7 +106,6 @@ set(TEST_UART_SRC
 )
 
 # Add test executables using the create_test_exec function with source lists
-create_test_exec(test_HmiBuilder "${TEST_HMIBUILDER_SRC}")
 create_test_exec(test_SaferArray "${TEST_SAFERARRAY_SRC}")
 create_test_exec(test_DriverState "${TEST_DRIVERSTATE_SRC}")
 create_test_exec(test_KeyboardFourPushButtonsDriver "${TEST_KEYBOARD_SRC}")

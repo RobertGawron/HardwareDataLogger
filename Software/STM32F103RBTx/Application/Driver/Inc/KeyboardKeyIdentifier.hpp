@@ -2,7 +2,7 @@
 #define KeyboardKeyIdentifier_h
 
 /**
- * @file KeyboardKeyIdentifier.h
+ * @file KeyboardKeyIdentifier.hpp
  * @brief Defines the KeyboardKeyIdentifier enum for identifying keyboard keys.
  *
  * This file contains the definition of the KeyboardKeyIdentifier enum, which assigns unique values

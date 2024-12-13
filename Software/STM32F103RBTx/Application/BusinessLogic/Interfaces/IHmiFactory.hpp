@@ -3,10 +3,8 @@
 
 #include "Device/Interfaces/IKeyboard.hpp"
 #include "Driver/Interfaces/IDisplayDriver.hpp"
-#include "Device/Interfaces/IDisplayBrightnessRegulator.hpp"
-#include "BusinessLogic/Interfaces/IHmiDataModel.hpp"
-#include "BusinessLogic/Interfaces/IHmiInputController.hpp"
-#include "BusinessLogic/Interfaces/IHmiViewManager.hpp"
+// #include "Device/Interfaces/IDisplayBrightnessRegulator.hpp"
+#include "Device/Inc/DisplayBrightnessRegulator.hpp"
 
 namespace BusinessLogic
 {
@@ -14,13 +12,7 @@ namespace BusinessLogic
      * @class IHmiFactory
      * @brief Interface for creating HMI-related components.
      *
-     * The IHmiFactory interface defines methods for creating and retrieving various HMI-related components,
-     * including the data model, input controller, and view manager. It serves as a factory for providing
-     * these components, which are essential for the operation of the HMI system.
-     *
-     * In the context of the Model-View-Controller (MVC) design pattern, the factory provides the necessary
-     * components to assemble and manage the MVC structure. The data model, view manager, and input controller
-     * are integral parts of the HMI, and the factory ensures their proper instantiation and integration.
+
      */
     class IHmiFactory
     {
@@ -39,37 +31,13 @@ namespace BusinessLogic
          */
         virtual ~IHmiFactory() = default;
 
-        /**
-         * @brief Retrieves the data model.
-         *
-         * This method returns a reference to the data model component of the HMI system. The data model
-         * is responsible for managing and storing application data.
-         *
-         * @return IHmiDataModel& Reference to the data model.
-         */
-        virtual IHmiDataModel &getDataModel() = 0;
+        virtual bool initialize() = 0;
+        virtual bool start() = 0;
 
-        /**
-         * @brief Retrieves the input controller.
-         *
-         * This method returns a reference to the input controller component of the HMI system. The input
-         * controller handles user interactions and communicates with the view to update its state.
-         *
-         * @return IHmiInputController& Reference to the input controller.
-         */
-        virtual IHmiInputController &getInputController() = 0;
+        virtual bool tick() = 0;
 
-        /**
-         * @brief Retrieves the view manager.
-         *
-         * This method returns a reference to the view manager component of the HMI system. The view manager
-         * is responsible for managing and switching between different views.
-         *
-         * @return IHmiViewManager& Reference to the view manager.
-         */
-        virtual IHmiViewManager &getHmiViewManager() = 0;
-
-    protected:
+#if 0 
+    private:
         /**
          * @brief Retrieves the display driver.
          *
@@ -99,6 +67,7 @@ namespace BusinessLogic
          * @return Device::IKeyboard& Reference to the keyboard.
          */
         virtual Device::IKeyboard &getKeyboard() = 0;
+#endif
     };
 }
 

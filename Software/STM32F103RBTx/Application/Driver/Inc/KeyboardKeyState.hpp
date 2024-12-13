@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 /**
- * @file KeyboardKeyState.h
+ * @file KeyboardKeyState.hpp
  * @brief Defines the KeyboardKeyState enum for indicating the low-level state of a keyboard key.
  */
 

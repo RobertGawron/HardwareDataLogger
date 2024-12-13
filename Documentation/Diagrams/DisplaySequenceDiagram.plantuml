@@ -1,0 +1,49 @@
+@startuml
+
+box "MVC pattern"
+participant "Controller" as CONTROLLER
+participant "View" as VIEW
+end box
+
+participant "Device::Display" as DISPLAY
+note right of DISPLAY
+Device::Display
+inherits from U8G2
+end note
+
+box "U8G2 library"
+participant MUIU8G2
+participant U8G2
+end box
+
+participant "Driver::St7735DisplayDriver" as DRIVER
+box "STM library"
+participant "stm32-st7735" as ST7735_LIB
+end box
+
+== Initialization ==
+
+CONTROLLER --> DISPLAY : onInitialize
+DISPLAY --> DRIVER : onInitialize
+DISPLAY --> U8G2 : u8g2_Setup_st7735
+
+DRIVER --> ST7735_LIB : Initialize hardware (TBD)
+CONTROLLER --> VIEW: onInitialize
+== Start ==
+
+CONTROLLER --> DISPLAY : onStart
+DISPLAY --> DRIVER : onStart
+DRIVER --> ST7735_LIB : Configure settings (TBD)
+
+CONTROLLER --> U8G2 : begin
+CONTROLLER --> MUIU8G2 : begin
+
+== Main Loop ==
+
+VIEW --> MUIU8G2 : draw
+MUIU8G2 --> U8G2 : u8x8_d_st7735
+U8G2  --> DISPLAY : u8x8_d_st7735
+DISPLAY --> DRIVER : drawBitmap
+DRIVER --> ST7735_LIB : Send Data (TBD)
+
+@enduml

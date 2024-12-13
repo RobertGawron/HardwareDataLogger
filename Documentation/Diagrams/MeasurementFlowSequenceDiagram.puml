@@ -1,0 +1,36 @@
+@startuml
+participant ApplicationBuilder
+
+participant MeasurementSourcesFactory
+participant MeasurementStoresFactory
+
+participant MeasurementCoordinator
+participant MeasurementDataStore
+
+== Initialization ==
+
+ApplicationBuilder --> MeasurementSourcesFactory: initialize
+ApplicationBuilder --> MeasurementStoresFactory: initialize
+
+ApplicationBuilder --> MeasurementCoordinator : initialize
+ApplicationBuilder --> MeasurementDataStore : initialize
+
+MeasurementSourcesFactory --> MeasurementCoordinator : registerSources
+MeasurementStoresFactory --> MeasurementDataStore : registerStores
+
+== Run ==
+
+loop Each cycle
+    ApplicationBuilder --> MeasurementCoordinator : tick()
+
+    loop Each MeasurementSource
+        MeasurementCoordinator --> MeasurementCoordinator : updateMeasurements()
+        MeasurementCoordinator --> MeasurementDataStore : store()
+        
+        loop Each MeasurementStore
+            MeasurementDataStore --> MeasurementDataStore : store()
+        end
+    end
+end
+
+@enduml

@@ -13,6 +13,9 @@ set(INCLUDE_DIRS
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Inc/
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Interfaces/
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Middlewares/Third_Party/stm32-st7735
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Middlewares/Third_Party/stm32-st7735
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Middlewares/Third_Party/u8g2/cppsrc
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Middlewares/Third_Party/u8g2/csrc
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Core/Inc
     ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/Mock/Application/Driver/Inc
     ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/Mock/System/
@@ -56,4 +59,5 @@ target_link_libraries(FirmwarePCSimulator
     BusinessLogic
     Device
     DriverForSimulation
+    u8g2
 )

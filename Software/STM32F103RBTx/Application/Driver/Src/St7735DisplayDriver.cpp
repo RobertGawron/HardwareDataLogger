@@ -55,7 +55,8 @@ namespace Driver
 
     IDisplayDriver::Status St7735DisplayDriver::drawBitmap(uint8_t x, uint8_t y, uint8_t &bitmap)
     {
-        return IDisplayDriver::Status::Ok;
+
+                return IDisplayDriver::Status::Ok;
     }
 
     IDisplayDriver::Status St7735DisplayDriver::fillRGBRectangle(uint8_t x,

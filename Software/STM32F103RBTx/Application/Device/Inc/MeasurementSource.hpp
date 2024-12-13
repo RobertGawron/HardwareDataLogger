@@ -1,6 +1,8 @@
 #ifndef MeasurementSource_H_
 #define MeasurementSource_H_
 
+#include <stdint.h>
+
 namespace Device
 {
     // Identify rom which device the data comes from.

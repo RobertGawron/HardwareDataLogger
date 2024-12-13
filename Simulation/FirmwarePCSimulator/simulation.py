@@ -1,8 +1,17 @@
 import threading
 import time
 from typing import Tuple
+from enum import Enum
 
 from device_under_test import DeviceUnderTest
+
+
+
+class SimulationKey(Enum):
+    UP = 0
+    DOWN = 1
+    LEFT = 2
+    RIGHT = 3
 
 
 class Simulation:
@@ -11,13 +20,12 @@ class Simulation:
         Initializes the Simulation class with a default tick interval, 
         a threading event for stopping the tick process, and the device under test (DUT).
         """
-        self.tick_interval: float = 1.0  # Default interval in seconds, can be configured
+        self.tick_interval: float = 0.02  # Default interval in seconds, can be configured
         self._tick_thread: threading.Thread | None = None
         self._stop_event: threading.Event = threading.Event()
 
         # Initialize the device under test (DUT)
         self.dut: DeviceUnderTest = DeviceUnderTest()
-        self.dut.init()  # TODO: Bind it to a key if required
 
     def start_firmware(self) -> None:
         """
@@ -25,6 +33,8 @@ class Simulation:
         This runs in a separate thread.
         """
         if self._tick_thread is None or not self._tick_thread.is_alive():
+            self.dut.init();
+            
             self._stop_event.clear()
             self._tick_thread = threading.Thread(target=self._run_periodic_tick, daemon=True)
             self._tick_thread.start()
@@ -100,3 +110,11 @@ class Simulation:
         blue_8: int = (blue * 255) // 31
 
         return red_8, green_8, blue_8
+
+    def key_pressed(self, key: SimulationKey):
+        self.dut.key_pressed(key)
+        print(f"Key pressed: {key.name}")
+
+    def key_released(self, key: SimulationKey):
+        self.dut.key_released(key)
+        print(f"Key released: {key.name}")

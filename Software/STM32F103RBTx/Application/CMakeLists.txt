@@ -49,6 +49,9 @@ endif()
 message(STATUS "VariableName: ${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/stm32-st7735/")
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/stm32-st7735/")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/u8g2/cppsrc")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/u8g2/csrc")
+
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Core/Inc/")
 #include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../FATFS/Target/")
 #include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../cubeide-sd-card/cubeide-sd-card/Drivers/CMSIS/Include/")
@@ -61,6 +64,14 @@ file(GLOB BUSINESS_LOGIC_SRC "${CMAKE_CURRENT_SOURCE_DIR}/BusinessLogic/Src/*.cp
 file(GLOB DEVICE_SRC "${CMAKE_CURRENT_SOURCE_DIR}/Device/Src/*.cpp")
 file(GLOB DRIVER_SRC "${CMAKE_CURRENT_SOURCE_DIR}/Driver/Src/*.cpp")
 
+
+# Add u8g2 as a subdirectory
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/u8g2 ${CMAKE_BINARY_DIR}/u8g2_build)
+
+# Link the u8g2 library (produced by its own CMakeLists.txt) to ApplicationLib
+#target_link_libraries(${PROJECT_NAME} PRIVATE u8g2)
+
+
 # Add library target for each module
 add_library(BusinessLogic STATIC ${BUSINESS_LOGIC_SRC})
 add_library(Device STATIC ${DEVICE_SRC})
@@ -71,10 +82,20 @@ target_include_directories(Driver PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/stm32-st7735/"
 )
 
-print_include_dirs(Driver)
+target_include_directories(BusinessLogic PUBLIC
+    "${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/u8g2/cppsrc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/u8g2/csrc"
+)
+target_include_directories(Device PUBLIC
+    "${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/u8g2/cppsrc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/u8g2/csrc"
+)
+
+print_include_dirs(BusinessLogic)
+print_include_dirs(Device)
 
 # Add the main ApplicationLib shared library and link the individual module libraries
 add_library(${PROJECT_NAME} STATIC ${BUSINESS_LOGIC_SRC} ${DEVICE_SRC} ${DRIVER_SRC})
-
+target_link_libraries(${PROJECT_NAME} PRIVATE u8g2)
 # Link the individual libraries to the main library
 #target_link_libraries(${PROJECT_NAME} PRIVATE BusinessLogic Device Driver)

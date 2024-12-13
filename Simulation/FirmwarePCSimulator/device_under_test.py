@@ -1,6 +1,12 @@
 import ctypes
 import os.path
+from enum import Enum
 
+class SimulationKey(Enum):
+    UP = 0
+    DOWN = 1
+    LEFT = 2
+    RIGHT = 3
 
 class DeviceUnderTest:
     def __init__(self) -> None:
@@ -60,3 +66,14 @@ class DeviceUnderTest:
         self.dut.LibWrapper_GetPixelValue.restype = ctypes.c_uint16
         self.dut.LibWrapper_GetPixelValue.argtypes = [ctypes.c_uint8, ctypes.c_uint8]
         return self.dut.LibWrapper_GetPixelValue(ctypes.c_uint8(x), ctypes.c_uint8(y))
+
+    def key_pressed(self, key: SimulationKey):
+        self.dut.LibWrapper_KeyPressed.restype = None  # Returns void
+        self.dut.LibWrapper_KeyPressed.argtypes = [ctypes.c_uint8]  # Accepts an integer (enum value)
+        self.dut.LibWrapper_KeyPressed(key.value)
+
+    def key_released(self, key: SimulationKey):
+        self.dut.LibWrapper_KeyReleased.restype = None  # Returns void
+        self.dut.LibWrapper_KeyReleased.argtypes = [ctypes.c_uint8]  # Accepts an integer (enum value)
+        self.dut.LibWrapper_KeyReleased(key.value)
+

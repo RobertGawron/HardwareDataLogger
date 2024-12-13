@@ -11,6 +11,7 @@
 #include "St7735DisplayDriverStub.hpp"
 
 Driver::St7735DisplayDriverStub st7735DisplayDriverStub;
+Driver::KeyboardDriverStub keyboardDriverStub;
 
 namespace BusinessLogic
 {
@@ -34,8 +35,7 @@ namespace BusinessLogic
 
     Driver::IKeyboardDriver &PlatformFactoryStm32::createKeyboardDriver()
     {
-        static Driver::KeyboardDriverStub driver;
-        return driver;
+        return keyboardDriverStub;
     }
 
     Driver::IUartDriver &PlatformFactoryStm32::createUartDriver(const Driver::UartIdentifier id)

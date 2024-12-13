@@ -4,14 +4,19 @@
 #include "PlatformFactoryStm32.hpp"
 #include "MyApplication.hpp"
 
+#include "KeyboardDriverStub.hpp"
+#include "Driver/Inc/KeyboardKeyState.hpp"
+
 #include "St7735DisplayDriverStub.hpp"
 #include "DisplayPixelColor.hpp"
 
 extern Driver::St7735DisplayDriverStub st7735DisplayDriverStub;
+extern Driver::KeyboardDriverStub keyboardDriverStub;
 
 void LibWrapper_Init()
 {
     app_init();
+    app_start();
 }
 
 void LibWrapper_Tick()
@@ -22,11 +27,14 @@ void LibWrapper_Tick()
 
 // I need display, key presses, BNC pulses and output from uart, wifi and sd card
 
-bool LibWrapper_PressKey()
+void LibWrapper_KeyPressed(KeyboardKeyIdentifier keyId)
 {
-    // return displayDriver.getDisplayWidth();
+    keyboardDriverStub.keyState[keyId] = Driver::KeyboardKeyState::Pressed;
+}
 
-    return true;
+void LibWrapper_KeyReleased(KeyboardKeyIdentifier keyId)
+{
+    keyboardDriverStub.keyState[keyId] = Driver::KeyboardKeyState::NotPressed;
 }
 
 uint8_t LibWrapper_GetDisplayWidth()

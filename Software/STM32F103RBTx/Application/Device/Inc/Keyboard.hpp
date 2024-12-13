@@ -91,6 +91,10 @@ namespace Device
         Driver::IKeyboardDriver &keyboardDriver; /**< Reference to the platform-specific keyboard driver. */
 
         static constexpr uint8_t AmountOfKeys = static_cast<uint8_t>(Driver::KeyboardKeyIdentifier::LastNotUsed); /**< Number of keys supported by the keyboard. */
+
+        uint8_t pressDurationTicks[AmountOfKeys];                 // counts number of tick() calls while key is pressed
+        static constexpr uint8_t LONG_PRESS_THRESHOLD_TICKS = 10; // 10 ticks * 100ms = 1 second
+
         KeyboardKeyActionState keyActionState[AmountOfKeys]{
             KeyboardKeyActionState::PressNot,
             KeyboardKeyActionState::PressNot,

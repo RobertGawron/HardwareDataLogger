@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTabWidget, QTextEdit, QPushButton
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QTimer
 
 from simulation_control_widget import SimulationControlWidget
 from direction_button_widget import DirectionButtonWidget
@@ -16,7 +16,7 @@ class MainWindow(QMainWindow):
         self.display_height = self.simulation.get_display_height()
 
         # Set window properties
-        self.setWindowTitle("FirmwareSimulator")
+        self.setWindowTitle("Firmware Simulator")
         self.setGeometry(100, 100, 800, 400)
 
         # Create central widget and set layout
@@ -49,8 +49,10 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(self.hardware_display, 2)  # Hardware display
         main_layout.addWidget(self.log_output, 3)  # Logs
 
-        # Initialize hardware display update
-        self.update_display()
+        # Use a QTimer for periodic updates
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_display)
+        self.timer.start(20)  # 20ms intervals
 
     def setup_tabs(self):
         # Layout for Actions tab
@@ -59,8 +61,8 @@ class MainWindow(QMainWindow):
         self.config_tab1.setLayout(actions_layout)
 
         # Buttons for the Actions tab
-        self.main_control_widget = SimulationControlWidget()
-        self.direction_buttons_widget = DirectionButtonWidget()
+        self.main_control_widget = SimulationControlWidget(self.simulation)
+        self.direction_buttons_widget = DirectionButtonWidget(self.simulation)
         self.load_test_data_button = QPushButton("Load Test Data")
 
         # Add buttons to the Actions tab layout
