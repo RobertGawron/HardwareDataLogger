@@ -22,10 +22,10 @@ namespace BusinessLogic
         /* ----------- Form 1: A list of selectable items ----------- */
         MUI_FORM(1)
             MUI_STYLE(0)
-                MUI_LABEL(5, 10, "Select an Item")
-                    MUI_XYT("BN", 64, 20, "Item 1")
-                        MUI_XYT("BN", 64, 30, "Item 2")
-                            MUI_XYT("BN", 64, 40, "Item 3")
+                MUI_LABEL(5, 12, "Select measurement device")
+                    MUI_XYT("BN", 30, 25, "Device #1")
+                        MUI_XYT("BN", 30, 40, "Device #2")
+                            MUI_XYT("BN", 30, 55, "Device #3")
 
         /* ----------- Form 2: A more complex layout ----------- */
         MUI_FORM(2)

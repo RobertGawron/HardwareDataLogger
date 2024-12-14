@@ -75,6 +75,8 @@ RUN /workspace/venv/bin/pip install --upgrade pip && \
     gprof2dot \
     coverxygen \
     hpp2plantuml \
+    pytest \
+    pytest-html \
     PyQt6
 
 # Add virtual environment binaries to the PATH

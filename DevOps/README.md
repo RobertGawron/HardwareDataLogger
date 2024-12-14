@@ -69,3 +69,19 @@ xclock
 If a small window with a clock is visible, it means everything is set up correctly.
 
 Note: If using Windows, [MobaXterm](https://mobaxterm.mobatek.net/download-home-edition.html) (or another tool capable of displaying X11 windows) is required. The Visual Studio terminal will not work.
+
+# Pytest
+
+cd /workspace/build/ && cmake .. && make -j24
+
+cd /workspace/Test/SystemTests
+python3 -m venv /workspace/venv
+pytest test_display.py -s  --html=report.html
+
+
+after:
+cd /workspace/build/ && cmake .. && make -j24 && cd /workspace/Test/SystemTests && pytest test_display.py -s  --html=report.html
+
+
+
+
