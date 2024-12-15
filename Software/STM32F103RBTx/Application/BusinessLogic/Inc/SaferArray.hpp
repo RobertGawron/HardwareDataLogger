@@ -1,6 +1,8 @@
 #ifndef SaferArray_h
 #define SaferArray_h
 
+#include <array>
+
 /**
  * @file SaferArray.h
  * @brief Definition of the SaferArray class template.
@@ -21,16 +23,15 @@ namespace BusinessLogic
      * @tparam T The type of the elements (pointers) stored in the array.
      * @tparam MaxSize The maximum number of elements (pointers) the array can hold.
      */
-    template <typename T, int MaxSize>
+    template <typename T, std::size_t MaxSize>
     class SaferArray
     {
     public:
         /**
          * @brief Constructor to initialize the array.
          *
-         * Initializes the array with a count of 0.
          */
-        SaferArray() : count(0) {}
+        SaferArray() = default;
 
         /**
          * @brief Add a pointer to the array.
@@ -62,15 +63,16 @@ namespace BusinessLogic
          */
         bool remove(T *ptr)
         {
-            for (int i = 0; i < count; ++i)
+            for (std::size_t i = 0; i < count; ++i)
             {
                 if (array[i] == ptr)
                 {
                     // Shift remaining pointers to fill the gap
-                    for (int j = i; j < count - 1; ++j)
+                    for (std::size_t j = i; j < count - 1; ++j)
                     {
                         array[j] = array[j + 1];
                     }
+                    array[count - 1] = nullptr; // Clear the last element
                     count--;
                     return true; // Successfully removed
                 }
@@ -83,7 +85,7 @@ namespace BusinessLogic
          *
          * @return The number of pointers currently stored in the array.
          */
-        int size() const
+        [[nodiscard]] std::size_t size() const
         {
             return count;
         }
@@ -97,9 +99,9 @@ namespace BusinessLogic
          * @param index The index of the element to access.
          * @return The pointer at the specified index, or nullptr if the index is out of bounds.
          */
-        T *operator[](int index) const
+        T *operator[](std::size_t index) const
         {
-            if (index >= 0 && index < count)
+            if (index < count)
             {
                 return array[index];
             }
@@ -116,9 +118,9 @@ namespace BusinessLogic
          * @return A reference to the pointer at the specified index, or a reference to a static
          *         null pointer if the index is out of bounds.
          */
-        T *&operator[](int index)
+        T *&operator[](std::size_t index)
         {
-            if (index >= 0 && index < count)
+            if (index < count)
             {
                 return array[index];
             }
@@ -127,8 +129,8 @@ namespace BusinessLogic
         }
 
     private:
-        T *array[MaxSize]; /**< Static array of pointers */
-        int count;         /**< Number of valid pointers stored in the array */
+        std::array<T *, MaxSize> array = {}; /**< Fixed-size array of pointers, initialized to nullptr */
+        std::size_t count = 0;               /**< Number of valid pointers stored in the array */
     };
 }
 #endif

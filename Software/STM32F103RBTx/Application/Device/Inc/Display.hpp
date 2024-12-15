@@ -36,7 +36,7 @@ namespace Device
          *
          * @return `true` if the initialization is successful; `false` otherwise.
          */
-        virtual bool initialize() override;
+        bool initialize() override;
 
         /**
          * @brief Callback function for handling low-level display commands.
@@ -50,7 +50,7 @@ namespace Device
          * @param argPtr Pointer argument associated with the message.
          * @return A status code indicating success or failure.
          */
-        uint8_t u8x8DSt7735Impl(u8x8_t *u8x8, uint8_t msg, uint8_t argInt, void *argPtr);
+        std::uint8_t u8x8DSt7735Impl(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t argInt, void *argPtr);
 
         /**
          * @brief Deleted default constructor.
@@ -64,7 +64,7 @@ namespace Device
          *
          * Cleans up the `Display` instance.
          */
-        virtual ~Display() = default;
+        ~Display() override = default;
 
         /**
          * @brief Deleted copy constructor.

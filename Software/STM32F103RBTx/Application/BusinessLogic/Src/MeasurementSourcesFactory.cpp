@@ -1,4 +1,9 @@
 #include "BusinessLogic/Inc/MeasurementSourcesFactory.hpp"
+#include "Device/Inc/PulseCounterMeasurementSource.hpp"
+#include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
+#include "Driver/Interfaces/IUartDriver.hpp"
+
+#include <cstdint>
 
 namespace BusinessLogic
 {
@@ -26,14 +31,19 @@ namespace BusinessLogic
     bool MeasurementSourcesFactory::registerSources(MeasurementCoordinator &coordinator)
     {
         bool status = true;
-        for (uint8_t i = 0u; (i < PulseCounterAmount) && status; i++)
+
+        for (std::uint8_t i = 0u; i < PulseCounterAmount; i++)
         {
-            status = coordinator.addObserver(pulseCounter[i]);
+            if (!coordinator.addObserver(pulseCounter[i]))
+            {
+                status = false;
+                break;
+            }
         }
 
         if (status)
         {
-            coordinator.addObserver(uartMeasurementSource);
+            status = coordinator.addObserver(uartMeasurementSource);
         }
 
         return status;

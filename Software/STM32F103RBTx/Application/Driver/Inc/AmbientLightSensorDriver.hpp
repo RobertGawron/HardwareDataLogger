@@ -4,7 +4,7 @@
 #include "Driver/Interfaces/IAmbientLightSensorDriver.hpp"
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_adc.h"
-#include <stdint.h>
+#include <cstdint>
 
 // struct ADC_HandleTypeDef;
 // enum HAL_StatusTypeDef;
@@ -36,7 +36,7 @@ namespace Driver
         /**
          * @brief Destructor for AmbientLightSensorDriver.
          */
-        virtual ~AmbientLightSensorDriver() = default;
+        ~AmbientLightSensorDriver() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
@@ -54,9 +54,9 @@ namespace Driver
          * This method returns the current ambient light level measured by the sensor.
          * The range of the returned value is dependent on the hardware configuration and sensor characteristics.
          *
-         * @return uint32_t The current ambient light level.
+         * @return std::uint32_t The current ambient light level.
          */
-        virtual uint32_t getAmbientLightLevel() const override;
+        [[nodiscard]] std::uint32_t getAmbientLightLevel() const override;
 
     protected:
         /**
@@ -67,7 +67,7 @@ namespace Driver
          *
          * @return true if the initialization is successful, false otherwise.
          */
-        virtual bool onInitialize() override;
+        bool onInitialize() override;
 
         /**
          * @brief Starts the ADC and DMA transfer.
@@ -77,7 +77,7 @@ namespace Driver
          *
          * @return true if the ADC and DMA start successfully, false otherwise.
          */
-        virtual bool onStart() override;
+        bool onStart() override;
 
         /**
          * @brief Stops the ADC and DMA transfer.
@@ -87,7 +87,7 @@ namespace Driver
          *
          * @return true if the ADC and DMA stop successfully, false otherwise.
          */
-        virtual bool onStop() override;
+        bool onStop() override;
 
         /**
          * @brief Resets the Ambient Light Sensor Driver.
@@ -97,7 +97,7 @@ namespace Driver
          *
          * @return true if the reset is successful, false otherwise.
          */
-        virtual bool onReset() override;
+        bool onReset() override;
 
         /**
          * @brief Starts the ADC conversion using DMA for data transfer.
@@ -108,7 +108,7 @@ namespace Driver
          *
          * @return true if ADC and DMA setup is successful, false otherwise.
          */
-        virtual bool startAdcWithDma();
+        bool startAdcWithDma();
 
         /**
          * @brief Stops the ADC conversion and DMA transfer.
@@ -119,7 +119,7 @@ namespace Driver
          *
          * @return true if the ADC and DMA stop successfully, false otherwise.
          */
-        virtual bool stopAdcWithDma();
+        bool stopAdcWithDma();
 
     private:
         /**

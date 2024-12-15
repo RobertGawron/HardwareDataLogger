@@ -43,7 +43,7 @@ namespace Device
          *
          * Cleans up resources used by the Keyboard instance.
          */
-        virtual ~Keyboard() = default;
+        ~Keyboard() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
@@ -67,7 +67,7 @@ namespace Device
          *
          * @return true if initialization is successful, false otherwise.
          */
-        virtual bool init() override;
+        bool init() override;
 
         /**
          * @brief Ticks the keyboard state machine.
@@ -77,7 +77,7 @@ namespace Device
          *
          * @return true if the tick operation was successful, false otherwise.
          */
-        virtual bool tick() override;
+        bool tick() override;
 
         /**
          * @brief Gets the action state of a specified key.
@@ -87,24 +87,24 @@ namespace Device
          * @param key The ID of the key for which the state is requested.
          * @return The action state of the specified key.
          */
-        virtual KeyboardKeyActionState getKeyState(Driver::KeyboardKeyIdentifier key) const override;
+        [[nodiscard]] KeyboardKeyActionState getKeyState(Driver::KeyboardKeyIdentifier key) const override;
 
     private:
         /** @brief Reference to the platform-specific keyboard driver. */
         Driver::IKeyboardDriver &keyboardDriver;
 
         /** @brief Number of keys supported by the keyboard. */
-        static constexpr uint8_t AmountOfKeys = static_cast<uint8_t>(Driver::KeyboardKeyIdentifier::LastNotUsed);
+        static constexpr std::uint8_t AmountOfKeys = static_cast<std::uint8_t>(Driver::KeyboardKeyIdentifier::LastNotUsed);
 
         /**
          * @brief Array for tracking the duration (in ticks) each key has been pressed.
          *
          * Each entry counts the number of `tick()` calls while the key is pressed.
          */
-        uint8_t pressDurationTicks[AmountOfKeys];
+        std::uint8_t pressDurationTicks[AmountOfKeys] = {0u};
 
         /** @brief Threshold for determining a long press (in ticks). */
-        static constexpr uint8_t LONG_PRESS_THRESHOLD_TICKS = 10; // 10 ticks * 100ms = 1 second
+        static constexpr std::uint8_t LONG_PRESS_THRESHOLD_TICKS = 10; // 10 ticks * 100ms = 1 second
 
         /**
          * @brief Array storing the action states for all keys.

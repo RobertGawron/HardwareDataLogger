@@ -48,7 +48,7 @@ namespace BusinessLogic
         /**
          * @brief Default destructor for ApplicationBuilder.
          */
-        virtual ~ApplicationBuilder() = default;
+        ~ApplicationBuilder() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying of ApplicationBuilder.
@@ -70,7 +70,7 @@ namespace BusinessLogic
          *
          * @return true if the initialization was successful, false otherwise.
          */
-        virtual bool initialize() override;
+        bool initialize() override;
 
         /**
          * @brief Starts the application and its components.

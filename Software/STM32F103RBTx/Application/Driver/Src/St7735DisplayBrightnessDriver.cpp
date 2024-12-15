@@ -1,5 +1,9 @@
 #include "Driver/Inc/St7735DisplayBrightnessDriver.hpp"
 
+#include <cstdint>
+#include "stm32f1xx_hal_tim.h"
+#include "stm32f1xx_hal_def.h"
+
 namespace Driver
 {
     St7735DisplayBrightnessDriver::St7735DisplayBrightnessDriver(TIM_HandleTypeDef &_htim) : htim(_htim)
@@ -21,14 +25,14 @@ namespace Driver
 
     bool St7735DisplayBrightnessDriver::onStart()
     {
-        bool status = startPWMWithInitialBrightness();
+        const bool status = startPWMWithInitialBrightness();
 
         return status;
     }
 
     bool St7735DisplayBrightnessDriver::onStop()
     {
-        bool status = stopPWM();
+        const bool status = stopPWM();
 
         // Optionally, additional hardware deinitialization can be done here if necessary
         // For example, disable the clock to save power if no other peripherals need it
@@ -42,14 +46,14 @@ namespace Driver
         return true;
     }
 
-    bool St7735DisplayBrightnessDriver::setBrightness(uint8_t brightness)
+    bool St7735DisplayBrightnessDriver::setBrightness(std::uint8_t brightness)
     {
         bool status = false;
 
         if (brightness <= MaxBrightness)
         {
             // Calculate the pulse length
-            uint32_t pulse = calculatePulseFromBrightness(brightness);
+            const std::uint32_t pulse = calculatePulseFromBrightness(brightness);
 
             // Set the pulse value for the PWM channel
             __HAL_TIM_SET_COMPARE(&htim, TIM_CHANNEL_2, pulse);
@@ -118,8 +122,8 @@ namespace Driver
         }
 
         // Set the initial brightness
-        uint32_t pulse = calculatePulseFromBrightness(initialBrightness); // Calculate pulse based on initial brightness (0-100%)
-        __HAL_TIM_SET_COMPARE(&htim, TIM_CHANNEL_2, pulse);               // Set duty cycle based on brightness
+        const std::uint32_t pulse = calculatePulseFromBrightness(initialBrightness); // Calculate pulse based on initial brightness (0-100%)
+        __HAL_TIM_SET_COMPARE(&htim, TIM_CHANNEL_2, pulse);                          // Set duty cycle based on brightness
 
         return status;
     }
@@ -137,10 +141,10 @@ namespace Driver
         return status;
     }
 
-    uint32_t St7735DisplayBrightnessDriver::calculatePulseFromBrightness(BrightnessPercentage brightness) const
+    std::uint32_t St7735DisplayBrightnessDriver::calculatePulseFromBrightness(BrightnessPercentage brightness)
     {
         // Calculate the pulse length based on brightness (0-100%)
-        const uint32_t pulse = (brightness * 4799) / 100;
+        const std::uint32_t pulse = (brightness * 4799) / 100;
         return pulse;
     }
 

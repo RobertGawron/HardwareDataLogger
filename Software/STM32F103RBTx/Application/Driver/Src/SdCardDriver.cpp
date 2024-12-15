@@ -10,13 +10,11 @@ namespace Driver
     FRESULT fres; // Result after operations
 */
     // SD card use SPI, it's already configured but pin for CS should be passed as an argument.
-    SdCardDriver::SdCardDriver()
-    {
-    }
+
     // clk
     bool SdCardDriver::onInitialize()
     {
-        bool status = true;
+        const bool status = true;
         return status;
     }
     bool SdCardDriver::onStart()
@@ -64,17 +62,17 @@ namespace Driver
                 // Unmount the filesystem
                 f_mount(0, "", 0);
                 */
-        bool status = true;
+        const bool status = true;
         return status;
     }
     bool SdCardDriver::onStop()
     {
-        bool status = true;
+        const bool status = true;
         return status;
     }
     bool SdCardDriver::onReset()
     {
-        bool status = true;
+        const bool status = true;
         return status;
     }
 

@@ -92,7 +92,7 @@ namespace BusinessLogic
          * @param id The identifier for the specific UART instance to create.
          * @return A reference to the platform-specific UART driver.
          */
-        virtual Driver::IUartDriver &createUartDriver(const Driver::UartIdentifier id) = 0;
+        virtual Driver::IUartDriver &createUartDriver(Driver::UartIdentifier id) = 0;
 
         /**
          * @brief Creates an instance of the SD card driver.
@@ -111,7 +111,7 @@ namespace BusinessLogic
          * @param id The identifier for the specific pulse counter instance to create.
          * @return A reference to the platform-specific pulse counter driver.
          */
-        virtual Driver::IPulseCounterDriver &createPulseCounterDriver(const Driver::PulseCounterIdentifier id) = 0;
+        virtual Driver::IPulseCounterDriver &createPulseCounterDriver(Driver::PulseCounterIdentifier id) = 0;
     };
 }
 

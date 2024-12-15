@@ -16,27 +16,27 @@ void ST7735_Init()
     mockLibST7735->ST7735_Init();
 }
 
-void ST7735_DrawPixel(uint16_t x, uint16_t y, uint16_t color)
+void ST7735_DrawPixel(std::uint16_t x, std::uint16_t y, std::uint16_t color)
 {
     mockLibST7735->ST7735_DrawPixel(x, y, color);
 }
 
-void ST7735_WriteString(uint16_t x, uint16_t y, const char *str, FontDef font, uint16_t color, uint16_t bgcolor)
+void ST7735_WriteString(std::uint16_t x, std::uint16_t y, const char *str, FontDef font, std::uint16_t color, std::uint16_t bgcolor)
 {
     mockLibST7735->ST7735_WriteString(x, y, str, font, color, bgcolor);
 }
 
-void ST7735_FillRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
+void ST7735_FillRectangle(std::uint16_t x, std::uint16_t y, std::uint16_t w, std::uint16_t h, std::uint16_t color)
 {
     mockLibST7735->ST7735_FillRectangle(x, y, w, h, color);
 }
 
-void ST7735_FillScreen(uint16_t color)
+void ST7735_FillScreen(std::uint16_t color)
 {
     mockLibST7735->ST7735_FillScreen(color);
 }
 
-void ST7735_DrawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t *data)
+void ST7735_DrawImage(std::uint16_t x, std::uint16_t y, std::uint16_t w, std::uint16_t h, const std::uint16_t *data)
 {
     mockLibST7735->ST7735_DrawImage(x, y, w, h, data);
 }

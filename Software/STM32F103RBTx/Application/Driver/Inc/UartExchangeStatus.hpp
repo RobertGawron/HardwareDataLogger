@@ -6,7 +6,7 @@
 #ifndef UartExchangeStatus_h
 #define UartExchangeStatus_h
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace Driver
 {
@@ -18,7 +18,7 @@ namespace Driver
      * operations. It is used to avoid direct dependency on STM32 HAL enums, making it easier to
      * switch to other platforms if needed.
      */
-    enum class UartExchangeStatus : uint8_t
+    enum class UartExchangeStatus : std::uint8_t
     {
         /**
          * @brief Indicates a successful UART exchange operation.

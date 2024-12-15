@@ -26,35 +26,35 @@ namespace Driver
         // Test conversion of specific colors and check against known values
 
         // Test Black
-        uint16_t black = DisplayPixelColor::getColor(0x00, 0x00, 0x00);
+        std::uint16_t black = DisplayPixelColor::getColor(0x00, 0x00, 0x00);
         EXPECT_EQ(black, DisplayPixelColor::BLACK);
 
         // Test Blue
-        uint16_t blue = DisplayPixelColor::getColor(0x00, 0x00, 0xFF);
+        std::uint16_t blue = DisplayPixelColor::getColor(0x00, 0x00, 0xFF);
         EXPECT_EQ(blue, DisplayPixelColor::BLUE);
 
         // Test Red
-        uint16_t red = DisplayPixelColor::getColor(0xFF, 0x00, 0x00);
+        std::uint16_t red = DisplayPixelColor::getColor(0xFF, 0x00, 0x00);
         EXPECT_EQ(red, DisplayPixelColor::RED);
 
         // Test Green
-        uint16_t green = DisplayPixelColor::getColor(0x00, 0xFF, 0x00);
+        std::uint16_t green = DisplayPixelColor::getColor(0x00, 0xFF, 0x00);
         EXPECT_EQ(green, DisplayPixelColor::GREEN);
 
         // Test Cyan
-        uint16_t cyan = DisplayPixelColor::getColor(0x00, 0xFF, 0xFF);
+        std::uint16_t cyan = DisplayPixelColor::getColor(0x00, 0xFF, 0xFF);
         EXPECT_EQ(cyan, DisplayPixelColor::CYAN);
 
         // Test Magenta
-        uint16_t magenta = DisplayPixelColor::getColor(0xFF, 0x00, 0xFF);
+        std::uint16_t magenta = DisplayPixelColor::getColor(0xFF, 0x00, 0xFF);
         EXPECT_EQ(magenta, DisplayPixelColor::MAGENTA);
 
         // Test Yellow
-        uint16_t yellow = DisplayPixelColor::getColor(0xFF, 0xFF, 0x00);
+        std::uint16_t yellow = DisplayPixelColor::getColor(0xFF, 0xFF, 0x00);
         EXPECT_EQ(yellow, DisplayPixelColor::YELLOW);
 
         // Test White
-        uint16_t white = DisplayPixelColor::getColor(0xFF, 0xFF, 0xFF);
+        std::uint16_t white = DisplayPixelColor::getColor(0xFF, 0xFF, 0xFF);
         EXPECT_EQ(white, DisplayPixelColor::WHITE);
     }
 
@@ -62,12 +62,12 @@ namespace Driver
     TEST_F(DisplayPixelColorTest, TestCustomColors)
     {
         // Example: Test some arbitrary colors and compare them with expected RGB565 values
-        uint16_t customColor1 = DisplayPixelColor::getColor(0x12, 0x34, 0x56);
-        uint16_t expectedColor1 = (0x12 >> 3) << 11 | (0x34 >> 2) << 5 | (0x56 >> 3);
+        std::uint16_t customColor1 = DisplayPixelColor::getColor(0x12, 0x34, 0x56);
+        std::uint16_t expectedColor1 = (0x12 >> 3) << 11 | (0x34 >> 2) << 5 | (0x56 >> 3);
         EXPECT_EQ(customColor1, expectedColor1);
 
-        uint16_t customColor2 = DisplayPixelColor::getColor(0xAA, 0xBB, 0xCC);
-        uint16_t expectedColor2 = (0xAA >> 3) << 11 | (0xBB >> 2) << 5 | (0xCC >> 3);
+        std::uint16_t customColor2 = DisplayPixelColor::getColor(0xAA, 0xBB, 0xCC);
+        std::uint16_t expectedColor2 = (0xAA >> 3) << 11 | (0xBB >> 2) << 5 | (0xCC >> 3);
         EXPECT_EQ(customColor2, expectedColor2);
     }
 

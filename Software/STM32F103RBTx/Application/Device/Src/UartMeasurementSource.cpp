@@ -1,4 +1,5 @@
 #include "Device/Inc/UartMeasurementSource.hpp"
+#include "Driver/Interfaces/IUartDriver.hpp"
 
 namespace Device
 {
@@ -9,7 +10,8 @@ namespace Device
 
     bool UartMeasurementSource::init()
     {
-        return true;
+        const bool status = driver.initialize();
+        return status;
     }
 
     bool UartMeasurementSource::deinit()

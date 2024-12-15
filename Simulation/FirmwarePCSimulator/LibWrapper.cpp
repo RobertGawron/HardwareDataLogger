@@ -37,23 +37,23 @@ void LibWrapper_KeyReleased(KeyboardKeyIdentifier keyId)
     keyboardDriverStub.keyState[keyId] = Driver::KeyboardKeyState::NotPressed;
 }
 
-uint8_t LibWrapper_GetDisplayWidth()
+std::uint8_t LibWrapper_GetDisplayWidth()
 {
-    uint8_t width = 0u;
+    std::uint8_t width = 0u;
 
     st7735DisplayDriverStub.getXSize(width);
     return width;
 }
 
-uint8_t LibWrapper_GetDisplayHeight()
+std::uint8_t LibWrapper_GetDisplayHeight()
 {
-    uint8_t height = 0u;
+    std::uint8_t height = 0u;
 
     st7735DisplayDriverStub.getYSize(height);
     return height;
 }
 
-uint16_t LibWrapper_GetPixelValue(uint8_t x, uint8_t y)
+std::uint16_t LibWrapper_GetPixelValue(std::uint8_t x, std::uint8_t y)
 {
     return st7735DisplayDriverStub.getPixelValue(x, y);
 }

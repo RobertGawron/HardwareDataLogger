@@ -35,10 +35,8 @@ namespace BusinessLogic
          *                                    for managing display brightness levels.
          * @param keyboard Reference to an `IKeyboard` object used for handling user input.
          */
-        IHmi(Device::IDisplay &display,
-             Device::IDisplayBrightnessRegulator &displayBrightnessRegulator,
-             Device::IKeyboard &keyboard) {}
 
+        IHmi() = default;
         /**
          * @brief Virtual destructor for IHmi.
          *

@@ -53,7 +53,7 @@ namespace BusinessLogic
          *
          * Ensures proper cleanup of the HmiMui instance and its resources.
          */
-        virtual ~HmiMui() = default;
+        ~HmiMui() override = default;
 
         /**
          * @brief Deleted copy constructor.
@@ -77,7 +77,7 @@ namespace BusinessLogic
          *
          * @return True if initialization was successful; false otherwise.
          */
-        virtual bool initialize() override;
+        bool initialize() override;
 
         /**
          * @brief Starts the HMI system.
@@ -86,7 +86,7 @@ namespace BusinessLogic
          *
          * @return True if the HMI started successfully; false otherwise.
          */
-        virtual bool start() override;
+        bool start() override;
 
         /**
          * @brief Periodic update function for the HMI system.
@@ -95,7 +95,7 @@ namespace BusinessLogic
          *
          * @return True if the tick operation was successful; false otherwise.
          */
-        virtual bool tick() override;
+        bool tick() override;
 
     private:
         Device::IDisplay &display;                                       /**< Reference to the display interface. */

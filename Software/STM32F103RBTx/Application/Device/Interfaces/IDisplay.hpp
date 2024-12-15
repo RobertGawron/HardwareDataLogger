@@ -9,7 +9,11 @@ namespace Device
     {
     public:
         // todo
-        IDisplay() : U8G2() {};
+        // IDisplay() : U8G2() {};
+
+        IDisplay() = default;
+
+        virtual ~IDisplay() = default;
 
         virtual bool initialize() = 0;
     };

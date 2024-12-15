@@ -50,37 +50,37 @@ namespace Driver
         virtual Status displayOff() override;
         virtual Status setOrientation(Orientation orientation) override;
         virtual Status getOrientation(Orientation &orientation) const override;
-        virtual Status setCursor(uint8_t x, uint8_t y) override;
-        virtual Status drawBitmap(uint8_t x, uint8_t y, uint8_t &bitmap) override;
-        virtual Status fillRGBRectangle(uint8_t x,
-                                        uint8_t y,
-                                        uint8_t &data,
-                                        uint8_t width,
-                                        uint8_t height) override;
-        virtual Status drawHorizontalLine(uint8_t x,
-                                          uint8_t y,
-                                          uint8_t length, DisplayPixelColor::PixelColor color) override;
-        virtual Status drawVerticalLine(uint8_t x,
-                                        uint8_t y,
-                                        uint8_t length,
+        virtual Status setCursor(std::uint8_t x, std::uint8_t y) override;
+        virtual Status drawBitmap(std::uint8_t x, std::uint8_t y, std::uint8_t &bitmap) override;
+        virtual Status fillRGBRectangle(std::uint8_t x,
+                                        std::uint8_t y,
+                                        std::uint8_t &data,
+                                        std::uint8_t width,
+                                        std::uint8_t height) override;
+        virtual Status drawHorizontalLine(std::uint8_t x,
+                                          std::uint8_t y,
+                                          std::uint8_t length, DisplayPixelColor::PixelColor color) override;
+        virtual Status drawVerticalLine(std::uint8_t x,
+                                        std::uint8_t y,
+                                        std::uint8_t length,
                                         DisplayPixelColor::PixelColor color) override;
-        virtual Status fillRectangle(uint8_t x,
-                                     uint8_t y,
-                                     uint8_t width,
-                                     uint8_t height,
+        virtual Status fillRectangle(std::uint8_t x,
+                                     std::uint8_t y,
+                                     std::uint8_t width,
+                                     std::uint8_t height,
                                      DisplayPixelColor::PixelColor color) override;
-        virtual Status setPixel(uint8_t x,
-                                uint8_t y,
+        virtual Status setPixel(std::uint8_t x,
+                                std::uint8_t y,
                                 DisplayPixelColor::PixelColor color) override;
-        virtual Status getPixel(uint8_t x,
-                                uint8_t y,
+        virtual Status getPixel(std::uint8_t x,
+                                std::uint8_t y,
                                 DisplayPixelColor::PixelColor &color) const override;
-        virtual Status getXSize(uint8_t &size) const override;
-        virtual Status getYSize(uint8_t &size) const override;
+        virtual Status getXSize(std::uint8_t &size) const override;
+        virtual Status getYSize(std::uint8_t &size) const override;
 
         // Used by lib wrapper in python to render display data
         // POTENTIALLY DUPLICATE getPixel
-        DisplayPixelColor::PixelColor getPixelValue(uint8_t x, uint8_t y) const;
+        DisplayPixelColor::PixelColor getPixelValue(std::uint8_t x, std::uint8_t y) const;
 
     protected:
         /**
@@ -121,15 +121,13 @@ namespace Driver
          */
         bool onReset() override;
 
-        // todo uncomment
-        // private:
         // No mater if the dispaly is configured as horisontal or vertical, ST7735_HEIGHT is the longer dimention so it will always fit
-        static const uint8_t MAX_WIDTH = ST7735_HEIGHT;
-        static const uint8_t MAX_HEIGHT = ST7735_HEIGHT;
+        static const std::uint8_t MAX_WIDTH = ST7735_HEIGHT;
+        static const std::uint8_t MAX_HEIGHT = ST7735_HEIGHT;
 
         IDisplayDriver::Orientation orientation = IDisplayDriver::Orientation::Vertical;
 
-        DisplayPixelColor::PixelColor content[MAX_WIDTH][MAX_HEIGHT] = {0u};
+        DisplayPixelColor::PixelColor content[MAX_WIDTH][MAX_HEIGHT] = {{0u}};
     };
 
 }

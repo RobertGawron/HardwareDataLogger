@@ -21,7 +21,7 @@ docker-compose build dev
 
 Start the Docker image:
 
-docker-compose up -d
+docker-compose up -d --remove-orphans
 
 Log into the Docker image:
 
@@ -30,6 +30,32 @@ docker-compose exec dev bash
 Additionally at the end of work:
 
 docker-compose down --remove-orphans
+
+## Runing stuff
+
+## Builds the firmware
+
+make code
+
+## Run tests
+
+make test
+
+## Run static analysis
+
+make static
+
+# Run code coverage
+
+cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j23 && make test -j23 && make coverage
+
+# Run docs coverage
+
+make docs
+
+# Run UML generation
+
+make uml
 
 ## Running Include what you use 
 

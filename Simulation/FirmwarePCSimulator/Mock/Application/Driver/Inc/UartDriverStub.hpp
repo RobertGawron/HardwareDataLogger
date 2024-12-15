@@ -48,7 +48,7 @@ namespace Driver
          * @param timeout Timeout period for the transmission, in milliseconds.
          * @return Status of the UART exchange operation (`UartExchangeStatus`).
          */
-        virtual UartExchangeStatus transmit(uint8_t *data, uint16_t size, uint32_t timeout) override;
+        virtual UartExchangeStatus transmit(std::uint8_t *data, std::uint16_t size, std::uint32_t timeout) override;
 
         /**
          * @brief Receives data over UART.
@@ -60,7 +60,7 @@ namespace Driver
          * @param timeout Timeout period for the reception, in milliseconds.
          * @return Status of the UART exchange operation (`UartExchangeStatus`).
          */
-        virtual UartExchangeStatus receive(uint8_t *data, uint16_t size, uint32_t timeout) override;
+        virtual UartExchangeStatus receive(std::uint8_t *data, std::uint16_t size, std::uint32_t timeout) override;
 
     protected:
         /**

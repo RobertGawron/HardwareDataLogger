@@ -59,7 +59,7 @@ namespace Driver
          * This constant defines the total number of keys that are supported by the keyboard driver.
          * It is derived from the last unused key identifier.
          */
-        static constexpr uint8_t AmountOfKeys = static_cast<uint8_t>(Driver::KeyboardKeyIdentifier::LastNotUsed);
+        static constexpr std::uint8_t AmountOfKeys = static_cast<std::uint8_t>(Driver::KeyboardKeyIdentifier::LastNotUsed);
 
         KeyboardKeyState keyState[AmountOfKeys] = {KeyboardKeyState::NotPressed};
 

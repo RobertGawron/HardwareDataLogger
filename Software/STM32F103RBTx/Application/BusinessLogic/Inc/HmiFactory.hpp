@@ -32,7 +32,7 @@ namespace BusinessLogic
          * @param platformFactory Reference to an IPlatformFactory instance used for creating platform-specific
          *                        components and drivers.
          */
-        HmiFactory(IPlatformFactory &platformFactory);
+        explicit HmiFactory(IPlatformFactory &platformFactory);
 
         /**
          * @brief Deleted default constructor.
@@ -44,7 +44,7 @@ namespace BusinessLogic
         /**
          * @brief Default destructor for HmiFactory.
          */
-        virtual ~HmiFactory() = default;
+        ~HmiFactory() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying of HmiFactory.
@@ -65,7 +65,7 @@ namespace BusinessLogic
          *
          * @return true if initialization is successful, false otherwise.
          */
-        virtual bool initialize() override;
+        bool initialize() override;
 
         /**
          * @brief Starts the HMI system.
@@ -74,7 +74,7 @@ namespace BusinessLogic
          *
          * @return true if the system starts successfully, false otherwise.
          */
-        virtual bool start() override;
+        bool start() override;
 
         /**
          * @brief Provides periodic updates to the HMI system.
@@ -83,7 +83,7 @@ namespace BusinessLogic
          *
          * @return true if the tick operation is successful, false otherwise.
          */
-        virtual bool tick() override;
+        bool tick() override;
 
     private:
         /**

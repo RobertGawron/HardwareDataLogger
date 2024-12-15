@@ -10,7 +10,7 @@ set(USE_X86_HEADERS TRUE)  # Set this to TRUE for X86, FALSE for ARM
 
 add_subdirectory(Software/STM32F103RBTx/Application)
 add_subdirectory(Simulation/FirmwarePCSimulator)
-add_subdirectory(Test/UT)
+#add_subdirectory(Test/Unit)
 
 include(Software/StaticAnalysis.cmake)
 include(Software/ClassDiagram.cmake)

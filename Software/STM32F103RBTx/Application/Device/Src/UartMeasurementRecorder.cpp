@@ -1,4 +1,5 @@
 #include "Device/Inc/UartMeasurementRecorder.hpp"
+#include "Driver/Interfaces/IUartDriver.hpp"
 
 namespace Device
 {

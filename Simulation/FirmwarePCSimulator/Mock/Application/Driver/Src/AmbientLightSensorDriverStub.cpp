@@ -23,9 +23,9 @@ namespace Driver
         return true;
     }
 
-    uint32_t AmbientLightSensorDriverStub::getAmbientLightLevel() const
+    std::uint32_t AmbientLightSensorDriverStub::getAmbientLightLevel() const
     {
-        volatile uint32_t adcResult;
+        std::uint32_t adcResult = 10;
 
         return adcResult;
     }

@@ -52,134 +52,108 @@ namespace Driver
         return IDisplayDriver::Status::Ok;
     }
 
-    IDisplayDriver::Status St7735DisplayDriverStub::setCursor(uint8_t x, uint8_t y)
+    IDisplayDriver::Status St7735DisplayDriverStub::setCursor(std::uint8_t x, std::uint8_t y)
     {
+        (void)x; // Mark x as unused
+        (void)y; // Mark y as unused
         return IDisplayDriver::Status::Ok;
     }
 
-    IDisplayDriver::Status St7735DisplayDriverStub::drawBitmap(uint8_t x,
-                                                               uint8_t y,
-                                                               uint8_t &bitmap)
+    IDisplayDriver::Status St7735DisplayDriverStub::drawBitmap(std::uint8_t x,
+                                                               std::uint8_t y,
+                                                               std::uint8_t &bitmap)
     {
-
+        (void)x;      // Mark x as unused
+        (void)y;      // Mark y as unused
+        (void)bitmap; // Mark bitmap as unused
         return IDisplayDriver::Status::Ok;
     }
 
-    IDisplayDriver::Status St7735DisplayDriverStub::fillRGBRectangle(uint8_t x,
-                                                                     uint8_t y,
-                                                                     uint8_t &data,
-                                                                     uint8_t width,
-                                                                     uint8_t height)
+    IDisplayDriver::Status St7735DisplayDriverStub::fillRGBRectangle(std::uint8_t x,
+                                                                     std::uint8_t y,
+                                                                     std::uint8_t &data,
+                                                                     std::uint8_t width,
+                                                                     std::uint8_t height)
     {
+        (void)x;      // Mark x as unused
+        (void)y;      // Mark y as unused
+        (void)data;   // Mark data as unused
+        (void)width;  // Mark width as unused
+        (void)height; // Mark height as unused
         return IDisplayDriver::Status::Ok;
     }
 
-    IDisplayDriver::Status St7735DisplayDriverStub::drawHorizontalLine(uint8_t x,
-                                                                       uint8_t y,
-                                                                       uint8_t length,
+    IDisplayDriver::Status St7735DisplayDriverStub::drawHorizontalLine(std::uint8_t x,
+                                                                       std::uint8_t y,
+                                                                       std::uint8_t length,
                                                                        DisplayPixelColor::PixelColor color)
     {
-        // printf("St7735DisplayDriverStub::drawHorizontalLine start %d %d %d\n", x, x + length, y);
-        for (uint16_t i = x; i < (x + length); i++)
+        for (std::uint16_t i = x; i < (x + length); i++)
         {
             content[i][y] = color;
         }
-        // printf("St7735DisplayDriverStub::drawHorizontalLine stop\n");
         return IDisplayDriver::Status::Ok;
     }
 
-    IDisplayDriver::Status St7735DisplayDriverStub::drawVerticalLine(uint8_t x,
-                                                                     uint8_t y,
-                                                                     uint8_t length,
+    IDisplayDriver::Status St7735DisplayDriverStub::drawVerticalLine(std::uint8_t x,
+                                                                     std::uint8_t y,
+                                                                     std::uint8_t length,
                                                                      DisplayPixelColor::PixelColor color)
     {
-
+        (void)x;      // Mark x as unused
+        (void)y;      // Mark y as unused
+        (void)length; // Mark length as unused
+        (void)color;  // Mark color as unused
         return IDisplayDriver::Status::Ok;
     }
 
-    IDisplayDriver::Status St7735DisplayDriverStub::fillRectangle(uint8_t x,
-                                                                  uint8_t y,
-                                                                  uint8_t width,
-                                                                  uint8_t height,
+    IDisplayDriver::Status St7735DisplayDriverStub::fillRectangle(std::uint8_t x,
+                                                                  std::uint8_t y,
+                                                                  std::uint8_t width,
+                                                                  std::uint8_t height,
                                                                   DisplayPixelColor::PixelColor color)
     {
+        (void)x;      // Mark x as unused
+        (void)y;      // Mark y as unused
+        (void)width;  // Mark width as unused
+        (void)height; // Mark height as unused
+        (void)color;  // Mark color as unused
         return IDisplayDriver::Status::Ok;
     }
 
-    IDisplayDriver::Status St7735DisplayDriverStub::setPixel(uint8_t x,
-                                                             uint8_t y,
+    IDisplayDriver::Status St7735DisplayDriverStub::setPixel(std::uint8_t x,
+                                                             std::uint8_t y,
                                                              DisplayPixelColor::PixelColor color)
     {
         content[x][y] = color;
         return IDisplayDriver::Status::Ok;
     }
 
-    IDisplayDriver::Status St7735DisplayDriverStub::getPixel(uint8_t x,
-                                                             uint8_t y,
+    IDisplayDriver::Status St7735DisplayDriverStub::getPixel(std::uint8_t x,
+                                                             std::uint8_t y,
                                                              DisplayPixelColor::PixelColor &color) const
     {
+        (void)x;     // Mark x as unused
+        (void)y;     // Mark y as unused
+        (void)color; // Mark color as unused
         return IDisplayDriver::Status::Ok;
     }
 
-    IDisplayDriver::Status St7735DisplayDriverStub::getXSize(uint8_t &size) const
+    IDisplayDriver::Status St7735DisplayDriverStub::getXSize(std::uint8_t &size) const
     {
-        IDisplayDriver::Status status = IDisplayDriver::Status::Ok;
-
-        /*switch (orientation)
-        {
-        case IDisplayDriver::Orientation::Horizontal:
-        {
-            size = ST7735_HEIGHT;
-        }
-        break;
-
-        case IDisplayDriver::Orientation::Vertical:
-        {
-            size = ST7735_WIDTH;
-        }
-        break;
-
-        default:
-        {
-            IDisplayDriver::Status::Fail;
-        }
-        break;
-        }*/
         size = ST7735_HEIGHT;
 
-        return status;
+        return IDisplayDriver::Status::Ok;
     }
 
-    IDisplayDriver::Status St7735DisplayDriverStub::getYSize(uint8_t &size) const
+    IDisplayDriver::Status St7735DisplayDriverStub::getYSize(std::uint8_t &size) const
     {
-        IDisplayDriver::Status status = IDisplayDriver::Status::Ok;
-
-        /*switch (orientation)
-        {
-        case IDisplayDriver::Orientation::Horizontal:
-        {
-            size = ST7735_WIDTH;
-        }
-        break;
-
-        case IDisplayDriver::Orientation::Vertical:
-        {
-            size = ST7735_HEIGHT;
-        }
-        break;
-
-        default:
-        {
-            IDisplayDriver::Status::Fail;
-        }
-        break;
-        }*/
         size = ST7735_WIDTH;
 
-        return status;
+        return IDisplayDriver::Status::Ok;
     }
 
-    DisplayPixelColor::PixelColor St7735DisplayDriverStub::getPixelValue(uint8_t x, uint8_t y) const
+    DisplayPixelColor::PixelColor St7735DisplayDriverStub::getPixelValue(std::uint8_t x, std::uint8_t y) const
     {
         if ((x < MAX_WIDTH) && (y < MAX_HEIGHT))
         {

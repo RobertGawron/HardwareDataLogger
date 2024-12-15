@@ -2,11 +2,6 @@
 
 namespace Driver
 {
-    DriverState::DriverState()
-        : currentState(State::Reset)
-    {
-    }
-
     bool DriverState::initialize()
     {
         if (onInitialize())

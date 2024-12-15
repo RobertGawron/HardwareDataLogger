@@ -1,4 +1,5 @@
 #include "Device/Inc/PulseCounterMeasurementSource.hpp"
+#include "Driver/Interfaces/IPulseCounterDriver.hpp"
 
 namespace Device
 {
@@ -10,6 +11,7 @@ namespace Device
 
     bool PulseCounterMeasurementSource::init()
     {
+        pulseCounterDriver.initialize();
         return true;
     }
 

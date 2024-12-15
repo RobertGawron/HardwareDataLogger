@@ -80,7 +80,7 @@ namespace Device
          *
          * @return The brightness level as a percentage (0-100).
          */
-        virtual uint8_t getBrightnessPercentage() const = 0;
+        [[nodiscard]] virtual std::uint8_t getBrightnessPercentage() const = 0;
 
         /**
          * @brief Sets the brightness level as a percentage.
@@ -89,7 +89,7 @@ namespace Device
          *
          * @param level The brightness level to set, in percentage (0-100).
          */
-        virtual void setBrightnessPercentage(uint8_t level) = 0;
+        virtual void setBrightnessPercentage(std::uint8_t level) = 0;
     };
 
 } // namespace Device

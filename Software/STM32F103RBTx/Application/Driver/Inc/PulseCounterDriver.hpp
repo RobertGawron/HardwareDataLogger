@@ -25,14 +25,14 @@ namespace Driver
          *
          * The constructor sets up the PulseCounterDriver, preparing it for initialization.
          */
-        explicit PulseCounterDriver();
+        explicit PulseCounterDriver() = default;
 
         /**
          * @brief Default destructor for PulseCounterDriver.
          *
          * Ensures proper cleanup of the driver.
          */
-        virtual ~PulseCounterDriver() = default;
+        ~PulseCounterDriver() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.

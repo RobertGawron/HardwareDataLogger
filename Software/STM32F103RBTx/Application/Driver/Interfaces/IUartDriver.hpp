@@ -8,7 +8,7 @@
 
 #include "Driver/Inc/UartExchangeStatus.hpp"
 #include "Driver/Inc/DriverState.hpp"
-#include <stdint.h>
+#include <cstdint>
 
 namespace Driver
 {
@@ -34,7 +34,7 @@ namespace Driver
          *
          * Ensures proper cleanup of derived classes.
          */
-        virtual ~IUartDriver() = default;
+        ~IUartDriver() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
@@ -57,7 +57,7 @@ namespace Driver
          * @param timeout The maximum time to wait for the transmission to complete, in milliseconds.
          * @return The status of the transmission operation (`UartExchangeStatus`).
          */
-        virtual UartExchangeStatus transmit(uint8_t *data, uint16_t size, uint32_t timeout) = 0;
+        virtual UartExchangeStatus transmit(std::uint8_t *data, std::uint16_t size, std::uint32_t timeout) = 0;
 
         /**
          * @brief Receives data over UART.
@@ -69,7 +69,7 @@ namespace Driver
          * @param timeout The maximum time to wait for the reception to complete, in milliseconds.
          * @return The status of the reception operation (`UartExchangeStatus`).
          */
-        virtual UartExchangeStatus receive(uint8_t *data, uint16_t size, uint32_t timeout) = 0;
+        virtual UartExchangeStatus receive(std::uint8_t *data, std::uint16_t size, std::uint32_t timeout) = 0;
 
         /**
          * @brief Maximum possible delay for transmit/receive operations.
@@ -78,7 +78,7 @@ namespace Driver
          * It is typically used to indicate an infinite timeout, where the function will wait
          * indefinitely for the operation to complete.
          */
-        static constexpr uint32_t MaxDelay{0xFFFFFFFFU};
+        static constexpr std::uint32_t MaxDelay{0xFFFFFFFFU};
     };
 
 }

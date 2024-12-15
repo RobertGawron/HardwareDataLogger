@@ -9,7 +9,7 @@
 
 #include "Device/Interfaces/IMeasurementRecorder.hpp"
 #include "BusinessLogic/Inc/SaferArray.hpp"
-#include <stdint.h>
+#include <cstdint>
 
 namespace BusinessLogic
 {
@@ -33,7 +33,7 @@ namespace BusinessLogic
         /**
          * @brief Destructor for MeasurementDataStore.
          */
-        virtual ~MeasurementDataStore() = default;
+        ~MeasurementDataStore() = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
@@ -100,7 +100,7 @@ namespace BusinessLogic
 
     private:
         /** @brief Maximum number of observers that can be registered. */
-        static const uint8_t MaxObservers{4u};
+        static const std::uint8_t MaxObservers{4u};
 
         /** @brief Array to store references to registered observers. */
         SaferArray<Device::IMeasurementRecorder, MaxObservers> observers;

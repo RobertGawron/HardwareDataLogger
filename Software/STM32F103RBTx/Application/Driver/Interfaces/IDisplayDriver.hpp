@@ -6,7 +6,7 @@
 #ifndef IDISPLAYDRIVER_H_
 #define IDISPLAYDRIVER_H_
 
-#include <stdint.h>
+#include <cstdint>
 #include "Driver/Inc/DriverState.hpp"
 #include "Driver/Inc/DisplayPixelColor.hpp"
 
@@ -25,32 +25,22 @@ namespace Driver
     class IDisplayDriver : public DriverState
     {
     public:
-        /**
-         * @enum Status
-         * @brief Enumeration representing the status of display operations.
-         */
-        typedef enum class Status
-        {
+        using Status = enum class StatusEnum : std::uint8_t {
             Ok = 0u,  /**< Operation completed successfully. */
             Fail = 1u /**< Operation failed. */
-        } Status;
+        };
 
-        /**
-         * @enum Orientation
-         * @brief Enumeration representing display orientation.
-         */
-        typedef enum class Orientation
-        {
+        using Orientation = enum class OrientationEnum : std::uint8_t {
             Horizontal = 0u, /**< Display is in horizontal orientation. */
             Vertical = 1u    /**< Display is in vertical orientation. */
-        } Orientation;
+        };
 
         /**
          * @brief Virtual destructor for IDisplayDriver.
          *
          * Ensures proper cleanup of derived classes.
          */
-        virtual ~IDisplayDriver() = default;
+        ~IDisplayDriver() override = default;
 
         /**
          * @brief Turns the display on.
@@ -84,7 +74,7 @@ namespace Driver
          * @param y The Y-coordinate of the cursor.
          * @return Status of the operation.
          */
-        virtual Status setCursor(uint8_t x, uint8_t y) = 0;
+        virtual Status setCursor(std::uint8_t x, std::uint8_t y) = 0;
 
         /**
          * @brief Draws a bitmap at the specified position.
@@ -93,7 +83,7 @@ namespace Driver
          * @param bitmap The bitmap data to draw.
          * @return Status of the operation.
          */
-        virtual Status drawBitmap(uint8_t x, uint8_t y, uint8_t &bitmap) = 0;
+        virtual Status drawBitmap(std::uint8_t x, std::uint8_t y, std::uint8_t &bitmap) = 0;
 
         /**
          * @brief Fills a rectangle with RGB data.
@@ -104,11 +94,11 @@ namespace Driver
          * @param height The height of the rectangle.
          * @return Status of the operation.
          */
-        virtual Status fillRGBRectangle(uint8_t x,
-                                        uint8_t y,
-                                        uint8_t &data,
-                                        uint8_t width,
-                                        uint8_t height) = 0;
+        virtual Status fillRGBRectangle(std::uint8_t x,
+                                        std::uint8_t y,
+                                        std::uint8_t &data,
+                                        std::uint8_t width,
+                                        std::uint8_t height) = 0;
 
         /**
          * @brief Draws a horizontal line.
@@ -118,9 +108,9 @@ namespace Driver
          * @param color The color of the line.
          * @return Status of the operation.
          */
-        virtual Status drawHorizontalLine(uint8_t x,
-                                          uint8_t y,
-                                          uint8_t length,
+        virtual Status drawHorizontalLine(std::uint8_t x,
+                                          std::uint8_t y,
+                                          std::uint8_t length,
                                           DisplayPixelColor::PixelColor color) = 0;
 
         /**
@@ -131,9 +121,9 @@ namespace Driver
          * @param color The color of the line.
          * @return Status of the operation.
          */
-        virtual Status drawVerticalLine(uint8_t x,
-                                        uint8_t y,
-                                        uint8_t length,
+        virtual Status drawVerticalLine(std::uint8_t x,
+                                        std::uint8_t y,
+                                        std::uint8_t length,
                                         DisplayPixelColor::PixelColor color) = 0;
 
         /**
@@ -145,10 +135,10 @@ namespace Driver
          * @param color The fill color of the rectangle.
          * @return Status of the operation.
          */
-        virtual Status fillRectangle(uint8_t x,
-                                     uint8_t y,
-                                     uint8_t width,
-                                     uint8_t height,
+        virtual Status fillRectangle(std::uint8_t x,
+                                     std::uint8_t y,
+                                     std::uint8_t width,
+                                     std::uint8_t height,
                                      DisplayPixelColor::PixelColor color) = 0;
 
         /**
@@ -158,8 +148,8 @@ namespace Driver
          * @param color The color of the pixel.
          * @return Status of the operation.
          */
-        virtual Status setPixel(uint8_t x,
-                                uint8_t y,
+        virtual Status setPixel(std::uint8_t x,
+                                std::uint8_t y,
                                 DisplayPixelColor::PixelColor color) = 0;
 
         /**
@@ -169,8 +159,8 @@ namespace Driver
          * @param[out] color The color of the pixel.
          * @return Status of the operation.
          */
-        virtual Status getPixel(uint8_t x,
-                                uint8_t y,
+        virtual Status getPixel(std::uint8_t x,
+                                std::uint8_t y,
                                 DisplayPixelColor::PixelColor &color) const = 0;
 
         /**
@@ -178,14 +168,14 @@ namespace Driver
          * @param[out] size The width of the display in pixels.
          * @return Status of the operation.
          */
-        virtual Status getXSize(uint8_t &size) const = 0;
+        virtual Status getXSize(std::uint8_t &size) const = 0;
 
         /**
          * @brief Gets the height of the display.
          * @param[out] size The height of the display in pixels.
          * @return Status of the operation.
          */
-        virtual Status getYSize(uint8_t &size) const = 0;
+        virtual Status getYSize(std::uint8_t &size) const = 0;
     };
 
 }

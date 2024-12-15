@@ -6,7 +6,7 @@
 #ifndef UartIdentifier_h
 #define UartIdentifier_h
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace Driver
 {
@@ -18,7 +18,7 @@ namespace Driver
      * This enum is used to specify which UART is used for receiving measurement data,
      * transmitting data via WiFi, or transmitting data via USB.
      */
-    enum class UartIdentifier : uint8_t
+    enum class UartIdentifier : std::uint8_t
     {
         /**
          * @brief UART for receiving measurement data.

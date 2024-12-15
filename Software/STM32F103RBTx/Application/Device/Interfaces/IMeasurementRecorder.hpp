@@ -33,7 +33,7 @@ namespace Device
         /**
          * @brief Virtual destructor.
          */
-        virtual ~IMeasurementRecorder() = default;
+        ~IMeasurementRecorder() override = default;
 
         /**
          * @brief Writes measurement data.

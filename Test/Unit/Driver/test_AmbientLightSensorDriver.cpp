@@ -66,7 +66,7 @@ TEST_F(AmbientLightSensorDriverTest, ResetTransitionsToReset)
 TEST_F(AmbientLightSensorDriverTest, GetAmbientLightLevelAfterStart)
 {
     // Simulate ADC buffer update by HAL
-    const uint32_t simulatedLightLevel = 1234;
+    const std::uint32_t simulatedLightLevel = 1234;
     EXPECT_CALL(mockHALInstance, HAL_ADC_Start_DMA(&hadc1, _, _))
         .WillOnce(DoAll(SetArrayArgument<1>(&simulatedLightLevel, &simulatedLightLevel + 1), Return(HAL_OK)));
 

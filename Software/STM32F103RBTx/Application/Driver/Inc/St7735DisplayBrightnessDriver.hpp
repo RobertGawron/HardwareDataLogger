@@ -11,7 +11,7 @@
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_tim.h"
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace Driver
 {
@@ -44,7 +44,7 @@ namespace Driver
         /**
          * @brief Default destructor for St7735DisplayBrightnessDriver.
          */
-        virtual ~St7735DisplayBrightnessDriver() = default;
+        ~St7735DisplayBrightnessDriver() override = default;
 
         // Delete copy constructor and assignment operator
 
@@ -102,9 +102,9 @@ namespace Driver
          * @param brightness Brightness level as a percentage (0-100).
          * @return True if the brightness is set successfully, false otherwise.
          */
-        virtual bool setBrightness(BrightnessPercentage brightness) override;
+        bool setBrightness(BrightnessPercentage brightness) override;
 
-    protected:
+    private:
         /**
          * @brief Initializes the timer used for PWM.
          *
@@ -153,7 +153,7 @@ namespace Driver
          * @param brightness Brightness level as a percentage (0-100).
          * @return The pulse width corresponding to the given brightness level.
          */
-        uint32_t calculatePulseFromBrightness(BrightnessPercentage brightness) const;
+        [[nodiscard]] static std::uint32_t calculatePulseFromBrightness(BrightnessPercentage brightness);
 
         /// Initial brightness level, set to 0% by default.
         const BrightnessPercentage initialBrightness{0u};
@@ -161,7 +161,6 @@ namespace Driver
         /// Maximum brightness level, set to 100% by default.
         const BrightnessPercentage MaxBrightness{100u};
 
-    private:
         /// Reference to the timer handle used for PWM.
         TIM_HandleTypeDef &htim;
     };

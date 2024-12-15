@@ -39,7 +39,7 @@ namespace Device
         /**
          * @brief Default virtual destructor.
          */
-        virtual ~DisplayBrightnessRegulator() = default;
+        ~DisplayBrightnessRegulator() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
@@ -58,7 +58,7 @@ namespace Device
          *
          * @return true if initialization is successful, false otherwise.
          */
-        virtual bool init();
+        bool init() override;
 
         /**
          * @brief Ticks the brightness regulator state machine.
@@ -66,7 +66,7 @@ namespace Device
          * This method should be called periodically to update the brightness level based on ambient light changes
          * and user preferences.
          */
-        void tick();
+        void tick() override;
 
         /**
          * @brief Gets the current brightness level as a percentage.
@@ -76,7 +76,7 @@ namespace Device
          *
          * @return The brightness level as a percentage (0-100).
          */
-        uint8_t getBrightnessPercentage() const;
+        [[nodiscard]] std::uint8_t getBrightnessPercentage() const override;
 
         /**
          * @brief Sets the brightness level as a percentage.
@@ -86,7 +86,7 @@ namespace Device
          *
          * @param level The brightness level to set, in percentage (0-100).
          */
-        void setBrightnessPercentage(uint8_t level);
+        void setBrightnessPercentage(std::uint8_t level) override;
 
     private:
         /** @brief Reference to the platform-specific ambient light sensor driver. */
@@ -96,7 +96,7 @@ namespace Device
         Driver::IDisplayBrightnessDriver &displayBrightnessDriver;
 
         /** @brief Current brightness level (0-100), used for temporary debugging. */
-        uint8_t level = 0u;
+        std::uint8_t level = 0u;
     };
 }
 

@@ -6,7 +6,9 @@
 #ifndef MeasurementSourcesFactory_h
 #define MeasurementSourcesFactory_h
 
-#include <stdint.h>
+#include <cstdint>
+#include <array>
+
 #include "BusinessLogic/Interfaces/IApplicationComponentFactory.hpp"
 // Driver
 #include "Driver/Interfaces/IPulseCounterDriver.hpp"
@@ -52,7 +54,7 @@ namespace BusinessLogic
         /**
          * @brief Default destructor.
          */
-        virtual ~MeasurementSourcesFactory() = default;
+        ~MeasurementSourcesFactory() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
@@ -69,7 +71,7 @@ namespace BusinessLogic
          * @brief Initializes the measurement sources.
          * @return true if initialization was successful, false otherwise.
          */
-        virtual bool initialize() override;
+        bool initialize() override;
 
         /**
          * @brief Registers the measurement sources with a data coordinator.
@@ -80,14 +82,13 @@ namespace BusinessLogic
          * @param coordinator Reference to the MeasurementCoordinator.
          * @return true if the sources were successfully registered, false otherwise.
          */
-        virtual bool registerSources(MeasurementCoordinator &coordinator);
+        bool registerSources(MeasurementCoordinator &coordinator);
 
     private:
         /** @brief Number of pulse counters available for measurement. */
-        static const uint8_t PulseCounterAmount{4};
+        static constexpr std::size_t PulseCounterAmount{4};
 
-        /** @brief Array of pulse counter measurement sources. */
-        Device::PulseCounterMeasurementSource pulseCounter[PulseCounterAmount];
+        std::array<Device::PulseCounterMeasurementSource, PulseCounterAmount> pulseCounter;
 
         /** @brief Reference to the UART driver used for receiving measurement data. */
         Driver::IUartDriver &uart;

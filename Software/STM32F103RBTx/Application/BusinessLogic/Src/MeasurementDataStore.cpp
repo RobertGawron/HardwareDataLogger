@@ -29,14 +29,14 @@ namespace BusinessLogic
     }
     bool MeasurementDataStore::addObserver(Device::IMeasurementRecorder &observer)
     {
-        bool status = observers.add(&observer);
+        const bool status = observers.add(&observer);
         return status;
     }
 
     bool MeasurementDataStore::removeObserver(Device::IMeasurementRecorder &observer)
     {
 
-        bool status = observers.remove(&observer);
+        const bool status = observers.remove(&observer);
         return status;
     }
 

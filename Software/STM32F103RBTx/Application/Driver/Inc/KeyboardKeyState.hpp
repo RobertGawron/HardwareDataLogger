@@ -1,7 +1,7 @@
 #ifndef KeyboardKeyState_h
 #define KeyboardKeyState_h
 
-#include <stdint.h>
+#include <cstdint>
 
 /**
  * @file KeyboardKeyState.hpp
@@ -19,7 +19,7 @@ namespace Driver
      * between long or short presses, nor does it handle debouncing. Higher-level classes in
      * the Device namespace are responsible for implementing these additional behaviors.
      */
-    enum class KeyboardKeyState : uint8_t
+    enum class KeyboardKeyState : std::uint8_t
     {
         Pressed = 1u,             /**< The key is currently pressed. */
         NotPressed = 2u,          /**< The key is currently not pressed. */

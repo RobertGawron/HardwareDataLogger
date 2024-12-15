@@ -1,5 +1,7 @@
-# Use an official Ubuntu base image
-FROM ubuntu:24.04
+# Stage 1: Build Stage
+# In this stage, we build include-what-you-use because it is not available as a Linux package. 
+# We also avoid polluting the final image with temporary files.
+FROM ubuntu:24.04 AS build-stage
 
 # Set the working directory
 WORKDIR /workspace
@@ -7,26 +9,68 @@ WORKDIR /workspace
 # Avoid prompts from apt
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install build essentials and other dependencies in one step
+# Install essential build tools and IWYU dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
     git \
-    gcovr \
-    clang \
-    clang-tidy \
-    clang-tools \
-    python3 \
-    python3-pip \
-    python3-dbg \
-    graphviz \
-    doxygen \
-    wget \
-    lld \
-    software-properties-common \
     llvm-15-dev \
     libclang-15-dev \
     clang-15 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Clone and build include-what-you-use
+RUN git clone https://github.com/include-what-you-use/include-what-you-use.git /usr/local/src/iwyu && \
+    cd /usr/local/src/iwyu && \
+    git checkout clang_15 && \
+    mkdir build && cd build && \
+    cmake -G "Unix Makefiles" .. && \
+    make -j $(nproc)
+
+# Stage 2: Minimal Runtime Stage
+FROM ubuntu:24.04 AS runtime-stage
+
+# Set the working directory
+WORKDIR /workspace
+
+# Avoid prompts from apt
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install only the runtime dependencies for IWYU
+#RUN apt-get update && apt-get install -y \
+#    libclang-15-dev \
+#    clang-15 \
+#    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Copy the IWYU binary from the build stage
+COPY --from=build-stage /usr/local/src/iwyu/build/bin/include-what-you-use /usr/local/bin/include-what-you-use
+
+
+# Install all required dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    git \
+    curl \
+    gcovr \
+    python3 \
+    python3-pip \
+    python3-dbg \
+    python3-venv \
+    python3-pyqt6 \
+    wget \
+    llvm \
+    clang \
+    clang-tidy \
+    clang-tools \
+    libclang-dev \
+    lsb-release \
+    unzip \
+    openjdk-11-jdk-headless \
+    graphviz \
+    doxygen \
+    lld \
+    software-properties-common \
     libgtest-dev \
     libgmock-dev \
     vim \
@@ -36,9 +80,6 @@ RUN apt-get update && apt-get install -y \
     plantuml \
     libnewlib-arm-none-eabi \
     qt6-base-dev \
-    python3-pyqt6 \
-    python3-venv \
-    llvm-15 \
     gdb \
     strace \
     elfutils \
@@ -62,7 +103,9 @@ RUN apt-get update && apt-get install -y \
     libxcb-xinerama0 \
     libfontconfig1 \
     libfreetype6 \
+    lcov \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 
 # Install Python-based tools in one step
 # Create a virtual environment in /workspace/venv
@@ -77,7 +120,8 @@ RUN /workspace/venv/bin/pip install --upgrade pip && \
     hpp2plantuml \
     pytest \
     pytest-html \
-    PyQt6
+    PyQt6 \
+    codechecker
 
 # Add virtual environment binaries to the PATH
 ENV PATH="/workspace/venv/bin:$PATH"
@@ -85,35 +129,18 @@ ENV PATH="/workspace/venv/bin:$PATH"
 # Set the QT_PLUGIN_PATH environment variable
 ENV QT_PLUGIN_PATH="/workspace/venv/lib/python3.12/site-packages/PyQt6/Qt6/plugins"
 
-# Install CMake manually (version 3.22.0)
-# RUN apt-get update && \
-#    wget https://github.com/Kitware/CMake/releases/download/v3.22.0/cmake-3.22.0-linux-x86_64.sh && \
-#    mkdir /opt/cmake && \
-#    sh cmake-3.22.0-linux-x86_64.sh --skip-license --prefix=/opt/cmake && \
-#    ln -s /opt/cmake/bin/cmake /usr/local/bin/cmake && \
-#    rm cmake-3.22.0-linux-x86_64.sh  # Clean up
-
-# Install include-what-you-use from source
-# RUN git clone https://github.com/include-what-you-use/include-what-you-use.git /usr/local/src/iwyu && \
-#    cd /usr/local/src/iwyu && \
-#    git checkout clang_15 && \
-#    git pull && \
-#    mkdir build && cd build && \
-#    cmake -G "Unix Makefiles" .. && \
-#    make -j $(nproc) && \
-#    make install
-
 # workaround for cppcheck html generator that needs older version 
 RUN pip uninstall -y pygments && pip install pygments==2.7.4
-
-
-RUN apt-get update && apt-get install -y \
-    lcov \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
 RUN mkdir -p /workspace/build
 WORKDIR /workspace/build
 
-# Default to bash
+#RUN git clone https://github.com/facebook/infer.git \
+#&& cd infer \
+#&& ./build-infer.sh \
+#&& ln -s $(pwd)/infer/bin/infer /usr/local/bin/infer \
+#&& cd .. && rm -rf infer
+
+# Default command
 CMD ["bash"]

@@ -1,4 +1,5 @@
 #include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
+#include "BusinessLogic/Inc/MeasurementDataStore.hpp"
 
 namespace BusinessLogic
 {
@@ -44,13 +45,13 @@ namespace BusinessLogic
     // Register an input device observer
     bool MeasurementCoordinator::addObserver(Device::IMeasurementSource &observer)
     {
-        bool status = observers.add(&observer);
+        const bool status = observers.add(&observer);
         return status;
     }
 
     bool MeasurementCoordinator::removeObserver(Device::IMeasurementSource &observer)
     {
-        bool status = observers.remove(&observer);
+        const bool status = observers.remove(&observer);
         return status;
     }
 }

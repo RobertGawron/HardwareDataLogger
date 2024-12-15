@@ -94,8 +94,8 @@ TEST_F(St7735DisplayBrightnessDriverTest, ResetShouldSucceed)
 
 TEST_F(St7735DisplayBrightnessDriverTest, SetBrightnessWithinValidRange)
 {
-    const uint8_t validBrightness = 50;                            // Choose a valid brightness value within the range
-    const uint32_t expectedPulse = (validBrightness * 4799) / 100; // Assuming the `calculatePulseFromBrightness` uses this formula
+    const std::uint8_t validBrightness = 50;                            // Choose a valid brightness value within the range
+    const std::uint32_t expectedPulse = (validBrightness * 4799) / 100; // Assuming the `calculatePulseFromBrightness` uses this formula
 
     // Expect the set compare function to be called with the calculated pulse
     EXPECT_CALL(mockTimerInstance, __HAL_TIM_SET_COMPARE(&htim, TIM_CHANNEL_2, expectedPulse))
@@ -108,7 +108,7 @@ TEST_F(St7735DisplayBrightnessDriverTest, SetBrightnessWithinValidRange)
 
 TEST_F(St7735DisplayBrightnessDriverTest, SetBrightnessOutsideValidRange)
 {
-    const uint8_t invalidBrightness = 101; // Choose an invalid brightness value
+    const std::uint8_t invalidBrightness = 101; // Choose an invalid brightness value
 
     // The set compare function should not be called
     EXPECT_CALL(mockTimerInstance, __HAL_TIM_SET_COMPARE(&htim, TIM_CHANNEL_2, _))

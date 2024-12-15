@@ -33,9 +33,9 @@ protected:
 TEST_F(UartDriverTest, TransmitShouldSucceed)
 {
     // Prepare the data to be transmitted
-    uint8_t data[] = {0x01, 0x02, 0x03};
-    uint16_t size = sizeof(data);
-    uint32_t timeout = 1000; // Timeout period in milliseconds
+    std::uint8_t data[] = {0x01, 0x02, 0x03};
+    std::uint16_t size = sizeof(data);
+    std::uint32_t timeout = 1000; // Timeout period in milliseconds
 
     // Initialize the driver
     EXPECT_TRUE(driver->initialize());
@@ -47,13 +47,13 @@ TEST_F(UartDriverTest, TransmitShouldSucceed)
     EXPECT_CALL(mockHAL_UART_Instance, HAL_UART_Transmit(&huart, data, size, timeout))
         .WillOnce(DoAll(
             // Capture and validate the parameters passed to HAL_UART_Transmit
-            WithArgs<1, 2>([=](uint8_t *sentData, uint16_t sentSize)
+            WithArgs<1, 2>([=](std::uint8_t *sentData, std::uint16_t sentSize)
                            {
                 // Check that the size passed to the HAL function matches the expected size
                 EXPECT_EQ(sentSize, size);
 
                 // Check that the data passed to the HAL function matches the expected data
-                for (uint16_t i = 0; i < sentSize; ++i) {
+                for (std::uint16_t i = 0; i < sentSize; ++i) {
                     EXPECT_EQ(sentData[i], data[i]);
                 } }),
             Return(HAL_OK)));
@@ -65,9 +65,9 @@ TEST_F(UartDriverTest, TransmitShouldSucceed)
 
 TEST_F(UartDriverTest, TransmitShouldFailOnError)
 {
-    uint8_t data[] = {0x01, 0x02, 0x03};
-    uint16_t size = sizeof(data);
-    uint32_t timeout = 1000; // Timeout period in milliseconds
+    std::uint8_t data[] = {0x01, 0x02, 0x03};
+    std::uint16_t size = sizeof(data);
+    std::uint32_t timeout = 1000; // Timeout period in milliseconds
 
     // Initialize the driver
     EXPECT_TRUE(driver->initialize());
@@ -86,9 +86,9 @@ TEST_F(UartDriverTest, TransmitShouldFailOnError)
 
 TEST_F(UartDriverTest, ReceiveShouldSucceed)
 {
-    uint8_t buffer[3];
-    uint16_t size = sizeof(buffer);
-    uint32_t timeout = 1000; // Timeout period in milliseconds
+    std::uint8_t buffer[3];
+    std::uint16_t size = sizeof(buffer);
+    std::uint32_t timeout = 1000; // Timeout period in milliseconds
 
     // Initialize the driver
     EXPECT_TRUE(driver->initialize());
@@ -107,9 +107,9 @@ TEST_F(UartDriverTest, ReceiveShouldSucceed)
 
 TEST_F(UartDriverTest, ReceiveShouldFailOnTimeout)
 {
-    uint8_t buffer[3];
-    uint16_t size = sizeof(buffer);
-    uint32_t timeout = 1000;
+    std::uint8_t buffer[3];
+    std::uint16_t size = sizeof(buffer);
+    std::uint32_t timeout = 1000;
 
     // Initialize the driver
     EXPECT_TRUE(driver->initialize());
@@ -128,9 +128,9 @@ TEST_F(UartDriverTest, ReceiveShouldFailOnTimeout)
 
 TEST_F(UartDriverTest, ReceiveShouldFailOnError)
 {
-    uint8_t buffer[3];
-    uint16_t size = sizeof(buffer);
-    uint32_t timeout = 1000;
+    std::uint8_t buffer[3];
+    std::uint16_t size = sizeof(buffer);
+    std::uint32_t timeout = 1000;
 
     // Initialize the driver
     EXPECT_TRUE(driver->initialize());

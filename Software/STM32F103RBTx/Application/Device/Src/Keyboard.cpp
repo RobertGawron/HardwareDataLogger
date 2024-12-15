@@ -1,9 +1,10 @@
 #include "Device/Inc/Keyboard.hpp"
 #include "Driver/Inc/KeyboardKeyState.hpp"
 #include "Device/Inc/KeyboardKeyActionState.hpp"
+#include "Driver/Inc/KeyboardKeyIdentifier.hpp"
+#include "Driver/Interfaces/IKeyboardDriver.hpp"
 
-// for test of driver lib
-#include <stdio.h>
+#include <cstdint>
 
 namespace Device
 {
@@ -14,19 +15,19 @@ namespace Device
 
     bool Keyboard::init()
     {
-        bool status = keyboardDriver.initialize();
+        const bool status = keyboardDriver.initialize();
         keyboardDriver.start();
         return status;
     }
 
     bool Keyboard::tick()
     {
-        for (uint8_t i = 0u; i < AmountOfKeys; i++)
+        for (std::uint8_t i = 0u; i < AmountOfKeys; i++)
         {
-            ::Driver::KeyboardKeyIdentifier keyId = static_cast<::Driver::KeyboardKeyIdentifier>(i);
-            ::Driver::KeyboardKeyState newState = keyboardDriver.getKeyState(keyId);
+            const ::Driver::KeyboardKeyIdentifier keyId = static_cast<::Driver::KeyboardKeyIdentifier>(i);
+            const ::Driver::KeyboardKeyState newState = keyboardDriver.getKeyState(keyId);
 
-            KeyboardKeyActionState currentState = keyActionState[i];
+            const KeyboardKeyActionState currentState = keyActionState[i];
             KeyboardKeyActionState nextState = currentState; // Default to no change
 
             switch (currentState)
@@ -76,6 +77,8 @@ namespace Device
                 }
                 break;
 
+            case KeyboardKeyActionState::Fail:
+                // TODO
             default:
                 // If there are other states or error conditions, handle them here
                 break;
@@ -91,7 +94,7 @@ namespace Device
     {
         KeyboardKeyActionState state;
 
-        uint8_t index = static_cast<uint8_t>(key);
+        const std::uint8_t index = static_cast<std::uint8_t>(key);
         if (index >= AmountOfKeys)
         {
             state = KeyboardKeyActionState::Fail;

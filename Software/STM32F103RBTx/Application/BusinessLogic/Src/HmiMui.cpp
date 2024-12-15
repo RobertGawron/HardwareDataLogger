@@ -1,12 +1,25 @@
-#include "BusinessLogic/Inc/HmiFactory.hpp"
-// #include "Device/Inc/KeyboardKeyActionState.hpp"
+#include "BusinessLogic/Inc/HmiMui.hpp"
+
+#include "Device/Inc/KeyboardKeyActionState.hpp"
+#include "Device/Interfaces/IDisplay.hpp"
+#include "Device/Interfaces/IDisplayBrightnessRegulator.hpp"
+#include "Device/Interfaces/IKeyboard.hpp"
+
 #include "Driver/Inc/KeyboardKeyIdentifier.hpp"
 
-// for test of driver lib
-#include <stdio.h>
+#include "mui.h"
+#include "u8g2.h"
+#include "u8x8.h"
+#include "mui_u8g2.h"
 
 namespace BusinessLogic
 {
+
+// Can't fix, MUI related implementation.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
+#pragma clang diagnostic ignored "-Wold-style-cast"
+
     // Define fonts/styles and UI elements
     muif_t muif_list[] = {
         MUIF_U8G2_FONT_STYLE(0, u8g2_font_helvR08_tr), /* style 0: small regular font */
@@ -54,14 +67,13 @@ namespace BusinessLogic
 
         ; // end of fds_data array
 
+#pragma clang diagnostic pop
+
     HmiMui::HmiMui(Device::IDisplay &_display,
                    Device::IDisplayBrightnessRegulator &_displayBrightnessRegulator,
                    Device::IKeyboard &_keyboard) : display(_display),
                                                    displayBrightnessRegulator(_displayBrightnessRegulator),
-                                                   keyboard(_keyboard),
-                                                   IHmi(_display,
-                                                        _displayBrightnessRegulator,
-                                                        _keyboard)
+                                                   keyboard(_keyboard)
     {
     }
 
@@ -86,9 +98,7 @@ namespace BusinessLogic
 
     bool HmiMui::start()
     {
-        printf("START %s %d\n", __FILE__, __LINE__);
-
-        display.begin(/* menu_select_pin= */ 5, /* menu_next_pin= */ 4, /* menu_prev_pin= */ 2, /* menu_up_pin= */ U8X8_PIN_NONE, /* menu_down_pin= */ U8X8_PIN_NONE, /* menu_home_pin= */ 3);
+        display.begin();
 
         mui.begin(display, fds_data, muif_list, sizeof(muif_list) / sizeof(muif_t));
         mui.gotoForm(/* form_id= */ 1, /* initial_cursor_position= */ 0);
@@ -98,7 +108,7 @@ namespace BusinessLogic
         do
         {
             mui.draw();
-        } while (display.nextPage());
+        } while (display.nextPage() > 0u);
 
         return true;
     }
@@ -145,7 +155,7 @@ namespace BusinessLogic
         do
         {
             mui.draw();
-        } while (display.nextPage());
+        } while (display.nextPage() > 0u);
 
         /*    printf("key state: %d %d %d %d\n",
                    keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up),

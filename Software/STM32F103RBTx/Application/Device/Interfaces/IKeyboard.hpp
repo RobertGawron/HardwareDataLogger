@@ -75,7 +75,7 @@ namespace Device
          * @param key The identifier of the key whose state is to be retrieved.
          * @return The action state of the specified key.
          */
-        virtual KeyboardKeyActionState getKeyState(Driver::KeyboardKeyIdentifier key) const = 0;
+        [[nodiscard]] virtual KeyboardKeyActionState getKeyState(Driver::KeyboardKeyIdentifier key) const = 0;
     };
 
 }

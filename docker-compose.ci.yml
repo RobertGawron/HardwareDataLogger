@@ -9,11 +9,8 @@ services:
       - ./Software:/workspace/Software
       - ./Simulation:/workspace/Simulation
       - ./Test:/workspace/Test
-      - ./DevOps/BuildArtifacts:/workspace/build/BuildArtifacts
-      - ./DevOps/Doxygen/Doxyfile:/workspace/Doxyfile
-      - ./DevOps/Doxygen/Doxyfile.in:/workspace/Doxyfile.in
+      - ./DevOps/HwDev/BuildArtifacts:/workspace/build/BuildArtifacts
       - ./CMakeLists.txt:/workspace/CMakeLists.txt
-      - ./DevOps/Scripts/.bashrc:/root/.bashrc
-      - ./DevOps/Scripts/ClassTemplate.puml:/workspace/ClassTemplate.puml
+      - /tmp/.X11-unix:/tmp/.X11-unix   # Mount X server socket
     working_dir: /workspace
     # Do not override the CMD from Dockerfile
