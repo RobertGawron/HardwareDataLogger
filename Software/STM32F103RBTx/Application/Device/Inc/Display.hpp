@@ -94,7 +94,7 @@ namespace Device
          * @param byte_cb Byte callback function for communication with the display.
          * @param gpio_and_delay_cb GPIO and delay callback function for controlling hardware signals.
          */
-        void u8g2_Setup_st7735(u8g2_t *u8g2, const u8g2_cb_t *rotation, u8x8_msg_cb byte_cb, u8x8_msg_cb gpio_and_delay_cb);
+        static void u8g2_Setup_st7735(u8g2_t *u8g2, const u8g2_cb_t *rotation, u8x8_msg_cb byte_cb, u8x8_msg_cb gpio_and_delay_cb);
 
         /// Reference to the display driver used for managing display operations.
         Driver::IDisplayDriver &displayDriver;

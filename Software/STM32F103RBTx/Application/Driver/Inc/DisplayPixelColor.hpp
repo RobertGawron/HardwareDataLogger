@@ -78,9 +78,9 @@ namespace Driver
             constexpr std::uint8_t BITS_IN_BYTE = 8;
 
             // Extract the top bits for each color channel and combine them
-            std::uint16_t r = (red >> (BITS_IN_BYTE - RED_BITS)) & RED_MASK;       // 5 bits for red
-            std::uint16_t g = (green >> (BITS_IN_BYTE - GREEN_BITS)) & GREEN_MASK; // 6 bits for green
-            std::uint16_t b = (blue >> (BITS_IN_BYTE - BLUE_BITS)) & BLUE_MASK;    // 5 bits for blue
+            const std::uint16_t r = (red >> (BITS_IN_BYTE - RED_BITS)) & RED_MASK;       // 5 bits for red
+            const std::uint16_t g = (green >> (BITS_IN_BYTE - GREEN_BITS)) & GREEN_MASK; // 6 bits for green
+            const std::uint16_t b = (blue >> (BITS_IN_BYTE - BLUE_BITS)) & BLUE_MASK;    // 5 bits for blue
 
             // Combine the bits into a single 16-bit value according to RGB565 format
             return (r << RED_SHIFT) | (g << GREEN_SHIFT) | (b << BLUE_SHIFT);

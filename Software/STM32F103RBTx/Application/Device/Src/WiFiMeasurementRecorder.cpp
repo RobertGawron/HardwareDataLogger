@@ -1,6 +1,6 @@
 #include "Device/Inc/WiFiMeasurementRecorder.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
-#include "Driver/Inc/UartExchangeStatus.hpp"
+// #include "Driver/Inc/UartExchangeStatus.hpp"
 
 #include <cstdint>
 
@@ -37,6 +37,7 @@ namespace Device
 
     void WiFiMeasurementRecorder::write()
     {
+        /*
         Driver::UartExchangeStatus status1, status2;
         {
             // #define HAL_MAX_DELAY      0xFFFFFFFFU
@@ -53,6 +54,7 @@ namespace Device
 
             volatile int a;
         }
+        */
     }
 
     void WiFiMeasurementRecorder::flush()

@@ -1,7 +1,7 @@
 #include "BusinessLogic/Inc/MeasurementStoresFactory.hpp"
 #include "BusinessLogic/Inc/MeasurementDataStore.hpp"
 
-#include "Driver/Interfaces/IPulseCounterDriver.hpp"
+// #include "Driver/Interfaces/IPulseCounterDriver.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
 #include "Driver/Interfaces/ISdCardDriver.hpp"
 

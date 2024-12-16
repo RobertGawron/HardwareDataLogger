@@ -1,5 +1,6 @@
 #include "Driver/Inc/UartDriver.hpp"
 #include "Driver/Inc/UartExchangeStatus.hpp"
+#include "Driver/Inc/DriverState.hpp"
 
 #include "stm32f1xx_hal_uart.h"
 #include "stm32f1xx_hal_def.h"
@@ -77,7 +78,7 @@ namespace Driver
             HAL_StatusTypeDef halStatus = HAL_UART_Receive(&uartHandler, data_rx, len, timeout);
             */
 
-            HAL_StatusTypeDef halStatus = HAL_UART_Receive(&uartHandler, data, size, timeout);
+            const HAL_StatusTypeDef halStatus = HAL_UART_Receive(&uartHandler, data, size, timeout);
             status = getExchangeStatus(halStatus);
         }
 

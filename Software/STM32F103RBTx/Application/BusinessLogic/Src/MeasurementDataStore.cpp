@@ -1,5 +1,7 @@
 #include "BusinessLogic/Inc/MeasurementDataStore.hpp"
 
+#include <cstddef>
+
 namespace BusinessLogic
 {
     bool MeasurementDataStore::initialize()
@@ -7,7 +9,7 @@ namespace BusinessLogic
         bool status = true;
 
         // abort on first fail
-        for (int i = 0; (i < observers.size()) && status; i++)
+        for (std::size_t i = 0u; (i < observers.size()) && status; i++)
         {
             status &= observers[i]->initialize();
         }
@@ -20,7 +22,7 @@ namespace BusinessLogic
         bool status = true;
 
         // abort on first fail
-        for (int i = 0; (i < observers.size()) && status; i++)
+        for (std::size_t i = 0u; (i < observers.size()) && status; i++)
         {
             status &= observers[i]->start();
         }
@@ -42,11 +44,9 @@ namespace BusinessLogic
 
     void MeasurementDataStore::notifyObservers()
     {
-        for (int i = 0; i < observers.size(); i++)
+        for (std::size_t i = 0u; i < observers.size(); i++)
         {
             observers[i]->notify();
-            // int dummy = 55;
         }
     }
-
 }

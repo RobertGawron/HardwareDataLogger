@@ -5,6 +5,7 @@
 #include "u8g2.h"
 #include "u8x8.h"
 
+#include <array>
 #include <cstdint>
 #include <cstdlib>
 
@@ -20,32 +21,37 @@ namespace Device
     static const std::uint8_t U8G2_STATUS_OK = 1u;
     static const std::uint8_t U8G2_STATUS_NOT_OK = 0u;
 
-    // Maximum number of Display instances supported
-    static const std::uint8_t MAX_DISPLAYS = 1u;
-
-    struct DisplayMapEntry
+    namespace
     {
-        u8x8_t *u8x8;
-        Device::Display *display;
-    };
+        // Define a constant for maximum displays
+        constexpr std::size_t MAX_DISPLAYS = 10;
 
-    static DisplayMapEntry displayMap[MAX_DISPLAYS];
-    static std::uint8_t displayCount = 1;
-
-    // This is  trampoline function.
-    // It must have the same signature as u8x8_d_st7735.
-    static std::uint8_t trampolineU8x8DSt7735(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t argInt, void *argPtr)
-    {
-        for (int i = 0; i < displayCount; i++)
+        // Struct for mapping display entries
+        struct DisplayMapEntry
         {
-            if (displayMap[i].u8x8 == u8x8)
+            u8x8_t *u8x8;
+            Device::Display *display;
+        };
+
+        // Use std::array for a fixed-size array
+        static std::array<DisplayMapEntry, MAX_DISPLAYS> displayMap{};
+        static std::size_t displayCount = 1;
+
+        // This is a trampoline function.
+        // It must have the same signature as u8x8_d_st7735.
+        std::uint8_t trampolineU8x8DSt7735(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t argInt, void *argPtr)
+        {
+            for (std::size_t i = 0; i < displayCount; i++)
             {
-                // Found the matching display instance
-                return displayMap[i].display->u8x8DSt7735Impl(u8x8, msg, argInt, argPtr);
+                if (displayMap[i].u8x8 == u8x8)
+                {
+                    // Found the matching display instance
+                    return displayMap[i].display->u8x8DSt7735Impl(u8x8, msg, argInt, argPtr);
+                }
             }
+            // No match found
+            return U8G2_STATUS_NOT_OK;
         }
-        // No match found
-        return U8G2_STATUS_NOT_OK;
     }
 
     static const u8x8_display_info_t u8x8_st7735_128x128_display_info =
@@ -129,7 +135,7 @@ namespace Device
                 // Treat each byte as a column of 8 vertical pixels.
                 for (std::uint8_t col = 0; col < 120; col++)
                 {
-                    std::uint8_t col_data = tile->tile_ptr[col]; // This is a vertical column
+                    const std::uint8_t col_data = tile->tile_ptr[col]; // This is a vertical column
                     for (std::uint8_t bit = 0; bit < 8; bit++)
                     {
                         Driver::DisplayPixelColor::PixelColor color = Driver::DisplayPixelColor::getColor(0x00, 0x00, 0x00);

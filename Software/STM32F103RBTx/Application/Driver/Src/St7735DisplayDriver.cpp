@@ -1,7 +1,13 @@
 #include "Driver/Inc/St7735DisplayDriver.hpp"
 #include "Driver/Inc/DisplayPixelColor.hpp"
+#include "Driver/Interfaces/IDisplayDriver.hpp"
+
+// todo remove suppression when the lib is fully integrated
+// codechecker_suppress [misc-include-cleaner]
 #include "st7735.h"
+
 #include <cstdint>
+
 namespace Driver
 {
     bool St7735DisplayDriver::onInitialize()

@@ -70,9 +70,11 @@ namespace Driver
             break;
 
             case KeyboardKeyIdentifier::LastNotUsed:
-            default:
+
+            {
                 state = KeyboardKeyState::UnknownKeyAsked;
-                break;
+            }
+            break;
             }
         }
         else

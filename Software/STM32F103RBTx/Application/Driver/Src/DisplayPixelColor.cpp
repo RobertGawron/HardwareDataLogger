@@ -1,7 +1,5 @@
 #include "Driver/Inc/DisplayPixelColor.hpp"
 
-#include <cstdint>
-
 namespace Driver
 {
     const DisplayPixelColor::PixelColor DisplayPixelColor::BLACK = DisplayPixelColor::getColor(0x00, 0x00, 0x00);

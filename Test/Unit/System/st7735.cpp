@@ -1,6 +1,6 @@
 
 #include "st7735.h"
-
+/*
 // Declare a global instance of MockLibST7735
 extern MockLibST7735 *mockLibST7735;
 
@@ -45,3 +45,4 @@ void ST7735_InvertColors(bool invert)
 {
     mockLibST7735->ST7735_InvertColors(invert);
 }
+*/

@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-enum HAL_StatusTypeDef
+enum HAL_StatusTypeDef : std::uint8_t
 {
     HAL_OK = 0,
     HAL_ERROR = 1,

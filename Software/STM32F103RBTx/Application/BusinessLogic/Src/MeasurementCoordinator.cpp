@@ -1,6 +1,8 @@
 #include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
 #include "BusinessLogic/Inc/MeasurementDataStore.hpp"
 
+#include <cstdint>
+
 namespace BusinessLogic
 {
 
@@ -13,7 +15,7 @@ namespace BusinessLogic
         bool status = true;
 
         // abort on first fail
-        for (int i = 0; (i < observers.size()) && status; i++)
+        for (std::size_t i = 0u; (i < observers.size()) && status; i++)
         {
             status &= observers[i]->init();
         }
@@ -31,7 +33,7 @@ namespace BusinessLogic
     // Updates measurements from all devices
     void MeasurementCoordinator::updateMeasurements()
     {
-        for (int i = 0; i < observers.size(); i++)
+        for (std::size_t i = 0u; i < observers.size(); i++)
         {
             const bool isMeasurementReady = observers[i]->isMeasurementAvailable();
 

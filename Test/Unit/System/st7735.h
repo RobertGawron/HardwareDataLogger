@@ -4,7 +4,7 @@
 
 #include <gmock/gmock.h>
 #include "fonts.h"
-
+/*
 class MockLibST7735
 {
 public:
@@ -29,5 +29,5 @@ void ST7735_FillRectangle(std::uint16_t x, std::uint16_t y, std::uint16_t w, std
 void ST7735_FillScreen(std::uint16_t color);
 void ST7735_DrawImage(std::uint16_t x, std::uint16_t y, std::uint16_t w, std::uint16_t h, const std::uint16_t *data);
 void ST7735_InvertColors(bool invert);
-
+*/
 #endif // lib_st7735_h
