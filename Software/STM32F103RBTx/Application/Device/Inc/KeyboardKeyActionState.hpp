@@ -19,7 +19,7 @@ namespace Device
      * It provides different states to represent the start of a press, the end of a short or long press,
      * and other relevant states.
      */
-    enum class KeyboardKeyActionState : uint8_t
+    enum class KeyboardKeyActionState : std::uint8_t
     {
         PressStart = 0u,    /**< The user started pressing the key. */
         PressEndShort = 1u, /**< The press has ended and is considered a short-duration press. */

@@ -37,7 +37,7 @@ namespace Device
         /**
          * @brief Default destructor for UartMeasurementSource.
          */
-        virtual ~UartMeasurementSource() = default;
+        ~UartMeasurementSource() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
@@ -56,7 +56,7 @@ namespace Device
          * Prepares the UART device for receiving measurement data.
          * @return True if initialization was successful, false otherwise.
          */
-        virtual bool init() override;
+        bool init() override;
 
         /**
          * @brief Deinitializes the UART measurement source.
@@ -64,21 +64,21 @@ namespace Device
          * Shuts down the communication with the UART device.
          * @return True if deinitialization was successful, false otherwise.
          */
-        virtual bool deinit() override;
+        bool deinit() override;
 
         /**
          * @brief Checks if new measurement data is available from the UART device.
          *
          * @return True if new measurement data is available, false otherwise.
          */
-        virtual bool isMeasurementAvailable() override;
+        bool isMeasurementAvailable() override;
 
         /**
          * @brief Retrieves the current measurement data from the UART device.
          *
          * This method fetches the latest measurement data received via UART.
          */
-        virtual void getMeasurement() override;
+        void getMeasurement() override;
 
     private:
         /** @brief Reference to the UART driver used for communication with the UART device. */

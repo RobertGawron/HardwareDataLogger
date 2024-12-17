@@ -1,4 +1,8 @@
 #include "Device/Inc/DisplayBrightnessRegulator.hpp"
+#include "Driver/Interfaces/IDisplayBrightnessDriver.hpp"
+#include "Driver/Interfaces/IAmbientLightSensorDriver.hpp"
+
+#include <cstdint>
 
 namespace Device
 {
@@ -11,7 +15,7 @@ namespace Device
 
     bool DisplayBrightnessRegulator::init()
     {
-        bool status = false;
+        const bool status = false;
 
         ambientLightSensorDriver.initialize();
         displayBrightnessDriver.initialize();
@@ -40,12 +44,12 @@ namespace Device
         volatile int dummy = ambientLightSensorDriver.getAmbientLightLevel();
     }
 
-    uint8_t DisplayBrightnessRegulator::getBrightnessPercentage() const
+    std::uint8_t DisplayBrightnessRegulator::getBrightnessPercentage() const
     {
         return level;
     }
 
-    void DisplayBrightnessRegulator::setBrightnessPercentage(uint8_t _level)
+    void DisplayBrightnessRegulator::setBrightnessPercentage(std::uint8_t _level)
     {
         // todo ake it bool
         level = _level;

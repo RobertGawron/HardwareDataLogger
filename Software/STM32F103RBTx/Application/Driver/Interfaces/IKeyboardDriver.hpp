@@ -9,7 +9,7 @@
 #include "Driver/Inc/KeyboardKeyState.hpp"
 #include "Driver/Inc/KeyboardKeyIdentifier.hpp"
 #include "Driver/Inc/DriverState.hpp"
-#include <stdint.h>
+#include <cstdint>
 
 namespace Driver
 {
@@ -35,7 +35,7 @@ namespace Driver
          *
          * Ensures proper cleanup of derived classes.
          */
-        virtual ~IKeyboardDriver() = default;
+        ~IKeyboardDriver() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
@@ -68,7 +68,7 @@ namespace Driver
          * @param key The identifier of the key whose state is requested.
          * @return The current state of the key (`KeyboardKeyState`).
          */
-        virtual KeyboardKeyState getKeyState(const KeyboardKeyIdentifier key) const = 0;
+        [[nodiscard]] virtual KeyboardKeyState getKeyState(KeyboardKeyIdentifier key) const = 0;
     };
 
 }

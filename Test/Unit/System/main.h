@@ -5,20 +5,12 @@
 
 // Mock definitions for GPIO_TypeDef and GPIO-related functions
 
-typedef enum
-{
-    HAL_OK = 0x00U,
-    HAL_ERROR = 0x01U,
-    HAL_BUSY = 0x02U,
-    HAL_TIMEOUT = 0x03U
-} HAL_StatusTypeDef;
-
 struct GPIO_TypeDef
 {
-    uint32_t ID; // Simple identifier, just to make the struct non-empty
+    std::uint32_t ID; // Simple identifier, just to make the struct non-empty
 };
 
-enum GPIO_PinState
+enum GPIO_PinState : std::uint8_t
 {
     GPIO_PIN_RESET = 0,
     GPIO_PIN_SET

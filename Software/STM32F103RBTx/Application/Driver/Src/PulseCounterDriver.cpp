@@ -2,10 +2,6 @@
 
 namespace Driver
 {
-    PulseCounterDriver::PulseCounterDriver()
-    {
-    }
-
     bool PulseCounterDriver::onInitialize()
     {
         return true;

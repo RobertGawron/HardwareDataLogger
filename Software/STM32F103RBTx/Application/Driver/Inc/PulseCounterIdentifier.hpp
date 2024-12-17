@@ -1,7 +1,7 @@
 #ifndef PulseCounterIdentifier_h
 #define PulseCounterIdentifier_h
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace Driver
 {
@@ -12,7 +12,7 @@ namespace Driver
      *
      * This enum is used to specify which pulse counter corresponds to which BNC connector.
      */
-    enum class PulseCounterIdentifier : uint8_t
+    enum class PulseCounterIdentifier : std::uint8_t
     {
         /**
          * @brief Pulse counter from the first BNC connector.

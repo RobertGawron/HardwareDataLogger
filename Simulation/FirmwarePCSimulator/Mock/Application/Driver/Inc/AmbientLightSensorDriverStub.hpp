@@ -38,9 +38,9 @@ namespace Driver
          * This method returns the current ambient light level measured by the sensor.
          * The range of the returned value is dependent on the hardware configuration and sensor characteristics.
          *
-         * @return uint32_t The current ambient light level.
+         * @return std::uint32_t The current ambient light level.
          */
-        virtual uint32_t getAmbientLightLevel() const override;
+        virtual std::uint32_t getAmbientLightLevel() const override;
 
     protected:
         /**

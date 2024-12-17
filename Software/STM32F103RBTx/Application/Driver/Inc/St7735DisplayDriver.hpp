@@ -30,7 +30,7 @@ namespace Driver
          *
          * Ensures proper cleanup of derived classes.
          */
-        virtual ~St7735DisplayDriver() = default;
+        ~St7735DisplayDriver() override = default;
 
         // Delete copy constructor and assignment operator
         /**
@@ -43,38 +43,38 @@ namespace Driver
          */
         St7735DisplayDriver &operator=(const St7735DisplayDriver &) = delete;
 
-        virtual Status displayOn();
-        virtual Status displayOff();
-        virtual Status setOrientation(Orientation orientation);
-        virtual Status getOrientation(Orientation &orientation) const;
-        virtual Status setCursor(uint8_t x, uint8_t y);
-        virtual Status drawBitmap(uint8_t x, uint8_t y, uint8_t &bitmap);
-        virtual Status fillRGBRectangle(uint8_t x,
-                                        uint8_t y,
-                                        uint8_t &data,
-                                        uint8_t width,
-                                        uint8_t height);
-        virtual Status drawHorizontalLine(uint8_t x,
-                                          uint8_t y,
-                                          uint8_t length,
-                                          DisplayPixelColor::PixelColor color);
-        virtual Status drawVerticalLine(uint8_t x,
-                                        uint8_t y,
-                                        uint8_t length,
-                                        DisplayPixelColor::PixelColor color);
-        virtual Status fillRectangle(uint8_t x,
-                                     uint8_t y,
-                                     uint8_t width,
-                                     uint8_t height,
-                                     DisplayPixelColor::PixelColor color);
-        virtual Status setPixel(uint8_t x,
-                                uint8_t y,
-                                DisplayPixelColor::PixelColor color);
-        virtual Status getPixel(uint8_t x,
-                                uint8_t y,
-                                DisplayPixelColor::PixelColor &color) const;
-        virtual Status getXSize(uint8_t &size) const;
-        virtual Status getYSize(uint8_t &size) const;
+        Status displayOn() override;
+        Status displayOff() override;
+        Status setOrientation(Orientation orientation) override;
+        Status getOrientation(Orientation &orientation) const override;
+        Status setCursor(std::uint8_t x, std::uint8_t y) override;
+        Status drawBitmap(std::uint8_t x, std::uint8_t y, std::uint8_t &bitmap) override;
+        Status fillRGBRectangle(std::uint8_t x,
+                                std::uint8_t y,
+                                std::uint8_t &data,
+                                std::uint8_t width,
+                                std::uint8_t height) override;
+        Status drawHorizontalLine(std::uint8_t x,
+                                  std::uint8_t y,
+                                  std::uint8_t length,
+                                  DisplayPixelColor::PixelColor color) override;
+        Status drawVerticalLine(std::uint8_t x,
+                                std::uint8_t y,
+                                std::uint8_t length,
+                                DisplayPixelColor::PixelColor color) override;
+        Status fillRectangle(std::uint8_t x,
+                             std::uint8_t y,
+                             std::uint8_t width,
+                             std::uint8_t height,
+                             DisplayPixelColor::PixelColor color) override;
+        Status setPixel(std::uint8_t x,
+                        std::uint8_t y,
+                        DisplayPixelColor::PixelColor color) override;
+        Status getPixel(std::uint8_t x,
+                        std::uint8_t y,
+                        DisplayPixelColor::PixelColor &color) const override;
+        Status getXSize(std::uint8_t &size) const override;
+        Status getYSize(std::uint8_t &size) const override;
 
     protected:
         /**

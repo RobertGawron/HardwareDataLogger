@@ -6,7 +6,7 @@
 #ifndef MeasurementStoresFactory_h
 #define MeasurementStoresFactory_h
 
-#include <stdint.h>
+#include <cstdint>
 #include "BusinessLogic/Interfaces/IApplicationComponentFactory.hpp"
 
 // Driver
@@ -17,22 +17,6 @@
 #include "Device/Inc/SdCardMeasurementRecorder.hpp"
 // High-level components
 #include "BusinessLogic/Inc/MeasurementDataStore.hpp"
-
-#include "BusinessLogic/Interfaces/IApplicationComponentFactory.hpp"
-#include "Device/Inc/SdCardMeasurementRecorder.hpp"
-#include "Device/Inc/WiFiMeasurementRecorder.hpp"
-namespace BusinessLogic
-{
-    class MeasurementDataStore;
-}
-namespace Driver
-{
-    class ISdCardDriver;
-}
-namespace Driver
-{
-    class IUartDriver;
-}
 
 namespace BusinessLogic
 {
@@ -63,7 +47,7 @@ namespace BusinessLogic
         /**
          * @brief Default destructor.
          */
-        virtual ~MeasurementStoresFactory() = default;
+        ~MeasurementStoresFactory() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
@@ -80,7 +64,7 @@ namespace BusinessLogic
          * @brief Initializes the measurement data stores.
          * @return true if initialization was successful, false otherwise.
          */
-        virtual bool initialize() override;
+        bool initialize() override;
 
         /**
          * @brief Registers the measurement data stores with a data coordinator.

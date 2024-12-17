@@ -1,3 +1,4 @@
+
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "main.h"
@@ -80,7 +81,7 @@ TEST_F(KeyboardFourPushButtonsDriverTest, TickUpdatesKeyStatesWhenRunning)
 
     EXPECT_TRUE(driver.tick());
 
-    for (uint8_t i = 0u; i < driver.AmountOfKeys; i++)
+    for (std::uint8_t i = 0u; i < driver.AmountOfKeys; i++)
     {
         EXPECT_EQ(driver.getKeyState(static_cast<KeyboardKeyIdentifier>(i)), KeyboardKeyState::NotPressed);
     }
@@ -92,7 +93,7 @@ TEST_F(KeyboardFourPushButtonsDriverTest, TickDoesNothingWhenNotRunning)
     // No expectation since HAL_GPIO_ReadPin should not be called
     EXPECT_FALSE(driver.tick());
 
-    for (uint8_t i = 0u; i < driver.AmountOfKeys; i++)
+    for (std::uint8_t i = 0u; i < driver.AmountOfKeys; i++)
     {
         EXPECT_EQ(driver.getKeyState(static_cast<KeyboardKeyIdentifier>(i)), KeyboardKeyState::DriverNotOperational);
     }
@@ -111,6 +112,6 @@ TEST_F(KeyboardFourPushButtonsDriverTest, GetKeyStateNothingWhenIncorrectKey)
 
     EXPECT_TRUE(driver.tick());
 
-    uint8_t incorrectKey = driver.AmountOfKeys;
+    std::uint8_t incorrectKey = driver.AmountOfKeys;
     EXPECT_EQ(driver.getKeyState(static_cast<KeyboardKeyIdentifier>(incorrectKey)), KeyboardKeyState::UnknownKeyAsked);
 }

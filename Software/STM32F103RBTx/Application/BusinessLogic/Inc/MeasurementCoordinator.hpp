@@ -7,7 +7,7 @@
 #ifndef MeasurementCoordinator_h
 #define MeasurementCoordinator_h
 
-#include <stdint.h>
+#include <cstdint>
 #include "Device/Interfaces/IMeasurementSource.hpp"
 #include "BusinessLogic/Inc/MeasurementDataStore.hpp"
 #include "BusinessLogic/Inc/SaferArray.hpp"
@@ -22,7 +22,7 @@ namespace BusinessLogic
      * The MeasurementCoordinator class is responsible for registering input devices that provide
      * measurement data, periodically querying them for new data, and then notifying the storage
      * system to store this data. This class employs an observer pattern to manage multiple input
-     * devices.
+     * devices and ensure data is processed and stored efficiently.
      */
     class MeasurementCoordinator
     {
@@ -44,8 +44,16 @@ namespace BusinessLogic
          */
         virtual ~MeasurementCoordinator() = default;
 
+        /**
+         * @brief Deleted copy constructor to prevent copying of MeasurementCoordinator.
+         */
         MeasurementCoordinator(const MeasurementCoordinator &) = delete;
 
+        /**
+         * @brief Deleted assignment operator to prevent assignment of MeasurementCoordinator.
+         *
+         * @return Reference to the MeasurementCoordinator instance.
+         */
         MeasurementCoordinator &operator=(const MeasurementCoordinator &) = delete;
 
         /**
@@ -100,7 +108,7 @@ namespace BusinessLogic
 
     private:
         /** @brief Maximum number of observers that can be registered. */
-        static const uint8_t MaxObservers{5u};
+        static const std::uint8_t MaxObservers{5u};
 
         /** @brief Array to store references to registered measurement source observers. */
         SaferArray<Device::IMeasurementSource, MaxObservers> observers;

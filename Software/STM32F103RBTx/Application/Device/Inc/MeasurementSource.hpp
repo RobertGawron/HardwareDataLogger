@@ -1,12 +1,12 @@
 #ifndef MeasurementSource_H_
 #define MeasurementSource_H_
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace Device
 {
     // Identify rom which device the data comes from.
-    enum class MeasurementSource : uint8_t
+    enum class MeasurementSource : std::uint8_t
     {
         DEVICE_GPIO_1 = 1u,
         DEVICE_GPIO_2 = 2u,

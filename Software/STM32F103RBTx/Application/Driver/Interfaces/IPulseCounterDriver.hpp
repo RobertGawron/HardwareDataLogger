@@ -31,7 +31,7 @@ namespace Driver
          *
          * Ensures proper cleanup of derived classes.
          */
-        virtual ~IPulseCounterDriver() = default;
+        ~IPulseCounterDriver() override = default;
     };
 }
 

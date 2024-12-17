@@ -4,7 +4,7 @@
 #ifndef LibWrapper_h
 #define LibWrapper_h
 
-#include <stdint.h>
+#include <cstdint>
 #include "MyApplication.hpp"
 
 #ifdef __cplusplus
@@ -33,14 +33,14 @@ extern "C"
      *
      * @return The width of the display in pixels.
      */
-    uint8_t LibWrapper_GetDisplayWidth();
+    std::uint8_t LibWrapper_GetDisplayWidth();
 
     /**
      * @brief Gets the height of the display.
      *
      * @return The height of the display in pixels.
      */
-    uint8_t LibWrapper_GetDisplayHeight();
+    std::uint8_t LibWrapper_GetDisplayHeight();
 
     /**
      * @brief Gets the value of a specific pixel on the display.
@@ -52,7 +52,7 @@ extern "C"
      * @param y The y-coordinate of the pixel.
      * @return The value of the pixel at the specified location.
      */
-    uint16_t LibWrapper_GetPixelValue(uint8_t x, uint8_t y);
+    std::uint16_t LibWrapper_GetPixelValue(std::uint8_t x, std::uint8_t y);
 
     typedef enum KeyboardKeyIdentifier
     {

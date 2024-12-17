@@ -36,7 +36,7 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 # Check if USE_X86_HEADERS is defined
 if(USE_X86_HEADERS)
     # If USE_X86_HEADERS is true, include X86 headers for unit testing
-    include_directories("${CMAKE_SOURCE_DIR}/Test/UT/System")
+    include_directories("${CMAKE_SOURCE_DIR}/Test/Unit/System")
 else()
     # Else, include STM32-specific headers for the STM32F103RBTx
     include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/STM32F1xx_HAL_Driver/Inc/")
@@ -46,7 +46,6 @@ else()
     
    # include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/FatFs/src/")
 endif()
-message(STATUS "VariableName: ${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/stm32-st7735/")
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/stm32-st7735/")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/u8g2/cppsrc")
