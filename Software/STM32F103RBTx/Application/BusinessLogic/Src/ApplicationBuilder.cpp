@@ -49,8 +49,8 @@ namespace BusinessLogic
         bool status = false;
 
         // clang-format off
-        if (dataStore.start()
-            && hmiFactory.start())
+        if (/*measurementCoordinator.start()
+            &&*/ hmiFactory.start())
         // clang-format on
         {
             status = true;
@@ -69,11 +69,9 @@ namespace BusinessLogic
         // can we recover from fault at any place here? I dont know.
         bool status = false;
 
-        dataStore.notifyObservers();
         // clang-format off
-        if (/*measurementCoordinator.tick()*/
-             
-            hmiFactory.tick())
+        if (measurementCoordinator.tick()
+            && hmiFactory.tick())
         // clang-format on
         {
             status = true;

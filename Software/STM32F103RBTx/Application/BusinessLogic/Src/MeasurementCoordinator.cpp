@@ -2,11 +2,12 @@
 #include "BusinessLogic/Inc/MeasurementDataStore.hpp"
 
 #include <cstdint>
+#include <stdio.h>
 
 namespace BusinessLogic
 {
 
-    MeasurementCoordinator::MeasurementCoordinator(MeasurementDataStore &_storage) : storage(_storage)
+    MeasurementCoordinator::MeasurementCoordinator(IMeasurementDataStore &_storage) : storage(_storage)
     {
     }
 
@@ -15,9 +16,21 @@ namespace BusinessLogic
         bool status = true;
 
         // abort on first fail
-        for (std::size_t i = 0u; (i < observers.size()) && status; i++)
+        for (std::size_t i = 0u; i < observers.size(); i++)
         {
-            status &= observers[i]->init();
+            status = observers[i]->initialize();
+
+            if (!status)
+            {
+                break;
+            }
+
+            status = observers[i]->start();
+
+            if (!status)
+            {
+                break;
+            }
         }
 
         return status;
@@ -39,7 +52,11 @@ namespace BusinessLogic
 
             if (isMeasurementReady)
             {
-                observers[i]->getMeasurement();
+
+                Device::MeasurementType measurement = observers[i]->getMeasurement();
+                storage.notifyObservers(measurement);
+
+                //  printf("updateMeasurements() %d\n", measurement);
             }
         }
     }

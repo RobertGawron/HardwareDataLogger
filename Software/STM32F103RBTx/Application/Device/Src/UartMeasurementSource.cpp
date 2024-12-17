@@ -8,13 +8,18 @@ namespace Device
     {
     }
 
-    bool UartMeasurementSource::init()
+    bool UartMeasurementSource::initialize()
     {
         const bool status = driver.initialize();
         return status;
     }
 
-    bool UartMeasurementSource::deinit()
+    bool UartMeasurementSource::start()
+    {
+        return true;
+    }
+
+    bool UartMeasurementSource::stop()
     {
         return true;
     }
@@ -24,7 +29,8 @@ namespace Device
         return true;
     }
 
-    void UartMeasurementSource::getMeasurement()
+    MeasurementType UartMeasurementSource::getMeasurement()
     {
+        return (std::uint8_t)5;
     }
 }

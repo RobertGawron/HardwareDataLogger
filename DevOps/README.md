@@ -100,13 +100,18 @@ Note: If using Windows, [MobaXterm](https://mobaxterm.mobatek.net/download-home-
 
 cd /workspace/build/ && cmake .. && make -j24
 
-cd /workspace/Test/SystemTests
+cd /workspace/Test/System
 python3 -m venv /workspace/venv
 pytest test_display.py -s  --html=report.html
 
 
 after:
-cd /workspace/build/ && cmake .. && make -j24 && cd /workspace/Test/SystemTests && pytest test_display.py -s  --html=report.html
+cd /workspace/build/ && cmake .. && make -j24 && cd /workspace/Test/System && pytest test_display.py -s  --html=report.html
+
+
+
+cd /workspace/build/ && cmake .. && make -j24 && cd /workspace/Test/System && pytest test_pulse_counter.py -s  --html=report.html
+
 
 
 

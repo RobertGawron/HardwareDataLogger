@@ -1,21 +1,21 @@
 /**
- * @file MeasurementDataStore.hpp
- * @brief Defines the MeasurementDataStore class which manages the storage of measurement data
+ * @file IMeasurementDataStore.hpp
+ * @brief Defines the IMeasurementDataStore class which manages the storage of measurement data
  *        using the observer pattern.
  */
 
-#ifndef MeasurementDataStore_H_
-#define MeasurementDataStore_H_
+#ifndef IMeasurementDataStore_H_
+#define IMeasurementDataStore_H_
 
-#include "BusinessLogic/Interfaces/IMeasurementDataStore.hpp"
 #include "BusinessLogic/Inc/SaferArray.hpp"
 #include "Device/Interfaces/IMeasurementRecorder.hpp"
+#include "Device/Interfaces/IMeasurementSource.hpp"
 #include <cstdint>
 
 namespace BusinessLogic
 {
     /**
-     * @class MeasurementDataStore
+     * @class IMeasurementDataStore
      * @brief Implements the observer pattern to manage a collection of measurement recorders.
      *
      * This class allows clients to add or remove observers that store measurement data.
@@ -23,40 +23,40 @@ namespace BusinessLogic
      * It is responsible for initializing and notifying all registered observers when new
      * measurement data is ready.
      */
-    class MeasurementDataStore : public IMeasurementDataStore
+    class IMeasurementDataStore
     {
     public:
         /**
-         * @brief Default constructor for MeasurementDataStore.
+         * @brief Default constructor for IMeasurementDataStore.
          */
-        explicit MeasurementDataStore() = default;
+        explicit IMeasurementDataStore() = default;
 
         /**
-         * @brief Destructor for MeasurementDataStore.
+         * @brief Destructor for IMeasurementDataStore.
          */
-        ~MeasurementDataStore() override = default;
+        virtual ~IMeasurementDataStore() = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
          */
-        MeasurementDataStore(const MeasurementDataStore &) = delete;
+        IMeasurementDataStore(const IMeasurementDataStore &) = delete;
 
         /**
          * @brief Deleted assignment operator to prevent assignment.
-         * @return MeasurementDataStore& The assigned object.
+         * @return IMeasurementDataStore& The assigned object.
          */
-        MeasurementDataStore &operator=(const MeasurementDataStore &) = delete;
+        IMeasurementDataStore &operator=(const IMeasurementDataStore &) = delete;
 
         /**
          * @brief Adds an observer that records measurement data.
          *
          * The observer should implement the IMeasurementRecorder interface, and this method will
-         * add it to the list of observers managed by the MeasurementDataStore.
+         * add it to the list of observers managed by the IMeasurementDataStore.
          *
          * @param observer Reference to an object that implements IMeasurementRecorder.
          * @return True if the observer was successfully added; false otherwise.
          */
-        bool addObserver(Device::IMeasurementRecorder &observer) override;
+        virtual bool addObserver(Device::IMeasurementRecorder &observer) = 0;
 
         /**
          * @brief Removes an observer that records measurement data.
@@ -68,28 +68,28 @@ namespace BusinessLogic
          * @return True if the observer was successfully removed; false otherwise.
          * @note Removing the observer does not automatically deinitialize it.
          */
-        bool removeObserver(Device::IMeasurementRecorder &observer) override;
+        virtual bool removeObserver(Device::IMeasurementRecorder &observer) = 0;
 
         /**
-         * @brief Initializes the MeasurementDataStore and all registered observers.
+         * @brief Initializes the IMeasurementDataStore and all registered observers.
          *
-         * This function initializes the MeasurementDataStore and all the objects
+         * This function initializes the IMeasurementDataStore and all the objects
          * registered via addObserver().
          *
          * @return True if initialization was successful; false otherwise.
          * @note Observers should not be initialized manually in other classes such as ApplicationBuilder.
          */
-        bool initialize() override;
+        virtual bool initialize() = 0;
 
         /**
-         * @brief Starts the MeasurementDataStore and all registered observers.
+         * @brief Starts the IMeasurementDataStore and all registered observers.
          *
-         * This function starts the MeasurementDataStore and prepares all registered observers to start
+         * This function starts the IMeasurementDataStore and prepares all registered observers to start
          * recording measurement data.
          *
          * @return True if start was successful; false otherwise.
          */
-        bool start() override;
+        virtual bool start() = 0;
 
         /**
          * @brief Notifies all registered observers that new measurement data is ready to be stored.
@@ -97,15 +97,8 @@ namespace BusinessLogic
          * This function iterates through the list of registered observers and notifies each one
          * that new measurement data is available for storage.
          */
-        bool notifyObservers(Device::MeasurementType measurement) override;
-
-    private:
-        /** @brief Maximum number of observers that can be registered. */
-        static const std::uint8_t MaxObservers{4u};
-
-        /** @brief Array to store references to registered observers. */
-        SaferArray<Device::IMeasurementRecorder, MaxObservers> observers;
+        virtual bool notifyObservers(Device::MeasurementType measurement) = 0;
     };
 }
 
-#endif // MeasurementDataStore_H_
+#endif // IMeasurementDataStore_H_

@@ -9,9 +9,14 @@ namespace BusinessLogic
         bool status = true;
 
         // abort on first fail
-        for (std::size_t i = 0u; (i < observers.size()) && status; i++)
+        for (std::size_t i = 0u; i < observers.size(); i++)
         {
-            status &= observers[i]->initialize();
+            status = observers[i]->initialize();
+
+            if (!status)
+            {
+                break;
+            }
         }
 
         return status;
@@ -22,9 +27,14 @@ namespace BusinessLogic
         bool status = true;
 
         // abort on first fail
-        for (std::size_t i = 0u; (i < observers.size()) && status; i++)
+        for (std::size_t i = 0u; i < observers.size(); i++)
         {
-            status &= observers[i]->start();
+            status = observers[i]->start();
+
+            if (!status)
+            {
+                break;
+            }
         }
 
         return status;
@@ -42,11 +52,13 @@ namespace BusinessLogic
         return status;
     }
 
-    void MeasurementDataStore::notifyObservers()
+    bool MeasurementDataStore::notifyObservers(Device::MeasurementType measurement)
     {
         for (std::size_t i = 0u; i < observers.size(); i++)
         {
-            observers[i]->notify();
+            observers[i]->notify(measurement);
         }
+
+        return true;
     }
 }

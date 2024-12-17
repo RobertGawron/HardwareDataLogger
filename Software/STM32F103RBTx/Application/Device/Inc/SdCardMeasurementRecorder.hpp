@@ -49,19 +49,12 @@ namespace Device
          */
         SdCardMeasurementRecorder &operator=(const SdCardMeasurementRecorder &) = delete;
 
-        /**
-         * @brief Writes measurement data to the SD card.
-         *
-         * This method writes the prepared measurement data to the SD card using the SD card driver.
-         */
-        void write() override;
-
-        /**
+            /**
          * @brief Flushes any remaining data to the SD card.
          *
          * This method ensures that any remaining buffered data is written to the SD card.
          */
-        void flush() override;
+        bool flush() override;
 
         /**
          * @brief Notifies the recorder to process new data.
@@ -69,7 +62,7 @@ namespace Device
          * This method is called to notify the recorder that new measurement data is available
          * and should be written to the SD card.
          */
-        void notify() override;
+        bool notify(Device::MeasurementType &measurement) override;
 
     protected:
         /**

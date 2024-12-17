@@ -105,6 +105,45 @@ set(TEST_UART_SRC
     ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
 )
 
+set(PULSE_COUNTER_DRIVER_SRC
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/PulseCounterDriver.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
+    ${CMAKE_SOURCE_DIR}/Test/Unit/Driver/test_PulseCounterDriver.cpp
+    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
+)
+
+set(PULSE_COUNTER_MEASUREMENT_SOURCE_SRC
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/PulseCounterMeasurementSource.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
+    ${CMAKE_SOURCE_DIR}/Test/Unit/Device/test_PulseCounterMeasurementSource.cpp
+    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
+)
+
+
+set(MEASUREMENT_DATA_STORE_SRC
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic/Src/MeasurementDataStore.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
+    ${CMAKE_SOURCE_DIR}/Test/Unit/BusinessLogic/test_MeasurementDataStore.cpp
+    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
+)
+
+set(TEST_MEASUREMENT_COORDINATOR
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic/Src/MeasurementCoordinator.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
+    ${CMAKE_SOURCE_DIR}/Test/Unit/BusinessLogic/test_MeasurementCoordinator.cpp
+    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
+)
+
+
+set(WIFI_MEASUREMENT_RECORDER
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/WiFiMeasurementRecorder.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
+    ${CMAKE_SOURCE_DIR}/Test/Unit/Device/test_WiFiMeasurementRecorder.cpp
+    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
+)
+
+
+
 # Add test executables using the create_test_exec function with source lists
 create_test_exec(test_SaferArray "${TEST_SAFERARRAY_SRC}")
 create_test_exec(test_DriverState "${TEST_DRIVERSTATE_SRC}")
@@ -113,6 +152,11 @@ create_test_exec(test_AmbientLightSensorDriver "${TEST_AMBIENTLIGHT_SRC}")
 create_test_exec(test_DisplayPixelColor "${TEST_DISPLAYPIXELCOLOR_SRC}")
 create_test_exec(test_St7735DisplayBrightnessDriver "${TEST_ST7735BRIGHTNESS_SRC}")
 create_test_exec(test_UartDriver "${TEST_UART_SRC}")
+create_test_exec(test_PulseCounterDriver "${PULSE_COUNTER_DRIVER_SRC}")
+create_test_exec(test_PulseCounterMeasurementSource "${PULSE_COUNTER_MEASUREMENT_SOURCE_SRC}")
+create_test_exec(test_MeasurementDataStore "${MEASUREMENT_DATA_STORE_SRC}")
+create_test_exec(test_MeasurementCoordinator "${TEST_MEASUREMENT_COORDINATOR}")
+create_test_exec(test_WiFiMeasurementRecorder "${WIFI_MEASUREMENT_RECORDER}")
 
 # Custom target to run all tests
 add_custom_target(test

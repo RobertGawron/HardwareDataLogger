@@ -10,6 +10,8 @@
  * pulse counters or UART devices.
  */
 
+#include "Device/Inc/MeasurementType.hpp"
+
 namespace Device
 {
     /**
@@ -33,24 +35,9 @@ namespace Device
          */
         virtual ~IMeasurementSource() = default;
 
-        /**
-         * @brief Initializes communication with the measurement device.
-         *
-         * This method should be implemented to set up necessary configurations and establish communication
-         * with the measurement device.
-         *
-         * @return true if initialization is successful, false otherwise.
-         */
-        virtual bool init() = 0;
-
-        /**
-         * @brief Stops communication with the measurement device.
-         *
-         * This method should be implemented to properly shut down or disconnect from the measurement device.
-         *
-         * @return true if deinitialization is successful, false otherwise.
-         */
-        virtual bool deinit() = 0;
+        virtual bool initialize() = 0;
+        virtual bool start() = 0;
+        virtual bool stop() = 0;
 
         /**
          * @brief Checks if a measurement is available.
@@ -69,7 +56,7 @@ namespace Device
          * This method should be implemented to obtain the current measurement data from the device.
          * It is not fully implemented yet.
          */
-        virtual void getMeasurement() = 0;
+        virtual MeasurementType getMeasurement() = 0;
     };
 }
 

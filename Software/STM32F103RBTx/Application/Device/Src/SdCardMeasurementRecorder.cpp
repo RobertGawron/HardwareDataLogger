@@ -32,15 +32,13 @@ namespace Device
         return status;
     }
 
-    void SdCardMeasurementRecorder::write()
+    bool SdCardMeasurementRecorder::flush()
     {
+        return true;
     }
 
-    void SdCardMeasurementRecorder::flush()
+    bool SdCardMeasurementRecorder::notify(Device::MeasurementType &measurement)
     {
-    }
-
-    void SdCardMeasurementRecorder::notify()
-    {
+        return true;
     }
 }

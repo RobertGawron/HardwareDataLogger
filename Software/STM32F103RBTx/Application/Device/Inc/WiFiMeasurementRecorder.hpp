@@ -57,7 +57,7 @@ namespace Device
          * This method is called to notify the recorder that new measurement data is available and
          * should be sent to the ESP module via UART.
          */
-        void notify() override;
+        bool notify(Device::MeasurementType &measurement) override;
 
     protected:
         /**
@@ -93,20 +93,20 @@ namespace Device
         bool onReset() override;
 
         /**
-         * @brief Writes the measurement data to the ESP module via UART.
-         *
-         * This method sends the prepared measurement data to the ESP module for transmission over WiFi.
-         */
-        void write() override;
-
-        /**
          * @brief Flushes any remaining data to the ESP module.
          *
          * This method ensures that any remaining measurement data is sent to the ESP module via UART.
          */
-        void flush() override;
+        bool flush() override;
 
     private:
+        /**
+         * @brief Writes the measurement data to the ESP module via UART.
+         *
+         * This method sends the prepared measurement data to the ESP module for transmission over WiFi.
+         */
+        virtual bool write(Device::MeasurementType &measurement);
+
         /** @brief Reference to the UART driver used for communication with the ESP module. */
         Driver::IUartDriver &driver;
     };
