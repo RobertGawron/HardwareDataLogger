@@ -26,7 +26,7 @@ namespace Driver
          *
          * Ensures proper cleanup of derived classes.
          */
-        virtual ~ISdCardDriver() = default;
+        ~ISdCardDriver() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.

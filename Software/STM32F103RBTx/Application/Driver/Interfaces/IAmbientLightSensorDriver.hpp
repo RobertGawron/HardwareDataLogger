@@ -6,7 +6,7 @@
 #ifndef IAMBIENTLIGHTSENSORDRIVER_H_
 #define IAMBIENTLIGHTSENSORDRIVER_H_
 
-#include <stdint.h>
+#include <cstdint>
 #include "Driver/Inc/DriverState.hpp"
 
 namespace Driver
@@ -23,19 +23,13 @@ namespace Driver
     class IAmbientLightSensorDriver : public DriverState
     {
     public:
-        /**
-         * @brief Default constructor for IAmbientLightSensorDriver.
-         *
-         * The constructor sets up the base interface for all ambient light sensor drivers.
-         */
         IAmbientLightSensorDriver() = default;
-
         /**
          * @brief Virtual destructor for IAmbientLightSensorDriver.
          *
          * Ensures proper cleanup of derived classes.
          */
-        virtual ~IAmbientLightSensorDriver() = default;
+        ~IAmbientLightSensorDriver() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
@@ -56,7 +50,7 @@ namespace Driver
          *
          * @return The current ambient light level as a 32-bit unsigned integer.
          */
-        virtual uint32_t getAmbientLightLevel() const = 0;
+        [[nodiscard]] virtual std::uint32_t getAmbientLightLevel() const = 0;
     };
 
 }

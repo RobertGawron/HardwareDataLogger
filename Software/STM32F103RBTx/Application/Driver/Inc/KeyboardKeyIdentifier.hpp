@@ -1,6 +1,8 @@
 #ifndef KeyboardKeyIdentifier_h
 #define KeyboardKeyIdentifier_h
 
+#include <cstdint>
+
 /**
  * @file KeyboardKeyIdentifier.hpp
  * @brief Defines the KeyboardKeyIdentifier enum for identifying keyboard keys.
@@ -19,7 +21,7 @@ namespace Driver
      * integer values. This allows for easy identification and handling of different key inputs.
      * Currently, there are four keys defined, but more can be added as needed.
      */
-    enum class KeyboardKeyIdentifier : uint8_t
+    enum class KeyboardKeyIdentifier : std::uint8_t
     {
         Up = 0u,         /**< Represents the 'Up' key, assigned with value 0. */
         Down = 1u,       /**< Represents the 'Down' key, assigned with value 1. */

@@ -21,7 +21,7 @@ docker-compose build dev
 
 Start the Docker image:
 
-docker-compose up -d
+docker-compose up -d --remove-orphans
 
 Log into the Docker image:
 
@@ -30,6 +30,32 @@ docker-compose exec dev bash
 Additionally at the end of work:
 
 docker-compose down --remove-orphans
+
+## Runing stuff
+
+## Builds the firmware
+
+make code
+
+## Run tests
+
+make test
+
+## Run static analysis
+
+make static
+
+# Run code coverage
+
+cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j23 && make test -j23 && make coverage
+
+# Run docs coverage
+
+make docs
+
+# Run UML generation
+
+make uml
 
 ## Running Include what you use 
 
@@ -69,3 +95,24 @@ xclock
 If a small window with a clock is visible, it means everything is set up correctly.
 
 Note: If using Windows, [MobaXterm](https://mobaxterm.mobatek.net/download-home-edition.html) (or another tool capable of displaying X11 windows) is required. The Visual Studio terminal will not work.
+
+# Pytest
+
+cd /workspace/build/ && cmake .. && make -j24
+
+cd /workspace/Test/System
+python3 -m venv /workspace/venv
+pytest test_display.py -s  --html=report.html
+
+
+after:
+cd /workspace/build/ && cmake .. && make -j24 && cd /workspace/Test/System && pytest test_display.py -s  --html=report.html
+
+
+
+cd /workspace/build/ && cmake .. && make -j24 && cd /workspace/Test/System && pytest test_pulse_counter.py -s  --html=report.html
+
+
+
+
+

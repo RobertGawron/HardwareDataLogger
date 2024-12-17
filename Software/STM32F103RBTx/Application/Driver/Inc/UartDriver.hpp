@@ -44,7 +44,7 @@ namespace Driver
          *
          * Ensures proper cleanup of derived classes.
          */
-        virtual ~UartDriver() = default;
+        ~UartDriver() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
@@ -67,7 +67,7 @@ namespace Driver
          * @param timeout Timeout period for the transmission, in milliseconds.
          * @return Status of the UART exchange operation (`UartExchangeStatus`).
          */
-        virtual UartExchangeStatus transmit(uint8_t *data, uint16_t size, uint32_t timeout) override;
+        UartExchangeStatus transmit(std::uint8_t *data, std::uint16_t size, std::uint32_t timeout) override;
 
         /**
          * @brief Receives data over UART.
@@ -79,7 +79,7 @@ namespace Driver
          * @param timeout Timeout period for the reception, in milliseconds.
          * @return Status of the UART exchange operation (`UartExchangeStatus`).
          */
-        virtual UartExchangeStatus receive(uint8_t *data, uint16_t size, uint32_t timeout) override;
+        UartExchangeStatus receive(std::uint8_t *data, std::uint16_t size, std::uint32_t timeout) override;
 
     protected:
         /**
@@ -90,7 +90,7 @@ namespace Driver
          * @param libStatus The status returned by STM32 HAL (`HAL_StatusTypeDef`).
          * @return The corresponding `UartExchangeStatus`.
          */
-        UartExchangeStatus getExchangeStatus(HAL_StatusTypeDef libStatus);
+        static UartExchangeStatus getExchangeStatus(HAL_StatusTypeDef libStatus);
 
         /**
          * @brief Initializes the UART driver.
@@ -100,7 +100,7 @@ namespace Driver
          *
          * @return True if initialization is successful, otherwise false.
          */
-        virtual bool onInitialize() override;
+        bool onInitialize() override;
 
         /**
          * @brief Starts the UART driver.
@@ -110,7 +110,7 @@ namespace Driver
          *
          * @return True if the start operation is successful, otherwise false.
          */
-        virtual bool onStart() override;
+        bool onStart() override;
 
         /**
          * @brief Stops the UART driver.
@@ -119,7 +119,7 @@ namespace Driver
          *
          * @return True if the stop operation is successful, otherwise false.
          */
-        virtual bool onStop() override;
+        bool onStop() override;
 
         /**
          * @brief Resets the UART driver.
@@ -129,7 +129,7 @@ namespace Driver
          *
          * @return True if the reset operation is successful, otherwise false.
          */
-        virtual bool onReset() override;
+        bool onReset() override;
 
     private:
         /**

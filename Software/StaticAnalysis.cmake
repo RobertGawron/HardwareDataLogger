@@ -1,69 +1,71 @@
-# Find the cppcheck executable
-find_program(CPPCHECK_EXECUTABLE cppcheck)
-find_program(CPPCHECK_HTMLREPORT_EXECUTABLE cppcheck-htmlreport)
+# Get the number of available processors
+include(ProcessorCount)
+ProcessorCount(NPROC)
+if(NOT NPROC OR NPROC EQUAL 0)
+    set(NPROC 1) # Fallback to 1 if ProcessorCount fails
+endif()
 
-if(CPPCHECK_EXECUTABLE)
-    # Define the source directories to check
-    set(CPPCHECK_SOURCE_DIRS ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/)
+# Define the source directories to analyze
+set(CODECHECKER_SOURCE_DIRS
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/
+    ${CMAKE_SOURCE_DIR}../Test/Unit/
+    ${CMAKE_SOURCE_DIR}../Simulation/FirmwarePCSimulator/
+)
 
-    # Define the output directory for the XML and HTML report
-    set(CPPCHECK_REPORT_DIR ${CMAKE_BINARY_DIR}/BuildArtifacts/StaticAnalyse)
-    file(MAKE_DIRECTORY ${CPPCHECK_REPORT_DIR})  # Ensure the directory exists
-
-    # Define the XML report output path
-    set(CPPCHECK_XML_OUTPUT ${CPPCHECK_REPORT_DIR}/CppCheckResults.xml)
-
-    # Define options for cppcheck
-    set(CPPCHECK_OPTIONS
-        --enable=all              # Enable all checks
-        --inconclusive            # Include inconclusive checks
-        --std=c++11               # Specify C++ standard
-        --language=c++            # Specify language
-        --quiet                   # Suppress verbose output
-        --force                   # Force checking of all files
-        --suppress=missingIncludeSystem # Suppress missing include errors (common with system includes)
-        --xml                     # Output results in XML format
-        --output-file=${CPPCHECK_XML_OUTPUT}  # Output XML to the report directory
-    )
-
-    # Add a custom target for running cppcheck
-    add_custom_target(static
-        COMMAND ${CPPCHECK_EXECUTABLE} ${CPPCHECK_OPTIONS} ${CPPCHECK_SOURCE_DIRS}
-        COMMENT "Running cppcheck on Application/ folder..."
-        VERBATIM
-    )
-
-    # If cppcheck-htmlreport is found, generate an HTML report
-    if(CPPCHECK_HTMLREPORT_EXECUTABLE)
-        add_custom_command(TARGET static
-            POST_BUILD
-            COMMAND ${CPPCHECK_HTMLREPORT_EXECUTABLE}
-                --file=${CPPCHECK_XML_OUTPUT}
-                --report-dir=${CPPCHECK_REPORT_DIR}
-                --source-dir=${CMAKE_SOURCE_DIR}
-            COMMENT "Generating HTML report from cppcheck results..."
-            VERBATIM
-        )
-    else()
-        message(WARNING "cppcheck-htmlreport not found. Skipping HTML report generation.")
-    endif()
+# Define the output directories for CodeChecker analysis and reports
+set(CODECHECKER_ANALYZE_DIR ${CMAKE_BINARY_DIR}/BuildArtifacts/StaticAnalysisIntermediary)
+set(CODECHECKER_REPORT_DIR ${CMAKE_BINARY_DIR}/BuildArtifacts/StaticAnalysis)
+set(CODECHECKER_SKIP_FILE ${CMAKE_SOURCE_DIR}/Software/CodeCheckerSkipList)
 
 
-    # Add a custom command to check for cppcheck errors
-    add_custom_command(TARGET static POST_BUILD
-        COMMAND bash -c "grep -v 'unmatchedSuppression|missingInclude' ${CPPCHECK_XML_OUTPUT} | grep error | wc -l > ${CPPCHECK_REPORT_DIR}/error_count.txt"
-        COMMENT "Checking for cppcheck errors..."
-        VERBATIM
-    )
+# Ensure the output directories exist
+file(MAKE_DIRECTORY ${CODECHECKER_ANALYZE_DIR})
+file(MAKE_DIRECTORY ${CODECHECKER_REPORT_DIR})
 
-    # Fail the build if there are errors
-    add_custom_command(TARGET static POST_BUILD
-        COMMAND bash -c "if [ \$(cat ${CPPCHECK_REPORT_DIR}/error_count.txt) -ne 0 ]; then echo 'Cppcheck found errors!'; exit 1; fi"
-        COMMENT "Failing the build if cppcheck finds errors..."
-        VERBATIM
-    )
+# Add a custom target for CodeChecker analysis
+add_custom_target(static
+    COMMAND CodeChecker analyze compile_commands.json
+        --output ${CODECHECKER_ANALYZE_DIR}
+        --skip ${CODECHECKER_SKIP_FILE}
+        --file ${CODECHECKER_SOURCE_DIRS}
+        --jobs ${NPROC}
+        --enable-all
+        --disable clang-diagnostic-c++98-compat
+        --disable modernize-use-trailing-return-type
+        --disable readability-identifier-length
+        --disable readability-uppercase-literal-suffix
+        --disable modernize-avoid-c-arrays
+        --disable modernize-use-auto
+        --disable altera-unroll-loops
+        --disable cppcheck-missingIncludeSystem
+        --disable cppcheck-toomanyconfigs
+        --disable clang-diagnostic-padded
+        --disable altera-struct-pack-align
+        --disable clang-diagnostic-weak-vtables
+        --disable altera-id-dependent-backward-branch
+        --disable bugprone-easily-swappable-parameters
+    COMMENT "Running CodeChecker analysis..."
+    VERBATIM
+)
 
+# Add a custom command to generate the HTML report
+add_custom_command(TARGET static POST_BUILD
+    COMMAND CodeChecker parse ${CODECHECKER_ANALYZE_DIR}
+        --export html
+        --output ${CODECHECKER_REPORT_DIR}
+    COMMENT "Generating CodeChecker HTML report..."
+    VERBATIM
+)
 
-else()
-    message(WARNING "cppcheck not found. Skipping static analysis.")
+# Add a custom command to check for errors and fail the build if any are found
+add_custom_command(TARGET static POST_BUILD
+    COMMAND bash -c "if [ -n \"\$(CodeChecker parse ${CODECHECKER_ANALYZE_DIR} --print-issues | grep -i 'error')\" ]; then echo 'CodeChecker found errors!'; exit 1; fi"
+    COMMENT "Failing the build if CodeChecker finds errors..."
+    VERBATIM
+)
+
+# Message if CodeChecker is not found (optional)
+find_program(CODECHECKER_EXECUTABLE CodeChecker)
+if(NOT CODECHECKER_EXECUTABLE)
+    message(WARNING "CodeChecker not found. Skipping static analysis.")
 endif()

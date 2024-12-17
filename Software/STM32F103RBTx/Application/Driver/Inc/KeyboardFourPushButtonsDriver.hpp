@@ -10,6 +10,7 @@
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_gpio.h"
 #include "main.h" // for KEY_UP_*_Port, KEY_*_Pin
+#include <cstdint>
 
 namespace Driver
 {
@@ -30,7 +31,7 @@ namespace Driver
         /**
          * @brief Default destructor for KeyboardFourPushButtonsDriver.
          */
-        virtual ~KeyboardFourPushButtonsDriver() = default;
+        ~KeyboardFourPushButtonsDriver() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
@@ -49,7 +50,7 @@ namespace Driver
          * This function should be called regularly (e.g., in a timer interrupt or main loop) to update
          * the state of the buttons.
          */
-        virtual bool tick() override;
+        bool tick() override;
 
         /**
          * @brief Gets the current state of a specified button.
@@ -59,7 +60,7 @@ namespace Driver
          * @param key The identifier of the button whose state is requested.
          * @return The current state of the button (`KeyboardKeyState`).
          */
-        virtual KeyboardKeyState getKeyState(const KeyboardKeyIdentifier key) const override;
+        [[nodiscard]] KeyboardKeyState getKeyState(KeyboardKeyIdentifier key) const override;
 
         /**
          * @brief Number of keys supported by the keyboard.
@@ -67,7 +68,7 @@ namespace Driver
          * This constant defines the total number of keys that are supported by the keyboard driver.
          * It is derived from the last unused key identifier.
          */
-        static constexpr uint8_t AmountOfKeys = static_cast<uint8_t>(Driver::KeyboardKeyIdentifier::LastNotUsed);
+        static constexpr std::uint8_t AmountOfKeys = static_cast<std::uint8_t>(Driver::KeyboardKeyIdentifier::LastNotUsed);
 
     protected:
         /**
@@ -122,7 +123,7 @@ namespace Driver
          * @param GPIO_Pin The GPIO pin number where the button is connected.
          * @return The state of the button connected to the specified GPIO pin (`KeyboardKeyState`).
          */
-        Driver::KeyboardKeyState getKeyStateFromHW(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin) const;
+        [[nodiscard]] static Driver::KeyboardKeyState getKeyStateFromHW(GPIO_TypeDef *GPIOx, std::uint16_t GPIO_Pin);
 
         /**
          * @brief Structure representing the state of a key.
@@ -131,12 +132,12 @@ namespace Driver
          * It contains the state of the GPIO (either pressed or not pressed), as well as the low-level
          * access details to the GPIO peripheral, including the port and pin number.
          */
-        typedef struct KeyState
+        using KeyState = struct
         {
             KeyboardKeyState state;  /**< State of the GPIO connected to the button, either pressed (low) or not pressed (high). */
             GPIO_TypeDef *GPIO_Port; /**< Pointer to the GPIO port associated with the key. */
-            uint16_t GPIO_Pin;       /**< GPIO pin number associated with the key. */
-        } KeyState;
+            std::uint16_t GPIO_Pin;       /**< GPIO pin number associated with the key. */
+        };
 
         /**
          * @brief Array holding the state and configuration for each key.

@@ -1,7 +1,7 @@
 #ifndef DriverState_h
 #define DriverState_h
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace Driver
 {
@@ -18,7 +18,7 @@ namespace Driver
         /**
          * @brief Enumeration representing the various states a driver can be in.
          */
-        enum class State : uint8_t
+        enum class State : std::uint8_t
         {
             Reset = 0xff,      /**< Driver is in the reset state, the initial state after construction. */
             Initialized = 0x1, /**< Driver has been initialized but not started. */
@@ -32,7 +32,7 @@ namespace Driver
          *
          * Initializes the driver state to Reset.
          */
-        DriverState();
+        DriverState() = default;
 
         /**
          * @brief Virtual destructor.
@@ -86,7 +86,7 @@ namespace Driver
          *
          * @return The current state of the driver.
          */
-        virtual State getState() const;
+        [[nodiscard]] virtual State getState() const;
 
         /**
          * @brief Checks if the driver is in a specific state.
@@ -96,7 +96,7 @@ namespace Driver
          * @param state The state to check against.
          * @return true if the driver is in the specified state, false otherwise.
          */
-        virtual bool isInState(State state) const;
+        [[nodiscard]] virtual bool isInState(State state) const;
 
     protected:
         /**
@@ -149,7 +149,7 @@ namespace Driver
         virtual bool onReset() = 0;
 
     private:
-        State currentState; /**< Holds the current state of the driver. */
+        State currentState = State::Reset; /**< Holds the current state of the driver. */
     };
 }
 

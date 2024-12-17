@@ -1,4 +1,5 @@
 #include "Device/Inc/UartMeasurementRecorder.hpp"
+#include "Driver/Interfaces/IUartDriver.hpp"
 
 namespace Device
 {
@@ -7,16 +8,14 @@ namespace Device
     {
     }
 
-    void UartMeasurementRecorder::write()
+    bool UartMeasurementRecorder::flush()
     {
+        return true;
     }
 
-    void UartMeasurementRecorder::flush()
+    bool UartMeasurementRecorder::notify(Device::MeasurementType &measurement)
     {
-    }
-
-    void UartMeasurementRecorder::notify()
-    {
+        return true;
     }
 
 }

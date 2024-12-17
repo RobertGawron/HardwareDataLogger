@@ -1,4 +1,5 @@
 #include "Device/Inc/SdCardMeasurementRecorder.hpp"
+#include "Driver/Interfaces/ISdCardDriver.hpp"
 
 namespace Device
 {
@@ -9,37 +10,35 @@ namespace Device
 
     bool SdCardMeasurementRecorder::onInitialize()
     {
-        bool status = driver.initialize();
+        const bool status = driver.initialize();
         return status;
     }
 
     bool SdCardMeasurementRecorder::onStart()
     {
-        bool status = driver.start();
+        const bool status = driver.start();
         return status;
     }
 
     bool SdCardMeasurementRecorder::onStop()
     {
-        bool status = driver.stop();
+        const bool status = driver.stop();
         return status;
     }
 
     bool SdCardMeasurementRecorder::onReset()
     {
-        bool status = driver.reset();
+        const bool status = driver.reset();
         return status;
     }
 
-    void SdCardMeasurementRecorder::write()
+    bool SdCardMeasurementRecorder::flush()
     {
+        return true;
     }
 
-    void SdCardMeasurementRecorder::flush()
+    bool SdCardMeasurementRecorder::notify(Device::MeasurementType &measurement)
     {
-    }
-
-    void SdCardMeasurementRecorder::notify()
-    {
+        return true;
     }
 }

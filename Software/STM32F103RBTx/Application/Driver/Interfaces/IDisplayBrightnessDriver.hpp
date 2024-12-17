@@ -6,7 +6,7 @@
 #ifndef IDisplayBrightnessDriver_H_
 #define IDisplayBrightnessDriver_H_
 
-#include <stdint.h>
+#include <cstdint>
 #include "Driver/Inc/DriverState.hpp"
 
 namespace Driver
@@ -24,7 +24,7 @@ namespace Driver
     {
     public:
         /** @brief Typedef for brightness level represented as a percentage (0-100). */
-        using BrightnessPercentage = uint8_t;
+        using BrightnessPercentage = std::uint8_t;
 
         /**
          * @brief Default constructor for IDisplayBrightnessDriver.
@@ -36,7 +36,7 @@ namespace Driver
          *
          * Ensures proper cleanup of derived classes.
          */
-        virtual ~IDisplayBrightnessDriver() = default;
+        ~IDisplayBrightnessDriver() override = default;
 
         /**
          * @brief Deleted copy constructor.
@@ -67,7 +67,7 @@ namespace Driver
          * @param value The brightness level to set, as a percentage (0-100).
          * @return True if the brightness was successfully set, false otherwise.
          */
-        virtual bool setBrightness(const BrightnessPercentage value) = 0;
+        virtual bool setBrightness(BrightnessPercentage value) = 0;
     };
 
 }

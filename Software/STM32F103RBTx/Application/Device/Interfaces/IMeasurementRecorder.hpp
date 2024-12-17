@@ -1,7 +1,9 @@
 #ifndef MeasurementRecorder_h
 #define MeasurementRecorder_h
 
+#include "Device/Inc/MeasurementType.hpp"
 #include "Driver/Inc/DriverState.hpp"
+
 /**
  * @file MeasurementRecorder.h
  * @brief Declaration of the IMeasurementRecorder interface class for storing measurement data.
@@ -33,15 +35,7 @@ namespace Device
         /**
          * @brief Virtual destructor.
          */
-        virtual ~IMeasurementRecorder() = default;
-
-        /**
-         * @brief Writes measurement data.
-         *
-         * This method should be implemented to write measurement data to the chosen storage medium.
-         * The data might be buffered before being written, depending on the implementation.
-         */
-        virtual void write() = 0;
+        ~IMeasurementRecorder() override = default;
 
         /**
          * @brief Flushes the data to the storage medium.
@@ -49,14 +43,14 @@ namespace Device
          * This method should be implemented to flush any buffered data to the storage medium, ensuring
          * that all data is physically written and not just stored in a temporary buffer.
          */
-        virtual void flush() = 0;
+        virtual bool flush() = 0;
 
         /**
          * @brief Notifies about new data to be saved.
          *
          * This method should be implemented to handle any necessary actions when new data is ready to be saved.
          */
-        virtual void notify() = 0;
+        virtual bool notify(Device::MeasurementType &measurement) = 0;
     };
 }
 

@@ -1,13 +1,14 @@
-#ifndef DisplayBrightnessRegulator_H_
-#define DisplayBrightnessRegulator_H_
-
 /**
- * @file DisplayBrightnessRegulator.h
+ * @file DisplayBrightnessRegulator.hpp
  * @brief Declaration of the DisplayBrightnessRegulator class for managing display brightness.
  *
  * This file contains the declaration of the DisplayBrightnessRegulator class, which adjusts the
  * backlight of an LCD display based on ambient light levels and user preferences.
  */
+
+#ifndef DisplayBrightnessRegulator_H_
+#define DisplayBrightnessRegulator_H_
+
 #include "Device/Interfaces/IDisplayBrightnessRegulator.hpp"
 #include "Driver/Interfaces/IAmbientLightSensorDriver.hpp"
 #include "Driver/Interfaces/IDisplayBrightnessDriver.hpp"
@@ -38,7 +39,7 @@ namespace Device
         /**
          * @brief Default virtual destructor.
          */
-        virtual ~DisplayBrightnessRegulator() = default;
+        ~DisplayBrightnessRegulator() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
@@ -49,7 +50,7 @@ namespace Device
          * @brief Deleted copy assignment operator to prevent copying.
          */
         DisplayBrightnessRegulator &operator=(const DisplayBrightnessRegulator &) = delete;
-        virtual bool init();
+
         /**
          * @brief Initializes the display brightness regulator.
          *
@@ -57,6 +58,7 @@ namespace Device
          *
          * @return true if initialization is successful, false otherwise.
          */
+        bool init() override;
 
         /**
          * @brief Ticks the brightness regulator state machine.
@@ -64,7 +66,7 @@ namespace Device
          * This method should be called periodically to update the brightness level based on ambient light changes
          * and user preferences.
          */
-        void tick();
+        void tick() override;
 
         /**
          * @brief Gets the current brightness level as a percentage.
@@ -74,7 +76,7 @@ namespace Device
          *
          * @return The brightness level as a percentage (0-100).
          */
-        uint8_t getBrightnessPercentage() const;
+        [[nodiscard]] std::uint8_t getBrightnessPercentage() const override;
 
         /**
          * @brief Sets the brightness level as a percentage.
@@ -84,15 +86,18 @@ namespace Device
          *
          * @param level The brightness level to set, in percentage (0-100).
          */
-        void setBrightnessPercentage(uint8_t level);
+        void setBrightnessPercentage(std::uint8_t level) override;
 
     private:
-        Driver::IAmbientLightSensorDriver &ambientLightSensorDriver; /**< Reference to the platform-specific ambient light sensor driver. */
-        Driver::IDisplayBrightnessDriver &displayBrightnessDriver;   /**< Reference to the platform-specific display brightness driver. */
+        /** @brief Reference to the platform-specific ambient light sensor driver. */
+        Driver::IAmbientLightSensorDriver &ambientLightSensorDriver;
 
-        uint8_t level = 0u; /**< Current brightness level (0-100), used for temporary debugging. */
+        /** @brief Reference to the platform-specific display brightness driver. */
+        Driver::IDisplayBrightnessDriver &displayBrightnessDriver;
+
+        /** @brief Current brightness level (0-100), used for temporary debugging. */
+        std::uint8_t level = 0u;
     };
-
 }
 
-#endif
+#endif // DisplayBrightnessRegulator_H_

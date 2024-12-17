@@ -5,42 +5,53 @@
 #include "u8g2.h"
 #include "u8x8.h"
 
-#include <stdio.h>
-#include <stdint.h>
-
-#include <stdlib.h>
+#include <array>
+#include <cstdint>
+#include <cstdlib>
 
 namespace Device
 {
-    static const uint8_t U8G2_STATUS_OK = 1u;
-    static const uint8_t U8G2_STATUS_NOT_OK = 0u;
 
-    // Maximum number of Display instances supported
-    static const uint8_t MAX_DISPLAYS = 1u;
+    // Not used. Required by the u8g2 library, but this action is handled by the St7735DisplayDriver class.
+    std::uint8_t u8x8_byte_dummy_callback(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t arg_int, void *arg_ptr);
 
-    struct DisplayMapEntry
+    // Not used. Required by the u8g2 library, but this action is handled by the St7735DisplayDriver class.
+    std::uint8_t u8x8_gpio_and_delay_dummy_callback(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t arg_int, void *arg_ptr);
+
+    static const std::uint8_t U8G2_STATUS_OK = 1u;
+    static const std::uint8_t U8G2_STATUS_NOT_OK = 0u;
+
+    namespace
     {
-        u8x8_t *u8x8;
-        Device::Display *display;
-    };
+        // Define a constant for maximum displays
+        constexpr std::size_t MAX_DISPLAYS = 10;
 
-    static DisplayMapEntry displayMap[MAX_DISPLAYS];
-    static uint8_t displayCount = 1;
-
-    // This is  trampoline function.
-    // It must have the same signature as u8x8_d_st7735.
-    static uint8_t trampolineU8x8DSt7735(u8x8_t *u8x8, uint8_t msg, uint8_t argInt, void *argPtr)
-    {
-        for (int i = 0; i < displayCount; i++)
+        // Struct for mapping display entries
+        struct DisplayMapEntry
         {
-            if (displayMap[i].u8x8 == u8x8)
+            u8x8_t *u8x8;
+            Device::Display *display;
+        };
+
+        // Use std::array for a fixed-size array
+        static std::array<DisplayMapEntry, MAX_DISPLAYS> displayMap{};
+        static std::size_t displayCount = 1;
+
+        // This is a trampoline function.
+        // It must have the same signature as u8x8_d_st7735.
+        std::uint8_t trampolineU8x8DSt7735(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t argInt, void *argPtr)
+        {
+            for (std::size_t i = 0; i < displayCount; i++)
             {
-                // Found the matching display instance
-                return displayMap[i].display->u8x8DSt7735Impl(u8x8, msg, argInt, argPtr);
+                if (displayMap[i].u8x8 == u8x8)
+                {
+                    // Found the matching display instance
+                    return displayMap[i].display->u8x8DSt7735Impl(u8x8, msg, argInt, argPtr);
+                }
             }
+            // No match found
+            return U8G2_STATUS_NOT_OK;
         }
-        // No match found
-        return U8G2_STATUS_NOT_OK;
     }
 
     static const u8x8_display_info_t u8x8_st7735_128x128_display_info =
@@ -66,26 +77,32 @@ namespace Device
             /* pixel_width = */ 128,
             /* pixel_height = */ 128};
 
-    static const uint8_t u8x8_d_st7735_init_seq[] = {
+    static const std::uint8_t u8x8_d_st7735_init_seq[] = {
         U8X8_START_TRANSFER(),
         U8X8_END_TRANSFER(), /* disable chip */
         U8X8_END()           /* end of sequence */
 
     };
 
-    // Not used. Required by the u8g2 library, but this action is handled by the St7735DisplayDriver class.
-    uint8_t u8x8_byte_dummy_callback(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)
+    std::uint8_t u8x8_byte_dummy_callback(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t arg_int, void *arg_ptr)
     {
+        (void)u8x8;    // Mark parameter as unused
+        (void)msg;     // Mark parameter as unused
+        (void)arg_int; // Mark parameter as unused
+        (void)arg_ptr; // Mark parameter as unused
         return U8G2_STATUS_OK;
     }
 
-    // Not used. Required by the u8g2 library, but this action is handled by the St7735DisplayDriver class.
-    uint8_t u8x8_gpio_and_delay_dummy_callback(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)
+    std::uint8_t u8x8_gpio_and_delay_dummy_callback(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t arg_int, void *arg_ptr)
     {
+        (void)u8x8;    // Mark parameter as unused
+        (void)msg;     // Mark parameter as unused
+        (void)arg_int; // Mark parameter as unused
+        (void)arg_ptr; // Mark parameter as unused
         return U8G2_STATUS_OK;
     }
 
-    uint8_t Display::u8x8DSt7735Impl(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)
+    std::uint8_t Display::u8x8DSt7735Impl(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t arg_int, void *arg_ptr)
 
     {
         switch (msg)
@@ -98,7 +115,7 @@ namespace Device
 
         case U8X8_MSG_DISPLAY_INIT:
         {
-            printf("Display initialization\n");
+            // printf("Display initialization\n");
             u8x8_d_helper_display_init(u8x8);
             u8x8_cad_SendSequence(u8x8, u8x8_d_st7735_init_seq);
         }
@@ -106,26 +123,24 @@ namespace Device
 
         case U8X8_MSG_DISPLAY_DRAW_TILE:
         {
-            u8x8_tile_t *tile = (u8x8_tile_t *)arg_ptr;
+            const u8x8_tile_t *tile = static_cast<u8x8_tile_t *>(arg_ptr);
 
-            for (uint8_t t = 0; t < arg_int; t++)
+            for (std::uint8_t t = 0; t < arg_int; t++)
             {
-                // printf("Processing tile at x=%d, y=%d\n", tile->x_pos, tile->y_pos);
+                const std::uint8_t tile_x_start = tile->x_pos * 8; // Starting x position in pixels
+                const std::uint8_t tile_y_start = tile->y_pos * 8; // Starting y position in pixels
 
-                uint8_t tile_x_start = tile->x_pos * 8; // Starting x position in pixels
-                uint8_t tile_y_start = tile->y_pos * 8; // Starting y position in pixels
-
-                printf("tile_x_start x=%d, y=%d\n", tile_x_start, tile_y_start);
+                // printf("tile_x_start x=%d, y=%d\n", tile_x_start, tile_y_start);
 
                 // Treat each byte as a column of 8 vertical pixels.
-                for (uint8_t col = 0; col < 120; col++)
+                for (std::uint8_t col = 0; col < 120; col++)
                 {
-                    uint8_t col_data = tile->tile_ptr[col]; // This is a vertical column
-                    for (uint8_t bit = 0; bit < 8; bit++)
+                    const std::uint8_t col_data = tile->tile_ptr[col]; // This is a vertical column
+                    for (std::uint8_t bit = 0; bit < 8; bit++)
                     {
                         Driver::DisplayPixelColor::PixelColor color = Driver::DisplayPixelColor::getColor(0x00, 0x00, 0x00);
-                        uint8_t x = tile_x_start + col;
-                        uint8_t y = tile_y_start + bit;
+                        const std::uint8_t x = tile_x_start + col;
+                        const std::uint8_t y = tile_y_start + bit;
 
                         if (col_data & (1 << bit))
                         {
@@ -146,15 +161,7 @@ namespace Device
         break;
 
         case U8X8_MSG_DISPLAY_SET_POWER_SAVE:
-        {
-        }
-        break;
-
         case U8X8_MSG_DISPLAY_SET_FLIP_MODE:
-        {
-        }
-        break;
-
         case U8X8_MSG_DISPLAY_REFRESH:
         {
         }
@@ -162,7 +169,7 @@ namespace Device
 
         default:
         {
-            printf("Unhandled message: %d\n", msg);
+            // printf("Unhandled message: %d\n", msg);
         }
         break;
         }
@@ -174,22 +181,28 @@ namespace Device
     {
         // Calculate the number of tile rows needed for 128x128 resolution.
         // Each tile is 8 pixels high, so for a 128-pixel height:
-        uint8_t tile_buf_height = 16; // 128 / 8 = 16 tiles.
+        std::uint8_t tile_buf_height = 16; // 128 / 8 = 16 tiles.
 
         // Allocate buffer dynamically for 128x128 resolution.
         // Each tile is 8 pixels wide * 1 byte (8 bits) = 8 bytes per tile.
         // For 16 rows and 16 tiles per row:
         // Total buffer size = 16 rows * 16 tiles/row * 8 bytes/tile = 2048 bytes.
-        uint8_t *buf = (uint8_t *)malloc(128 * tile_buf_height);
+        std::uint8_t *buf = static_cast<std::uint8_t *>(malloc(128 * tile_buf_height));
 
-        if (buf == NULL)
+        if (buf == nullptr)
         {
-            printf("Error: Memory allocation failed for u8g2 buffer\n");
+            // printf("Error: Memory allocation failed for u8g2 buffer\n");
             return;
         }
 
+// Can't fix, MUI related implementation.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
+
         // Setup the display with the appropriate parameters.
         u8g2_SetupDisplay(u8g2, trampolineU8x8DSt7735, u8x8_cad_001, byte_cb, gpio_and_delay_cb);
+
+#pragma clang diagnostic pop
 
         // Configure the buffer and the rendering method (vertical top to bottom).
         u8g2_SetupBuffer(u8g2, buf, tile_buf_height, u8g2_ll_hvline_vertical_top_lsb, rotation);

@@ -1,8 +1,11 @@
 #include "Driver/Inc/AmbientLightSensorDriver.hpp"
+#include "stm32f1xx_hal_adc.h"
+#include "stm32f1xx_hal_def.h"
+#include <cstdint>
 
 // declare a buffer to hold ADC values
-static const uint8_t AdcBufferSize{10};
-uint32_t adcBuffer[AdcBufferSize];
+static const std::uint8_t AdcBufferSize{10};
+std::uint32_t adcBuffer[AdcBufferSize];
 
 namespace Driver
 {
@@ -34,23 +37,23 @@ namespace Driver
         return true;
     }
 
-    uint32_t AmbientLightSensorDriver::getAmbientLightLevel() const
+    std::uint32_t AmbientLightSensorDriver::getAmbientLightLevel() const
     {
-        uint32_t adcResult = adcBuffer[0u];
+        const std::uint32_t adcResult = adcBuffer[0u];
 
         return adcResult;
     }
 
     bool AmbientLightSensorDriver::startAdcWithDma()
     {
-        HAL_StatusTypeDef statusFromHal = HAL_ADC_Start_DMA(&hadc, (uint32_t *)adcBuffer, AdcBufferSize);
+        const HAL_StatusTypeDef statusFromHal = HAL_ADC_Start_DMA(&hadc, (std::uint32_t *)adcBuffer, AdcBufferSize);
 
         return (statusFromHal == HAL_OK);
     }
 
     bool AmbientLightSensorDriver::stopAdcWithDma()
     {
-        HAL_StatusTypeDef statusFromHal = HAL_ADC_Stop_DMA(&hadc);
+        const HAL_StatusTypeDef statusFromHal = HAL_ADC_Stop_DMA(&hadc);
 
         return (statusFromHal == HAL_OK);
     }

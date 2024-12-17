@@ -1,5 +1,12 @@
 #include "Driver/Inc/KeyboardFourPushButtonsDriver.hpp"
-#include "main.h"
+#include "Driver/Inc/KeyboardKeyState.hpp"
+#include "Driver/Inc/DriverState.hpp"
+#include "Driver/Inc/KeyboardKeyIdentifier.hpp"
+
+#include "main.h" // todo maybe remove
+#include "stm32f1xx_hal_gpio.h"
+
+#include <cstdint>
 
 namespace Driver
 {
@@ -33,9 +40,9 @@ namespace Driver
 
         if (isInState(DriverState::State::Running))
         {
-            for (uint8_t i = 0u; i < AmountOfKeys; i++)
+            for (auto &key : keyState)
             {
-                keyState[i].state = getKeyStateFromHW(keyState[i].GPIO_Port, keyState[i].GPIO_Pin);
+                key.state = getKeyStateFromHW(key.GPIO_Port, key.GPIO_Pin);
             }
 
             status = true;
@@ -44,7 +51,7 @@ namespace Driver
         return status;
     }
 
-    KeyboardKeyState KeyboardFourPushButtonsDriver::getKeyState(const KeyboardKeyIdentifier key) const
+    KeyboardKeyState KeyboardFourPushButtonsDriver::getKeyState(KeyboardKeyIdentifier key) const
     {
         KeyboardKeyState state;
 
@@ -57,15 +64,18 @@ namespace Driver
             case KeyboardKeyIdentifier::Left:
             case KeyboardKeyIdentifier::Right:
             {
-                const uint8_t id = static_cast<uint8_t>(key);
+                const std::uint8_t id = static_cast<std::uint8_t>(key);
                 state = keyState[id].state;
             }
             break;
 
-            default:
+            case KeyboardKeyIdentifier::LastNotUsed:
+
+            {
                 state = KeyboardKeyState::UnknownKeyAsked;
-                break;
-            };
+            }
+            break;
+            }
         }
         else
         {
@@ -75,7 +85,7 @@ namespace Driver
         return state;
     }
 
-    Driver::KeyboardKeyState KeyboardFourPushButtonsDriver::getKeyStateFromHW(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin) const
+    Driver::KeyboardKeyState KeyboardFourPushButtonsDriver::getKeyStateFromHW(GPIO_TypeDef *GPIOx, std::uint16_t GPIO_Pin)
     {
         return (HAL_GPIO_ReadPin(GPIOx, GPIO_Pin) != GPIO_PIN_SET) ? KeyboardKeyState::Pressed : KeyboardKeyState::NotPressed;
     }

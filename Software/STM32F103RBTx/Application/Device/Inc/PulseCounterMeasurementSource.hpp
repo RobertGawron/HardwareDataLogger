@@ -23,6 +23,8 @@ namespace Device
     class PulseCounterMeasurementSource : public IMeasurementSource
     {
     public:
+        using MeasurementSizeType = Driver::IPulseCounterDriver::CounterSizeType;
+
         /**
          * @brief Constructs a PulseCounterMeasurementSource with a reference to a PulseCounterDriver.
          *
@@ -38,7 +40,7 @@ namespace Device
         /**
          * @brief Default destructor for PulseCounterMeasurementSource.
          */
-        virtual ~PulseCounterMeasurementSource() = default;
+        ~PulseCounterMeasurementSource() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
@@ -51,31 +53,21 @@ namespace Device
          */
         PulseCounterMeasurementSource &operator=(const PulseCounterMeasurementSource &) = delete;
 
-        /**
-         * @brief Initializes the pulse counter, setting the initial pulse count to zero.
-         *
-         * @return True if initialization was successful, false otherwise.
-         */
-        virtual bool init() override;
-
-        /**
-         * @brief Deinitializes the pulse counter device.
-         *
-         * @return True if deinitialization was successful, false otherwise.
-         */
-        virtual bool deinit() override;
+        bool initialize() override;
+        bool start() override;
+        bool stop() override;
 
         /**
          * @brief Checks if a new measurement is available from the pulse counter.
          *
          * @return True if new measurement data is available, false otherwise.
          */
-        virtual bool isMeasurementAvailable() override;
+        bool isMeasurementAvailable() override;
 
         /**
          * @brief Retrieves the current pulse count from the pulse counter device.
          */
-        virtual void getMeasurement() override;
+        MeasurementType getMeasurement() override;
 
     private:
         /** @brief Reference to the driver responsible for interacting with the pulse counter device. */

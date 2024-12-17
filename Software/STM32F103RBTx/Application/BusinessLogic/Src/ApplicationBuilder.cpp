@@ -2,8 +2,7 @@
 #include "Driver/Inc/PulseCounterIdentifier.hpp"
 #include "Driver/Inc/UartIdentifier.hpp"
 
-// for test of driver lib
-#include <stdio.h>
+#include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
 
 namespace BusinessLogic
 {
@@ -17,14 +16,8 @@ namespace BusinessLogic
 
           storesBuilder(platformFactory.createUartDriver(Driver::UartIdentifier::DataTransmitterViaWiFiModule),
                         platformFactory.createSdCardDriver()),
-
-          dataStore(),
           measurementCoordinator(dataStore),
-
           hmiFactory(platformFactory)
-    //,
-    // hmiBuilder(hmiFactory)
-
     {
     }
 
@@ -55,18 +48,14 @@ namespace BusinessLogic
         // can we recover from fault at any place here? I dont know.
         bool status = false;
 
-        dataStore.start();
-        hmiFactory.start();
-        /*
-                // clang-format off
-                if (
-                   // && measurementCoordinator.start()
-                    && )
-                // clang-format on
-                {
-                    status = true;
-                }
-        */
+        // clang-format off
+        if (/*measurementCoordinator.start()
+            &&*/ hmiFactory.start())
+        // clang-format on
+        {
+            status = true;
+        }
+
         return status;
     }
 
@@ -80,10 +69,9 @@ namespace BusinessLogic
         // can we recover from fault at any place here? I dont know.
         bool status = false;
 
-        dataStore.notifyObservers();
         // clang-format off
-                if (/*measurementCoordinator.tick()
-                    &&*/ hmiFactory.tick())
+        if (measurementCoordinator.tick()
+            && hmiFactory.tick())
         // clang-format on
         {
             status = true;

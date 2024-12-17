@@ -33,7 +33,7 @@ namespace Device
         /**
          * @brief Default destructor for UartMeasurementRecorder.
          */
-        virtual ~UartMeasurementRecorder() = default;
+        ~UartMeasurementRecorder() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
@@ -46,19 +46,12 @@ namespace Device
          */
         UartMeasurementRecorder &operator=(const UartMeasurementRecorder &) = delete;
 
-        /**
-         * @brief Writes measurement data to the COM port via UART.
-         *
-         * This method writes the prepared measurement data to the COM port using the UART driver.
-         */
-        virtual void write() override;
-
-        /**
+             /**
          * @brief Flushes any remaining data to the COM port via UART.
          *
          * This method ensures that any remaining buffered data is sent to the COM port via UART.
          */
-        virtual void flush() override;
+        bool flush() override;
 
         /**
          * @brief Notifies the recorder to process new data.
@@ -66,7 +59,7 @@ namespace Device
          * This method is called to notify the recorder that new measurement data is available
          * and should be sent to the COM port via UART.
          */
-        virtual void notify() override;
+        bool notify(Device::MeasurementType &measurement) override;
 
     protected:
         /**
@@ -75,7 +68,7 @@ namespace Device
          * This method is responsible for initializing the recorder and preparing it for operation.
          * @return True if initialization was successful, false otherwise.
          */
-        virtual bool onInitialize() override;
+        bool onInitialize() override;
 
         /**
          * @brief Starts the UartMeasurementRecorder.
@@ -83,7 +76,7 @@ namespace Device
          * This method starts the recorder, enabling it to begin sending measurement data to the COM port via UART.
          * @return True if the recorder started successfully, false otherwise.
          */
-        virtual bool onStart() override;
+        bool onStart() override;
 
         /**
          * @brief Stops the UartMeasurementRecorder.
@@ -91,7 +84,7 @@ namespace Device
          * This method stops the recorder, halting any further transmission of measurement data.
          * @return True if the recorder stopped successfully, false otherwise.
          */
-        virtual bool onStop() override;
+        bool onStop() override;
 
         /**
          * @brief Resets the UartMeasurementRecorder.
@@ -99,7 +92,7 @@ namespace Device
          * This method resets the recorder, clearing any internal state or buffers.
          * @return True if the recorder was reset successfully, false otherwise.
          */
-        virtual bool onReset() override;
+        bool onReset() override;
 
     private:
         /** @brief Reference to the UART driver used for communication with the COM port. */

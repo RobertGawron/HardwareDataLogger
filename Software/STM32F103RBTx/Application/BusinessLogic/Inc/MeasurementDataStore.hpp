@@ -7,9 +7,10 @@
 #ifndef MeasurementDataStore_H_
 #define MeasurementDataStore_H_
 
-#include "Device/Interfaces/IMeasurementRecorder.hpp"
+#include "BusinessLogic/Interfaces/IMeasurementDataStore.hpp"
 #include "BusinessLogic/Inc/SaferArray.hpp"
-#include <stdint.h>
+#include "Device/Interfaces/IMeasurementRecorder.hpp"
+#include <cstdint>
 
 namespace BusinessLogic
 {
@@ -22,7 +23,7 @@ namespace BusinessLogic
      * It is responsible for initializing and notifying all registered observers when new
      * measurement data is ready.
      */
-    class MeasurementDataStore
+    class MeasurementDataStore : public IMeasurementDataStore
     {
     public:
         /**
@@ -33,7 +34,7 @@ namespace BusinessLogic
         /**
          * @brief Destructor for MeasurementDataStore.
          */
-        virtual ~MeasurementDataStore() = default;
+        ~MeasurementDataStore() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
@@ -55,7 +56,7 @@ namespace BusinessLogic
          * @param observer Reference to an object that implements IMeasurementRecorder.
          * @return True if the observer was successfully added; false otherwise.
          */
-        bool addObserver(Device::IMeasurementRecorder &observer);
+        bool addObserver(Device::IMeasurementRecorder &observer) override;
 
         /**
          * @brief Removes an observer that records measurement data.
@@ -67,7 +68,7 @@ namespace BusinessLogic
          * @return True if the observer was successfully removed; false otherwise.
          * @note Removing the observer does not automatically deinitialize it.
          */
-        bool removeObserver(Device::IMeasurementRecorder &observer);
+        bool removeObserver(Device::IMeasurementRecorder &observer) override;
 
         /**
          * @brief Initializes the MeasurementDataStore and all registered observers.
@@ -78,7 +79,7 @@ namespace BusinessLogic
          * @return True if initialization was successful; false otherwise.
          * @note Observers should not be initialized manually in other classes such as ApplicationBuilder.
          */
-        bool initialize();
+        bool initialize() override;
 
         /**
          * @brief Starts the MeasurementDataStore and all registered observers.
@@ -88,7 +89,7 @@ namespace BusinessLogic
          *
          * @return True if start was successful; false otherwise.
          */
-        bool start();
+        bool start() override;
 
         /**
          * @brief Notifies all registered observers that new measurement data is ready to be stored.
@@ -96,11 +97,11 @@ namespace BusinessLogic
          * This function iterates through the list of registered observers and notifies each one
          * that new measurement data is available for storage.
          */
-        void notifyObservers();
+        bool notifyObservers(Device::MeasurementType measurement) override;
 
     private:
         /** @brief Maximum number of observers that can be registered. */
-        static const uint8_t MaxObservers{4u};
+        static const std::uint8_t MaxObservers{4u};
 
         /** @brief Array to store references to registered observers. */
         SaferArray<Device::IMeasurementRecorder, MaxObservers> observers;

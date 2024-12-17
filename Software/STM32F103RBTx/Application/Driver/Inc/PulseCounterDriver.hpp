@@ -8,6 +8,11 @@
 
 #include "Driver/Interfaces/IPulseCounterDriver.hpp"
 
+extern "C"
+{
+    void incrementPulseCounter(std::uint8_t counterId);
+}
+
 namespace Driver
 {
     /**
@@ -20,19 +25,17 @@ namespace Driver
     class PulseCounterDriver : public IPulseCounterDriver
     {
     public:
-        /**
-         * @brief Constructs a PulseCounterDriver object.
-         *
-         * The constructor sets up the PulseCounterDriver, preparing it for initialization.
-         */
-        explicit PulseCounterDriver();
+        static const std::uint8_t PULSE_COUNTER_AMOUNT = 4u;
 
+        explicit PulseCounterDriver(PulseCounterIdentifier id);
+
+        PulseCounterDriver() = delete;
         /**
          * @brief Default destructor for PulseCounterDriver.
          *
          * Ensures proper cleanup of the driver.
          */
-        virtual ~PulseCounterDriver() = default;
+        ~PulseCounterDriver() override;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
@@ -44,6 +47,9 @@ namespace Driver
          * @return PulseCounterDriver& The assigned object.
          */
         PulseCounterDriver &operator=(const PulseCounterDriver &) = delete;
+
+        IPulseCounterDriver::CounterSizeType getMeasurement() override;
+        void clearMeasurement() override;
 
         /**
          * @brief Initializes the pulse counter driver.
@@ -76,6 +82,9 @@ namespace Driver
          * @return True if the driver reset successfully, false otherwise.
          */
         bool onReset() override;
+
+        PulseCounterIdentifier id;
+        CounterSizeType &value;
     };
 }
 
