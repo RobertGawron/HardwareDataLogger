@@ -7,6 +7,7 @@
 #define IPulseCounterDriver_h
 
 #include "Driver/Inc/DriverState.hpp"
+#include "Driver/Inc/PulseCounterIdentifier.hpp"
 
 namespace Driver
 {
@@ -21,9 +22,8 @@ namespace Driver
     class IPulseCounterDriver : public DriverState
     {
     public:
-        /**
-         * @brief Default constructor for IPulseCounterDriver.
-         */
+        using CounterSizeType = std::uint32_t; // Define a type alias for the max value of the counter (in bits)
+
         explicit IPulseCounterDriver() = default;
 
         /**
@@ -32,6 +32,9 @@ namespace Driver
          * Ensures proper cleanup of derived classes.
          */
         ~IPulseCounterDriver() override = default;
+
+        virtual CounterSizeType getMeasurement() = 0;
+        virtual void clearMeasurement() = 0;
     };
 }
 

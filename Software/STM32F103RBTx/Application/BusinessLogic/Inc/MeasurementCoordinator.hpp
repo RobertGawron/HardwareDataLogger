@@ -7,10 +7,10 @@
 #ifndef MeasurementCoordinator_h
 #define MeasurementCoordinator_h
 
-#include <cstdint>
-#include "Device/Interfaces/IMeasurementSource.hpp"
-#include "BusinessLogic/Inc/MeasurementDataStore.hpp"
+#include "BusinessLogic/Interfaces/IMeasurementDataStore.hpp"
 #include "BusinessLogic/Inc/SaferArray.hpp"
+#include "Device/Interfaces/IMeasurementSource.hpp"
+#include <cstdint>
 
 namespace BusinessLogic
 {
@@ -32,7 +32,7 @@ namespace BusinessLogic
          *
          * @param storage Reference to a MeasurementDataStore object that handles the storage of measurement data.
          */
-        explicit MeasurementCoordinator(MeasurementDataStore &storage);
+        explicit MeasurementCoordinator(IMeasurementDataStore &storage);
 
         /**
          * @brief Deleted default constructor to prevent instantiation without a storage reference.
@@ -76,14 +76,6 @@ namespace BusinessLogic
         virtual bool tick();
 
         /**
-         * @brief Updates measurements from all registered input devices.
-         *
-         * This function queries all registered measurement sources for new data, processes it,
-         * and ensures the data is ready to be stored.
-         */
-        void updateMeasurements();
-
-        /**
          * @brief Registers an input device observer to be periodically queried for measurement data.
          *
          * The observer should implement the IMeasurementSource interface, and this method will add it
@@ -107,6 +99,14 @@ namespace BusinessLogic
         bool removeObserver(Device::IMeasurementSource &observer);
 
     private:
+        /**
+         * @brief Updates measurements from all registered input devices.
+         *
+         * This function queries all registered measurement sources for new data, processes it,
+         * and ensures the data is ready to be stored.
+         */
+        void updateMeasurements();
+
         /** @brief Maximum number of observers that can be registered. */
         static const std::uint8_t MaxObservers{5u};
 
@@ -118,7 +118,7 @@ namespace BusinessLogic
          *
          * This member is responsible for notifying the storage objects when new measurement data is ready.
          */
-        MeasurementDataStore &storage;
+        IMeasurementDataStore &storage;
     };
 }
 

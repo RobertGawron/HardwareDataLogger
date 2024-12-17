@@ -50,21 +50,9 @@ namespace Device
          */
         UartMeasurementSource &operator=(const UartMeasurementSource &) = delete;
 
-        /**
-         * @brief Initializes the UART measurement source.
-         *
-         * Prepares the UART device for receiving measurement data.
-         * @return True if initialization was successful, false otherwise.
-         */
-        bool init() override;
-
-        /**
-         * @brief Deinitializes the UART measurement source.
-         *
-         * Shuts down the communication with the UART device.
-         * @return True if deinitialization was successful, false otherwise.
-         */
-        bool deinit() override;
+        bool initialize() override;
+        bool start() override;
+        bool stop() override;
 
         /**
          * @brief Checks if new measurement data is available from the UART device.
@@ -78,7 +66,7 @@ namespace Device
          *
          * This method fetches the latest measurement data received via UART.
          */
-        void getMeasurement() override;
+        MeasurementType getMeasurement() override;
 
     private:
         /** @brief Reference to the UART driver used for communication with the UART device. */

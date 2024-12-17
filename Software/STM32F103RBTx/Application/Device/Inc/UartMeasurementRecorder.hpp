@@ -46,19 +46,12 @@ namespace Device
          */
         UartMeasurementRecorder &operator=(const UartMeasurementRecorder &) = delete;
 
-        /**
-         * @brief Writes measurement data to the COM port via UART.
-         *
-         * This method writes the prepared measurement data to the COM port using the UART driver.
-         */
-        void write() override;
-
-        /**
+             /**
          * @brief Flushes any remaining data to the COM port via UART.
          *
          * This method ensures that any remaining buffered data is sent to the COM port via UART.
          */
-        void flush() override;
+        bool flush() override;
 
         /**
          * @brief Notifies the recorder to process new data.
@@ -66,7 +59,7 @@ namespace Device
          * This method is called to notify the recorder that new measurement data is available
          * and should be sent to the COM port via UART.
          */
-        void notify() override;
+        bool notify(Device::MeasurementType &measurement) override;
 
     protected:
         /**

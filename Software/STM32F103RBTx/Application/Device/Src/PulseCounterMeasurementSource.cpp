@@ -1,6 +1,8 @@
 #include "Device/Inc/PulseCounterMeasurementSource.hpp"
 #include "Driver/Interfaces/IPulseCounterDriver.hpp"
 
+#include <stdio.h>
+#include <stdio.h>
 namespace Device
 {
 
@@ -9,15 +11,22 @@ namespace Device
     {
     }
 
-    bool PulseCounterMeasurementSource::init()
+    bool PulseCounterMeasurementSource::initialize()
     {
-        pulseCounterDriver.initialize();
-        return true;
+        const bool status = pulseCounterDriver.initialize();
+        return status;
     }
 
-    bool PulseCounterMeasurementSource::deinit()
+    bool PulseCounterMeasurementSource::start()
     {
-        return true;
+        const bool status = pulseCounterDriver.start();
+        return status;
+    }
+
+    bool PulseCounterMeasurementSource::stop()
+    {
+        const bool status = pulseCounterDriver.stop();
+        return status;
     }
 
     bool PulseCounterMeasurementSource::isMeasurementAvailable()
@@ -25,8 +34,11 @@ namespace Device
         return true;
     }
 
-    void PulseCounterMeasurementSource::getMeasurement()
+    MeasurementType PulseCounterMeasurementSource::getMeasurement()
     {
+
+        //   printf("PulseCounterMeasurementSource %d ", pulseCounterDriver.getMeasurement());
+        return pulseCounterDriver.getMeasurement();
     }
 
 }
