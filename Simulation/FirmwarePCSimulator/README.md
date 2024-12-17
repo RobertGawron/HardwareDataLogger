@@ -4,7 +4,7 @@
 
 The reasons for using a simulator are explained in the [main README](../../README.md).
 
-![PC Simulation Screenshot](../../Documentation/Pictures/PCSimulation_17_11_2024.png)
+![PC Simulation Screenshot](../../Documentation/Pictures/PCSimulation_18_12_2024.png)
 
 ## Architecture
 

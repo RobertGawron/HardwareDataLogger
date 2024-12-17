@@ -21,7 +21,7 @@ Note: The generated CMake setup is not integrated with the main CMake configurat
 ## Architecture
 
 Measurement flow diagram
-![measurement flow diagram](../../../Documentation/Diagrams/MeasurementFlowSequenceDiagram.svg)
+![measurement flow diagram](../../Documentation/Diagrams/MeasurementFlowSequenceDiagram.svg)
 
 Sequence diagram of the display.
 ![sequence diagram of the display](../../Documentation/Diagrams/DisplaySequenceDiagram.svg)

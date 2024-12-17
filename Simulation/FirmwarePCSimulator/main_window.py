@@ -1,9 +1,12 @@
-from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTabWidget, QTextEdit, QPushButton
+from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTabWidget
 from PyQt6.QtCore import Qt, QTimer
 
 from simulation_control_widget import SimulationControlWidget
 from direction_button_widget import DirectionButtonWidget
 from hardware_display_widget import HardwareDisplayWidget
+from simulation_speed_widget import SimulationSpeedWidget
+from measurement_data_input_widget import MeasurementDataInputWidget
+from log_tabs_widget import LogTabsWidget
 
 
 class MainWindow(QMainWindow):
@@ -17,15 +20,19 @@ class MainWindow(QMainWindow):
 
         # Set window properties
         self.setWindowTitle("Firmware Simulator")
-        self.setGeometry(100, 100, 800, 400)
+        self.setGeometry(100, 100, 800, 600)
 
         # Create central widget and set layout
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
 
         # Main layout
-        main_layout = QHBoxLayout()
+        main_layout = QVBoxLayout()  # Vertical layout to align components top to bottom
         central_widget.setLayout(main_layout)
+
+        # Top Layout for Tabs, Hardware Display, and Measurement Input
+        top_layout = QHBoxLayout()
+        main_layout.addLayout(top_layout)
 
         # Config tabs on the left side
         self.tabs = QTabWidget()
@@ -40,14 +47,17 @@ class MainWindow(QMainWindow):
         # Hardware display widget in the middle
         self.hardware_display = HardwareDisplayWidget(self.display_width, self.display_height)
 
-        # Log output on the right side
-        self.log_output = QTextEdit()
-        self.log_output.setReadOnly(True)
+        # Measurement Data Input widget on the right
+        self.measurement_data_input_widget = MeasurementDataInputWidget()
 
-        # Add widgets to the main layout
-        main_layout.addWidget(self.tabs, 1)  # Config tabs
-        main_layout.addWidget(self.hardware_display, 2)  # Hardware display
-        main_layout.addWidget(self.log_output, 3)  # Logs
+        # Add widgets to the top layout
+        top_layout.addWidget(self.tabs, 1)  # Config tabs
+        top_layout.addWidget(self.hardware_display, 3)  # Hardware display takes more space
+        top_layout.addWidget(self.measurement_data_input_widget, 2)  # Measurement Data Input expands proportionally
+
+        # Log output tabs at the bottom
+        self.log_tabs = LogTabsWidget()
+        main_layout.addWidget(self.log_tabs, 1)  # Logs take bottom section
 
         # Use a QTimer for periodic updates
         self.timer = QTimer(self)
@@ -63,12 +73,12 @@ class MainWindow(QMainWindow):
         # Buttons for the Actions tab
         self.main_control_widget = SimulationControlWidget(self.simulation)
         self.direction_buttons_widget = DirectionButtonWidget(self.simulation)
-        self.load_test_data_button = QPushButton("Load Test Data")
+        self.simulation_speed_widget = SimulationSpeedWidget(self.simulation)
 
         # Add buttons to the Actions tab layout
         actions_layout.addWidget(self.main_control_widget)
         actions_layout.addWidget(self.direction_buttons_widget)
-        actions_layout.addWidget(self.load_test_data_button)
+        actions_layout.addWidget(self.simulation_speed_widget)
 
         # Layout for Config tab (empty for now)
         config_layout = QVBoxLayout()
