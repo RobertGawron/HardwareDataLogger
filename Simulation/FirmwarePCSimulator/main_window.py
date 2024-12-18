@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTabWidget
 from PyQt6.QtCore import Qt, QTimer
 
@@ -6,7 +8,8 @@ from direction_button_widget import DirectionButtonWidget
 from hardware_display_widget import HardwareDisplayWidget
 from simulation_speed_widget import SimulationSpeedWidget
 from measurement_data_input_widget import MeasurementDataInputWidget
-from log_tabs_widget import LogTabsWidget
+from log_tabs_widget import LogTabsWidget, LogTabID
+from data_visualization_widget import DataVisualizationWidget
 
 
 class MainWindow(QMainWindow):
@@ -37,9 +40,9 @@ class MainWindow(QMainWindow):
         # Config tabs on the left side
         self.tabs = QTabWidget()
         self.config_tab1 = QWidget()
-        self.config_tab2 = QWidget()
+        self.data_visualization_tab = DataVisualizationWidget()
         self.tabs.addTab(self.config_tab1, "Actions")
-        self.tabs.addTab(self.config_tab2, "Config")
+        self.tabs.addTab(self.data_visualization_tab, "Data Visualization")
 
         # Setup the tabs layout
         self.setup_tabs()
@@ -47,8 +50,8 @@ class MainWindow(QMainWindow):
         # Hardware display widget in the middle
         self.hardware_display = HardwareDisplayWidget(self.display_width, self.display_height)
 
-        # Measurement Data Input widget on the right
-        self.measurement_data_input_widget = MeasurementDataInputWidget()
+        # Measurement Data Input widget on the right with callback
+        self.measurement_data_input_widget = MeasurementDataInputWidget(update_measurement_callback=self.on_measurement_update)
 
         # Add widgets to the top layout
         top_layout.addWidget(self.tabs, 1)  # Config tabs
@@ -80,13 +83,20 @@ class MainWindow(QMainWindow):
         actions_layout.addWidget(self.direction_buttons_widget)
         actions_layout.addWidget(self.simulation_speed_widget)
 
-        # Layout for Config tab (empty for now)
-        config_layout = QVBoxLayout()
-        config_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        self.config_tab2.setLayout(config_layout)
-
     def update_display(self):
         """
         Update the hardware display with pixel data from the simulation.
         """
         self.hardware_display.update_from_simulation(self.simulation)
+
+    def on_measurement_update(self, values):
+        """
+        Handle updates from the MeasurementDataInputWidget sliders.
+        :param values: List of current slider values.
+        """
+        timestamp = "{:%Y-%m-%d %H:%M:%S}".format(datetime.now())
+        message = "Simulated pulse counter values: " + ", ".join(f"{value}" for value in values)
+        self.log_tabs.add_log(LogTabID.PULSE_COUNTER, timestamp, message)
+        
+        self.data_visualization_tab.update_pulse_counters(timestamp, values)
+        self.simulation.update_pulse_counters(values)

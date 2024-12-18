@@ -1,6 +1,7 @@
 import ctypes
 import os.path
 from enum import Enum
+from typing import List
 
 class SimulationKey(Enum):
     UP = 0
@@ -77,3 +78,19 @@ class DeviceUnderTest:
         self.dut.LibWrapper_KeyReleased.argtypes = [ctypes.c_uint8]  # Accepts an integer (enum value)
         self.dut.LibWrapper_KeyReleased(key.value)
 
+    def update_pulse_counters(self, pulse_counters: List[int]):
+        """
+        Updates the pulse counters in the shared library.
+
+        :param pulse_counters: A list of pulse counter values to update.
+        """
+        PULSE_COUNTER_COUNT = 4
+        if len(pulse_counters) != PULSE_COUNTER_COUNT:
+            raise ValueError(f"Expected {PULSE_COUNTER_COUNT} pulse counters, got {len(pulse_counters)}")
+
+        PulseCountersArrayType = ctypes.c_uint16 * PULSE_COUNTER_COUNT
+        pulse_counters_array = PulseCountersArrayType(*pulse_counters)
+
+        self.dut.LibWrapper_UpdatePulseCounters.restype = None
+        self.dut.LibWrapper_UpdatePulseCounters.argtypes = [PulseCountersArrayType]
+        self.dut.LibWrapper_UpdatePulseCounters(pulse_counters_array)

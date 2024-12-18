@@ -1,5 +1,8 @@
 #include "Device/Inc/UartMeasurementSource.hpp"
+#include "Device/Inc/MeasurementType.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
+
+#include <cstdint>
 
 namespace Device
 {

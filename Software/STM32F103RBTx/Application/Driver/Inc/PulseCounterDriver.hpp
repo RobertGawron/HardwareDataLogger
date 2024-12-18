@@ -83,6 +83,7 @@ namespace Driver
          */
         bool onReset() override;
 
+    private:
         PulseCounterIdentifier id;
         CounterSizeType &value;
     };

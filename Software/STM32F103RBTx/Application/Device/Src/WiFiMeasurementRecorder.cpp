@@ -1,9 +1,13 @@
 #include "Device/Inc/WiFiMeasurementRecorder.hpp"
+#include "Device/Inc/MeasurementType.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
-// #include "Driver/Inc/UartExchangeStatus.hpp"
 
 #include <cstdint>
 #include <stdio.h>
+
+#include <variant>     // Provides std::visit
+#include <type_traits> // Provides std::decay_t
+
 namespace Device
 {
 

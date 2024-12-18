@@ -3,8 +3,6 @@
 #include "stm32f1xx_hal_def.h"
 #include <cstdint>
 
-// declare a buffer to hold ADC values
-static const std::uint8_t AdcBufferSize{10};
 std::uint32_t adcBuffer[AdcBufferSize];
 
 namespace Driver

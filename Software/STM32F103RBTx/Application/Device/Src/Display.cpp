@@ -24,7 +24,7 @@ namespace Device
     namespace
     {
         // Define a constant for maximum displays
-        constexpr std::size_t MAX_DISPLAYS = 10;
+        constexpr std::size_t MAX_DISPLAYS = 10u;
 
         // Struct for mapping display entries
         struct DisplayMapEntry
@@ -34,14 +34,14 @@ namespace Device
         };
 
         // Use std::array for a fixed-size array
-        static std::array<DisplayMapEntry, MAX_DISPLAYS> displayMap{};
-        static std::size_t displayCount = 1;
+        std::array<DisplayMapEntry, MAX_DISPLAYS> displayMap{};
+        std::size_t displayCount = 1u;
 
         // This is a trampoline function.
         // It must have the same signature as u8x8_d_st7735.
         std::uint8_t trampolineU8x8DSt7735(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t argInt, void *argPtr)
         {
-            for (std::size_t i = 0; i < displayCount; i++)
+            for (std::size_t i = 0u; i < displayCount; i++)
             {
                 if (displayMap[i].u8x8 == u8x8)
                 {

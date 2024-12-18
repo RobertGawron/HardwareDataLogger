@@ -1,8 +1,7 @@
 #include "Device/Inc/PulseCounterMeasurementSource.hpp"
+#include "Device/Inc/MeasurementType.hpp"
 #include "Driver/Interfaces/IPulseCounterDriver.hpp"
 
-#include <stdio.h>
-#include <stdio.h>
 namespace Device
 {
 
@@ -36,8 +35,6 @@ namespace Device
 
     MeasurementType PulseCounterMeasurementSource::getMeasurement()
     {
-
-        //   printf("PulseCounterMeasurementSource %d ", pulseCounterDriver.getMeasurement());
         return pulseCounterDriver.getMeasurement();
     }
 
