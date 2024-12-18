@@ -1,8 +1,9 @@
+#include "BusinessLogic/Interfaces/IMeasurementDataStore.hpp"
 #include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
 #include "BusinessLogic/Inc/MeasurementDataStore.hpp"
+#include "Device/Inc/MeasurementType.hpp"
 
-#include <cstdint>
-#include <stdio.h>
+#include <cstddef>
 
 namespace BusinessLogic
 {
@@ -52,11 +53,8 @@ namespace BusinessLogic
 
             if (isMeasurementReady)
             {
-
                 Device::MeasurementType measurement = observers[i]->getMeasurement();
                 storage.notifyObservers(measurement);
-
-                //  printf("updateMeasurements() %d\n", measurement);
             }
         }
     }

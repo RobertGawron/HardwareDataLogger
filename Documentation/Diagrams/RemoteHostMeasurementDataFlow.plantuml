@@ -1,0 +1,27 @@
+@startuml
+title Deploy Diagram
+
+actor "Measurement Devices"
+
+box "HardwareDataLogger" #LightYellow
+    participant "STM32F103RBTx chip"
+    participant "ESP8266MOD chip"
+end box
+
+box "Docker Image" #LightBlue
+    database "InfluxDB"
+    participant "Grafana"
+end box
+
+note over "InfluxDB", "Grafana"
+"Either run locally (for debug) on PC or remotely on RaspberryPi"
+end note
+
+actor "End User"
+
+"Measurement Devices" -> "STM32F103RBTx chip" : Sends Raw Data
+"STM32F103RBTx chip" -> "ESP8266MOD chip" : Processes and Transfers Data
+"ESP8266MOD chip" --> "InfluxDB" : Stores Data\n(via MQTT or HTTP)
+"InfluxDB" -> "Grafana" : Fetches and Serves Data
+"End User" -> "Grafana" : Accesses Data Visualization
+@enduml

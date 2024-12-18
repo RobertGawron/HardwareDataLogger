@@ -75,7 +75,7 @@ namespace Driver
          */
         static constexpr PixelColor getColorRGB565(std::uint8_t red, std::uint8_t green, std::uint8_t blue)
         {
-            constexpr std::uint8_t BITS_IN_BYTE = 8;
+            constexpr std::uint8_t BITS_IN_BYTE = 8u;
 
             // Extract the top bits for each color channel and combine them
             const std::uint16_t r = (red >> (BITS_IN_BYTE - RED_BITS)) & RED_MASK;       // 5 bits for red

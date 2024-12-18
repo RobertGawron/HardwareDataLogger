@@ -1,23 +1,22 @@
-#include "BusinessLogic/Inc/HmiFactory.hpp"
-
 #include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
-
+#include "BusinessLogic/Inc/HmiFactory.hpp"
 #include "BusinessLogic/Inc/HmiMui.hpp"
-
 #include "Device/Inc/Keyboard.hpp"
 #include "Device/Inc/DisplayBrightnessRegulator.hpp"
 
 namespace BusinessLogic
 {
-    HmiFactory::HmiFactory(IPlatformFactory &platformFactory)
-        : display(platformFactory.createDisplayDriver()),
-          brightnessRegulator(
-              platformFactory.createAmbientLightSensorDriver(),
-              platformFactory.createDisplayBrightnessDriver()),
-          keyboard(platformFactory.createKeyboardDriver()),
-          hmi(display,
-              brightnessRegulator,
-              keyboard)
+    HmiFactory::HmiFactory(Device::IMeasurementReader &reader,
+                           IPlatformFactory &platformFactory) : hmiMeasurementModel(reader),
+                                                                display(platformFactory.createDisplayDriver()),
+                                                                brightnessRegulator(
+                                                                    platformFactory.createAmbientLightSensorDriver(),
+                                                                    platformFactory.createDisplayBrightnessDriver()),
+                                                                keyboard(platformFactory.createKeyboardDriver()),
+                                                                hmi(hmiMeasurementModel,
+                                                                    display,
+                                                                    brightnessRegulator,
+                                                                    keyboard)
     {
     }
 
@@ -31,9 +30,15 @@ namespace BusinessLogic
         return hmi.start();
     }
 
+    // todo shoudnt have tick method
     bool HmiFactory::tick()
     {
         return hmi.tick();
+    }
+
+    bool HmiFactory::addDataSource(Device::IMeasurementRecorder &recorder)
+    {
+        return true;
     }
 
 }

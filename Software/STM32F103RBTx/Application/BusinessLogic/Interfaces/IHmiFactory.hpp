@@ -7,8 +7,9 @@
 #define IHmiFactory_h
 
 #include "Device/Interfaces/IKeyboard.hpp"
-#include "Driver/Interfaces/IDisplayDriver.hpp"
 #include "Device/Inc/DisplayBrightnessRegulator.hpp"
+#include "Device/Interfaces/IMeasurementRecorder.hpp"
+#include "Driver/Interfaces/IDisplayDriver.hpp"
 
 namespace BusinessLogic
 {
@@ -62,6 +63,8 @@ namespace BusinessLogic
          * @return True if the update operation was successful; false otherwise.
          */
         virtual bool tick() = 0;
+
+        virtual bool addDataSource(Device::IMeasurementRecorder &recorder) = 0;
     };
 }
 

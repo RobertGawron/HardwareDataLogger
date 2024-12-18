@@ -1,14 +1,17 @@
 #include "LibWrapper.hpp"
-#include <stdint.h>
 
 #include "PlatformFactoryStm32.hpp"
 #include "MyApplication.hpp"
 
 #include "KeyboardDriverStub.hpp"
 #include "Driver/Inc/KeyboardKeyState.hpp"
+#include "PulseCounterDriverStub.hpp"
 
 #include "St7735DisplayDriverStub.hpp"
 #include "DisplayPixelColor.hpp"
+
+#include <stdint.h>
+#include <array>
 
 extern Driver::St7735DisplayDriverStub st7735DisplayDriverStub;
 extern Driver::KeyboardDriverStub keyboardDriverStub;
@@ -56,4 +59,12 @@ std::uint8_t LibWrapper_GetDisplayHeight()
 std::uint16_t LibWrapper_GetPixelValue(std::uint8_t x, std::uint8_t y)
 {
     return st7735DisplayDriverStub.getPixelValue(x, y);
+}
+
+void LibWrapper_UpdatePulseCounters(const std::array<std::uint16_t, PULSE_COUNTER_COUNT> &pulseCounters)
+{
+    for (std::size_t i = 0; i < PULSE_COUNTER_COUNT; i++)
+    {
+        setPulseCounter(i, pulseCounters.at(i));
+    }
 }

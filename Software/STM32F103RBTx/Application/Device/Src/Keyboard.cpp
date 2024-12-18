@@ -1,6 +1,6 @@
 #include "Device/Inc/Keyboard.hpp"
-#include "Driver/Inc/KeyboardKeyState.hpp"
 #include "Device/Inc/KeyboardKeyActionState.hpp"
+#include "Driver/Inc/KeyboardKeyState.hpp"
 #include "Driver/Inc/KeyboardKeyIdentifier.hpp"
 #include "Driver/Interfaces/IKeyboardDriver.hpp"
 
@@ -8,7 +8,6 @@
 
 namespace Device
 {
-
     Keyboard::Keyboard(::Driver::IKeyboardDriver &_keyboardDriver) : keyboardDriver(_keyboardDriver)
     {
     }

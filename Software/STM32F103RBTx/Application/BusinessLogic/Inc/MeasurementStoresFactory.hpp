@@ -6,17 +6,18 @@
 #ifndef MeasurementStoresFactory_h
 #define MeasurementStoresFactory_h
 
-#include <cstdint>
 #include "BusinessLogic/Interfaces/IApplicationComponentFactory.hpp"
-
-// Driver
-#include "Driver/Interfaces/IUartDriver.hpp"
-#include "Driver/Interfaces/ISdCardDriver.hpp"
-// Device
+#include "BusinessLogic/Inc/MeasurementDataStore.hpp"
+#include "BusinessLogic/Inc/HmiFactory.hpp"
+#include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
 #include "Device/Inc/WiFiMeasurementRecorder.hpp"
 #include "Device/Inc/SdCardMeasurementRecorder.hpp"
-// High-level components
-#include "BusinessLogic/Inc/MeasurementDataStore.hpp"
+#include "Device/Inc/CacheMeasurementRecorder.hpp"
+#include "Device/Inc/CacheMeasurementRecorder.hpp"
+#include "Driver/Interfaces/IUartDriver.hpp"
+#include "Driver/Interfaces/ISdCardDriver.hpp"
+
+#include <cstdint>
 
 namespace BusinessLogic
 {
@@ -41,6 +42,7 @@ namespace BusinessLogic
          * @param sdCard Reference to the SD card driver used for data storage.
          */
         explicit MeasurementStoresFactory(
+            Device::CacheMeasurementRecorder &cacheRecorder,
             Driver::IUartDriver &uartForWiFi,
             Driver::ISdCardDriver &sdCard);
 
@@ -66,16 +68,10 @@ namespace BusinessLogic
          */
         bool initialize() override;
 
-        /**
-         * @brief Registers the measurement data stores with a data coordinator.
-         *
-         * This function registers the WiFi and SD card measurement recorders with the provided
-         * MeasurementDataStore coordinator.
-         *
-         * @param coordinator Reference to the MeasurementDataStore coordinator.
-         * @return true if the stores were successfully registered, false otherwise.
-         */
+        //  virtual bool registerStoresToHmi(IHmiFactory &hmiFactory);
+
         virtual bool registerStores(MeasurementDataStore &coordinator);
+        //  bool registerStoresToHmi(IHmiFactory &coordinator);
 
     private:
         /** @brief WiFi measurement recorder used for storing measurements via WiFi. */
@@ -83,6 +79,8 @@ namespace BusinessLogic
 
         /** @brief SD card measurement recorder used for storing measurements on an SD card. */
         Device::SdCardMeasurementRecorder sdCardRecorder;
+
+        Device::CacheMeasurementRecorder &cacheRecorder;
     };
 }
 

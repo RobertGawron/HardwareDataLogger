@@ -11,6 +11,7 @@
 
 #include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
 #include "BusinessLogic/Interfaces/IHmi.hpp"
+
 #include "U8g2lib.h"
 #include "MUIU8g2.h"
 
@@ -37,7 +38,8 @@ namespace BusinessLogic
          * @param displayBrightnessRegulator Reference to the brightness regulator for managing display brightness.
          * @param keyboard Reference to the keyboard interface for handling user input.
          */
-        HmiMui(Device::IDisplay &display,
+        HmiMui(HmiMeasurementModel &hmiMeasurementModel,
+               Device::IDisplay &display,
                Device::IDisplayBrightnessRegulator &displayBrightnessRegulator,
                Device::IKeyboard &keyboard);
 
@@ -103,6 +105,8 @@ namespace BusinessLogic
         Device::IKeyboard &keyboard;                                     /**< Reference to the keyboard interface. */
 
         MUIU8G2 mui; /**< Instance of the MUIU8G2 library for managing the GUI. */
+
+        HmiMeasurementModel &hmiMeasurementModel;
     };
 }
 

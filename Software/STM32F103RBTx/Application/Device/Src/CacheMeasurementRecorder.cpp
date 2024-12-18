@@ -1,44 +1,47 @@
-#include "Device/Inc/WiFiMeasurementRecorder.hpp"
+#include "Device/Inc/CacheMeasurementRecorder.hpp"
 #include "Device/Inc/MeasurementType.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
 
 #include <cstdint>
 #include <stdio.h>
+
 #include <variant>     // Provides std::visit
 #include <type_traits> // Provides std::decay_t
 
 namespace Device
 {
 
-    WiFiMeasurementRecorder::WiFiMeasurementRecorder(Driver::IUartDriver &_driver) : driver(_driver)
+    bool CacheMeasurementRecorder::onInitialize()
     {
-    }
-
-    bool WiFiMeasurementRecorder::onInitialize()
-    {
-        const bool status = driver.initialize();
+        const bool status = true;
         return status;
     }
 
-    bool WiFiMeasurementRecorder::onStart()
+    bool CacheMeasurementRecorder::onStart()
     {
-        const bool status = driver.start();
+        const bool status = true;
         return status;
     }
 
-    bool WiFiMeasurementRecorder::onStop()
+    bool CacheMeasurementRecorder::onStop()
     {
-        const bool status = driver.stop();
+        const bool status = true;
         return status;
     }
 
-    bool WiFiMeasurementRecorder::onReset()
+    bool CacheMeasurementRecorder::onReset()
     {
-        const bool status = driver.reset();
+        const bool status = true;
         return status;
     }
 
-    bool WiFiMeasurementRecorder::write(Device::MeasurementType &measurement)
+    int CacheMeasurementRecorder::getDataDummy()
+    {
+        // const bool status = true;
+        return dummyData;
+    }
+
+    bool CacheMeasurementRecorder::write(Device::MeasurementType &measurement)
     {
 
         //     printf("= START=, data %d\n", measurement);
@@ -58,6 +61,7 @@ namespace Device
             data[1] = '\r';
             data[2] = '\n';
           
+        //  dummyData = value;
 //printf("i am here 1, data %u\n", static_cast<unsigned int>(data[0]));
         }
         else if constexpr (std::is_same_v<T, std::uint16_t>)
@@ -79,11 +83,15 @@ namespace Device
             data[4] = '\r';
             data[5] = '\n';
             
+
+            dummyData = value;
+
             len = 5;
 
     //        printf("i am here 4\n");      
         } }, measurement);
 
+        // dummyData = 55;
         //   printf("= STOP=, data %d\n", measurement);
 
         // Append terminator bytes
@@ -93,7 +101,7 @@ namespace Device
         //  auto len = sizeof(data) / sizeof(data[0]);
         // std::uint16_t len = 3; // hack for now
 
-        driver.transmit(data, len, Driver::IUartDriver::MaxDelay);
+        // driver.transmit(data, len, Driver::IUartDriver::MaxDelay);
 
         /*
                     std::uint8_t data_rx[30] = {0};
@@ -108,13 +116,13 @@ namespace Device
         return status;
     }
 
-    bool WiFiMeasurementRecorder::flush()
+    bool CacheMeasurementRecorder::flush()
     {
         const bool status = true;
         return status;
     }
 
-    bool WiFiMeasurementRecorder::notify(Device::MeasurementType &measurement)
+    bool CacheMeasurementRecorder::notify(Device::MeasurementType &measurement)
     {
         const bool status = write(measurement);
         return status;

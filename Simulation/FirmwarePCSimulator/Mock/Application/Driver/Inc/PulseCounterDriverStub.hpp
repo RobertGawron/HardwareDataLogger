@@ -7,6 +7,7 @@
 extern "C"
 {
     void incrementPulseCounter(std::uint8_t counterId);
+    void setPulseCounter(std::uint8_t counterId, std::uint32_t value);
 }
 
 namespace Driver

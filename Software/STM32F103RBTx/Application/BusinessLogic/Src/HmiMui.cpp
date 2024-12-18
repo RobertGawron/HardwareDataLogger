@@ -12,6 +12,37 @@
 #include "u8x8.h"
 #include "mui_u8g2.h"
 
+#include "stdio.h"
+
+char myLabel[10];
+
+// hacks!!!!
+Device::IDisplay *_display;
+BusinessLogic::HmiMeasurementModel *model;
+
+// Define a custom MUIF handler for dynamic labels
+uint8_t mui_dynamic_label_handler(mui_t *ui, uint8_t msg)
+{
+    if (msg == MUIF_MSG_DRAW)
+    {
+        _display->setCursor(mui_get_x(ui), mui_get_y(ui));
+        //_display->getU8x8()->print(stop_watch_timer);
+
+        sprintf(myLabel, "%d", model->dummyGetData());
+
+        _display->drawUTF8(mui_get_x(ui), mui_get_y(ui), myLabel);
+        //  _display->getU8g2().print(".");
+        // u8g2.print((stop_watch_timer/10)%100);
+    }
+
+    // if (msg == MUIF_MSG_DRAW)
+    {
+        printf("hello %d\n", msg);
+        //       const char *label = get_device_value(ui->arg); /* Fetch dynamic content based on index */
+        //     u8g2_DrawStr(ui->u8g2, ui->x, ui->y, label);
+    }
+    return 0;
+}
 namespace BusinessLogic
 {
 
@@ -27,6 +58,10 @@ namespace BusinessLogic
         MUIF_U8G2_LABEL(),                             /* allow MUI_LABEL command */
         MUIF_BUTTON("BN", mui_u8g2_btn_exit_wm_fi),    /* simple exit button definition */
         MUIF_BUTTON("BG", mui_u8g2_btn_goto_wm_fi),    /* assume a callback to go to a given form */
+                                                       //  {"DL", mui_dynamic_label_handler},             /* Custom handler for dynamic labels */
+                                                       //        MUIF_LABEL(mui_u8g2_draw_text)
+        MUIF_RO("CT", mui_dynamic_label_handler),
+
         //  Add more UI elements or callbacks as needed
     };
 
@@ -35,10 +70,14 @@ namespace BusinessLogic
         /* ----------- Form 1: A list of selectable items ----------- */
         MUI_FORM(1)
             MUI_STYLE(0)
-                MUI_LABEL(5, 12, "Select measurement device")
-                    MUI_XYT("BN", 30, 25, "Device #1")
-                        MUI_XYT("BN", 30, 40, "Device #2")
-                            MUI_XYT("BN", 30, 55, "Device #3")
+                MUI_LABEL(5, 12, "Layout Name")
+                    MUI_LABEL(5, 25, "Devices readings:")
+                        MUI_LABEL(20, 40, "Device #1")
+                            MUI_XY("CT", 80, 40)
+                                MUI_LABEL(20, 55, "Device #2")
+                                    MUI_LABEL(20, 70, "Device #3")
+
+        //   MUI_XY("CT", 50, 24)
 
         /* ----------- Form 2: A more complex layout ----------- */
         MUI_FORM(2)
@@ -69,9 +108,11 @@ namespace BusinessLogic
 
 #pragma clang diagnostic pop
 
-    HmiMui::HmiMui(Device::IDisplay &_display,
+    HmiMui::HmiMui(HmiMeasurementModel &_hmiMeasurementModel,
+                   Device::IDisplay &_display,
                    Device::IDisplayBrightnessRegulator &_displayBrightnessRegulator,
-                   Device::IKeyboard &_keyboard) : display(_display),
+                   Device::IKeyboard &_keyboard) : hmiMeasurementModel(_hmiMeasurementModel),
+                                                   display(_display),
                                                    displayBrightnessRegulator(_displayBrightnessRegulator),
                                                    keyboard(_keyboard)
     {
@@ -79,6 +120,8 @@ namespace BusinessLogic
 
     bool HmiMui::initialize()
     {
+        _display = &display;
+        model = &hmiMeasurementModel;
         /*
         volatile int x = 0;
         // display.initialize();
@@ -99,6 +142,8 @@ namespace BusinessLogic
     bool HmiMui::start()
     {
         display.begin();
+
+        sprintf(myLabel, "hello");
 
         mui.begin(display, fds_data, muif_list, sizeof(muif_list) / sizeof(muif_t));
         mui.gotoForm(/* form_id= */ 1, /* initial_cursor_position= */ 0);

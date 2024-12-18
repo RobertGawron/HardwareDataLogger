@@ -3,8 +3,9 @@
 
 #include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
 #include "BusinessLogic/Interfaces/IHmiFactory.hpp"
-
 #include "BusinessLogic/Inc/HmiMui.hpp"
+#include "BusinessLogic/Inc/HmiMeasurementModel.hpp"
+#include "Device/Interfaces/IMeasurementRecorder.hpp"
 #include "Device/Inc/Display.hpp"
 #include "Device/Inc/Keyboard.hpp"
 
@@ -32,7 +33,7 @@ namespace BusinessLogic
          * @param platformFactory Reference to an IPlatformFactory instance used for creating platform-specific
          *                        components and drivers.
          */
-        explicit HmiFactory(IPlatformFactory &platformFactory);
+        explicit HmiFactory(Device::IMeasurementReader &reader, IPlatformFactory &platformFactory);
 
         /**
          * @brief Deleted default constructor.
@@ -85,6 +86,8 @@ namespace BusinessLogic
          */
         bool tick() override;
 
+        bool addDataSource(Device::IMeasurementRecorder &recorder) override;
+
     private:
         /**
          * @brief Instance of HMI implementation using the MUI library.
@@ -108,6 +111,10 @@ namespace BusinessLogic
          * @brief Display brightness regulator for managing screen brightness.
          */
         Device::DisplayBrightnessRegulator brightnessRegulator;
+
+        HmiMeasurementModel hmiMeasurementModel;
+
+        // Device::IMeasurementRecorder &recorder;
     };
 }
 

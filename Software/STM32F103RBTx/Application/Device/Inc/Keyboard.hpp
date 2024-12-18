@@ -10,8 +10,8 @@
  */
 
 #include "Device/Interfaces/IKeyboard.hpp"
-#include "Driver/Interfaces/IKeyboardDriver.hpp"
 #include "Device/Inc/KeyboardKeyActionState.hpp"
+#include "Driver/Interfaces/IKeyboardDriver.hpp"
 #include "Driver/Inc/KeyboardKeyIdentifier.hpp"
 
 #include <cstdint>

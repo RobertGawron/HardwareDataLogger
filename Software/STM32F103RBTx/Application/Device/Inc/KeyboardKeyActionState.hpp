@@ -1,6 +1,8 @@
 #ifndef KeyboardKeyActionState_h_
 #define KeyboardKeyActionState_h_
 
+#include <cstdint>
+
 /**
  * @file KeyboardKeyActionState.h
  * @brief Defines the KeyboardKeyActionState enum for key press actions.

@@ -9,13 +9,10 @@
 
 #include "BusinessLogic/Interfaces/IApplicationComponentFactory.hpp"
 #include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
-
 #include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
 #include "BusinessLogic/Inc/MeasurementDataStore.hpp"
-
 #include "BusinessLogic/Inc/MeasurementSourcesFactory.hpp"
 #include "BusinessLogic/Inc/MeasurementStoresFactory.hpp"
-
 #include "BusinessLogic/Inc/HmiFactory.hpp"
 
 namespace BusinessLogic
@@ -107,6 +104,9 @@ namespace BusinessLogic
          * that generate measurement data used by the application.
          */
         MeasurementSourcesFactory sourceBuilder;
+
+        // cant be build by builder because we need it in hmi as well
+        Device::CacheMeasurementRecorder cacheRecorder;
 
         /**
          * @brief Object responsible for building measurement stores.

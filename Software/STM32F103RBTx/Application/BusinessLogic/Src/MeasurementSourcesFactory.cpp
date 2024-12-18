@@ -1,8 +1,9 @@
 #include "BusinessLogic/Inc/MeasurementSourcesFactory.hpp"
-#include "Device/Inc/PulseCounterMeasurementSource.hpp"
 #include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
+#include "Device/Inc/PulseCounterMeasurementSource.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
 #include "Driver/Interfaces/IPulseCounterDriver.hpp"
+
 #include <cstdint>
 
 namespace BusinessLogic

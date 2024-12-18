@@ -15,6 +15,7 @@ namespace Device
 
     bool UartMeasurementRecorder::notify(Device::MeasurementType &measurement)
     {
+        (void)measurement; // Explicitly suppresses "unused parameter" warning
         return true;
     }
 

@@ -5,9 +5,11 @@
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_adc.h"
 #include <cstdint>
+#include <cstddef>
 
-// struct ADC_HandleTypeDef;
-// enum HAL_StatusTypeDef;
+// declare a buffer to hold ADC values
+constexpr std::size_t AdcBufferSize = 10;
+extern std::uint32_t adcBuffer[AdcBufferSize];
 
 namespace Driver
 {

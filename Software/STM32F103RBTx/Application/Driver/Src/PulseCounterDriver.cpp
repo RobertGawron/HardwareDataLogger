@@ -1,10 +1,15 @@
+#include "Driver/Interfaces/IPulseCounterDriver.hpp"
 #include "Driver/Inc/PulseCounterDriver.hpp"
+#include "Driver/Inc/PulseCounterIdentifier.hpp"
 
 #include <cstdint>
 #include <array>
 
-// Declare a std::array to store pulse counts
-static std::array<Driver::PulseCounterDriver::CounterSizeType, Driver::PulseCounterDriver::PULSE_COUNTER_AMOUNT> pulseCounters = {0};
+using PulseCounterArray = std::array<
+    Driver::PulseCounterDriver::CounterSizeType,
+    Driver::PulseCounterDriver::PULSE_COUNTER_AMOUNT>;
+
+static PulseCounterArray pulseCounters = {0};
 
 // Expose the array pointer for C compatibility
 extern "C"

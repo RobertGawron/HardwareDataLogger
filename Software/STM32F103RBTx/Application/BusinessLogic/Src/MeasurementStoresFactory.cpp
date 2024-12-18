@@ -1,16 +1,18 @@
 #include "BusinessLogic/Inc/MeasurementStoresFactory.hpp"
 #include "BusinessLogic/Inc/MeasurementDataStore.hpp"
-
-// #include "Driver/Interfaces/IPulseCounterDriver.hpp"
+#include "Device/Inc/CacheMeasurementRecorder.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
 #include "Driver/Interfaces/ISdCardDriver.hpp"
 
 namespace BusinessLogic
 {
 
-    MeasurementStoresFactory::MeasurementStoresFactory(Driver::IUartDriver &uartForWiFi,
-                                                       Driver::ISdCardDriver &sdCard)
-        : wifiRecorder(uartForWiFi),
+    MeasurementStoresFactory::MeasurementStoresFactory(
+        Device::CacheMeasurementRecorder &_cacheRecorder,
+        Driver::IUartDriver &uartForWiFi,
+        Driver::ISdCardDriver &sdCard)
+        : cacheRecorder(_cacheRecorder),
+          wifiRecorder(uartForWiFi),
           sdCardRecorder(sdCard)
     {
     }
@@ -19,6 +21,7 @@ namespace BusinessLogic
     {
         wifiRecorder.initialize();
         sdCardRecorder.initialize();
+        cacheRecorder.initialize();
 
         return true;
     }
@@ -29,8 +32,9 @@ namespace BusinessLogic
         bool status = false;
 
         // clang-format off
-        if (coordinator.addObserver(wifiRecorder) 
-            && coordinator.addObserver(sdCardRecorder))
+            if (coordinator.addObserver(wifiRecorder) 
+                && coordinator.addObserver(sdCardRecorder)
+                && coordinator.addObserver(cacheRecorder))
         // clang-format on
         {
             status = true;
