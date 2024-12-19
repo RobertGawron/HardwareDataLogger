@@ -1,4 +1,5 @@
 #include "Device/Inc/SdCardMeasurementRecorder.hpp"
+#include "Device/Inc/MeasurementType.hpp"
 #include "Driver/Interfaces/ISdCardDriver.hpp"
 
 namespace Device
@@ -39,6 +40,7 @@ namespace Device
 
     bool SdCardMeasurementRecorder::notify(Device::MeasurementType &measurement)
     {
+        (void)measurement; // Explicitly suppresses "unused parameter" warning
         return true;
     }
 }

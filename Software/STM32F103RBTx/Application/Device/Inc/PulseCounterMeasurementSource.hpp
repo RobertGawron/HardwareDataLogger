@@ -8,6 +8,7 @@
 #define PulseCounterMeasurementSource_H_
 
 #include "Device/Interfaces/IMeasurementSource.hpp"
+#include "Device/Inc/MeasurementDeviceId.hpp"
 #include "Driver/Inc/PulseCounterDriver.hpp"
 
 namespace Device
@@ -30,7 +31,7 @@ namespace Device
          *
          * @param pulseCounterDriver Reference to the driver responsible for interfacing with the pulse counter device.
          */
-        explicit PulseCounterMeasurementSource(Driver::IPulseCounterDriver &pulseCounterDriver);
+        explicit PulseCounterMeasurementSource(MeasurementDeviceId id, Driver::IPulseCounterDriver &pulseCounterDriver);
 
         /**
          * @brief Deleted default constructor to prevent instantiation without a driver.

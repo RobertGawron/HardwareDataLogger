@@ -3,8 +3,9 @@
 
 #include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
 #include "BusinessLogic/Interfaces/IHmiFactory.hpp"
-
 #include "BusinessLogic/Inc/HmiMui.hpp"
+#include "BusinessLogic/Inc/HmiMeasurementModel.hpp"
+#include "Device/Interfaces/IMeasurementRecorder.hpp"
 #include "Device/Inc/Display.hpp"
 #include "Device/Inc/Keyboard.hpp"
 
@@ -32,7 +33,7 @@ namespace BusinessLogic
          * @param platformFactory Reference to an IPlatformFactory instance used for creating platform-specific
          *                        components and drivers.
          */
-        explicit HmiFactory(IPlatformFactory &platformFactory);
+        explicit HmiFactory(Device::IMeasurementReader &reader, IPlatformFactory &platformFactory);
 
         /**
          * @brief Deleted default constructor.
@@ -86,13 +87,7 @@ namespace BusinessLogic
         bool tick() override;
 
     private:
-        /**
-         * @brief Instance of HMI implementation using the MUI library.
-         *
-         * Note: While directly exposing the use of the MUI library in the header file is not ideal, it is
-         * necessary here due to design constraints.
-         */
-        HmiMui hmi;
+        HmiMeasurementModel hmiMeasurementModel;
 
         /**
          * @brief Display driver used by the HMI system.
@@ -100,14 +95,22 @@ namespace BusinessLogic
         Device::Display display;
 
         /**
+         * @brief Display brightness regulator for managing screen brightness.
+         */
+        Device::DisplayBrightnessRegulator brightnessRegulator;
+
+        /**
          * @brief Keyboard driver used for input in the HMI system.
          */
         Device::Keyboard keyboard;
 
         /**
-         * @brief Display brightness regulator for managing screen brightness.
+         * @brief Instance of HMI implementation using the MUI library.
+         *
+         * Note: While directly exposing the use of the MUI library in the header file is not ideal, it is
+         * necessary here due to design constraints.
          */
-        Device::DisplayBrightnessRegulator brightnessRegulator;
+        HmiMui hmi;
     };
 }
 

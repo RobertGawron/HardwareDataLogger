@@ -1,9 +1,17 @@
 #include "Device/Inc/WiFiMeasurementRecorder.hpp"
+#include "Device/Inc/MeasurementType.hpp"
+
+#include "Driver/Inc/UartExchangeStatus.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
-// #include "Driver/Inc/UartExchangeStatus.hpp"
+
+#include <array>
+#include <cstddef> // For std::size_t
 
 #include <cstdint>
-#include <stdio.h>
+// #include <stdio.h>
+#include <variant>     // Provides std::visit
+#include <type_traits> // Provides std::decay_t
+
 namespace Device
 {
 
@@ -37,71 +45,69 @@ namespace Device
 
     bool WiFiMeasurementRecorder::write(Device::MeasurementType &measurement)
     {
+        bool status = false;
 
-        printf("= START=, data %d\n", measurement);
+        constexpr std::size_t MaxBufferSize = 10;
+        constexpr char CarriageReturn = '\r';
+        constexpr char LineFeed = '\n';
 
-        std::uint16_t len = 3; // TODO
+        constexpr std::uint8_t ByteMask = 0xFF;
+        constexpr std::uint8_t ByteShift24 = 24;
+        constexpr std::uint8_t ByteShift16 = 16;
+        constexpr std::uint8_t ByteShift8 = 8;
 
-        std::uint8_t data[6] = {0}; // Buffer to hold data + terminators
+        // Using std::array instead of C-style array
+        std::array<std::uint8_t, MaxBufferSize> data = {0}; // Maximum possible size for data with terminators
+        std::size_t currentDataPosition = 2;                // Start position after reserved space for length
 
-        // Use std::visit to safely extract the value from the variant
-        std::visit([&](auto &&value)
-                   {
-        using T = std::decay_t<decltype(value)>;
+        // Add the source ID as the first byte in the data buffer
+        data[currentDataPosition++] = static_cast<std::uint8_t>(measurement.source);
 
-        if constexpr (std::is_same_v<T, std::uint8_t>)
+        auto appendDataWithTerminator = [&](auto value)
         {
-            data[0] = value; // Single byte
-            data[1] = '\r';
-            data[2] = '\n';
-          
-printf("i am here 1, data %u\n", static_cast<unsigned int>(data[0]));
-        }
-        else if constexpr (std::is_same_v<T, std::uint16_t>)
-        {
-            data[0] = static_cast<std::uint8_t>((value >> 8) & 0xFF); // High byte
-            data[1] = static_cast<std::uint8_t>(value & 0xFF);        // Low byte
-            data[2] = '\r';
-            data[3] = '\n';
-            
-            printf("i am here 2\n");    
-        }
-        else if constexpr (std::is_same_v<T, std::uint32_t>)
-        {
-            data[0] = static_cast<std::uint8_t>((value >> 24) & 0xFF); // Byte 3
-            data[1] = static_cast<std::uint8_t>((value >> 16) & 0xFF); // Byte 2
-            data[2] = static_cast<std::uint8_t>((value >> 8) & 0xFF);  // Byte 1
-            data[3] = static_cast<std::uint8_t>(value & 0xFF);         // Byte 0
-      
-            data[4] = '\r';
-            data[5] = '\n';
-            
-            len = 5;
+            using T = std::decay_t<decltype(value)>;
+            if constexpr (std::is_same_v<T, std::uint8_t>)
+            {
+                data[currentDataPosition++] = value;
+            }
+            else if constexpr (std::is_same_v<T, std::uint16_t>)
+            {
+                data[currentDataPosition++] = static_cast<std::uint8_t>((value >> ByteShift8) & ByteMask); // High byte
+                data[currentDataPosition++] = static_cast<std::uint8_t>(value & ByteMask);                 // Low byte
+            }
+            else if constexpr (std::is_same_v<T, std::uint32_t>)
+            {
+                data[currentDataPosition++] = static_cast<std::uint8_t>((value >> ByteShift24) & ByteMask); // Byte 3
+                data[currentDataPosition++] = static_cast<std::uint8_t>((value >> ByteShift16) & ByteMask); // Byte 2
+                data[currentDataPosition++] = static_cast<std::uint8_t>((value >> ByteShift8) & ByteMask);  // Byte 1
+                data[currentDataPosition++] = static_cast<std::uint8_t>(value & ByteMask);                  // Byte 0
+            }
+            data[currentDataPosition++] = CarriageReturn;
+            data[currentDataPosition++] = LineFeed;
+        };
 
-            printf("i am here 4\n");      
-        } }, measurement);
+        // Use std::visit to safely handle the variant type in MeasurementType
+        std::visit(
+            [&](auto &&value)
+            {
+                appendDataWithTerminator(value);
+            },
+            measurement.data);
 
-        printf("= STOP=, data %d\n", measurement);
+        // Calculate the message length (excluding the length bytes themselves)
+        const std::uint16_t len = static_cast<std::uint16_t>(currentDataPosition - 2);
 
-        // Append terminator bytes
-        // data[sizeof(data) - 2] = '\r';
-        //  data[sizeof(data) - 1] = '\n';
+        // Store the length in the first two bytes
+        data[0] = static_cast<std::uint8_t>((len >> ByteShift8) & ByteMask); // High byte of length
+        data[1] = static_cast<std::uint8_t>(len & ByteMask);                 // Low byte of length
 
-        //  auto len = sizeof(data) / sizeof(data[0]);
-        // std::uint16_t len = 3; // hack for now
+        const Driver::UartExchangeStatus driverStatus = driver.transmit(
+            data.data(),
+            currentDataPosition,
+            Driver::IUartDriver::MaxDelay);
 
-        driver.transmit(data, len, Driver::IUartDriver::MaxDelay);
+        status = (driverStatus == Driver::UartExchangeStatus::Ok);
 
-        /*
-                    std::uint8_t data_rx[30] = {0};
-                    auto len = 3;
-                    status2 = driver.receive(data_rx, len, 0xFFFFU);
-
-                    volatile int a;
-
-        */
-
-        const bool status = true;
         return status;
     }
 

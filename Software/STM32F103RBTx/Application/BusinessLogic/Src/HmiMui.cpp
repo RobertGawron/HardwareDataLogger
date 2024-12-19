@@ -1,15 +1,14 @@
 #include "BusinessLogic/Inc/HmiMui.hpp"
-
-#include "Device/Inc/KeyboardKeyActionState.hpp"
+#include "BusinessLogic/Inc/HmiMuiHandlers.hpp"
+#include "BusinessLogic/Inc/HmiMeasurementModel.hpp"
 #include "Device/Interfaces/IDisplay.hpp"
 #include "Device/Interfaces/IDisplayBrightnessRegulator.hpp"
 #include "Device/Interfaces/IKeyboard.hpp"
-
+#include "Device/Inc/KeyboardKeyActionState.hpp"
 #include "Driver/Inc/KeyboardKeyIdentifier.hpp"
 
 #include "mui.h"
 #include "u8g2.h"
-#include "u8x8.h"
 #include "mui_u8g2.h"
 
 namespace BusinessLogic
@@ -27,6 +26,10 @@ namespace BusinessLogic
         MUIF_U8G2_LABEL(),                             /* allow MUI_LABEL command */
         MUIF_BUTTON("BN", mui_u8g2_btn_exit_wm_fi),    /* simple exit button definition */
         MUIF_BUTTON("BG", mui_u8g2_btn_goto_wm_fi),    /* assume a callback to go to a given form */
+                                                       //  {"DL", mui_dynamic_label_handler},             /* Custom handler for dynamic labels */
+                                                       //        MUIF_LABEL(mui_u8g2_draw_text)
+        MUIF_RO("CT", device1_printLastReading),
+
         //  Add more UI elements or callbacks as needed
     };
 
@@ -35,10 +38,14 @@ namespace BusinessLogic
         /* ----------- Form 1: A list of selectable items ----------- */
         MUI_FORM(1)
             MUI_STYLE(0)
-                MUI_LABEL(5, 12, "Select measurement device")
-                    MUI_XYT("BN", 30, 25, "Device #1")
-                        MUI_XYT("BN", 30, 40, "Device #2")
-                            MUI_XYT("BN", 30, 55, "Device #3")
+                MUI_LABEL(5, 12, "Layout Name")
+                    MUI_LABEL(5, 25, "Devices readings:")
+                        MUI_LABEL(20, 40, "Device #1")
+                            MUI_XY("CT", 80, 40)
+                                MUI_LABEL(20, 55, "Device #2")
+                                    MUI_LABEL(20, 70, "Device #3")
+
+        //   MUI_XY("CT", 50, 24)
 
         /* ----------- Form 2: A more complex layout ----------- */
         MUI_FORM(2)
@@ -69,9 +76,11 @@ namespace BusinessLogic
 
 #pragma clang diagnostic pop
 
-    HmiMui::HmiMui(Device::IDisplay &_display,
+    HmiMui::HmiMui(HmiMeasurementModel &_hmiMeasurementModel,
+                   Device::IDisplay &_display,
                    Device::IDisplayBrightnessRegulator &_displayBrightnessRegulator,
-                   Device::IKeyboard &_keyboard) : display(_display),
+                   Device::IKeyboard &_keyboard) : hmiMeasurementModel(_hmiMeasurementModel),
+                                                   display(_display),
                                                    displayBrightnessRegulator(_displayBrightnessRegulator),
                                                    keyboard(_keyboard)
     {
@@ -101,6 +110,9 @@ namespace BusinessLogic
         display.begin();
 
         mui.begin(display, fds_data, muif_list, sizeof(muif_list) / sizeof(muif_t));
+
+        registerMuiToItsObjects(mui.getMUI(), &display, &hmiMeasurementModel);
+
         mui.gotoForm(/* form_id= */ 1, /* initial_cursor_position= */ 0);
         display.firstPage();
         display.setCursor(0, 0);

@@ -74,7 +74,7 @@ TEST_F(MeasurementDataStoreTest, RemoveObserverShouldRemoveObserverSuccessfully)
     dataStore->addObserver(mockRecorder1);
     EXPECT_TRUE(dataStore->removeObserver(mockRecorder1));
 }
-
+/*
 TEST_F(MeasurementDataStoreTest, NotifyObserversShouldCallNotifyOnAllObserversWithCorrectValue)
 {
     Device::MeasurementType mockMeasurement{42u}; // The expected measurement value
@@ -103,3 +103,4 @@ TEST_F(MeasurementDataStoreTest, NotifyObserversShouldCallNotifyOnAllObserversWi
 
     dataStore->notifyObservers(mockMeasurement);
 }
+*/

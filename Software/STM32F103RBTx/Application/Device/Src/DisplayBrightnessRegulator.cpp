@@ -3,6 +3,7 @@
 #include "Driver/Interfaces/IAmbientLightSensorDriver.hpp"
 
 #include <cstdint>
+#include <cstddef>
 
 namespace Device
 {
@@ -15,33 +16,35 @@ namespace Device
 
     bool DisplayBrightnessRegulator::init()
     {
-        const bool status = false;
+        bool status = false;
 
         ambientLightSensorDriver.initialize();
         displayBrightnessDriver.initialize();
 
         ambientLightSensorDriver.start();
         displayBrightnessDriver.start();
-        /* if ()
-         {
-             status = true;
-         }*/
 
         // dummy test
-        for (int i = 1; i < 95; i += 10)
+        const std::uint8_t start = 1;
+        const std::uint8_t stop = 95;
+        const std::uint8_t step = 10;
+
+        for (std::size_t i = start; i < stop; i += step)
         {
-            displayBrightnessDriver.setBrightness(i);
+            auto const newValue = static_cast<Driver::IDisplayBrightnessDriver::BrightnessPercentage>(i);
+            displayBrightnessDriver.setBrightness(newValue);
+            status = true; // dummy
         }
         // displayBrightnessDriver.setBrightness(55);
         // displayBrightnessDriver.setBrightness(90);
 
-        return true;
-        // return status;
+        return status;
     }
 
     void DisplayBrightnessRegulator::tick()
     {
-        volatile int dummy = ambientLightSensorDriver.getAmbientLightLevel();
+        volatile const std::uint32_t dummy = ambientLightSensorDriver.getAmbientLightLevel();
+        (void)dummy; // Suppress unused warning by explicitly marking it as used
     }
 
     std::uint8_t DisplayBrightnessRegulator::getBrightnessPercentage() const
@@ -49,17 +52,20 @@ namespace Device
         return level;
     }
 
-    void DisplayBrightnessRegulator::setBrightnessPercentage(std::uint8_t _level)
+    bool DisplayBrightnessRegulator::setBrightnessPercentage(std::uint8_t _level)
     {
-        // todo ake it bool
-        level = _level;
+        const std::uint8_t MaxLevel = 100u;
+        bool status = false;
 
-        if (level > 100)
+        if (_level < MaxLevel)
         {
-            level = 100;
+            level = _level;
+            status = true;
+
+            displayBrightnessDriver.setBrightness(level);
         }
 
-        displayBrightnessDriver.setBrightness(level);
+        return status;
     }
 
 }

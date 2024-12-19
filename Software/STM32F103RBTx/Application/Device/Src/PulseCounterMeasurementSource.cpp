@@ -1,13 +1,18 @@
 #include "Device/Inc/PulseCounterMeasurementSource.hpp"
+
+#include "Device/Interfaces/IMeasurementSource.hpp"
+#include "Device/Inc/MeasurementType.hpp"
+#include "Device/Inc/MeasurementDeviceId.hpp"
 #include "Driver/Interfaces/IPulseCounterDriver.hpp"
 
-#include <stdio.h>
-#include <stdio.h>
+// #include <stdio.h>
+
 namespace Device
 {
 
-    PulseCounterMeasurementSource::PulseCounterMeasurementSource(Driver::IPulseCounterDriver &_pulseCounterDriver)
-        : pulseCounterDriver(_pulseCounterDriver)
+    PulseCounterMeasurementSource::PulseCounterMeasurementSource(MeasurementDeviceId id, Driver::IPulseCounterDriver &_pulseCounterDriver)
+        : IMeasurementSource(id),
+          pulseCounterDriver(_pulseCounterDriver)
     {
     }
 
@@ -36,9 +41,12 @@ namespace Device
 
     MeasurementType PulseCounterMeasurementSource::getMeasurement()
     {
+        MeasurementType m;
+        m.source = getMyId();
+        m.data = pulseCounterDriver.getMeasurement();
 
-        //   printf("PulseCounterMeasurementSource %d ", pulseCounterDriver.getMeasurement());
-        return pulseCounterDriver.getMeasurement();
+        // printf("my id: %d\n", m.source);
+        return m;
     }
 
 }

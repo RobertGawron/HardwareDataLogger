@@ -57,7 +57,3 @@ While this simulation handles the firmware, speed of execution isn't a concern s
 
 * Toolchain: pyqt6, cmake.
 * [More info.](./Simulation/FirmwarePCSimulator/README.md)
-
-## Documentation
-
-TBD UML diagrams.

@@ -1,9 +1,5 @@
 # Firmware for STM32F103RBTx
 
-## Architecture
-
-TODO UML diagrams.
-
 ## Toolchain
 * ST32CubeMX
 * Visual Studio Code
@@ -21,16 +17,14 @@ Note: The generated CMake setup is not integrated with the main CMake configurat
 ## Architecture
 
 Measurement flow diagram
-![measurement flow diagram](../../../Documentation/Diagrams/MeasurementFlowSequenceDiagram.svg)
+![measurement flow diagram](../../Documentation/Diagrams/MeasurementFlowSequenceDiagram.svg)
 
 Sequence diagram of the display.
 ![sequence diagram of the display](../../Documentation/Diagrams/DisplaySequenceDiagram.svg)
 
-## Open points
-
-* Code formatting standard.
-
 ## Third party libraries used
 
+* [MUI](https://github.com/olikraus/u8g2/wiki/muimanual)
+* [u8g2](https://github.com/olikraus/u8g2)
 * ST7735S LCD [STMicroelectronics/stm32-st7735](https://github.com/STMicroelectronics/stm32-st7735).
 

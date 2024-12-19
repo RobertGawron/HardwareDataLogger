@@ -1,14 +1,14 @@
 #include "Device/Inc/Keyboard.hpp"
-#include "Driver/Inc/KeyboardKeyState.hpp"
 #include "Device/Inc/KeyboardKeyActionState.hpp"
+#include "Driver/Inc/KeyboardKeyState.hpp"
 #include "Driver/Inc/KeyboardKeyIdentifier.hpp"
 #include "Driver/Interfaces/IKeyboardDriver.hpp"
 
 #include <cstdint>
+#include <cstddef> // For std::size_t
 
 namespace Device
 {
-
     Keyboard::Keyboard(::Driver::IKeyboardDriver &_keyboardDriver) : keyboardDriver(_keyboardDriver)
     {
     }
@@ -22,13 +22,13 @@ namespace Device
 
     bool Keyboard::tick()
     {
-        for (std::uint8_t i = 0u; i < AmountOfKeys; i++)
+        for (std::size_t i = 0; i < keyActionState.size(); ++i)
         {
-            const ::Driver::KeyboardKeyIdentifier keyId = static_cast<::Driver::KeyboardKeyIdentifier>(i);
-            const ::Driver::KeyboardKeyState newState = keyboardDriver.getKeyState(keyId);
+            const auto keyId = static_cast<::Driver::KeyboardKeyIdentifier>(i);
+            const auto newState = keyboardDriver.getKeyState(keyId);
 
-            const KeyboardKeyActionState currentState = keyActionState[i];
-            KeyboardKeyActionState nextState = currentState; // Default to no change
+            const auto currentState = keyActionState[i];
+            auto nextState = currentState; // Default to no change
 
             switch (currentState)
             {
@@ -79,7 +79,7 @@ namespace Device
 
             case KeyboardKeyActionState::Fail:
                 // TODO
-            default:
+                // default:
                 // If there are other states or error conditions, handle them here
                 break;
             }
@@ -92,18 +92,14 @@ namespace Device
 
     KeyboardKeyActionState Keyboard::getKeyState(::Driver::KeyboardKeyIdentifier key) const
     {
-        KeyboardKeyActionState state;
+        // Use std::find_if for safe lookup
+        auto index = static_cast<std::uint8_t>(key);
+        if (index >= keyActionState.size())
+        {
+            return KeyboardKeyActionState::Fail;
+        }
 
-        const std::uint8_t index = static_cast<std::uint8_t>(key);
-        if (index >= AmountOfKeys)
-        {
-            state = KeyboardKeyActionState::Fail;
-        }
-        else
-        {
-            state = keyActionState[index];
-        }
-        return state;
+        return keyActionState[index];
     }
 
 }

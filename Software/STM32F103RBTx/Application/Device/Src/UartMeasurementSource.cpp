@@ -1,10 +1,18 @@
 #include "Device/Inc/UartMeasurementSource.hpp"
+
+#include "Device/Interfaces/IMeasurementSource.hpp"
+#include "Device/Inc/MeasurementType.hpp"
+#include "Device/Inc/MeasurementDeviceId.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
+
+#include <cstdint>
 
 namespace Device
 {
 
-    UartMeasurementSource::UartMeasurementSource(Driver::IUartDriver &_driver) : driver(_driver)
+    UartMeasurementSource::UartMeasurementSource(MeasurementDeviceId id, Driver::IUartDriver &_driver)
+        : IMeasurementSource(id),
+          driver(_driver)
     {
     }
 
@@ -31,6 +39,12 @@ namespace Device
 
     MeasurementType UartMeasurementSource::getMeasurement()
     {
-        return (std::uint8_t)5;
+        const std::uint16_t dummyData = 5u;
+
+        MeasurementType m;
+        m.source = getMyId();
+        m.data = dummyData;
+
+        return m;
     }
 }
