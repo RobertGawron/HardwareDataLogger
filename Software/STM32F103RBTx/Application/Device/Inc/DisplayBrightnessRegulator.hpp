@@ -78,15 +78,7 @@ namespace Device
          */
         [[nodiscard]] std::uint8_t getBrightnessPercentage() const override;
 
-        /**
-         * @brief Sets the brightness level as a percentage.
-         *
-         * This method is primarily for debugging purposes and sets the brightness level of the display
-         * to a specific percentage.
-         *
-         * @param level The brightness level to set, in percentage (0-100).
-         */
-        void setBrightnessPercentage(std::uint8_t level) override;
+        bool setBrightnessPercentage(std::uint8_t level) override;
 
     private:
         /** @brief Reference to the platform-specific ambient light sensor driver. */
