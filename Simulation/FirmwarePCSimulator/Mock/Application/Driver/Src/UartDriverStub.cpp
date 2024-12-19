@@ -30,9 +30,9 @@ namespace Driver
 
         for (std::size_t i = 0u; i < size; i++)
         {
-            printf("TX %d ", data[i]);
+            //   printf("TX %d ", data[i]);
         }
-        printf("\n");
+        //   printf("\n");
 
         return UartExchangeStatus::Ok;
     }

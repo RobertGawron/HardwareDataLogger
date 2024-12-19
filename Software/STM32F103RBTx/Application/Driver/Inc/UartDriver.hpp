@@ -82,15 +82,7 @@ namespace Driver
         UartExchangeStatus receive(std::uint8_t *data, std::uint16_t size, std::uint32_t timeout) override;
 
     protected:
-        /**
-         * @brief Converts HAL status to UartExchangeStatus.
-         *
-         * Maps the status returned by STM32 HAL functions to a `UartExchangeStatus` value.
-         *
-         * @param libStatus The status returned by STM32 HAL (`HAL_StatusTypeDef`).
-         * @return The corresponding `UartExchangeStatus`.
-         */
-        static UartExchangeStatus getExchangeStatus(HAL_StatusTypeDef libStatus);
+           static UartExchangeStatus getExchangeStatus(HAL_StatusTypeDef halStatus);
 
         /**
          * @brief Initializes the UART driver.

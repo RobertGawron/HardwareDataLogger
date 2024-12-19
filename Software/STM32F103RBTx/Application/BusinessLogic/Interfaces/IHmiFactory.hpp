@@ -7,8 +7,9 @@
 #define IHmiFactory_h
 
 #include "Device/Interfaces/IKeyboard.hpp"
-#include "Driver/Interfaces/IDisplayDriver.hpp"
 #include "Device/Inc/DisplayBrightnessRegulator.hpp"
+#include "Device/Interfaces/IMeasurementRecorder.hpp"
+#include "Driver/Interfaces/IDisplayDriver.hpp"
 
 namespace BusinessLogic
 {

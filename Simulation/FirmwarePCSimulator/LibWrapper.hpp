@@ -5,7 +5,10 @@
 #define LibWrapper_h
 
 #include <cstdint>
+#include <array>
 #include "MyApplication.hpp"
+
+constexpr std::size_t PULSE_COUNTER_COUNT = 4;
 
 #ifdef __cplusplus
 extern "C"
@@ -66,6 +69,16 @@ extern "C"
     void LibWrapper_KeyPressed(KeyboardKeyIdentifier keyId);
 
     void LibWrapper_KeyReleased(KeyboardKeyIdentifier keyId);
+
+    /**
+     * @brief Updates the values of the pulse counters.
+     *
+     * This function takes an std::array containing the pulse counter values and updates
+     * the internal state accordingly.
+     *
+     * @param pulseCounters An array of pulse counter values.
+     */
+    void LibWrapper_UpdatePulseCounters(const std::array<std::uint16_t, PULSE_COUNTER_COUNT> &pulseCounters);
 
 #ifdef __cplusplus
 }

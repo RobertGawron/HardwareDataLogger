@@ -55,6 +55,10 @@ class Simulation:
         self.stop_firmware()
         self.start_firmware()
 
+    def update_pulse_counters(self, values) -> None:
+        self.dut.update_pulse_counters(values)
+
+
     def get_display_width(self) -> int:
         """
         Retrieves the width of the display from the DUT.

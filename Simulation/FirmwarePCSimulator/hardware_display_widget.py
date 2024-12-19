@@ -38,14 +38,17 @@ class HardwareDisplayWidget(QWidget):
         """
         if 0 <= x < self.display_width and 0 <= y < self.display_height:
             self.hw_display.setPixel(x, y, color.rgb())
-        self.update_display()
 
     def update_display(self) -> None:
         """
-        Convert the QImage to QPixmap and set it to QLabel for display.
+        Convert the QImage to QPixmap, scale it by 2x, and set it to QLabel for display.
+        Avoid pixel aliasing using the `Qt.FastTransformation` scaling mode.
         """
-        pixmap = QPixmap.fromImage(self.hw_display)
-        self.hw_display_label.setPixmap(pixmap)
+        scaled_pixmap = QPixmap.fromImage(self.hw_display)
+        scaled_pixmap = scaled_pixmap.scaled(self.display_width * 2, self.display_height * 2, 
+                                            Qt.AspectRatioMode.IgnoreAspectRatio, 
+                                            Qt.TransformationMode.FastTransformation)
+        self.hw_display_label.setPixmap(scaled_pixmap)
 
     def update_from_simulation(self, simulation) -> None:
         """
@@ -58,3 +61,4 @@ class HardwareDisplayWidget(QWidget):
                 red, green, blue = simulation.get_display_pixel(x, y)
                 color = QColor(red, green, blue)
                 self.update_pixel(x, y, color)
+        self.update_display()

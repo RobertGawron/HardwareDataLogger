@@ -1,8 +1,7 @@
+#include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
 #include "BusinessLogic/Inc/ApplicationBuilder.hpp"
 #include "Driver/Inc/PulseCounterIdentifier.hpp"
 #include "Driver/Inc/UartIdentifier.hpp"
-
-#include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
 
 namespace BusinessLogic
 {
@@ -14,10 +13,12 @@ namespace BusinessLogic
                         platformFactory.createPulseCounterDriver(Driver::PulseCounterIdentifier::bncD),
                         platformFactory.createUartDriver(Driver::UartIdentifier::MeasurementReceiver)),
 
-          storesBuilder(platformFactory.createUartDriver(Driver::UartIdentifier::DataTransmitterViaWiFiModule),
-                        platformFactory.createSdCardDriver()),
+          storesBuilder(
+              cacheRecorder,
+              platformFactory.createUartDriver(Driver::UartIdentifier::DataTransmitterViaWiFi),
+              platformFactory.createSdCardDriver()),
           measurementCoordinator(dataStore),
-          hmiFactory(platformFactory)
+          hmiFactory(cacheRecorder, platformFactory)
     {
     }
 
@@ -39,6 +40,8 @@ namespace BusinessLogic
 
         sourceBuilder.registerSources(measurementCoordinator);
         storesBuilder.registerStores(dataStore);
+
+        //  storesBuilder.registerStoresToHmi(hmiFactory);
 
         return status;
     }

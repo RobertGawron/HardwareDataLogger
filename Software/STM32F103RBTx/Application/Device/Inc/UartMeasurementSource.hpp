@@ -7,6 +7,7 @@
 #define UartMeasurementSource_H_
 
 #include "Device/Interfaces/IMeasurementSource.hpp"
+#include "Device/Inc/MeasurementDeviceId.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
 
 namespace Device
@@ -27,7 +28,7 @@ namespace Device
          *
          * @param driver Reference to the UART driver responsible for managing communication with the UART device.
          */
-        explicit UartMeasurementSource(Driver::IUartDriver &driver);
+        explicit UartMeasurementSource(MeasurementDeviceId id, Driver::IUartDriver &driver);
 
         /**
          * @brief Deleted default constructor to prevent instantiation without a driver.

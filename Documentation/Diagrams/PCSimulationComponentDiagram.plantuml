@@ -1,0 +1,75 @@
+@startuml
+!pragma layout smetana
+
+package "Simulation (located in Simulation/FirmwarePCSimulator)" {
+  [GUI] --> [Simulation Engine (simulation.py)]
+  [Simulation Engine (simulation.py)] --> [Python Wrapper (device_under_test.py)]
+  [Python Wrapper (device_under_test.py)] --> ["DLL (libFirmwarePCSimulator.so)"]
+  [Simulation Engine (simulation.py)] --> [Mocks]
+  [Mocks] -up-> ["DLL (libFirmwarePCSimulator.so)"]
+}
+
+package "Firmware (located in Software/STM32F103RBTx)" {
+  component "Application" {
+    package "Business Logic" as BL {
+      folder "Headers" as BusinessLogic_Headers
+      folder "Interfaces" as BusinessLogic_Interfaces
+      folder "Sources" as BusinessLogic_Sources
+    }
+
+    package "Device" as Dev {
+      folder "Headers" as Device_Headers
+      folder "Interfaces" as Device_Interfaces
+      folder "Sources" as Device_Sources
+    }
+    ' Dummy relation to group blocks vertically
+    package "Driver" as Drv {
+      folder "Headers" as Driver_Headers
+      folder "Interfaces" as Driver_Interfaces
+      folder "Sources" as Driver_Sources
+    }
+
+    BL -[hidden]down--- Dev
+    Dev -[hidden]down--- Drv
+  }
+
+  component "Libraries \n(located in Middlewares/Third_Party)" {
+    package "STM32-ST7735" {
+      folder "Headers (*.h)" as STM32_ST7735_Headers
+    }
+  }
+
+  component "Core (located in Core)" {
+    folder "Headers (*.h)" as Core_Headers
+  }
+
+  "Application" -[hidden]down-------- "Libraries \n(located in Middlewares/Third_Party)"
+  "Application" -[hidden]down-------- "Core (located in Core)"
+}
+
+
+' Connections between DLL and Firmware components
+["DLL (libFirmwarePCSimulator.so)"] -down--> BL
+["DLL (libFirmwarePCSimulator.so)"] -down--> Dev
+[Mocks] -down----> Driver_Interfaces
+[Mocks] -down----> Core_Headers
+[Mocks] -down---> STM32_ST7735_Headers
+
+' Add a note for Mocks
+note left of [GUI]
+Uses PyQt6. Only this component uses it 
+to avoid tightly coupling with the framework.
+end note
+
+
+' Add a note for Mocks
+note top of [Mocks]
+These replace the hardware-specific code
+from the firmware directory because
+the source code from:
+* Application/Driver
+* Middlewares/Third_Party
+* Core
+is not included in the compilation.
+end note
+@enduml

@@ -1,4 +1,5 @@
 #include "Device/Inc/UartMeasurementRecorder.hpp"
+#include "Device/Inc/MeasurementType.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
 
 namespace Device
@@ -15,6 +16,7 @@ namespace Device
 
     bool UartMeasurementRecorder::notify(Device::MeasurementType &measurement)
     {
+        (void)measurement; // Explicitly suppresses "unused parameter" warning
         return true;
     }
 

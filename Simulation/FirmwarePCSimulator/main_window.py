@@ -1,9 +1,15 @@
-from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTabWidget, QTextEdit, QPushButton
+from datetime import datetime
+
+from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTabWidget
 from PyQt6.QtCore import Qt, QTimer
 
 from simulation_control_widget import SimulationControlWidget
 from direction_button_widget import DirectionButtonWidget
 from hardware_display_widget import HardwareDisplayWidget
+from simulation_speed_widget import SimulationSpeedWidget
+from measurement_data_input_widget import MeasurementDataInputWidget
+from log_tabs_widget import LogTabsWidget, LogTabID
+from data_visualization_widget import DataVisualizationWidget
 
 
 class MainWindow(QMainWindow):
@@ -17,22 +23,26 @@ class MainWindow(QMainWindow):
 
         # Set window properties
         self.setWindowTitle("Firmware Simulator")
-        self.setGeometry(100, 100, 800, 400)
+        self.setGeometry(100, 100, 800, 600)
 
         # Create central widget and set layout
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
 
         # Main layout
-        main_layout = QHBoxLayout()
+        main_layout = QVBoxLayout()  # Vertical layout to align components top to bottom
         central_widget.setLayout(main_layout)
+
+        # Top Layout for Tabs, Hardware Display, and Measurement Input
+        top_layout = QHBoxLayout()
+        main_layout.addLayout(top_layout)
 
         # Config tabs on the left side
         self.tabs = QTabWidget()
         self.config_tab1 = QWidget()
-        self.config_tab2 = QWidget()
+        self.data_visualization_tab = DataVisualizationWidget()
         self.tabs.addTab(self.config_tab1, "Actions")
-        self.tabs.addTab(self.config_tab2, "Config")
+        self.tabs.addTab(self.data_visualization_tab, "Data Visualization")
 
         # Setup the tabs layout
         self.setup_tabs()
@@ -40,14 +50,17 @@ class MainWindow(QMainWindow):
         # Hardware display widget in the middle
         self.hardware_display = HardwareDisplayWidget(self.display_width, self.display_height)
 
-        # Log output on the right side
-        self.log_output = QTextEdit()
-        self.log_output.setReadOnly(True)
+        # Measurement Data Input widget on the right with callback
+        self.measurement_data_input_widget = MeasurementDataInputWidget(update_measurement_callback=self.on_measurement_update)
 
-        # Add widgets to the main layout
-        main_layout.addWidget(self.tabs, 1)  # Config tabs
-        main_layout.addWidget(self.hardware_display, 2)  # Hardware display
-        main_layout.addWidget(self.log_output, 3)  # Logs
+        # Add widgets to the top layout
+        top_layout.addWidget(self.tabs, 1)  # Config tabs
+        top_layout.addWidget(self.hardware_display, 3)  # Hardware display takes more space
+        top_layout.addWidget(self.measurement_data_input_widget, 2)  # Measurement Data Input expands proportionally
+
+        # Log output tabs at the bottom
+        self.log_tabs = LogTabsWidget()
+        main_layout.addWidget(self.log_tabs, 1)  # Logs take bottom section
 
         # Use a QTimer for periodic updates
         self.timer = QTimer(self)
@@ -63,20 +76,27 @@ class MainWindow(QMainWindow):
         # Buttons for the Actions tab
         self.main_control_widget = SimulationControlWidget(self.simulation)
         self.direction_buttons_widget = DirectionButtonWidget(self.simulation)
-        self.load_test_data_button = QPushButton("Load Test Data")
+        self.simulation_speed_widget = SimulationSpeedWidget(self.simulation)
 
         # Add buttons to the Actions tab layout
         actions_layout.addWidget(self.main_control_widget)
         actions_layout.addWidget(self.direction_buttons_widget)
-        actions_layout.addWidget(self.load_test_data_button)
-
-        # Layout for Config tab (empty for now)
-        config_layout = QVBoxLayout()
-        config_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        self.config_tab2.setLayout(config_layout)
+        actions_layout.addWidget(self.simulation_speed_widget)
 
     def update_display(self):
         """
         Update the hardware display with pixel data from the simulation.
         """
         self.hardware_display.update_from_simulation(self.simulation)
+
+    def on_measurement_update(self, values):
+        """
+        Handle updates from the MeasurementDataInputWidget sliders.
+        :param values: List of current slider values.
+        """
+        timestamp = "{:%Y-%m-%d %H:%M:%S}".format(datetime.now())
+        message = "Simulated pulse counter values: " + ", ".join(f"{value}" for value in values)
+        self.log_tabs.add_log(LogTabID.PULSE_COUNTER, timestamp, message)
+        
+        self.data_visualization_tab.update_pulse_counters(timestamp, values)
+        self.simulation.update_pulse_counters(values)

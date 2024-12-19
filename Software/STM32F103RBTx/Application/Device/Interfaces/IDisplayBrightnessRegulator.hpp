@@ -82,14 +82,7 @@ namespace Device
          */
         [[nodiscard]] virtual std::uint8_t getBrightnessPercentage() const = 0;
 
-        /**
-         * @brief Sets the brightness level as a percentage.
-         *
-         * This method sets the brightness level of the display to a specific percentage.
-         *
-         * @param level The brightness level to set, in percentage (0-100).
-         */
-        virtual void setBrightnessPercentage(std::uint8_t level) = 0;
+        virtual bool setBrightnessPercentage(std::uint8_t level) = 0;
     };
 
 } // namespace Device

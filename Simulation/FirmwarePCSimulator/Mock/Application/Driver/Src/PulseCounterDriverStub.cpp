@@ -20,6 +20,11 @@ extern "C"
             pulseCounters[counterId]++;
         }
     }
+
+    void setPulseCounter(std::uint8_t counterId, std::uint32_t value)
+    {
+        pulseCounters[counterId] = value;
+    }
 }
 
 namespace Driver
@@ -51,7 +56,7 @@ namespace Driver
     IPulseCounterDriver::CounterSizeType PulseCounterDriverStub::getMeasurement()
     {
         //    printf("PulseCounterDriverStub::getMeasurement()\n");
-        return 5;
+        return pulseCounters[0];
     }
 
     void PulseCounterDriverStub::clearMeasurement()

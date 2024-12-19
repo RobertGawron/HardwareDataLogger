@@ -28,7 +28,7 @@ namespace Driver
         /**
          * @brief UART for sending/storing processed data via WiFi module.
          */
-        DataTransmitterViaWiFiModule = 1u,
+        DataTransmitterViaWiFi = 1u,
 
         /**
          * @brief UART for sending/storing processed data via USB.

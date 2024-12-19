@@ -10,6 +10,7 @@
 #include "BusinessLogic/Interfaces/IMeasurementDataStore.hpp"
 #include "BusinessLogic/Inc/SaferArray.hpp"
 #include "Device/Interfaces/IMeasurementSource.hpp"
+
 #include <cstdint>
 
 namespace BusinessLogic

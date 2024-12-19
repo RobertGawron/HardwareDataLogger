@@ -3,10 +3,11 @@
 #include "Driver/Inc/DriverState.hpp"
 #include "Driver/Inc/KeyboardKeyIdentifier.hpp"
 
-#include "main.h" // todo maybe remove
+#include "main.h" // TODO: Maybe remove
 #include "stm32f1xx_hal_gpio.h"
 
 #include <cstdint>
+#include <algorithm> // For std::find_if
 
 namespace Driver
 {
@@ -40,6 +41,7 @@ namespace Driver
 
         if (isInState(DriverState::State::Running))
         {
+            // Use range-based for loop for clarity and simplicity
             for (auto &key : keyState)
             {
                 key.state = getKeyStateFromHW(key.GPIO_Port, key.GPIO_Pin);
@@ -53,36 +55,36 @@ namespace Driver
 
     KeyboardKeyState KeyboardFourPushButtonsDriver::getKeyState(KeyboardKeyIdentifier key) const
     {
-        KeyboardKeyState state;
+        // Initialize the result with a default state
+        KeyboardKeyState result = KeyboardKeyState::UnknownKeyAsked;
 
         if (isInState(DriverState::State::Running))
         {
-            switch (key)
-            {
-            case KeyboardKeyIdentifier::Up:
-            case KeyboardKeyIdentifier::Down:
-            case KeyboardKeyIdentifier::Left:
-            case KeyboardKeyIdentifier::Right:
-            {
-                const std::uint8_t id = static_cast<std::uint8_t>(key);
-                state = keyState[id].state;
-            }
-            break;
+            // Use std::find_if to locate the key configuration in the array
+            // Use std::find_if to locate the key configuration in the array
+            auto it = std::find_if(
+                keyState.begin(),
+                keyState.end(),
+                [this, key](const KeyState &ks)
+                {
+                    return static_cast<KeyboardKeyIdentifier>(&ks - keyState.data()) == key;
+                });
 
-            case KeyboardKeyIdentifier::LastNotUsed:
-
+            if (it != keyState.end())
             {
-                state = KeyboardKeyState::UnknownKeyAsked;
+                result = it->state;
             }
-            break;
+            else if (key == KeyboardKeyIdentifier::LastNotUsed)
+            {
+                result = KeyboardKeyState::UnknownKeyAsked;
             }
         }
         else
         {
-            state = KeyboardKeyState::DriverNotOperational;
+            result = KeyboardKeyState::DriverNotOperational;
         }
 
-        return state;
+        return result;
     }
 
     Driver::KeyboardKeyState KeyboardFourPushButtonsDriver::getKeyStateFromHW(GPIO_TypeDef *GPIOx, std::uint16_t GPIO_Pin)

@@ -9,6 +9,8 @@
 #include "Device/Interfaces/IKeyboard.hpp"
 #include "Device/Interfaces/IDisplay.hpp"
 #include "Device/Interfaces/IDisplayBrightnessRegulator.hpp"
+#include "Device/Interfaces/IMeasurementRecorder.hpp"
+#include "BusinessLogic/Inc/HmiMeasurementModel.hpp"
 
 namespace BusinessLogic
 {
