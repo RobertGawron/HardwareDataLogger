@@ -6,9 +6,26 @@
 #include "stm32f1xx_hal_def.h"
 
 #include <cstdint>
+#include <array>
 
 namespace Driver
 {
+    namespace
+    {
+        using HalStatusToDriverStatus = struct
+        {
+            HAL_StatusTypeDef halStatus;
+            UartExchangeStatus driverStatus;
+        };
+        constexpr std::size_t STATUS_LENGTH = 4u;
+
+        constexpr std::array<HalStatusToDriverStatus, STATUS_LENGTH> translation = {
+            {{HAL_OK, UartExchangeStatus::Ok},
+             {HAL_ERROR, UartExchangeStatus::ErrorFromHal},
+             {HAL_BUSY, UartExchangeStatus::Busy},
+             {HAL_TIMEOUT, UartExchangeStatus::Timeout}}};
+    }
+
     UartDriver::UartDriver(UART_HandleTypeDef &_uartHandler) : uartHandler(_uartHandler)
     {
     }
@@ -87,28 +104,14 @@ namespace Driver
 
     UartExchangeStatus UartDriver::getExchangeStatus(HAL_StatusTypeDef _halStatus)
     {
-        using HalStatusToDriverStatus = struct
-        {
-            HAL_StatusTypeDef halStatus;
-            UartExchangeStatus driverStatus;
-        };
-
-        const HalStatusToDriverStatus translation[] = {
-            {HAL_OK, UartExchangeStatus::Ok},
-            {HAL_ERROR, UartExchangeStatus::ErrorFromHal},
-            {HAL_BUSY, UartExchangeStatus::Busy},
-            {HAL_TIMEOUT, UartExchangeStatus::Timeout}};
-
-        constexpr std::uint8_t len = sizeof(translation) / sizeof(translation[0]);
-
         UartExchangeStatus status = UartExchangeStatus::ErrorUnknown;
-        bool isFound = false;
-        for (std::uint8_t i = 0u; (i < len) && (!isFound); i++)
+
+        for (const auto &entry : translation)
         {
-            if (translation[i].halStatus == _halStatus)
+            if (entry.halStatus == _halStatus)
             {
-                status = translation[i].driverStatus;
-                isFound = true;
+                status = entry.driverStatus;
+                break;
             }
         }
 
