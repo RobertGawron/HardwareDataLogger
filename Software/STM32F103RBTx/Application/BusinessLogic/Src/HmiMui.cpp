@@ -39,29 +39,64 @@ namespace BusinessLogic
         constexpr std::size_t LabelTextBufferSize = 10;
         char labelTextBuffer[LabelTextBufferSize];
 
-        uint8_t printLastReading(mui_t *ui, uint8_t msg, Device::MeasurementSource source)
+        uint8_t printLastReading(mui_t *muiHandler, uint8_t muiMessage, Device::MeasurementSource source)
         {
+
+            if (muiMessage == MUIF_MSG_DRAW)
+            {
+                _display->setCursor(mui_get_x(muiHandler), mui_get_y(muiHandler));
+                //_display->getU8x8()->print(stop_watch_timer);
+
+                sprintf(labelTextBuffer, "%d", model->dummyGetData());
+
+                _display->drawUTF8(mui_get_x(muiHandler), mui_get_y(muiHandler), labelTextBuffer);
+                //  _display->getU8g2().print(".");
+                // u8g2.print((stop_watch_timer/10)%100);
+            }
+
+            // if (msg == MUIF_MSG_DRAW)
+            {
+                //  printf("hello %d\n", msg);
+                //  //       const char *label = get_device_value(ui->arg); /* Fetch dynamic content based on index */
+                //     u8g2_DrawStr(ui->u8g2, ui->x, ui->y, label);
+            }
+            return 0;
         }
     }
 
-    uint8_t device1_printLastReading(mui_t *ui, uint8_t msg)
+    uint8_t device1_printLastReading(mui_t *muiHandler, uint8_t muiMessage)
     {
+        return printLastReading(muiHandler,
+                                muiMessage,
+                                Device::MeasurementSource::DEVICE_PULSE_COUNTER_1);
     }
 
-    uint8_t device2_printLastReading(mui_t *ui, uint8_t msg)
+    uint8_t device2_printLastReading(mui_t *muiHandler, uint8_t muiMessage)
     {
+        return printLastReading(muiHandler,
+                                muiMessage,
+                                Device::MeasurementSource::DEVICE_PULSE_COUNTER_2);
     }
 
-    uint8_t device3_printLastReading(mui_t *ui, uint8_t msg)
+    uint8_t device3_printLastReading(mui_t *muiHandler, uint8_t muiMessage)
     {
+        return printLastReading(muiHandler,
+                                muiMessage,
+                                Device::MeasurementSource::DEVICE_PULSE_COUNTER_3);
     }
 
-    uint8_t device4_printLastReading(mui_t *ui, uint8_t msg)
+    uint8_t device4_printLastReading(mui_t *muiHandler, uint8_t muiMessage)
     {
+        return printLastReading(muiHandler,
+                                muiMessage,
+                                Device::MeasurementSource::DEVICE_PULSE_COUNTER_4);
     }
 
-    uint8_t device5_printLastReading(mui_t *ui, uint8_t msg)
+    uint8_t device5_printLastReading(mui_t *muiHandler, uint8_t muiMessage)
     {
+        return printLastReading(muiHandler,
+                                muiMessage,
+                                Device::MeasurementSource::DEVICE_UART_1);
     }
 
     // Define a custom MUIF handler for dynamic labels
@@ -102,7 +137,7 @@ namespace BusinessLogic
         MUIF_BUTTON("BG", mui_u8g2_btn_goto_wm_fi),    /* assume a callback to go to a given form */
                                                        //  {"DL", mui_dynamic_label_handler},             /* Custom handler for dynamic labels */
                                                        //        MUIF_LABEL(mui_u8g2_draw_text)
-        MUIF_RO("CT", mui_dynamic_label_handler),
+        MUIF_RO("CT", device1_printLastReading),
 
         //  Add more UI elements or callbacks as needed
     };
