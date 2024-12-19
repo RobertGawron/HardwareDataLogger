@@ -18,9 +18,9 @@ namespace BusinessLogic
     // Struct for mapping MUI to display and model entries
     struct DisplayMapEntry
     {
-        mui_t *ui;
-        Device::IDisplay *display;
-        BusinessLogic::HmiMeasurementModel *model;
+        mui_t *ui = nullptr;
+        Device::IDisplay *display = nullptr;
+        BusinessLogic::HmiMeasurementModel *model = nullptr;
     };
 
     DisplayMapEntry *findEntryByMui(mui_t *muiHandler);
@@ -79,7 +79,9 @@ namespace BusinessLogic
             muiMap.begin(),
             muiMap.end(),
             [muiHandler](const DisplayMapEntry &entry)
-            { return entry.ui == muiHandler; });
+            {
+                return entry.ui != nullptr && entry.ui == muiHandler;
+            });
 
         if (it != muiMap.end())
         {
