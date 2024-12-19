@@ -38,13 +38,14 @@ namespace Device
 
     std::uint32_t CacheMeasurementRecorder::getLatestMeasurement(MeasurementSource source) const
     {
-        // const bool status = true;
-        return dummyData;
+
+        return lastMeasurement[0];
     }
 
     bool CacheMeasurementRecorder::write(Device::MeasurementType &measurement)
     {
-        dummyData = 55;
+        lastMeasurement[0] = 3; // std::get<std::uint32_t>(measurement.data);
+        //  dummyData = 55;
 
         //     printf("= START=, data %d\n", measurement);
 
