@@ -21,8 +21,8 @@ namespace Device
 
     namespace
     {
-        // Define a constant for maximum displays
-        constexpr std::size_t MAX_DISPLAYS = 10u;
+        // Define a constant for maximum displays, change if needed
+        constexpr std::size_t MAX_DISPLAYS = 1u;
 
         // Struct for mapping display entries
         struct DisplayMapEntry

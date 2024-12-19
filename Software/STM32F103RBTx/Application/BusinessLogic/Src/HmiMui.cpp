@@ -3,6 +3,7 @@
 #include "Device/Interfaces/IDisplayBrightnessRegulator.hpp"
 #include "Device/Interfaces/IKeyboard.hpp"
 #include "Device/Inc/KeyboardKeyActionState.hpp"
+#include "Device/Inc/MeasurementSource.hpp"
 #include "Driver/Inc/KeyboardKeyIdentifier.hpp"
 
 #include "mui.h"
@@ -10,40 +11,82 @@
 #include "mui_u8g2.h"
 
 #include <cstdint>
+#include <cstddef>
 
 #include "stdio.h"
 
-char myLabel[10];
-
-// hacks!!!!
-Device::IDisplay *_display;
-BusinessLogic::HmiMeasurementModel *model;
-
-// Define a custom MUIF handler for dynamic labels
-uint8_t mui_dynamic_label_handler(mui_t *ui, uint8_t msg)
-{
-    if (msg == MUIF_MSG_DRAW)
-    {
-        _display->setCursor(mui_get_x(ui), mui_get_y(ui));
-        //_display->getU8x8()->print(stop_watch_timer);
-
-        sprintf(myLabel, "%d", model->dummyGetData());
-
-        _display->drawUTF8(mui_get_x(ui), mui_get_y(ui), myLabel);
-        //  _display->getU8g2().print(".");
-        // u8g2.print((stop_watch_timer/10)%100);
-    }
-
-    // if (msg == MUIF_MSG_DRAW)
-    {
-        printf("hello %d\n", msg);
-        //       const char *label = get_device_value(ui->arg); /* Fetch dynamic content based on index */
-        //     u8g2_DrawStr(ui->u8g2, ui->x, ui->y, label);
-    }
-    return 0;
-}
 namespace BusinessLogic
 {
+
+    char myLabel[10];
+
+    // hacks!!!!
+    Device::IDisplay *_display;
+    BusinessLogic::HmiMeasurementModel *model;
+
+    namespace
+    {
+        // Define a constant for maximum displays, change if needed
+        constexpr std::size_t MAX_DISPLAYS = 1u;
+
+        // Struct for mapping display entries
+        struct DisplayMapEntry
+        {
+            mui_t *ui;
+            Device::IDisplay *display;
+        };
+
+        constexpr std::size_t LabelTextBufferSize = 10;
+        char labelTextBuffer[LabelTextBufferSize];
+
+        uint8_t printLastReading(mui_t *ui, uint8_t msg, Device::MeasurementSource source)
+        {
+        }
+    }
+
+    uint8_t device1_printLastReading(mui_t *ui, uint8_t msg)
+    {
+    }
+
+    uint8_t device2_printLastReading(mui_t *ui, uint8_t msg)
+    {
+    }
+
+    uint8_t device3_printLastReading(mui_t *ui, uint8_t msg)
+    {
+    }
+
+    uint8_t device4_printLastReading(mui_t *ui, uint8_t msg)
+    {
+    }
+
+    uint8_t device5_printLastReading(mui_t *ui, uint8_t msg)
+    {
+    }
+
+    // Define a custom MUIF handler for dynamic labels
+    uint8_t mui_dynamic_label_handler(mui_t *ui, uint8_t msg)
+    {
+        if (msg == MUIF_MSG_DRAW)
+        {
+            _display->setCursor(mui_get_x(ui), mui_get_y(ui));
+            //_display->getU8x8()->print(stop_watch_timer);
+
+            sprintf(myLabel, "%d", model->dummyGetData());
+
+            _display->drawUTF8(mui_get_x(ui), mui_get_y(ui), myLabel);
+            //  _display->getU8g2().print(".");
+            // u8g2.print((stop_watch_timer/10)%100);
+        }
+
+        // if (msg == MUIF_MSG_DRAW)
+        {
+            printf("hello %d\n", msg);
+            //       const char *label = get_device_value(ui->arg); /* Fetch dynamic content based on index */
+            //     u8g2_DrawStr(ui->u8g2, ui->x, ui->y, label);
+        }
+        return 0;
+    }
 
 // Can't fix, MUI related implementation.
 #pragma clang diagnostic push
