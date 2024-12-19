@@ -10,8 +10,8 @@ namespace BusinessLogic
     {
     }
 
-    int HmiMeasurementModel::dummyGetData()
+    std::uint32_t HmiMeasurementModel::getLatestMeasurement(Device::MeasurementSource source) const
     {
-        return reader.getDataDummy();
+        return reader.getLatestMeasurement(source);
     }
 }

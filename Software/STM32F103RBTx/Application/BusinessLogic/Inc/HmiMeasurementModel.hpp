@@ -34,7 +34,7 @@ namespace BusinessLogic
          */
         HmiMeasurementModel &operator=(const HmiMeasurementModel &) = delete;
 
-        int dummyGetData();
+        std::uint32_t getLatestMeasurement(Device::MeasurementSource source) const;
 
     private:
         Device::IMeasurementReader &reader;

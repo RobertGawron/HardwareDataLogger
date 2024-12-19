@@ -6,8 +6,7 @@
 
 namespace Device
 {
-
-    class IMeasurementReader //: public Driver::DriverState
+    class IMeasurementReader
     {
     public:
         /**
@@ -20,7 +19,7 @@ namespace Device
          */
         virtual ~IMeasurementReader() = default;
 
-        virtual int getDataDummy() = 0;
+        virtual std::uint32_t getLatestMeasurement(MeasurementSource source) const = 0;
     };
 }
 

@@ -116,7 +116,7 @@ namespace BusinessLogic
 
             if (entry != nullptr)
             {
-                sprintf(labelTextBuffer, "%d", entry->model->dummyGetData());
+                sprintf(labelTextBuffer, "%d", entry->model->getLatestMeasurement(source));
 
                 entry->display->setCursor(mui_get_x(muiHandler), mui_get_y(muiHandler));
                 entry->display->drawUTF8(mui_get_x(muiHandler), mui_get_y(muiHandler), labelTextBuffer);

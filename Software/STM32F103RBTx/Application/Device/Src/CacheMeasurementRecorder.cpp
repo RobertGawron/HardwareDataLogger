@@ -1,5 +1,6 @@
 #include "Device/Inc/CacheMeasurementRecorder.hpp"
 #include "Device/Inc/MeasurementType.hpp"
+#include "Device/Inc/MeasurementSource.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
 
 #include <cstdint>
@@ -35,7 +36,7 @@ namespace Device
         return status;
     }
 
-    int CacheMeasurementRecorder::getDataDummy()
+    std::uint32_t CacheMeasurementRecorder::getLatestMeasurement(MeasurementSource source) const
     {
         // const bool status = true;
         return dummyData;

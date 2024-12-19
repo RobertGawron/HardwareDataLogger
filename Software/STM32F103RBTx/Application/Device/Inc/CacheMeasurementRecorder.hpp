@@ -4,8 +4,7 @@
 
 #include "Device/Interfaces/IMeasurementRecorder.hpp"
 #include "Device/Interfaces/IMeasurementReader.hpp"
-
-// #include "Driver/Interfaces/IUartDriver.hpp"
+#include "Device/Inc/MeasurementSource.hpp"
 
 namespace Device
 {
@@ -82,7 +81,7 @@ namespace Device
          */
         bool flush() override;
 
-        int getDataDummy();
+        std::uint32_t getLatestMeasurement(Device::MeasurementSource source) const override;
 
     private:
         /**
