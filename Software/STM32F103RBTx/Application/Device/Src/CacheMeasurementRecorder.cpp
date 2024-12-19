@@ -1,7 +1,6 @@
 #include "Device/Inc/CacheMeasurementRecorder.hpp"
 #include "Device/Inc/MeasurementType.hpp"
 #include "Device/Inc/MeasurementSource.hpp"
-#include "Driver/Interfaces/IUartDriver.hpp"
 
 #include <cstdint>
 #include <stdio.h>
