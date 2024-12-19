@@ -1,6 +1,6 @@
 #include "Device/Inc/UartMeasurementSource.hpp"
 #include "Device/Inc/MeasurementType.hpp"
-#include "Device/Inc/MeasurementSource.hpp"
+#include "Device/Inc/MeasurementDeviceId.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
 
 #include <cstdint>
@@ -38,7 +38,7 @@ namespace Device
         const std::uint16_t dummyData = 5u;
 
         MeasurementType m;
-        m.source = MeasurementSource::DEVICE_PULSE_COUNTER_1;
+        m.source = MeasurementDeviceId::DEVICE_PULSE_COUNTER_1;
         m.data = dummyData;
 
         return m;

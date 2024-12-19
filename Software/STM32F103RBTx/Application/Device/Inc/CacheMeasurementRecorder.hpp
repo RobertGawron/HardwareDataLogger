@@ -4,7 +4,7 @@
 
 #include "Device/Interfaces/IMeasurementRecorder.hpp"
 #include "Device/Interfaces/IMeasurementReader.hpp"
-#include "Device/Inc/MeasurementSource.hpp"
+#include "Device/Inc/MeasurementDeviceId.hpp"
 
 #include <array>
 #include <cstdint>
@@ -84,7 +84,7 @@ namespace Device
          */
         bool flush() override;
 
-        [[nodiscard]] std::uint32_t getLatestMeasurement(Device::MeasurementSource source) const override;
+        [[nodiscard]] std::uint32_t getLatestMeasurement(Device::MeasurementDeviceId source) const override;
 
     private:
         /**
@@ -94,7 +94,7 @@ namespace Device
          */
         virtual bool write(Device::MeasurementType &measurement);
 
-        static constexpr std::size_t MeasurementSourceCount = static_cast<std::size_t>(MeasurementSource::LAST_NOT_USED);
+        static constexpr std::size_t MeasurementSourceCount = static_cast<std::size_t>(MeasurementDeviceId::LAST_NOT_USED);
 
         // Map to store the last measurements for each source
         std::array<std::uint32_t, MeasurementSourceCount> lastMeasurement = {0u};

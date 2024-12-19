@@ -1,6 +1,6 @@
 #include "Device/Inc/CacheMeasurementRecorder.hpp"
 #include "Device/Inc/MeasurementType.hpp"
-#include "Device/Inc/MeasurementSource.hpp"
+#include "Device/Inc/MeasurementDeviceId.hpp"
 
 #include <cstdint>
 #include <stdio.h>
@@ -35,7 +35,7 @@ namespace Device
         return status;
     }
 
-    std::uint32_t CacheMeasurementRecorder::getLatestMeasurement(MeasurementSource source) const
+    std::uint32_t CacheMeasurementRecorder::getLatestMeasurement(MeasurementDeviceId source) const
     {
 
         return lastMeasurement[0];

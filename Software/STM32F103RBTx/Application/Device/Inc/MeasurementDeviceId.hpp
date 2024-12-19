@@ -1,12 +1,12 @@
-#ifndef MeasurementSource_H_
-#define MeasurementSource_H_
+#ifndef MeasurementDeviceId_H_
+#define MeasurementDeviceId_H_
 
 #include <cstdint>
 
 namespace Device
 {
     // Identify rom which device the data comes from.
-    enum class MeasurementSource : std::uint8_t
+    enum class MeasurementDeviceId : std::uint8_t
     {
         DEVICE_PULSE_COUNTER_1 = 0u,
         DEVICE_PULSE_COUNTER_2 = 1u,

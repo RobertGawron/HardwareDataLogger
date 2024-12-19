@@ -1,6 +1,6 @@
 #include "BusinessLogic/Inc/HmiMuiHandlers.hpp"
 #include "BusinessLogic/Inc/HmiMeasurementModel.hpp"
-#include "Device/Inc/MeasurementSource.hpp"
+#include "Device/Inc/MeasurementDeviceId.hpp"
 #include "Device/Interfaces/IDisplay.hpp"
 
 #include <array>
@@ -24,7 +24,7 @@ namespace BusinessLogic
     };
 
     DisplayMapEntry *findEntryByMui(mui_t *muiHandler);
-    uint8_t printLastReading(mui_t *muiHandler, uint8_t muiMessage, Device::MeasurementSource source);
+    uint8_t printLastReading(mui_t *muiHandler, uint8_t muiMessage, Device::MeasurementDeviceId source);
 
     namespace
     {
@@ -42,35 +42,35 @@ namespace BusinessLogic
     {
         return printLastReading(muiHandler,
                                 muiMessage,
-                                Device::MeasurementSource::DEVICE_PULSE_COUNTER_1);
+                                Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_1);
     }
 
     uint8_t device2_printLastReading(mui_t *muiHandler, uint8_t muiMessage)
     {
         return printLastReading(muiHandler,
                                 muiMessage,
-                                Device::MeasurementSource::DEVICE_PULSE_COUNTER_2);
+                                Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_2);
     }
 
     uint8_t device3_printLastReading(mui_t *muiHandler, uint8_t muiMessage)
     {
         return printLastReading(muiHandler,
                                 muiMessage,
-                                Device::MeasurementSource::DEVICE_PULSE_COUNTER_3);
+                                Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_3);
     }
 
     uint8_t device4_printLastReading(mui_t *muiHandler, uint8_t muiMessage)
     {
         return printLastReading(muiHandler,
                                 muiMessage,
-                                Device::MeasurementSource::DEVICE_PULSE_COUNTER_4);
+                                Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_4);
     }
 
     uint8_t device5_printLastReading(mui_t *muiHandler, uint8_t muiMessage)
     {
         return printLastReading(muiHandler,
                                 muiMessage,
-                                Device::MeasurementSource::DEVICE_UART_1);
+                                Device::MeasurementDeviceId::DEVICE_UART_1);
     }
 
     DisplayMapEntry *findEntryByMui(mui_t *muiHandler)
@@ -109,7 +109,7 @@ namespace BusinessLogic
         return status;
     }
 
-    uint8_t printLastReading(mui_t *muiHandler, uint8_t muiMessage, Device::MeasurementSource source)
+    uint8_t printLastReading(mui_t *muiHandler, uint8_t muiMessage, Device::MeasurementDeviceId source)
     {
 
         if (muiMessage == MUIF_MSG_DRAW)

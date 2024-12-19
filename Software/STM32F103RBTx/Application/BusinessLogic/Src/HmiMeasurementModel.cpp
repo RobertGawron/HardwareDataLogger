@@ -2,7 +2,7 @@
 
 #include "BusinessLogic/Inc/HmiMeasurementModel.hpp"
 #include "Device/Interfaces/IMeasurementReader.hpp"
-#include "Device/Inc/MeasurementSource.hpp"
+#include "Device/Inc/MeasurementDeviceId.hpp"
 
 #include <cstdint>
 
@@ -13,7 +13,7 @@ namespace BusinessLogic
     {
     }
 
-    std::uint32_t HmiMeasurementModel::getLatestMeasurement(Device::MeasurementSource source) const
+    std::uint32_t HmiMeasurementModel::getLatestMeasurement(Device::MeasurementDeviceId source) const
     {
         return reader.getLatestMeasurement(source);
     }

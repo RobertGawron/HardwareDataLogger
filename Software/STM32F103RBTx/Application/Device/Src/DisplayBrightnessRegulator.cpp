@@ -25,9 +25,9 @@ namespace Device
         displayBrightnessDriver.start();
 
         // dummy test
-        std::uint8_t start = 1;
-        std::uint8_t stop = 95;
-        std::uint8_t step = 10;
+        const std::uint8_t start = 1;
+        const std::uint8_t stop = 95;
+        const std::uint8_t step = 10;
 
         for (std::size_t i = start; i < stop; i += step)
         {
