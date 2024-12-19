@@ -35,10 +35,4 @@ namespace BusinessLogic
     {
         return hmi.tick();
     }
-
-    bool HmiFactory::addDataSource(Device::IMeasurementRecorder &recorder)
-    {
-        return true;
-    }
-
 }

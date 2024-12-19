@@ -1,16 +1,15 @@
 #include "BusinessLogic/Inc/HmiMui.hpp"
-
-#include "Device/Inc/KeyboardKeyActionState.hpp"
 #include "Device/Interfaces/IDisplay.hpp"
 #include "Device/Interfaces/IDisplayBrightnessRegulator.hpp"
 #include "Device/Interfaces/IKeyboard.hpp"
-
+#include "Device/Inc/KeyboardKeyActionState.hpp"
 #include "Driver/Inc/KeyboardKeyIdentifier.hpp"
 
 #include "mui.h"
 #include "u8g2.h"
-#include "u8x8.h"
 #include "mui_u8g2.h"
+
+#include <cstdint>
 
 #include "stdio.h"
 

@@ -1,9 +1,5 @@
 # Firmware for STM32F103RBTx
 
-## Architecture
-
-TODO UML diagrams.
-
 ## Toolchain
 * ST32CubeMX
 * Visual Studio Code
@@ -26,11 +22,9 @@ Measurement flow diagram
 Sequence diagram of the display.
 ![sequence diagram of the display](../../Documentation/Diagrams/DisplaySequenceDiagram.svg)
 
-## Open points
-
-* Code formatting standard.
-
 ## Third party libraries used
 
+* [MUI](https://github.com/olikraus/u8g2/wiki/muimanual)
+* [u8g2](https://github.com/olikraus/u8g2)
 * ST7735S LCD [STMicroelectronics/stm32-st7735](https://github.com/STMicroelectronics/stm32-st7735).
 

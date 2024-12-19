@@ -13,7 +13,6 @@
 #include "Device/Inc/WiFiMeasurementRecorder.hpp"
 #include "Device/Inc/SdCardMeasurementRecorder.hpp"
 #include "Device/Inc/CacheMeasurementRecorder.hpp"
-#include "Device/Inc/CacheMeasurementRecorder.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
 #include "Driver/Interfaces/ISdCardDriver.hpp"
 

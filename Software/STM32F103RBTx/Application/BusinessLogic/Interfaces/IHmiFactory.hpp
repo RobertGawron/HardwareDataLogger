@@ -63,8 +63,6 @@ namespace BusinessLogic
          * @return True if the update operation was successful; false otherwise.
          */
         virtual bool tick() = 0;
-
-        virtual bool addDataSource(Device::IMeasurementRecorder &recorder) = 0;
     };
 }
 
