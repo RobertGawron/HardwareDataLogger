@@ -1,10 +1,15 @@
 #include "BusinessLogic/Inc/HmiMuiHandlers.hpp"
+#include "BusinessLogic/Inc/HmiMeasurementModel.hpp"
 #include "Device/Inc/MeasurementSource.hpp"
+#include "Device/Interfaces/IDisplay.hpp"
 
 #include <array>
 #include <algorithm> // For std::find_if
 #include <cstdint>
 #include <cstddef>
+
+#include "mui.h"
+#include "mui_u8g2.h"
 
 #include "stdio.h"
 
@@ -21,12 +26,17 @@ namespace BusinessLogic
     DisplayMapEntry *findEntryByMui(mui_t *muiHandler);
     uint8_t printLastReading(mui_t *muiHandler, uint8_t muiMessage, Device::MeasurementSource source);
 
-    // Define a constant for maximum displays, change if needed
-    constexpr std::size_t MAX_MUI_AMOUNT = 1u;
-    std::array<DisplayMapEntry, MAX_MUI_AMOUNT> muiMap{};
+    namespace
+    {
 
-    constexpr std::size_t LabelTextBufferSize = 10;
-    char labelTextBuffer[LabelTextBufferSize];
+        // Define a constant for maximum displays, change if needed
+        constexpr std::size_t MAX_MUI_AMOUNT = 1u;
+        std::array<DisplayMapEntry, MAX_MUI_AMOUNT> muiMap{};
+
+        constexpr std::size_t LabelTextBufferSize = 10;
+        char labelTextBuffer[LabelTextBufferSize];
+
+    }
 
     uint8_t device1_printLastReading(mui_t *muiHandler, uint8_t muiMessage)
     {

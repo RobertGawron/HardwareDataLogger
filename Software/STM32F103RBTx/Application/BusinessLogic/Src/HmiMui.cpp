@@ -1,22 +1,15 @@
 #include "BusinessLogic/Inc/HmiMui.hpp"
 #include "BusinessLogic/Inc/HmiMuiHandlers.hpp"
+#include "BusinessLogic/Inc/HmiMeasurementModel.hpp"
 #include "Device/Interfaces/IDisplay.hpp"
 #include "Device/Interfaces/IDisplayBrightnessRegulator.hpp"
 #include "Device/Interfaces/IKeyboard.hpp"
 #include "Device/Inc/KeyboardKeyActionState.hpp"
-#include "Device/Inc/MeasurementSource.hpp"
 #include "Driver/Inc/KeyboardKeyIdentifier.hpp"
 
 #include "mui.h"
 #include "u8g2.h"
 #include "mui_u8g2.h"
-
-#include <array>
-#include <algorithm> // For std::find_if
-#include <cstdint>
-#include <cstddef>
-
-#include "stdio.h"
 
 namespace BusinessLogic
 {
@@ -93,7 +86,7 @@ namespace BusinessLogic
     {
     }
 
-      bool HmiMui::initialize()
+    bool HmiMui::initialize()
     {
         /*
         volatile int x = 0;

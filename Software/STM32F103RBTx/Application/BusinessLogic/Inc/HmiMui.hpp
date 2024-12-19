@@ -100,13 +100,13 @@ namespace BusinessLogic
         bool tick() override;
 
     private:
+        HmiMeasurementModel &hmiMeasurementModel;
+
         Device::IDisplay &display;                                       /**< Reference to the display interface. */
         Device::IDisplayBrightnessRegulator &displayBrightnessRegulator; /**< Reference to the display brightness regulator. */
         Device::IKeyboard &keyboard;                                     /**< Reference to the keyboard interface. */
 
         MUIU8G2 mui; /**< Instance of the MUIU8G2 library for managing the GUI. */
-
-        HmiMeasurementModel &hmiMeasurementModel;
     };
 }
 
