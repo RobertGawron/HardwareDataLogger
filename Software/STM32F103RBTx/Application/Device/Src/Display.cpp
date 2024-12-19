@@ -21,8 +21,8 @@ namespace Device
 
     namespace
     {
-        // Define a constant for maximum displays
-        constexpr std::size_t MAX_DISPLAYS = 10u;
+        // Define a constant for maximum displays, change if needed
+        constexpr std::size_t MAX_DISPLAYS = 1u;
 
         // Struct for mapping display entries
         struct DisplayMapEntry
@@ -34,6 +34,11 @@ namespace Device
         // Use std::array for a fixed-size array
         std::array<DisplayMapEntry, MAX_DISPLAYS> displayMap{};
         std::size_t displayCount = 1u;
+
+        constexpr std::uint8_t TILE_PIXEL_HEIGHT = 8;
+        constexpr std::uint8_t DEFAULT_COLOR_RED = 0x2f;
+        constexpr std::uint8_t DEFAULT_COLOR_GREEN = 0xff;
+        constexpr std::uint8_t DEFAULT_COLOR_BLUE = 0xff;
 
         // This is a trampoline function.
         // It must have the same signature as u8x8_d_st7735.
@@ -79,7 +84,6 @@ namespace Device
         U8X8_START_TRANSFER(),
         U8X8_END_TRANSFER(), /* disable chip */
         U8X8_END()           /* end of sequence */
-
     };
 
     std::uint8_t u8x8_byte_dummy_callback(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t arg_int, void *arg_ptr)
@@ -100,8 +104,7 @@ namespace Device
         return U8G2_STATUS_OK;
     }
 
-    std::uint8_t Display::u8x8DSt7735Impl(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t arg_int, void *arg_ptr)
-
+    std::uint8_t Display::u8x8DSt7735Impl(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t argInt, void *argPtr)
     {
         switch (msg)
         {
@@ -121,12 +124,12 @@ namespace Device
 
         case U8X8_MSG_DISPLAY_DRAW_TILE:
         {
-            const u8x8_tile_t *tile = static_cast<u8x8_tile_t *>(arg_ptr);
+            const u8x8_tile_t *tile = static_cast<u8x8_tile_t *>(argPtr);
 
-            for (std::uint8_t t = 0; t < arg_int; t++)
+            for (std::uint8_t t = 0; t < argInt; t++)
             {
-                const std::uint8_t tile_x_start = tile->x_pos * 8; // Starting x position in pixels
-                const std::uint8_t tile_y_start = tile->y_pos * 8; // Starting y position in pixels
+                const std::uint8_t tile_x_start = tile->x_pos * TILE_PIXEL_HEIGHT; // Starting x position in pixels
+                const std::uint8_t tile_y_start = tile->y_pos * TILE_PIXEL_HEIGHT; // Starting y position in pixels
 
                 // printf("tile_x_start x=%d, y=%d\n", tile_x_start, tile_y_start);
 
@@ -134,7 +137,7 @@ namespace Device
                 for (std::uint8_t col = 0; col < 120; col++)
                 {
                     const std::uint8_t col_data = tile->tile_ptr[col]; // This is a vertical column
-                    for (std::uint8_t bit = 0; bit < 8; bit++)
+                    for (std::uint8_t bit = 0; bit < TILE_PIXEL_HEIGHT; bit++)
                     {
                         Driver::DisplayPixelColor::PixelColor color = Driver::DisplayPixelColor::getColor(0x00, 0x00, 0x00);
                         const std::uint8_t x = tile_x_start + col;
@@ -146,7 +149,7 @@ namespace Device
                             // x = tile_x_start + col
                             // y = tile_y_start + bit
                             // printf("Pixel ON at x=%d, y=%d\n", tile_x_start + col, tile_y_start + bit);
-                            color = Driver::DisplayPixelColor::getColor(0x2f, 0xff, 0xff);
+                            color = Driver::DisplayPixelColor::getColor(DEFAULT_COLOR_RED, DEFAULT_COLOR_GREEN, DEFAULT_COLOR_BLUE);
                         }
 
                         displayDriver.setPixel(x, y, color);
@@ -179,7 +182,7 @@ namespace Device
     {
         // Calculate the number of tile rows needed for 128x128 resolution.
         // Each tile is 8 pixels high, so for a 128-pixel height:
-        std::uint8_t tile_buf_height = 16; // 128 / 8 = 16 tiles.
+        constexpr std::uint8_t tile_buf_height = 16; // 128 / TILE_PIXEL_HEIGHT = 16 tiles.
 
         // Allocate buffer dynamically for 128x128 resolution.
         // Each tile is 8 pixels wide * 1 byte (8 bits) = 8 bytes per tile.
@@ -193,14 +196,10 @@ namespace Device
             return;
         }
 
-// Can't fix, MUI related implementation.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wold-style-cast"
-
         // Setup the display with the appropriate parameters.
+        // Note that this is u8g2 macro so I cant modify it to avoid warning
+        // codechecker_suppress [mold-style-cast, cppcheck-cstyleCast]
         u8g2_SetupDisplay(u8g2, trampolineU8x8DSt7735, u8x8_cad_001, byte_cb, gpio_and_delay_cb);
-
-#pragma clang diagnostic pop
 
         // Configure the buffer and the rendering method (vertical top to bottom).
         u8g2_SetupBuffer(u8g2, buf, tile_buf_height, u8g2_ll_hvline_vertical_top_lsb, rotation);
@@ -220,5 +219,4 @@ namespace Device
 
         return true;
     }
-
-};
+}

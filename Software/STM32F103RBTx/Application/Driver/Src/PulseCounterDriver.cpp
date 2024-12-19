@@ -3,13 +3,17 @@
 #include "Driver/Inc/PulseCounterIdentifier.hpp"
 
 #include <cstdint>
+#include <cstddef> // For std::size_t
 #include <array>
 
-using PulseCounterArray = std::array<
-    Driver::PulseCounterDriver::CounterSizeType,
-    Driver::PulseCounterDriver::PULSE_COUNTER_AMOUNT>;
+namespace
+{
+    using PulseCounterArray = std::array<
+        Driver::PulseCounterDriver::CounterSizeType,
+        Driver::PulseCounterDriver::PULSE_COUNTER_AMOUNT>;
 
-static PulseCounterArray pulseCounters = {0};
+    PulseCounterArray pulseCounters = {0};
+}
 
 // Expose the array pointer for C compatibility
 extern "C"
@@ -27,13 +31,9 @@ extern "C"
 
 namespace Driver
 {
-    PulseCounterDriver::PulseCounterDriver(PulseCounterIdentifier id) : value(pulseCounters[(int)id])
+    PulseCounterDriver::PulseCounterDriver(PulseCounterIdentifier deviceIdentifier)
+        : value(pulseCounters[static_cast<std::size_t>(deviceIdentifier)])
     {
-    }
-
-    PulseCounterDriver::~PulseCounterDriver()
-    {
-        clearMeasurement();
     }
 
     bool PulseCounterDriver::onInitialize()
@@ -50,6 +50,7 @@ namespace Driver
 
     bool PulseCounterDriver::onStop()
     {
+        clearMeasurement();
         return true;
     }
 
@@ -60,6 +61,7 @@ namespace Driver
 
     IPulseCounterDriver::CounterSizeType PulseCounterDriver::getMeasurement()
     {
+
         return value;
     }
 

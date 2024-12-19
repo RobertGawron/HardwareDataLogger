@@ -1,6 +1,5 @@
 #include "BusinessLogic/Interfaces/IMeasurementDataStore.hpp"
 #include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
-#include "BusinessLogic/Inc/MeasurementDataStore.hpp"
 #include "Device/Inc/MeasurementType.hpp"
 
 #include <cstddef>
@@ -53,7 +52,7 @@ namespace BusinessLogic
 
             if (isMeasurementReady)
             {
-                Device::MeasurementType measurement = observers[i]->getMeasurement();
+                const Device::MeasurementType measurement = observers[i]->getMeasurement();
                 storage.notifyObservers(measurement);
             }
         }

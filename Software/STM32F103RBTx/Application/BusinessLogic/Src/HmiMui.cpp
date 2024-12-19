@@ -1,48 +1,16 @@
 #include "BusinessLogic/Inc/HmiMui.hpp"
-
-#include "Device/Inc/KeyboardKeyActionState.hpp"
+#include "BusinessLogic/Inc/HmiMuiHandlers.hpp"
+#include "BusinessLogic/Inc/HmiMeasurementModel.hpp"
 #include "Device/Interfaces/IDisplay.hpp"
 #include "Device/Interfaces/IDisplayBrightnessRegulator.hpp"
 #include "Device/Interfaces/IKeyboard.hpp"
-
+#include "Device/Inc/KeyboardKeyActionState.hpp"
 #include "Driver/Inc/KeyboardKeyIdentifier.hpp"
 
 #include "mui.h"
 #include "u8g2.h"
-#include "u8x8.h"
 #include "mui_u8g2.h"
 
-#include "stdio.h"
-
-char myLabel[10];
-
-// hacks!!!!
-Device::IDisplay *_display;
-BusinessLogic::HmiMeasurementModel *model;
-
-// Define a custom MUIF handler for dynamic labels
-uint8_t mui_dynamic_label_handler(mui_t *ui, uint8_t msg)
-{
-    if (msg == MUIF_MSG_DRAW)
-    {
-        _display->setCursor(mui_get_x(ui), mui_get_y(ui));
-        //_display->getU8x8()->print(stop_watch_timer);
-
-        sprintf(myLabel, "%d", model->dummyGetData());
-
-        _display->drawUTF8(mui_get_x(ui), mui_get_y(ui), myLabel);
-        //  _display->getU8g2().print(".");
-        // u8g2.print((stop_watch_timer/10)%100);
-    }
-
-    // if (msg == MUIF_MSG_DRAW)
-    {
-        printf("hello %d\n", msg);
-        //       const char *label = get_device_value(ui->arg); /* Fetch dynamic content based on index */
-        //     u8g2_DrawStr(ui->u8g2, ui->x, ui->y, label);
-    }
-    return 0;
-}
 namespace BusinessLogic
 {
 
@@ -60,7 +28,7 @@ namespace BusinessLogic
         MUIF_BUTTON("BG", mui_u8g2_btn_goto_wm_fi),    /* assume a callback to go to a given form */
                                                        //  {"DL", mui_dynamic_label_handler},             /* Custom handler for dynamic labels */
                                                        //        MUIF_LABEL(mui_u8g2_draw_text)
-        MUIF_RO("CT", mui_dynamic_label_handler),
+        MUIF_RO("CT", device1_printLastReading),
 
         //  Add more UI elements or callbacks as needed
     };
@@ -120,8 +88,6 @@ namespace BusinessLogic
 
     bool HmiMui::initialize()
     {
-        _display = &display;
-        model = &hmiMeasurementModel;
         /*
         volatile int x = 0;
         // display.initialize();
@@ -143,9 +109,10 @@ namespace BusinessLogic
     {
         display.begin();
 
-        sprintf(myLabel, "hello");
-
         mui.begin(display, fds_data, muif_list, sizeof(muif_list) / sizeof(muif_t));
+
+        registerMuiToItsObjects(mui.getMUI(), &display, &hmiMeasurementModel);
+
         mui.gotoForm(/* form_id= */ 1, /* initial_cursor_position= */ 0);
         display.firstPage();
         display.setCursor(0, 0);

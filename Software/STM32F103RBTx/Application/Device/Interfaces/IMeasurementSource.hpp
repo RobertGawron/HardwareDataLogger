@@ -11,6 +11,7 @@
  */
 
 #include "Device/Inc/MeasurementType.hpp"
+#include "Device/Inc/MeasurementDeviceId.hpp"
 
 namespace Device
 {
@@ -25,10 +26,9 @@ namespace Device
     class IMeasurementSource
     {
     public:
-        /**
-         * @brief Default constructor.
-         */
-        IMeasurementSource() = default;
+        IMeasurementSource(MeasurementDeviceId _id) : id(_id) {}
+
+        IMeasurementSource() = delete;
 
         /**
          * @brief Virtual destructor.
@@ -56,7 +56,16 @@ namespace Device
          * This method should be implemented to obtain the current measurement data from the device.
          * It is not fully implemented yet.
          */
-        virtual MeasurementType getMeasurement() = 0;
+        [[nodiscard]] virtual MeasurementType getMeasurement() = 0;
+
+    protected:
+        [[nodiscard]] MeasurementDeviceId getMyId() const
+        {
+            return id;
+        }
+
+    private:
+        MeasurementDeviceId id;
     };
 }
 

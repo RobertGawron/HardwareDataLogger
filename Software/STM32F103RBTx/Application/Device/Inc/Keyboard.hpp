@@ -15,6 +15,7 @@
 #include "Driver/Inc/KeyboardKeyIdentifier.hpp"
 
 #include <cstdint>
+#include <array> // For std::array
 
 namespace Device
 {
@@ -101,7 +102,7 @@ namespace Device
          *
          * Each entry counts the number of `tick()` calls while the key is pressed.
          */
-        std::uint8_t pressDurationTicks[AmountOfKeys] = {0u};
+        std::array<std::uint8_t, AmountOfKeys> pressDurationTicks{};
 
         /** @brief Threshold for determining a long press (in ticks). */
         static constexpr std::uint8_t LONG_PRESS_THRESHOLD_TICKS = 10; // 10 ticks * 100ms = 1 second
@@ -111,7 +112,7 @@ namespace Device
          *
          * Each key's action state indicates whether it is pressed, held, or not pressed.
          */
-        KeyboardKeyActionState keyActionState[AmountOfKeys]{
+        std::array<KeyboardKeyActionState, AmountOfKeys> keyActionState{
             KeyboardKeyActionState::PressNot,
             KeyboardKeyActionState::PressNot,
             KeyboardKeyActionState::PressNot,

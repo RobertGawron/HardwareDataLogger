@@ -27,7 +27,7 @@ namespace Driver
     public:
         static const std::uint8_t PULSE_COUNTER_AMOUNT = 4u;
 
-        explicit PulseCounterDriver(PulseCounterIdentifier id);
+        explicit PulseCounterDriver(PulseCounterIdentifier deviceIdentifier);
 
         PulseCounterDriver() = delete;
         /**
@@ -35,7 +35,7 @@ namespace Driver
          *
          * Ensures proper cleanup of the driver.
          */
-        ~PulseCounterDriver() override;
+        ~PulseCounterDriver() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.
@@ -84,7 +84,6 @@ namespace Driver
         bool onReset() override;
 
     private:
-        PulseCounterIdentifier id;
         CounterSizeType &value;
     };
 }

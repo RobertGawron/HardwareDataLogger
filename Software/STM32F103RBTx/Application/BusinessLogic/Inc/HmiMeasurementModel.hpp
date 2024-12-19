@@ -5,11 +5,10 @@
 
 namespace BusinessLogic
 {
-
     class HmiMeasurementModel
     {
     public:
-        HmiMeasurementModel(Device::IMeasurementReader &reader);
+        explicit HmiMeasurementModel(Device::IMeasurementReader &reader);
 
         HmiMeasurementModel() = delete;
 
@@ -35,8 +34,9 @@ namespace BusinessLogic
          */
         HmiMeasurementModel &operator=(const HmiMeasurementModel &) = delete;
 
-        int dummyGetData();
+        [[nodiscard]] std::uint32_t getLatestMeasurement(Device::MeasurementDeviceId source) const;
 
+    private:
         Device::IMeasurementReader &reader;
     };
 }

@@ -1,6 +1,7 @@
 #include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
 #include "BusinessLogic/Inc/HmiFactory.hpp"
 #include "BusinessLogic/Inc/HmiMui.hpp"
+#include "Device/Interfaces/IMeasurementReader.hpp"
 #include "Device/Inc/Keyboard.hpp"
 #include "Device/Inc/DisplayBrightnessRegulator.hpp"
 
@@ -35,10 +36,4 @@ namespace BusinessLogic
     {
         return hmi.tick();
     }
-
-    bool HmiFactory::addDataSource(Device::IMeasurementRecorder &recorder)
-    {
-        return true;
-    }
-
 }

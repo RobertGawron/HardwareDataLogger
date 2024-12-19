@@ -1,4 +1,5 @@
 #include "BusinessLogic/Inc/MeasurementDataStore.hpp"
+#include "Device/Inc/MeasurementType.hpp"
 
 #include <cstddef>
 

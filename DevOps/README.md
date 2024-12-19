@@ -43,7 +43,7 @@ make test
 
 ## Run static analysis
 
-make static
+cd /workspace/build && cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CXX_STANDARD=17 .. && make static
 
 # Run code coverage
 

@@ -83,7 +83,10 @@ namespace Driver
             const std::uint16_t b = (blue >> (BITS_IN_BYTE - BLUE_BITS)) & BLUE_MASK;    // 5 bits for blue
 
             // Combine the bits into a single 16-bit value according to RGB565 format
-            return (r << RED_SHIFT) | (g << GREEN_SHIFT) | (b << BLUE_SHIFT);
+            return static_cast<PixelColor>(
+                (static_cast<std::uint16_t>(r) << RED_SHIFT) |
+                (static_cast<std::uint16_t>(g) << GREEN_SHIFT) |
+                (static_cast<std::uint16_t>(b) << BLUE_SHIFT));
         }
 
         /// Bit position shift for the red component in RGB565 format.

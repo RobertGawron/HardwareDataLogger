@@ -35,40 +35,12 @@
 // codechecker_suppress [modernize-macro-to-enum]
 #define TIM_OCFAST_DISABLE 0xcafe
 
-/*
-using TIM_Base_InitTypeDef = struct
-{
-    std::uint32_t Prescaler;
-    std::uint32_t CounterMode;
-    std::uint32_t Period;
-    std::uint32_t ClockDivision;
-    std::uint32_t RepetitionCounter;
-    std::uint32_t AutoReloadPreload;
-};*/
-
 // dummy way, but I dont need better for now.
 using TIM_TypeDef = std::uint8_t;
+
 // Can't fix, HAL related implementation.
 // codechecker_suppress [modernize-macro-to-enum]
-#define TIM3 0x0
-
-/*
-using TIM_HandleTypeDef = struct
-{
-    TIM_TypeDef Instance;
-    TIM_Base_InitTypeDef Init;
-};
-
-using TIM_OC_InitTypeDef = struct
-{
-    std::uint32_t OCMode;
-    std::uint32_t Pulse;
-    std::uint32_t OCPolarity;
-    std::uint32_t OCNPolarity;
-    std::uint32_t OCFastMode;
-    std::uint32_t OCIdleState;
-    std::uint32_t OCNIdleState;
-};*/
+#define TIM3 (static_cast<TIM_TypeDef *>(nullptr))
 
 struct TIM_Base_InitTypeDef
 {

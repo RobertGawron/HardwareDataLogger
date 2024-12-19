@@ -4,8 +4,10 @@
 
 #include "Device/Interfaces/IMeasurementRecorder.hpp"
 #include "Device/Interfaces/IMeasurementReader.hpp"
+#include "Device/Inc/MeasurementDeviceId.hpp"
 
-// #include "Driver/Interfaces/IUartDriver.hpp"
+#include <array>
+#include <cstdint>
 
 namespace Device
 {
@@ -82,7 +84,7 @@ namespace Device
          */
         bool flush() override;
 
-        int getDataDummy();
+        [[nodiscard]] std::uint32_t getLatestMeasurement(Device::MeasurementDeviceId source) const override;
 
     private:
         /**
@@ -92,7 +94,10 @@ namespace Device
          */
         virtual bool write(Device::MeasurementType &measurement);
 
-        int dummyData = 0;
+        static constexpr std::size_t MeasurementSourceCount = static_cast<std::size_t>(MeasurementDeviceId::LAST_NOT_USED);
+
+        // Map to store the last measurements for each source
+        std::array<std::uint32_t, MeasurementSourceCount> lastMeasurement = {0u};
     };
 
 }

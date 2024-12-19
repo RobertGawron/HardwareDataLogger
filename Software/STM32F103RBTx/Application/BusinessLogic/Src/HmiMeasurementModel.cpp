@@ -1,6 +1,10 @@
 
 
 #include "BusinessLogic/Inc/HmiMeasurementModel.hpp"
+#include "Device/Interfaces/IMeasurementReader.hpp"
+#include "Device/Inc/MeasurementDeviceId.hpp"
+
+#include <cstdint>
 
 namespace BusinessLogic
 {
@@ -9,8 +13,8 @@ namespace BusinessLogic
     {
     }
 
-    int HmiMeasurementModel::dummyGetData()
+    std::uint32_t HmiMeasurementModel::getLatestMeasurement(Device::MeasurementDeviceId source) const
     {
-        return reader.getDataDummy();
+        return reader.getLatestMeasurement(source);
     }
 }

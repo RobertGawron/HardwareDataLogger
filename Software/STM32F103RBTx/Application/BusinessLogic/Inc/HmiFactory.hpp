@@ -86,16 +86,8 @@ namespace BusinessLogic
          */
         bool tick() override;
 
-        bool addDataSource(Device::IMeasurementRecorder &recorder) override;
-
     private:
-        /**
-         * @brief Instance of HMI implementation using the MUI library.
-         *
-         * Note: While directly exposing the use of the MUI library in the header file is not ideal, it is
-         * necessary here due to design constraints.
-         */
-        HmiMui hmi;
+        HmiMeasurementModel hmiMeasurementModel;
 
         /**
          * @brief Display driver used by the HMI system.
@@ -103,18 +95,22 @@ namespace BusinessLogic
         Device::Display display;
 
         /**
+         * @brief Display brightness regulator for managing screen brightness.
+         */
+        Device::DisplayBrightnessRegulator brightnessRegulator;
+
+        /**
          * @brief Keyboard driver used for input in the HMI system.
          */
         Device::Keyboard keyboard;
 
         /**
-         * @brief Display brightness regulator for managing screen brightness.
+         * @brief Instance of HMI implementation using the MUI library.
+         *
+         * Note: While directly exposing the use of the MUI library in the header file is not ideal, it is
+         * necessary here due to design constraints.
          */
-        Device::DisplayBrightnessRegulator brightnessRegulator;
-
-        HmiMeasurementModel hmiMeasurementModel;
-
-        // Device::IMeasurementRecorder &recorder;
+        HmiMui hmi;
     };
 }
 
