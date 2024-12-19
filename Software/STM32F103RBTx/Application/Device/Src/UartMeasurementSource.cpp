@@ -8,7 +8,9 @@
 namespace Device
 {
 
-    UartMeasurementSource::UartMeasurementSource(Driver::IUartDriver &_driver) : driver(_driver)
+    UartMeasurementSource::UartMeasurementSource(Driver::IUartDriver &_driver)
+        : driver(_driver),
+          IMeasurementSource(MeasurementDeviceId::DEVICE_PULSE_COUNTER_1)
     {
     }
 

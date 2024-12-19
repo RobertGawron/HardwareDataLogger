@@ -11,6 +11,7 @@
  */
 
 #include "Device/Inc/MeasurementType.hpp"
+#include "Device/Inc/MeasurementDeviceId.hpp"
 
 namespace Device
 {
@@ -25,10 +26,9 @@ namespace Device
     class IMeasurementSource
     {
     public:
-        /**
-         * @brief Default constructor.
-         */
-        IMeasurementSource() = default;
+        IMeasurementSource(MeasurementDeviceId _id) : id(id) {}
+
+        IMeasurementSource() = delete;
 
         /**
          * @brief Virtual destructor.
@@ -57,6 +57,15 @@ namespace Device
          * It is not fully implemented yet.
          */
         virtual MeasurementType getMeasurement() = 0;
+
+    protected:
+        MeasurementDeviceId getMyId() const
+        {
+            return id;
+        }
+
+    private:
+        MeasurementDeviceId &id;
     };
 }
 

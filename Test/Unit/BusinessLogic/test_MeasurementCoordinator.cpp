@@ -10,6 +10,9 @@
 class MockMeasurementSource : public Device::IMeasurementSource
 {
 public:
+    explicit MockMeasurementSource(Device::MeasurementDeviceId id)
+        : IMeasurementSource(id) {}
+
     MOCK_METHOD(bool, initialize, (), (override));
     MOCK_METHOD(bool, start, (), (override));
     MOCK_METHOD(bool, isMeasurementAvailable, (), (override));
@@ -33,8 +36,8 @@ class MeasurementCoordinatorTest : public ::testing::Test
 {
 protected:
     MockMeasurementDataStore mockStorage;
-    MockMeasurementSource mockSource1;
-    MockMeasurementSource mockSource2;
+    MockMeasurementSource mockSource1{Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_1};
+    MockMeasurementSource mockSource2{Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_2};
     BusinessLogic::MeasurementCoordinator *coordinator;
 
     void SetUp() override

@@ -6,7 +6,9 @@ namespace Device
 {
 
     PulseCounterMeasurementSource::PulseCounterMeasurementSource(Driver::IPulseCounterDriver &_pulseCounterDriver)
-        : pulseCounterDriver(_pulseCounterDriver)
+        : pulseCounterDriver(_pulseCounterDriver),
+          IMeasurementSource(MeasurementDeviceId::DEVICE_PULSE_COUNTER_1)
+
     {
     }
 
