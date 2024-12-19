@@ -8,7 +8,6 @@
 #include <cstdint>
 #include <array>
 #include <algorithm> // For std::find_if
-#include <cstddef>   // For std::size_t
 
 namespace Driver
 {
@@ -82,7 +81,7 @@ namespace Driver
     UartExchangeStatus UartDriver::getExchangeStatus(HAL_StatusTypeDef _halStatus)
     {
         // Use std::find_if for concise and safe lookup
-        auto it = std::find_if(
+        const auto *it = std::find_if(
             translation.begin(),
             translation.end(),
             [_halStatus](const HalStatusToDriverStatus &entry)

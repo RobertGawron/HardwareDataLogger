@@ -5,7 +5,7 @@
 #include "Driver/Interfaces/IKeyboardDriver.hpp"
 
 #include <cstdint>
-#include <algorithm> // For std::find_if
+#include <cstddef> // For std::size_t
 
 namespace Device
 {
@@ -79,7 +79,7 @@ namespace Device
 
             case KeyboardKeyActionState::Fail:
                 // TODO
-            default:
+                // default:
                 // If there are other states or error conditions, handle them here
                 break;
             }

@@ -18,8 +18,6 @@
 namespace BusinessLogic
 {
 
-    char myLabel[10];
-
     // hacks!!!!
     Device::IDisplay *_display;
     BusinessLogic::HmiMeasurementModel *model;
@@ -34,6 +32,7 @@ namespace BusinessLogic
         {
             mui_t *ui;
             Device::IDisplay *display;
+            BusinessLogic::HmiMeasurementModel *model;
         };
 
         constexpr std::size_t LabelTextBufferSize = 10;
@@ -44,23 +43,13 @@ namespace BusinessLogic
 
             if (muiMessage == MUIF_MSG_DRAW)
             {
-                _display->setCursor(mui_get_x(muiHandler), mui_get_y(muiHandler));
-                //_display->getU8x8()->print(stop_watch_timer);
-
                 sprintf(labelTextBuffer, "%d", model->dummyGetData());
 
+                _display->setCursor(mui_get_x(muiHandler), mui_get_y(muiHandler));
                 _display->drawUTF8(mui_get_x(muiHandler), mui_get_y(muiHandler), labelTextBuffer);
-                //  _display->getU8g2().print(".");
-                // u8g2.print((stop_watch_timer/10)%100);
             }
 
-            // if (msg == MUIF_MSG_DRAW)
-            {
-                //  printf("hello %d\n", msg);
-                //  //       const char *label = get_device_value(ui->arg); /* Fetch dynamic content based on index */
-                //     u8g2_DrawStr(ui->u8g2, ui->x, ui->y, label);
-            }
-            return 0;
+            return 0; // TODO what should this function return?
         }
     }
 
@@ -97,30 +86,6 @@ namespace BusinessLogic
         return printLastReading(muiHandler,
                                 muiMessage,
                                 Device::MeasurementSource::DEVICE_UART_1);
-    }
-
-    // Define a custom MUIF handler for dynamic labels
-    uint8_t mui_dynamic_label_handler(mui_t *ui, uint8_t msg)
-    {
-        if (msg == MUIF_MSG_DRAW)
-        {
-            _display->setCursor(mui_get_x(ui), mui_get_y(ui));
-            //_display->getU8x8()->print(stop_watch_timer);
-
-            sprintf(myLabel, "%d", model->dummyGetData());
-
-            _display->drawUTF8(mui_get_x(ui), mui_get_y(ui), myLabel);
-            //  _display->getU8g2().print(".");
-            // u8g2.print((stop_watch_timer/10)%100);
-        }
-
-        // if (msg == MUIF_MSG_DRAW)
-        {
-            printf("hello %d\n", msg);
-            //       const char *label = get_device_value(ui->arg); /* Fetch dynamic content based on index */
-            //     u8g2_DrawStr(ui->u8g2, ui->x, ui->y, label);
-        }
-        return 0;
     }
 
 // Can't fix, MUI related implementation.
@@ -220,9 +185,7 @@ namespace BusinessLogic
     {
         display.begin();
 
-        sprintf(myLabel, "hello");
-
-        mui.begin(display, fds_data, muif_list, sizeof(muif_list) / sizeof(muif_t));
+               mui.begin(display, fds_data, muif_list, sizeof(muif_list) / sizeof(muif_t));
         mui.gotoForm(/* form_id= */ 1, /* initial_cursor_position= */ 0);
         display.firstPage();
         display.setCursor(0, 0);
