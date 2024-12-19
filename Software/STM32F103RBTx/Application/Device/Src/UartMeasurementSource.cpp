@@ -1,6 +1,6 @@
 #include "Device/Inc/UartMeasurementSource.hpp"
 #include "Device/Inc/MeasurementType.hpp"
-#include "Device/Inc/MeasurementType.hpp"
+#include "Device/Inc/MeasurementSource.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
 
 #include <cstdint>
