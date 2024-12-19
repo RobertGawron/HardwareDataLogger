@@ -11,6 +11,7 @@
 #include "stm32f1xx_hal_gpio.h"
 #include "main.h" // for KEY_UP_*_Port, KEY_*_Pin
 #include <cstdint>
+#include <array> // For std::array
 
 namespace Driver
 {
@@ -18,7 +19,7 @@ namespace Driver
      * @class KeyboardFourPushButtonsDriver
      * @brief Periodically reads the state of four push buttons via GPIO.
      *
-     * This class represents the raw state of keys read from GPIO pins on a microcontroller to which the buttons are connected. Note that there is no HW debouncing circuit and there is no pull-up resistor o the pCB (the pull-up resistor is configured in CubeMX)
+     * This class represents the raw state of keys read from GPIO pins on a microcontroller to which the buttons are connected. Note that there is no HW debouncing circuit and there is no pull-up resistor o the PCB (the pull-up resistor is configured in CubeMX)
      */
     class KeyboardFourPushButtonsDriver : public IKeyboardDriver
     {
@@ -136,7 +137,7 @@ namespace Driver
         {
             KeyboardKeyState state;  /**< State of the GPIO connected to the button, either pressed (low) or not pressed (high). */
             GPIO_TypeDef *GPIO_Port; /**< Pointer to the GPIO port associated with the key. */
-            std::uint16_t GPIO_Pin;       /**< GPIO pin number associated with the key. */
+            std::uint16_t GPIO_Pin;  /**< GPIO pin number associated with the key. */
         };
 
         /**
@@ -146,12 +147,12 @@ namespace Driver
          * Each entry corresponds to a key, including its initial state (not pressed) and the associated
          * GPIO port and pin number.
          */
-        KeyState keyState[AmountOfKeys] = {
+        std::array<KeyState, AmountOfKeys> keyState = {{
             {KeyboardKeyState::NotPressed, KEY_UP_GPIO_Port, KEY_UP_Pin},      /**< Key Up: Not pressed, associated GPIO port and pin. */
             {KeyboardKeyState::NotPressed, KEY_DOWN_GPIO_Port, KEY_DOWN_Pin},  /**< Key Down: Not pressed, associated GPIO port and pin. */
             {KeyboardKeyState::NotPressed, KEY_LEFT_GPIO_Port, KEY_LEFT_Pin},  /**< Key Left: Not pressed, associated GPIO port and pin. */
             {KeyboardKeyState::NotPressed, KEY_RIGHT_GPIO_Port, KEY_RIGHT_Pin} /**< Key Right: Not pressed, associated GPIO port and pin. */
-        };
+        }};
     };
 
 }
