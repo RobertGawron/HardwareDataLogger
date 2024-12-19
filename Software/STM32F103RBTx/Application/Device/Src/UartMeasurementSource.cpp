@@ -34,6 +34,12 @@ namespace Device
 
     MeasurementType UartMeasurementSource::getMeasurement()
     {
-        return (std::uint8_t)5;
+        std::uint16_t dummyData = 5u;
+
+        MeasurementType m;
+        m.source = MeasurementSource::DEVICE_PULSE_COUNTER_1;
+        m.data = dummyData;
+
+        return m;
     }
 }

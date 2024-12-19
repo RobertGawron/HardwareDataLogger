@@ -60,6 +60,7 @@ namespace Driver
 
     IPulseCounterDriver::CounterSizeType PulseCounterDriver::getMeasurement()
     {
+
         return value;
     }
 

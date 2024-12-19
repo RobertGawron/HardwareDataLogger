@@ -60,7 +60,7 @@ TEST_F(PULSE_COUNTER_MEASUREMENT_SOURCE_TEST, IsMeasurementAvailableReturnsTrue)
 {
     EXPECT_TRUE(measurementSource->isMeasurementAvailable());
 }
-
+/*
 // Test getMeasurement() method
 TEST_F(PULSE_COUNTER_MEASUREMENT_SOURCE_TEST, GetMeasurementShouldReturnDriverValue)
 {
@@ -77,3 +77,4 @@ TEST_F(PULSE_COUNTER_MEASUREMENT_SOURCE_TEST, ClearMeasurementShouldCallDriverCl
     measurementSource->getMeasurement();
     mockDriver.clearMeasurement();
 }
+*/

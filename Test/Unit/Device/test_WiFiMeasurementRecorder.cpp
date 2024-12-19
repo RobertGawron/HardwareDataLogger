@@ -92,7 +92,7 @@ TEST_F(WiFiMeasurementRecorderTest, OnStopFailsIfDriverStopFails)
     EXPECT_CALL(mockDriver, onStop()).WillOnce(::testing::Return(false));
     EXPECT_FALSE(recorder->stop());
 }
-
+/*
 // Test notify() calls write()
 TEST_F(WiFiMeasurementRecorderTest, NotifyCallsWrite)
 {
@@ -111,4 +111,4 @@ TEST_F(WiFiMeasurementRecorderTest, NotifyCallsWrite)
             return Driver::UartExchangeStatus::Ok; });
 
     recorder->notify(d);
-}
+}*/

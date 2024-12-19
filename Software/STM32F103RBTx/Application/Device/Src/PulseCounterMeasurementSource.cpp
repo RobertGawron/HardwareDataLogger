@@ -35,7 +35,11 @@ namespace Device
 
     MeasurementType PulseCounterMeasurementSource::getMeasurement()
     {
-        return pulseCounterDriver.getMeasurement();
+        MeasurementType m;
+        m.source = MeasurementSource::DEVICE_PULSE_COUNTER_1;
+        m.data = pulseCounterDriver.getMeasurement();
+
+        return m;
     }
 
 }
