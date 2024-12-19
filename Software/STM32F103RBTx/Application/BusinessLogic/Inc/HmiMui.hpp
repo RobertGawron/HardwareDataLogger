@@ -100,6 +100,8 @@ namespace BusinessLogic
         bool tick() override;
 
     private:
+        bool registerMuiToItsObjects(mui_t *ui, Device::IDisplay *display, BusinessLogic::HmiMeasurementModel *model);
+
         Device::IDisplay &display;                                       /**< Reference to the display interface. */
         Device::IDisplayBrightnessRegulator &displayBrightnessRegulator; /**< Reference to the display brightness regulator. */
         Device::IKeyboard &keyboard;                                     /**< Reference to the keyboard interface. */
