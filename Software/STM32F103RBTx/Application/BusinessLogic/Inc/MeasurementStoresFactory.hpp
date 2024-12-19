@@ -73,13 +73,13 @@ namespace BusinessLogic
         //  bool registerStoresToHmi(IHmiFactory &coordinator);
 
     private:
+        Device::CacheMeasurementRecorder &cacheRecorder;
+
         /** @brief WiFi measurement recorder used for storing measurements via WiFi. */
         Device::WiFiMeasurementRecorder wifiRecorder;
 
         /** @brief SD card measurement recorder used for storing measurements on an SD card. */
         Device::SdCardMeasurementRecorder sdCardRecorder;
-
-        Device::CacheMeasurementRecorder &cacheRecorder;
     };
 }
 

@@ -19,7 +19,7 @@ namespace Device
          */
         virtual ~IMeasurementReader() = default;
 
-        virtual std::uint32_t getLatestMeasurement(MeasurementSource source) const = 0;
+        [[nodiscard]] virtual std::uint32_t getLatestMeasurement(MeasurementSource source) const = 0;
     };
 }
 

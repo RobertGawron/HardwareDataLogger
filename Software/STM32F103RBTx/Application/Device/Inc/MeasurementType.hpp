@@ -7,7 +7,6 @@
 
 #include <variant>
 #include <cstdint>
-#include <cstdint>
 
 namespace Device
 {

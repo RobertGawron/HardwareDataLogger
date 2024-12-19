@@ -84,7 +84,7 @@ namespace Device
          */
         bool flush() override;
 
-        std::uint32_t getLatestMeasurement(Device::MeasurementSource source) const override;
+        [[nodiscard]] std::uint32_t getLatestMeasurement(Device::MeasurementSource source) const override;
 
     private:
         /**

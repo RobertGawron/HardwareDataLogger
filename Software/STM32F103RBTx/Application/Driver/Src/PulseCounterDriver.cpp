@@ -3,6 +3,7 @@
 #include "Driver/Inc/PulseCounterIdentifier.hpp"
 
 #include <cstdint>
+#include <cstddef> // For std::size_t
 #include <array>
 
 namespace
