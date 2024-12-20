@@ -19,3 +19,18 @@ services:
     working_dir: /workspace
     # Do not override the CMD from Dockerfile
 
+  raspberry-logger:
+    image: raspberry-logger:latest
+    build:
+      context: .
+      dockerfile: DevOps/Docker/Dockerfile.pi
+    #environment:
+    #  - PYTHONUNBUFFERED=1
+    volumes:
+      - ./Software:/workspace/Software
+    ports:
+      - "3000:3000"  # Map Grafana's internal port 3000 to the host
+      - "8086:8086"  # InfluxDB
+    #depends_on:
+    #  - dev
+    restart: unless-stopped

@@ -116,3 +116,19 @@ cd /workspace/build/ && cmake .. && make -j24 && cd /workspace/Test/System && py
 
 
 
+
+# Pi
+
+Build the image with 
+
+docker compose build raspberry-logger
+
+Run with 
+
+docker compose up raspberry-logger -d
+
+Connect:
+
+docker-compose exec raspberry-logger bash
+
+For cross-platform usage, use Buildx to produce a multi-arch image.
