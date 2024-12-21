@@ -31,6 +31,12 @@ Additionally at the end of work:
 
 docker-compose down --remove-orphans
 
+Oneliner:
+ 
+docker-compose build dev && docker-compose up -d --remove-orphans && docker-compose exec dev bash
+
+ 
+
 ## Runing stuff
 
 ## Builds the firmware

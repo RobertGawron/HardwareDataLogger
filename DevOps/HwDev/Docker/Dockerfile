@@ -121,7 +121,10 @@ RUN /workspace/venv/bin/pip install --upgrade pip && \
     pytest \
     pytest-html \
     PyQt6 \
-    codechecker
+    codechecker \
+    esptool \
+    adafruit-ampy
+
 
 # Add virtual environment binaries to the PATH
 ENV PATH="/workspace/venv/bin:$PATH"
