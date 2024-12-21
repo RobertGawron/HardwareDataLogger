@@ -147,5 +147,8 @@ WORKDIR /workspace/build
 #&& ln -s $(pwd)/infer/bin/infer /usr/local/bin/infer \
 #&& cd .. && rm -rf infer
 
+RUN apt-get update && apt-get install -y lsof
+
+
 # Default command
 CMD ["bash"]

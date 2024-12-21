@@ -4,7 +4,9 @@ services:
     build:
       context: .
       dockerfile: DevOps/HwDev/Docker/Dockerfile
-    privileged: true
+    privileged: true  # Ensure container has access to the device
+    devices:
+      - "/dev/ttyS3:/dev/ttyS3"  # Replace /dev/ttyS3 with your actual port
     environment:
       - DISPLAY=${DISPLAY}   # Forward the host's display
     stdin_open: true  # Keep stdin open for interaction
