@@ -54,13 +54,38 @@ COM2 → /dev/ttyS2
 COM3 → /dev/ttyS3
 
 
+in shell of windows:
+
+winget install usbipd
+
+
+on host:
+
+wsl --shutdown
+wsl
+
+open new shell wiwnods as root
+
+C:\Users\rober>usbipd list
+Connected:
+BUSID  VID:PID    DEVICE                                                        STATE
+2-1    10c4:ea60  Silicon Labs CP210x USB to UART Bridge (COM3)                 Not shared
+2-3    046d:c52b  Logitech USB Input Device, USB Input Device                   Not shared
+2-5    27c6:639c  Goodix MOC Fingerprint                                        Not shared
+2-6    0c45:6739  Integrated Webcam                                             Not shared
+2-10   8087:0033  Intel(R) Wireless Bluetooth(R)                                Not shared
+
+
+usbipd bind --busid 2-1
+
+
 root@robert:/mnt/c/Documents and Settings/rober/Documents# chmod 666 /dev/ttyS3
 
 modify docker compose
 
 docker-compose build dev && docker-compose up -d --remove-orphans && docker-compose exec dev bash
 
-
+on host machine
 root@robert:/mnt/c/Documents and Settings/rober/Documents# ls -l /dev/ttyS3
 
 
@@ -90,4 +115,12 @@ cd /workspace/Software/ESP8266MOD/ && python3 -m venv /workspace/venv
 
 
 
+esptool.py --port /dev/ttyS3 erase_flash
 
+
+
+=====================
+
+on host:
+
+esptool.py --port /dev/ttyUSB0 erase_flash
