@@ -123,7 +123,9 @@ RUN /workspace/venv/bin/pip install --upgrade pip && \
     PyQt6 \
     codechecker \
     esptool \
-    adafruit-ampy
+    adafruit-ampy \
+    prospector \
+    junit2html
 
 
 # Add virtual environment binaries to the PATH
