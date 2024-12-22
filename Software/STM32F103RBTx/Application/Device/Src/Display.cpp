@@ -124,49 +124,52 @@ namespace Device
 
         case U8X8_MSG_DISPLAY_DRAW_TILE:
         {
-            const u8x8_tile_t *tile = static_cast<u8x8_tile_t *>(argPtr);
+            const u8x8_tile_t *tiles = static_cast<u8x8_tile_t *>(argPtr);
 
             for (std::uint8_t t = 0; t < argInt; t++)
             {
-                const std::uint8_t tile_x_start = tile->x_pos * TILE_PIXEL_HEIGHT; // Starting x position in pixels
-                const std::uint8_t tile_y_start = tile->y_pos * TILE_PIXEL_HEIGHT; // Starting y position in pixels
+                // lib api, can't change it
+                // codechecker_suppress [clang-diagnostic-unsafe-buffer-usage]
+                const u8x8_tile_t &tile = tiles[t]; // Access the current tile safely using an index
 
-                // printf("tile_x_start x=%d, y=%d\n", tile_x_start, tile_y_start);
+                const std::uint8_t tile_x_start = tile.x_pos * TILE_PIXEL_HEIGHT; // Starting x position in pixels
+                const std::uint8_t tile_y_start = tile.y_pos * TILE_PIXEL_HEIGHT; // Starting y position in pixels
 
                 // Treat each byte as a column of 8 vertical pixels.
-                for (std::uint8_t col = 0; col < 120; col++)
+                constexpr std::uint8_t len = 120; // todo think about it
+                for (std::uint8_t col = 0; col < len; col++)
                 {
-                    const std::uint8_t col_data = tile->tile_ptr[col]; // This is a vertical column
+                    // lib api, can't change it
+                    // codechecker_suppress [clang-diagnostic-unsafe-buffer-usage]
+                    const std::uint8_t col_data = tile.tile_ptr[col]; // This is a vertical column
                     for (std::uint8_t bit = 0; bit < TILE_PIXEL_HEIGHT; bit++)
                     {
                         Driver::DisplayPixelColor::PixelColor color = Driver::DisplayPixelColor::getColor(0x00, 0x00, 0x00);
                         const std::uint8_t x = tile_x_start + col;
                         const std::uint8_t y = tile_y_start + bit;
 
-                        if (col_data & (1 << bit))
+                        if ((col_data & (1 << bit)) != 0)
                         {
                             // Now (col, bit) corresponds to (x, y) pixel offsets within the tile:
-                            // x = tile_x_start + col
-                            // y = tile_y_start + bit
-                            // printf("Pixel ON at x=%d, y=%d\n", tile_x_start + col, tile_y_start + bit);
                             color = Driver::DisplayPixelColor::getColor(DEFAULT_COLOR_RED, DEFAULT_COLOR_GREEN, DEFAULT_COLOR_BLUE);
                         }
 
                         displayDriver.setPixel(x, y, color);
                     }
                 }
-
-                tile++;
             }
         }
+
         break;
 
-        case U8X8_MSG_DISPLAY_SET_POWER_SAVE:
-        case U8X8_MSG_DISPLAY_SET_FLIP_MODE:
-        case U8X8_MSG_DISPLAY_REFRESH:
-        {
-        }
-        break;
+            /*
+            case U8X8_MSG_DISPLAY_SET_POWER_SAVE:
+            case U8X8_MSG_DISPLAY_SET_FLIP_MODE:
+            case U8X8_MSG_DISPLAY_REFRESH:
+            {
+            }
+            break;
+            */
 
         default:
         {
@@ -178,7 +181,7 @@ namespace Device
         return U8G2_STATUS_OK;
     }
 
-    void Display::u8g2_Setup_st7735(u8g2_t *u8g2, const u8g2_cb_t *rotation, u8x8_msg_cb byte_cb, u8x8_msg_cb gpio_and_delay_cb)
+    void Display::u8g2_Setup_st7735(u8g2_t *u8g2Handler, const u8g2_cb_t *rotation, u8x8_msg_cb byte_cb, u8x8_msg_cb gpio_and_delay_cb)
     {
         // Calculate the number of tile rows needed for 128x128 resolution.
         // Each tile is 8 pixels high, so for a 128-pixel height:
@@ -188,7 +191,9 @@ namespace Device
         // Each tile is 8 pixels wide * 1 byte (8 bits) = 8 bytes per tile.
         // For 16 rows and 16 tiles per row:
         // Total buffer size = 16 rows * 16 tiles/row * 8 bytes/tile = 2048 bytes.
-        std::uint8_t *buf = static_cast<std::uint8_t *>(malloc(128 * tile_buf_height));
+        constexpr std::size_t len = 128;
+        std::uint8_t *buf = static_cast<std::uint8_t *>(malloc(
+            len * static_cast<std::size_t>(tile_buf_height)));
 
         if (buf == nullptr)
         {
@@ -198,11 +203,11 @@ namespace Device
 
         // Setup the display with the appropriate parameters.
         // Note that this is u8g2 macro so I cant modify it to avoid warning
-        // codechecker_suppress [mold-style-cast, cppcheck-cstyleCast]
-        u8g2_SetupDisplay(u8g2, trampolineU8x8DSt7735, u8x8_cad_001, byte_cb, gpio_and_delay_cb);
+        // codechecker_suppress [mold-style-cast, cppcheck-cstyleCast, clang-diagnostic-old-style-cast]
+        u8g2_SetupDisplay(u8g2Handler, trampolineU8x8DSt7735, u8x8_cad_001, byte_cb, gpio_and_delay_cb);
 
         // Configure the buffer and the rendering method (vertical top to bottom).
-        u8g2_SetupBuffer(u8g2, buf, tile_buf_height, u8g2_ll_hvline_vertical_top_lsb, rotation);
+        u8g2_SetupBuffer(u8g2Handler, buf, tile_buf_height, u8g2_ll_hvline_vertical_top_lsb, rotation);
     }
 
     Display::Display(Driver::IDisplayDriver &_displayDriver) : displayDriver(_displayDriver)

@@ -38,6 +38,9 @@ TEST_F(PulseCounterDriverTest, IncrementCounterIncreasesCorrectValue)
 {
     auto idOfCounter = static_cast<std::uint8_t>(id);
 
+    EXPECT_TRUE(driver->onInitialize());
+    EXPECT_TRUE(driver->onStart());
+
     incrementPulseCounter(idOfCounter);
     EXPECT_EQ(driver->getMeasurement(), 1u);
 
@@ -48,6 +51,9 @@ TEST_F(PulseCounterDriverTest, IncrementCounterIncreasesCorrectValue)
 TEST_F(PulseCounterDriverTest, ClearMeasurementResetsCounter)
 {
     auto idOfCounter = static_cast<std::uint8_t>(id);
+
+    EXPECT_TRUE(driver->onInitialize());
+    EXPECT_TRUE(driver->onStart());
 
     incrementPulseCounter(idOfCounter);
     EXPECT_EQ(driver->getMeasurement(), 1u);

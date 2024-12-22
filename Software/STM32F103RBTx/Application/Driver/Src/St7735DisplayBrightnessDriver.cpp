@@ -71,10 +71,14 @@ namespace Driver
         // Enable the clock for TIM3
         __HAL_RCC_TIM3_CLK_ENABLE();
 
+        constexpr std::uint32_t TIMER_CLOCK_FREQ = 24000000; // Timer clock frequency in Hz
+        constexpr std::uint32_t PWM_FREQ = 5000;             // Desired PWM frequency in Hz
+        constexpr std::uint32_t TIMER_PERIOD = (TIMER_CLOCK_FREQ / PWM_FREQ) - 1;
+
         htim.Instance = TIM3;    // This should be configurable.
         htim.Init.Prescaler = 0; // No prescaler, timer clock remains 24 MHz
         htim.Init.CounterMode = TIM_COUNTERMODE_UP;
-        htim.Init.Period = 4799; // Period to get a PWM frequency of 5 kHz
+        htim.Init.Period = TIMER_PERIOD; // Period to get a PWM frequency of 5 kHz
         htim.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
         htim.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
 

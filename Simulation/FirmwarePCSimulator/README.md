@@ -33,26 +33,6 @@ main_window.py: Main window of the application.
 * cmake
 * Docker
 
-## Compilation and usage
+## Setup
 
-[This part is covered in the DevOps section.](../../DevOps/README.md).
-
-cd /workspace/build/ && cmake .. && make -j24 && cd /workspace/Simulation/FirmwarePCSimulator/ && python3 main.py
-
-## Troubleshooting
-
-Check if Core Dumps Are Enabled Core dumps might be disabled by default on your system. Check the current core dump settings using:
-
-ulimit -c
-
-If it shows 0, core dumps are disabled, enable core dumps by running:
-
-ulimit -c unlimited
-
-On WSL (Docker runs in Windows), disable wsl-capture-crash for Core Dumps:
-
-echo "/tmp/core.%e.%p" | tee /proc/sys/kernel/core_pattern
-
-
-debug core:
-gdb /workspace/venv/bin/python3 /tmp/core.python3.2430
+[Setup Manual](../Documentation/Manuals/SetupFirmwareSimulation.md)
