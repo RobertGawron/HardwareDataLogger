@@ -36,30 +36,3 @@ When finished, shut down the Docker container:
 docker-compose down --remove-orphans
 ```
 
-## Docker Image for Raspberry Pi Development
-
-### Build the Image
-
-In the main directory (HardwareDataLogger), run the following command to build the image:
-
-```
-docker-compose build raspberry-logger
-```
-
-### Running the Docker Image
-
-Start the Docker image:
-
-```
-docker-compose up raspberry-logger -d
-```
-
-Log into the Docker image:
-
-```
-docker-compose exec raspberry-logger bash
-```
-
-### Cross-Platform Usage
-
-For cross-platform usage, use Buildx to produce a multi-arch image.

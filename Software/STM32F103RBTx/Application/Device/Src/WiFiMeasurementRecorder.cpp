@@ -103,7 +103,7 @@ namespace Device
 
         const Driver::UartExchangeStatus driverStatus = driver.transmit(
             data.data(),
-            currentDataPosition,
+            static_cast<std::uint16_t>(currentDataPosition),
             Driver::IUartDriver::MaxDelay);
 
         status = (driverStatus == Driver::UartExchangeStatus::Ok);

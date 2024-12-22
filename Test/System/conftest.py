@@ -4,6 +4,7 @@ import base64
 from pathlib import Path
 from io import BytesIO
 from PIL import Image
+from typing import Generator
 
 import pytest
 import pytest_html
@@ -12,24 +13,24 @@ import pytest_html
 simulation_path = Path(__file__).parent.parent.parent / "Simulation" / "FirmwarePCSimulator"
 sys.path.append(str(simulation_path))
 
+# pylint: disable=import-error, wrong-import-position
 from simulation import Simulation
 
 logger = logging.getLogger(__name__)
 
-
 @pytest.fixture
-def assert_display_content(request):
+def assert_display_content(request: pytest.FixtureRequest) -> callable:
 
     if not hasattr(request.node, "assert_display_contents"):
         request.node.assert_display_contents = []
 
-    def generate_image(dut: Simulation):
+    def generate_image(dut: Simulation) -> Image.Image:
         """
         Generate an image from the display content of the DUT.
         """
         width = dut.get_display_width()
         height = dut.get_display_height()
-        logger.info(f"Display dimensions: width={width}, height={height}")
+        logger.info("Display dimensions: width=%d, height=%d", width, height)
 
         # Create a new image representing the current display state
         generated_image = Image.new("RGB", (width, height))
@@ -45,7 +46,8 @@ def assert_display_content(request):
 
         return generated_image
 
-    def validate_display_content(dut: Simulation, assert_name, reference_path):
+    # pylint: disable=unused-argument
+    def validate_display_content(dut: Simulation, assert_name: str, reference_path: str) -> None:
         """
         Validate the display content by comparing the generated image with a reference.
         """
@@ -65,10 +67,10 @@ def assert_display_content(request):
 
     return validate_display_content
 
-
 @pytest.hookimpl(hookwrapper=True)
-def pytest_runtest_makereport(item, call):
+def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo) -> Generator[None, None, None]:
     """Attach all assertion-related images to the HTML report."""
+    # pylint: disable=unused-argument
     outcome = yield
     report = outcome.get_result()
 
@@ -78,15 +80,14 @@ def pytest_runtest_makereport(item, call):
         for image_base64, assert_name in images:
             # Append each image to the extras list
             extras.append(pytest_html.extras.image(image_base64, mime_type="image/png", name=assert_name))
-        
+
         report.extras = extras
-        
-def pytest_html_results_table_header(cells):
+
+def pytest_html_results_table_header(cells: list) -> None:
     """Add a 'Display' column to the HTML report header."""
     cells.insert(2, '<th class="sortable time" data-column-type="time">Display (Actual)</th>')
 
-
-def pytest_html_results_table_row(report, cells):
+def pytest_html_results_table_row(report: pytest.TestReport, cells: list) -> None:
     """Add custom content (images and assertions) to the HTML report row."""
     # Ensure the Display column includes all attached images
     if hasattr(report, "extras"):
@@ -100,5 +101,3 @@ def pytest_html_results_table_row(report, cells):
         )
 
         cells.insert(2, f"<td>{images_html}</td>")
-
- 

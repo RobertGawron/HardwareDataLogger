@@ -82,6 +82,10 @@ namespace Device
                 // default:
                 // If there are other states or error conditions, handle them here
                 break;
+            default:
+            {
+            }
+            break;
             }
 
             keyActionState[i] = nextState;

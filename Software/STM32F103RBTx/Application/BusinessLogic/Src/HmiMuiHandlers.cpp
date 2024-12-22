@@ -28,14 +28,12 @@ namespace BusinessLogic
 
     namespace
     {
-
         // Define a constant for maximum displays, change if needed
         constexpr std::size_t MAX_MUI_AMOUNT = 1u;
         std::array<DisplayMapEntry, MAX_MUI_AMOUNT> muiMap{};
 
         constexpr std::size_t LabelTextBufferSize = 10;
         char labelTextBuffer[LabelTextBufferSize];
-
     }
 
     uint8_t device1_printLastReading(mui_t *muiHandler, uint8_t muiMessage)
@@ -75,6 +73,8 @@ namespace BusinessLogic
 
     DisplayMapEntry *findEntryByMui(mui_t *muiHandler)
     {
+        // The std::find_if function returns an iterator, which is an object (not a raw pointer) in modern STL containers.
+        // codechecker_suppress [readability-qualified-auto]
         auto it = std::find_if(
             muiMap.begin(),
             muiMap.end(),

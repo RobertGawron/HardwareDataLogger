@@ -61,7 +61,8 @@ namespace Driver
         if (isInState(DriverState::State::Running))
         {
             // Use std::find_if to locate the key configuration in the array
-            // Use std::find_if to locate the key configuration in the array
+            // The std::find_if function returns an iterator, which is an object (not a raw pointer) in modern STL containers.
+            // codechecker_suppress [readability-qualified-auto]
             auto it = std::find_if(
                 keyState.begin(),
                 keyState.end(),

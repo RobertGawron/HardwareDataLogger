@@ -44,6 +44,7 @@ add_custom_target(static
         --disable clang-diagnostic-weak-vtables
         --disable altera-id-dependent-backward-branch
         --disable bugprone-easily-swappable-parameters
+        --disable clang-diagnostic-covered-switch-default
     COMMENT "Running CodeChecker analysis..."
     VERBATIM
 )

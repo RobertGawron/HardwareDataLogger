@@ -24,16 +24,16 @@ class DataVisualizationWidget(QWidget):
 
         self.setLayout(self.layout)
 
-    def update_pulse_counters(self, timestamp, values):
+    def update_pulse_counters(self, timestamp, new_values):
         """
         Update the graph with new pulse counter values.
 
         :param timestamp: The timestamp of the update.
-        :param values: A list of pulse counter values.
+        :param new_values: A list of pulse counter values.
         """
         # Append new data to the storage
         self.time_stamps.append(timestamp)
-        for i, value in enumerate(values):
+        for i, value in enumerate(new_values):
             self.pulse_counters[i].append(value)
 
         # Ensure the time series does not grow indefinitely (optional)
@@ -45,8 +45,8 @@ class DataVisualizationWidget(QWidget):
 
         # Clear and plot new data
         self.ax.clear()
-        for i, values in self.pulse_counters.items():
-            self.ax.plot(self.time_stamps, values, label=f"Pulse Counter {i + 1}")
+        for i, counter_values in self.pulse_counters.items():
+            self.ax.plot(self.time_stamps, counter_values, label=f"Pulse Counter {i + 1}")
 
         self.ax.set_title("Pulse Counter Values Over Time")
         self.ax.set_xlabel("Time")

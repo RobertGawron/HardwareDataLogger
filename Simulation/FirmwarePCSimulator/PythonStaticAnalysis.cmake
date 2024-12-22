@@ -14,7 +14,7 @@ file(MAKE_DIRECTORY ${PYTHON_REPORT_DIR})
 # Add a custom target for Python static analysis
 add_custom_target(pystatic
     COMMAND bash -c " \
-        /workspace/Simulation/FirmwarePCSimulator/PythonStaticAnalysis.sh"
+        source /workspace/Simulation/FirmwarePCSimulator/PythonStaticAnalysis.sh"
     COMMENT "Running Python static analysis with Prospector and generating reports..."
     VERBATIM
 )

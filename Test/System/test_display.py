@@ -7,6 +7,7 @@ from pathlib import Path
 simulation_path = Path(__file__).parent.parent.parent / "Simulation" / "FirmwarePCSimulator"
 sys.path.append(str(simulation_path))
 
+# pylint: disable=import-error, wrong-import-position
 from simulation import Simulation, SimulationKey
 
 
