@@ -7,12 +7,13 @@ from pathlib import Path
 simulation_path = Path(__file__).parent.parent.parent / "Simulation" / "FirmwarePCSimulator"
 sys.path.append(str(simulation_path))
 
-from simulation import Simulation, SimulationKey
-
+# pylint: disable=import-error, wrong-import-position
+from simulation import Simulation
 
 logger = logging.getLogger(__name__)
 
 def test_pulse_counter_start(assert_display_content):
+    # pylint: disable=unused-argument
     """Test to validate iteration through a list using display content."""
     logger.info("Starting test: test_iterate_list")
 
@@ -21,4 +22,3 @@ def test_pulse_counter_start(assert_display_content):
     logger.info("Firmware started for the simulation.")
 
     time.sleep(0.1)
-

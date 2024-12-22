@@ -8,11 +8,9 @@
 
 Note: Some people argue that using STM32CubeMX is a bad idea and that everything should be coded manually. I disagree, especially for personal projects. STM32CubeMX is a great time-saver and offers a more visual way to configure the project, making it easier to understand and modify. However, the GUI can be somewhat primitive and could definitely be improve
 
-## Building
-* Generate the project in STM32CubeMX, which will create the CMake setup.
-* Configure the STM32 VS Code Extension.
+## Setup
 
-Note: The generated CMake setup is not integrated with the main CMake configuration.   
+[Setup Manual](../../Documentation/Manuals/SetupFirmwareDevelopment.md)
 
 ## Architecture
 

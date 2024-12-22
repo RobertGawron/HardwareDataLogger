@@ -94,9 +94,9 @@ class MainWindow(QMainWindow):
         Handle updates from the MeasurementDataInputWidget sliders.
         :param values: List of current slider values.
         """
-        timestamp = "{:%Y-%m-%d %H:%M:%S}".format(datetime.now())
-        message = "Simulated pulse counter values: " + ", ".join(f"{value}" for value in values)
+        timestamp = f"{datetime.now():%Y-%m-%d %H:%M:%S}"
+        message = f"Simulated pulse counter values: {', '.join(str(value) for value in values)}"
         self.log_tabs.add_log(LogTabID.PULSE_COUNTER, timestamp, message)
-        
+
         self.data_visualization_tab.update_pulse_counters(timestamp, values)
         self.simulation.update_pulse_counters(values)

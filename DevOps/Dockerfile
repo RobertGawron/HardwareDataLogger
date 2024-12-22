@@ -121,7 +121,9 @@ RUN /workspace/venv/bin/pip install --upgrade pip && \
     pytest \
     pytest-html \
     PyQt6 \
-    codechecker
+    codechecker \
+    prospector \
+    prospector2html
 
 # Add virtual environment binaries to the PATH
 ENV PATH="/workspace/venv/bin:$PATH"

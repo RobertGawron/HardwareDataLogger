@@ -89,12 +89,12 @@ namespace Device
          * This method sets up the `u8g2` library with the appropriate callbacks and parameters
          * for the ST7735 display hardware.
          *
-         * @param u8g2 Pointer to the `u8g2_t` structure representing the library context.
+         * @param u8g2Handler Pointer to the `u8g2_t` structure representing the library context.
          * @param rotation Pointer to a `u8g2_cb_t` structure specifying the display rotation.
          * @param byte_cb Byte callback function for communication with the display.
          * @param gpio_and_delay_cb GPIO and delay callback function for controlling hardware signals.
          */
-        static void u8g2_Setup_st7735(u8g2_t *u8g2, const u8g2_cb_t *rotation, u8x8_msg_cb byte_cb, u8x8_msg_cb gpio_and_delay_cb);
+        static void u8g2_Setup_st7735(u8g2_t *u8g2Handler, const u8g2_cb_t *rotation, u8x8_msg_cb byte_cb, u8x8_msg_cb gpio_and_delay_cb);
 
         /// Reference to the display driver used for managing display operations.
         Driver::IDisplayDriver &displayDriver;

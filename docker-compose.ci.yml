@@ -9,7 +9,7 @@ services:
       - ./Software:/workspace/Software
       - ./Simulation:/workspace/Simulation
       - ./Test:/workspace/Test
-      - ./DevOps/HwDev/BuildArtifacts:/workspace/build/BuildArtifacts
+      - ./DevOps/BuildArtifacts:/workspace/build/BuildArtifacts
       - ./CMakeLists.txt:/workspace/CMakeLists.txt
       - /tmp/.X11-unix:/tmp/.X11-unix   # Mount X server socket
     working_dir: /workspace
