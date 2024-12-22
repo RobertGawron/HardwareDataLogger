@@ -204,14 +204,14 @@ jobs:
         run: |
           docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "\
             set -e; \
-            cd /workspace/build && cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CXX_STANDARD=17 .. && make static"
+            cd /workspace/build && cmake .. && make pystatic"
 
       - name: Upload Static Analysis Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: static-analysis-results
-          path: DevOps/HwDev/BuildArtifacts/StaticAnalysis
+          path: DevOps/HwDev/BuildArtifacts/PythonStaticAnalysis
 
       - name: Clean up Docker containers
         run: |

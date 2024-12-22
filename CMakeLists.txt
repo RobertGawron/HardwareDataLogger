@@ -12,6 +12,10 @@ add_subdirectory(Software/STM32F103RBTx/Application)
 add_subdirectory(Simulation/FirmwarePCSimulator)
 add_subdirectory(Test/Unit)
 
-include(Software/StaticAnalysis.cmake)
+include(Software/CStaticAnalysis.cmake)
 include(Software/ClassDiagram.cmake)
 include(Software/DocsCoverage.cmake)
+
+include(Simulation/FirmwarePCSimulator/PythonStaticAnalysis.cmake)
+
+
