@@ -26,17 +26,35 @@ namespace Device
     class IMeasurementSource
     {
     public:
+        /**
+         * @brief Constructs an IMeasurementSource with a specific device identifier.
+         * @param _id The unique identifier for this measurement source.
+         */
         IMeasurementSource(MeasurementDeviceId _id) : id(_id) {}
 
-        IMeasurementSource() = delete;
+        IMeasurementSource() = delete; ///< Deleted default constructor prevents instantiation without device ID.
 
         /**
          * @brief Virtual destructor.
          */
         virtual ~IMeasurementSource() = default;
 
+        /**
+         * @brief Initializes the measurement source.
+         * @return True if initialization succeeded, false otherwise.
+         */
         virtual bool initialize() = 0;
+        
+        /**
+         * @brief Starts the measurement collection process.
+         * @return True if start succeeded, false otherwise.
+         */
         virtual bool start() = 0;
+        
+        /**
+         * @brief Stops the measurement collection process.
+         * @return True if stop succeeded, false otherwise.
+         */
         virtual bool stop() = 0;
 
         /**
@@ -55,16 +73,22 @@ namespace Device
          *
          * This method should be implemented to obtain the current measurement data from the device.
          * It is not fully implemented yet.
+         * @return The current measurement data.
          */
         [[nodiscard]] virtual MeasurementType getMeasurement() = 0;
 
     protected:
+        /**
+         * @brief Retrieves the device identifier for this measurement source.
+         * @return The unique identifier of this measurement source.
+         */
         [[nodiscard]] MeasurementDeviceId getMyId() const
         {
             return id;
         }
 
     private:
+        /** @brief Unique identifier for this measurement source. */
         MeasurementDeviceId id;
     };
 }

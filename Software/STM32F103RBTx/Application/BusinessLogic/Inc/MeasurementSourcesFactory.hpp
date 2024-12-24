@@ -1,6 +1,6 @@
 /**
  * @file MeasurementSourcesFactory.hpp
- * @brief Declares the MeasurementSourcesFactory class responsible for building and managing measurement sources.
+ * @brief Declares the MeasurementSourcesFactory class for creating measurement data sources.
  */
 
 #ifndef MeasurementSourcesFactory_h
@@ -12,34 +12,27 @@
 #include "Device/Inc/UartMeasurementSource.hpp"
 #include "Driver/Interfaces/IPulseCounterDriver.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
-
-#include <cstdint>
 #include <array>
 
 namespace BusinessLogic
 {
     /**
      * @class MeasurementSourcesFactory
-     * @brief Responsible for building and managing measurement sources.
+     * @brief Creates and manages measurement data source components.
      *
-     * The MeasurementSourcesFactory class constructs and manages components related to measurement sources.
-     * It requires drivers for pulse counters and UART to build the measurement sources, which can be platform-specific,
-     * depending on whether the application is running in firmware or simulation.
+     * Constructs and initializes pulse counter and UART-based measurement sources.
+     * Implements the IApplicationComponentFactory interface for system initialization.
      */
     class MeasurementSourcesFactory : public IApplicationComponentFactory
     {
     public:
         /**
-         * @brief Constructs the MeasurementSourcesFactory with platform-specific drivers.
-         *
-         * The constructor requires pulse counter drivers for measurement collection and a UART driver for UART-based
-         * measurements. Other components are constructed internally.
-         *
-         * @param pulseCounterDriver1 Reference to the first pulse counter driver.
-         * @param pulseCounterDriver2 Reference to the second pulse counter driver.
-         * @param pulseCounterDriver3 Reference to the third pulse counter driver.
-         * @param pulseCounterDriver4 Reference to the fourth pulse counter driver.
-         * @param uart Reference to the UART driver for receiving measurement data.
+         * @brief Constructs factory with required drivers.
+         * @param pulseCounterDriver1 Driver for pulse counter 1
+         * @param pulseCounterDriver2 Driver for pulse counter 2
+         * @param pulseCounterDriver3 Driver for pulse counter 3
+         * @param pulseCounterDriver4 Driver for pulse counter 4
+         * @param uart Driver for UART communication
          */
         explicit MeasurementSourcesFactory(
             Driver::IPulseCounterDriver &pulseCounterDriver1,
@@ -54,43 +47,39 @@ namespace BusinessLogic
         ~MeasurementSourcesFactory() override = default;
 
         /**
-         * @brief Deleted copy constructor to prevent copying.
+         * @brief Deleted copy constructor.
          */
         MeasurementSourcesFactory(const MeasurementSourcesFactory &) = delete;
 
         /**
-         * @brief Deleted assignment operator to prevent assignment.
-         * @return MeasurementSourcesFactory& The assigned object.
+         * @brief Deleted copy assignment operator.
          */
         MeasurementSourcesFactory &operator=(const MeasurementSourcesFactory &) = delete;
 
         /**
-         * @brief Initializes the measurement sources.
-         * @return true if initialization was successful, false otherwise.
+         * @brief Initializes all measurement sources.
+         * @return true if all sources initialized successfully, false otherwise
          */
         bool initialize() override;
 
         /**
-         * @brief Registers the measurement sources with a data coordinator.
-         *
-         * This function registers the pulse counter and UART measurement sources with the provided
-         * MeasurementCoordinator, enabling coordination between the measurement sources.
-         *
-         * @param coordinator Reference to the MeasurementCoordinator.
-         * @return true if the sources were successfully registered, false otherwise.
+         * @brief Registers all sources with the measurement coordinator.
+         * @param coordinator Reference to the measurement coordinator
+         * @return true if all sources registered successfully, false otherwise
          */
         bool registerSources(MeasurementCoordinator &coordinator);
 
     private:
-        /** @brief Number of pulse counters available for measurement. */
+        /** @brief Number of pulse counter sources */
         static constexpr std::size_t PulseCounterAmount{4};
 
+        /** @brief Array of pulse counter measurement sources */
         std::array<Device::PulseCounterMeasurementSource, PulseCounterAmount> pulseCounter;
 
-        /** @brief Reference to the UART driver used for receiving measurement data. */
+        /** @brief UART driver reference for measurement source */
         Driver::IUartDriver &uart;
 
-        /** @brief UART measurement source for receiving measurements over UART. */
+        /** @brief UART-based measurement source */
         Device::UartMeasurementSource uartMeasurementSource;
     };
 }

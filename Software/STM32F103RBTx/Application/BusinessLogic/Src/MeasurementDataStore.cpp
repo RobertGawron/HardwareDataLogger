@@ -2,6 +2,7 @@
 #include "Device/Inc/MeasurementType.hpp"
 
 #include <cstddef>
+#include <algorithm>
 
 namespace BusinessLogic
 {
@@ -10,13 +11,15 @@ namespace BusinessLogic
         bool status = true;
 
         // abort on first fail
-        for (std::size_t i = 0u; i < observers.size(); i++)
+        for (auto &observer : observers)
         {
-            status = observers[i]->initialize();
-
-            if (!status)
+            if (observer != nullptr)
             {
-                break;
+                status = observer->initialize();
+                if (!status)
+                {
+                    break;
+                }
             }
         }
 
@@ -28,38 +31,67 @@ namespace BusinessLogic
         bool status = true;
 
         // abort on first fail
-        for (std::size_t i = 0u; i < observers.size(); i++)
+        for (auto &observer : observers)
         {
-            status = observers[i]->start();
-
-            if (!status)
+            if (observer != nullptr)
             {
-                break;
+                status = observer->start();
+                if (!status)
+                {
+                    break;
+                }
             }
         }
 
         return status;
     }
+
     bool MeasurementDataStore::addObserver(Device::IMeasurementRecorder &observer)
     {
-        const bool status = observers.add(&observer);
+        bool status = false;
+
+        auto it = std::find(std::begin(observers), std::end(observers), nullptr);
+        if (it != std::end(observers))
+        {
+            *it = &observer;
+            status = true;
+        }
+
         return status;
     }
 
     bool MeasurementDataStore::removeObserver(Device::IMeasurementRecorder &observer)
     {
+        bool status = false;
+        const std::size_t shiftOffset = 1; // Offset to shift remaining elements
 
-        const bool status = observers.remove(&observer);
+        auto it = std::find(std::begin(observers), std::end(observers), &observer);
+        if (it != std::end(observers))
+        {
+            // Shift remaining elements to the left
+            for (auto shiftIt = it; shiftIt != std::end(observers) - shiftOffset; ++shiftIt)
+            {
+                *shiftIt = *(shiftIt + shiftOffset);
+            }
+            *(std::end(observers) - shiftOffset) = nullptr; // Clear the last slot
+            status = true;
+        }
+
         return status;
     }
 
     bool MeasurementDataStore::notifyObservers(Device::MeasurementType measurement)
     {
-        for (std::size_t i = 0u; i < observers.size(); i++)
+        bool status = true;
+
+        for (auto &observer : observers)
         {
-            observers[i]->notify(measurement);
+            if (observer != nullptr)
+            {
+                observer->notify(measurement);
+            }
         }
 
-        return true;
+        return status;
     }
 }

@@ -1,7 +1,6 @@
 /**
  * @file ApplicationBuilder.hpp
- * @brief Defines the ApplicationBuilder class responsible for building and initializing
- *        all main objects of the application.
+ * @brief Defines the ApplicationBuilder class responsible for orchestrating application component initialization.
  */
 
 #ifndef APPLICATIONBUILDER_H_
@@ -19,125 +18,95 @@ namespace BusinessLogic
 {
     /**
      * @class ApplicationBuilder
-     * @brief Implements the builder pattern and is responsible for correctly building and
-     *        initializing all the main objects of the application.
+     * @brief Orchestrates construction and initialization of core application components.
      *
-     * The ApplicationBuilder class coordinates the initialization and registration of various
-     * components, such as measurement sources, data storage mechanisms, and peripheral drivers.
-     * It does not create any objects by itself but relies on objects passed through the
-     * IPlatformFactory interface.
+     * Implements the builder pattern to coordinate initialization and registration of:
+     * - Measurement sources (data producers)
+     * - Data stores (data consumers)
+     * - Human-Machine Interface (HMI)
+     * - Core coordination mechanisms
+     *
+     * Relies on platform-specific factory implementations to provide concrete components.
+     * Implements the IApplicationComponentFactory interface for system initialization.
      */
     class ApplicationBuilder : public IApplicationComponentFactory
     {
     public:
         /**
-         * @brief Constructs an ApplicationBuilder with a reference to an IPlatformFactory.
-         *
-         * @param factory Reference to a platform-specific factory that provides the necessary objects.
+         * @brief Constructs an ApplicationBuilder with platform-specific component factory.
+         * @param factory Reference to platform factory providing concrete implementations
          */
         explicit ApplicationBuilder(IPlatformFactory &factory);
 
         /**
-         * @brief Deleted default constructor to prevent instantiation without a platform factory.
+         * @brief Deleted default constructor.
          */
         ApplicationBuilder() = delete;
 
         /**
-         * @brief Default destructor for ApplicationBuilder.
+         * @brief Default destructor.
          */
         ~ApplicationBuilder() override = default;
 
         /**
-         * @brief Deleted copy constructor to prevent copying of ApplicationBuilder.
+         * @brief Deleted copy constructor.
          */
         ApplicationBuilder(const ApplicationBuilder &) = delete;
 
         /**
-         * @brief Deleted assignment operator to prevent assignment of ApplicationBuilder.
-         *
-         * @return Reference to the ApplicationBuilder instance.
+         * @brief Deleted copy assignment operator.
          */
         ApplicationBuilder &operator=(const ApplicationBuilder &) = delete;
 
         /**
-         * @brief Initializes the components of the application.
-         *
-         * This method initializes the necessary components, such as measurement sources,
-         * data stores, and the HMI (Human Machine Interface).
-         *
-         * @return true if the initialization was successful, false otherwise.
+         * @brief Initializes all application components.
+         * 
+         * Calls initialize() on all managed factories and components.
+         * 
+         * @return true if all components initialized successfully, false otherwise
          */
         bool initialize() override;
 
         /**
-         * @brief Starts the application and its components.
-         *
-         * This method starts the operation of all application components.
-         *
-         * @return true if the components started successfully, false otherwise.
+         * @brief Starts all application components.
+         * @return true if all components started successfully, false otherwise
          */
         virtual bool start();
 
         /**
-         * @brief Stops the application and its components.
-         *
-         * This method halts the operation of all application components.
-         *
-         * @return true if the components stopped successfully, false otherwise.
+         * @brief Stops all application components.
+         * @return true if all components stopped successfully, false otherwise
          */
         virtual bool stop();
 
         /**
-         * @brief Ticks the application, providing periodic updates.
-         *
-         * This method is called periodically to update the application state.
-         *
-         * @return true if the tick operation was successful, false otherwise.
+         * @brief Performs periodic update of application components.
+         * @return true if tick was processed successfully, false otherwise
          */
         virtual bool tick();
 
     private:
-        /**
-         * @brief Object responsible for building measurement sources.
-         *
-         * The `MeasurementSourcesFactory` creates and initializes the sources
-         * that generate measurement data used by the application.
-         */
+        /** @brief Factory for measurement data sources */
         MeasurementSourcesFactory sourceBuilder;
 
-        // cant be build by builder because we need it in hmi as well
+        /**
+         * @brief Cache measurement recorder (directly managed)
+         * 
+         * Required by both stores factory and HMI, managed directly
+         * here rather than through stores factory.
+         */
         Device::CacheMeasurementRecorder cacheRecorder;
 
-        /**
-         * @brief Object responsible for building measurement stores.
-         *
-         * The `MeasurementStoresFactory` creates and initializes the storage
-         * mechanisms for persisting measurement data.
-         */
+        /** @brief Factory for measurement data stores */
         MeasurementStoresFactory storesBuilder;
 
-        /**
-         * @brief Object responsible for storing measurement data.
-         *
-         * The `MeasurementDataStore` handles the management and storage of
-         * measurement data generated by the sources.
-         */
+        /** @brief Central repository for measurement data */
         MeasurementDataStore dataStore;
 
-        /**
-         * @brief Object responsible for coordinating measurement sources and storage.
-         *
-         * The `MeasurementCoordinator` manages the flow of measurement data from
-         * sources to the storage system and ensures proper synchronization.
-         */
+        /** @brief Coordinates data flow between sources and stores */
         MeasurementCoordinator measurementCoordinator;
 
-        /**
-         * @brief Factory for creating and initializing the Human Machine Interface (HMI).
-         *
-         * The `HmiFactory` is capable of creating HMIs based on various frameworks.
-         * Currently, only the MUI-based HMI implementation is available.
-         */
+        /** @brief Factory for Human-Machine Interface components */
         HmiFactory hmiFactory;
     };
 }

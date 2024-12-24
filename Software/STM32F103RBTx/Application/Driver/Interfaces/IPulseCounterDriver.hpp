@@ -22,8 +22,16 @@ namespace Driver
     class IPulseCounterDriver : public DriverState
     {
     public:
-        using CounterSizeType = std::uint32_t; // Define a type alias for the max value of the counter (in bits)
+        /** 
+         * @brief Type representing the counter value size.
+         * 
+         * Defines the integer type used for storing pulse count values.
+         */
+        using CounterSizeType = std::uint32_t;
 
+        /**
+         * @brief Default constructor for IPulseCounterDriver.
+         */
         explicit IPulseCounterDriver() = default;
 
         /**
@@ -33,7 +41,16 @@ namespace Driver
          */
         ~IPulseCounterDriver() override = default;
 
+        /**
+         * @brief Retrieves the current pulse count value.
+         * 
+         * @return The current pulse count value.
+         */
         virtual CounterSizeType getMeasurement() = 0;
+        
+        /**
+         * @brief Resets the pulse counter to zero.
+         */
         virtual void clearMeasurement() = 0;
     };
 }

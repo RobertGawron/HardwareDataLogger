@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "HardwareDataLogger")(type "KiCad")(uri "${KIPRJMOD}/../Library/HardwareDataLogger.pretty")(options "")(descr ""))
+)

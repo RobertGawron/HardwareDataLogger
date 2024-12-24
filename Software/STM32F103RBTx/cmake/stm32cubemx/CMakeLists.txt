@@ -1,77 +1,118 @@
 cmake_minimum_required(VERSION 3.22)
-
-project(stm32cubemx)
-add_library(stm32cubemx INTERFACE)
-
 # Enable CMake support for ASM and C languages
 enable_language(C ASM)
-
-target_compile_definitions(stm32cubemx INTERFACE 
+# STM32CubeMX generated symbols (macros)
+set(MX_Defines_Syms 
 	USE_HAL_DRIVER 
 	STM32F103xB
     $<$<CONFIG:Debug>:DEBUG>
 )
 
-target_include_directories(stm32cubemx INTERFACE
-    ../../FATFS/Target
-    ../../FATFS/App
-    ../../Core/Inc
-    ../../Drivers/STM32F1xx_HAL_Driver/Inc
-    ../../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy
-    ../../Middlewares/Third_Party/FatFs/src
-    ../../Drivers/CMSIS/Device/ST/STM32F1xx/Include
-    ../../Drivers/CMSIS/Include
+# STM32CubeMX generated include paths
+set(MX_Include_Dirs
+    ${CMAKE_SOURCE_DIR}/USB_DEVICE/App
+    ${CMAKE_SOURCE_DIR}/USB_DEVICE/Target
+    ${CMAKE_SOURCE_DIR}/Core/Inc
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Inc
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy
+    ${CMAKE_SOURCE_DIR}/Middlewares/ST/STM32_USB_Device_Library/Core/Inc
+    ${CMAKE_SOURCE_DIR}/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc
+    ${CMAKE_SOURCE_DIR}/Drivers/CMSIS/Device/ST/STM32F1xx/Include
+    ${CMAKE_SOURCE_DIR}/Drivers/CMSIS/Include
 )
 
-target_sources(stm32cubemx INTERFACE
-    ../../Core/Src/main.c
-    ../../Core/Src/stm32f1xx_it.c
-    ../../Core/Src/stm32f1xx_hal_msp.c
-    ../../FATFS/Target/user_diskio.c
-    ../../FATFS/App/fatfs.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_adc.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_adc_ex.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_can.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_iwdg.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c
-    ../../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_wwdg.c
-    ../../Core/Src/system_stm32f1xx.c
-    ../../Middlewares/Third_Party/FatFs/src/diskio.c
-    ../../Middlewares/Third_Party/FatFs/src/ff.c
-    ../../Middlewares/Third_Party/FatFs/src/ff_gen_drv.c
-    ../../Middlewares/Third_Party/FatFs/src/option/syscall.c
-    ../../Core/Src/sysmem.c
-    ../../Core/Src/syscalls.c
-    ../../startup_stm32f103xb.s
+# STM32CubeMX generated application sources
+set(MX_Application_Src
+    ${CMAKE_SOURCE_DIR}/USB_DEVICE/Target/usbd_conf.c
+    ${CMAKE_SOURCE_DIR}/USB_DEVICE/App/usb_device.c
+    ${CMAKE_SOURCE_DIR}/USB_DEVICE/App/usbd_desc.c
+    ${CMAKE_SOURCE_DIR}/USB_DEVICE/App/usbd_cdc_if.c
+    ${CMAKE_SOURCE_DIR}/Core/Src/main.c
+    ${CMAKE_SOURCE_DIR}/Core/Src/stm32f1xx_it.c
+    ${CMAKE_SOURCE_DIR}/Core/Src/stm32f1xx_hal_msp.c
+    ${CMAKE_SOURCE_DIR}/Core/Src/sysmem.c
+    ${CMAKE_SOURCE_DIR}/Core/Src/syscalls.c
+    ${CMAKE_SOURCE_DIR}/startup_stm32f103xb.s
 )
 
-target_link_directories(stm32cubemx INTERFACE
+# STM32 HAL/LL Drivers
+set(STM32_Drivers_Src
+    ${CMAKE_SOURCE_DIR}/Core/Src/system_stm32f1xx.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_adc.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_adc_ex.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_can.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_iwdg.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_usart.c
+    ${CMAKE_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_wwdg.c
 )
 
-target_link_libraries(stm32cubemx INTERFACE
+# Drivers Midllewares
+
+
+set(USB_Device_Library_Src
+    ${CMAKE_SOURCE_DIR}/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c
+    ${CMAKE_SOURCE_DIR}/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c
+    ${CMAKE_SOURCE_DIR}/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c
+    ${CMAKE_SOURCE_DIR}/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c
 )
+
+# Link directories setup
+set(MX_LINK_DIRS
+
+)
+# Project static libraries
+set(MX_LINK_LIBS 
+    STM32_Drivers
+    USB_Device_Library	
+)
+# Interface library for includes and symbols
+add_library(stm32cubemx INTERFACE)
+target_include_directories(stm32cubemx INTERFACE ${MX_Include_Dirs})
+target_compile_definitions(stm32cubemx INTERFACE ${MX_Defines_Syms})
+
+# Create STM32_Drivers static library
+add_library(STM32_Drivers OBJECT)
+target_sources(STM32_Drivers PRIVATE ${STM32_Drivers_Src})
+target_link_libraries(STM32_Drivers PUBLIC stm32cubemx)
+
+
+# Create USB_Device_Library static library
+add_library(USB_Device_Library OBJECT)
+target_sources(USB_Device_Library PRIVATE ${USB_Device_Library_Src})
+target_link_libraries(USB_Device_Library PUBLIC stm32cubemx)
+
+# Add STM32CubeMX generated application sources to the project
+target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${MX_Application_Src})
+
+# Link directories setup
+target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE ${MX_LINK_DIRS})
+
+# Add libraries to the project
+target_link_libraries(${CMAKE_PROJECT_NAME} ${MX_LINK_LIBS})
+
+# Add the map file to the list of files to be removed with 'clean' target
+set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES ADDITIONAL_CLEAN_FILES ${CMAKE_PROJECT_NAME}.map)
 
 # Validate that STM32CubeMX code is compatible with C standard
-if(CMAKE_C_STANDARD LESS 11)
+if((CMAKE_C_STANDARD EQUAL 90) OR (CMAKE_C_STANDARD EQUAL 99))
     message(ERROR "Generated code requires C11 or higher")
 endif()
-
-

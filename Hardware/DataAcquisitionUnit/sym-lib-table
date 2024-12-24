@@ -1,0 +1,5 @@
+(sym_lib_table
+  (lib (name "DataAcquisitionUnit")(type "KiCad")(uri "${KIPRJMOD}/DataAcquisitionUnit.kicad_sym")(options "")(descr ""))
+  (lib (name "HardwareDataLogger")(type "KiCad")(uri "${KIPRJMOD}/../Library/HardwareDataLogger.kicad_sym")(options "")(descr ""))
+
+)

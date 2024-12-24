@@ -49,7 +49,13 @@ function(create_test_exec TARGET_NAME SRC_FILES)
 
     # Add include directories for each test target
     target_include_directories(${TARGET_NAME} PRIVATE
+        ${CMAKE_SOURCE_DIR}/Software/ESP8266/include
+        ${CMAKE_SOURCE_DIR}/Test/Unit/ESP8266/Mock
+
+        ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/ESP8266/Mocks/Inc
+
         ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application
+        ${CMAKE_SOURCE_DIR}/Software/Common
         ${CMAKE_SOURCE_DIR}/Test/Unit/Device
         ${CMAKE_SOURCE_DIR}/Test/Unit/System
         ${GTEST_INCLUDE_DIRS}
@@ -62,9 +68,28 @@ function(create_test_exec TARGET_NAME SRC_FILES)
 endfunction()
 
 # Define source files for each test
+set(TEST_ESP8266_UART_STATE_MACHINE_SRC
+    ${CMAKE_SOURCE_DIR}/Software/ESP8266/src/UartStateMachine.cpp
+    ${CMAKE_SOURCE_DIR}/Test/Unit/ESP8266/test_UartStateMachine.cpp
+    ${CMAKE_SOURCE_DIR}/Software/Common/Crc32.cpp
+    ${CMAKE_SOURCE_DIR}/Software/Common/CobsEncoder.cpp
+)
 
-set(TEST_SAFERARRAY_SRC
-    ${CMAKE_SOURCE_DIR}/Test/Unit/BusinessLogic/test_SaferArray.cpp
+
+set(TEST_CRC_SRC
+    ${CMAKE_SOURCE_DIR}/Software/Common/Crc32.cpp
+    ${CMAKE_SOURCE_DIR}/Test/Unit/Common/test_Crc.cpp
+)
+
+set(TEST_COBS_ENCODER_SRC
+    ${CMAKE_SOURCE_DIR}/Software/Common/CobsEncoder.cpp
+    ${CMAKE_SOURCE_DIR}/Test/Unit/Common/test_CobsEncoder.cpp
+)
+
+
+set(DISPLAY_PIXEL_COLOR_SRC
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DisplayPixelColor.cpp
+    ${CMAKE_SOURCE_DIR}/Test/Unit/Driver/test_DisplayPixelColor.cpp
 )
 
 set(TEST_DRIVERSTATE_SRC
@@ -84,11 +109,6 @@ set(TEST_AMBIENTLIGHT_SRC
     ${CMAKE_SOURCE_DIR}/Test/Unit/Driver/test_AmbientLightSensorDriver.cpp
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
     ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
-)
-
-set(TEST_DISPLAYPIXELCOLOR_SRC
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DisplayPixelColor.cpp
-    ${CMAKE_SOURCE_DIR}/Test/Unit/Driver/test_DisplayPixelColor.cpp
 )
 
 set(TEST_ST7735BRIGHTNESS_SRC
@@ -112,51 +132,52 @@ set(PULSE_COUNTER_DRIVER_SRC
     ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
 )
 
+set(TEST_KEYBOARD_SRC
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/Keyboard.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
+    ${CMAKE_SOURCE_DIR}/Test/Unit/Device/test_Keyboard.cpp
+)
+
 set(PULSE_COUNTER_MEASUREMENT_SOURCE_SRC
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/PulseCounterMeasurementSource.cpp
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
     ${CMAKE_SOURCE_DIR}/Test/Unit/Device/test_PulseCounterMeasurementSource.cpp
-    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
 )
-
 
 set(MEASUREMENT_DATA_STORE_SRC
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic/Src/MeasurementDataStore.cpp
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
     ${CMAKE_SOURCE_DIR}/Test/Unit/BusinessLogic/test_MeasurementDataStore.cpp
-    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
 )
 
 set(TEST_MEASUREMENT_COORDINATOR
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic/Src/MeasurementCoordinator.cpp
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
     ${CMAKE_SOURCE_DIR}/Test/Unit/BusinessLogic/test_MeasurementCoordinator.cpp
-    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
 )
-
 
 set(WIFI_MEASUREMENT_RECORDER
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/WiFiMeasurementRecorder.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/WiFiMeasurementSerializer.cpp
+    ${CMAKE_SOURCE_DIR}/Software/Common/Crc32.cpp
+    ${CMAKE_SOURCE_DIR}/Software/Common/CobsEncoder.cpp
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
     ${CMAKE_SOURCE_DIR}/Test/Unit/Device/test_WiFiMeasurementRecorder.cpp
-    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
+)
+
+set(WIFI_MEASUREMENT_SERIALIZER_SRC
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/WiFiMeasurementSerializer.cpp
+    ${CMAKE_SOURCE_DIR}/Test/Unit/Device/test_WiFiMeasurementSerializer.cpp
+    ${CMAKE_SOURCE_DIR}/Software/Common/Crc32.cpp
+    ${CMAKE_SOURCE_DIR}/Software/Common/CobsEncoder.cpp
 )
 
 
 
 # Add test executables using the create_test_exec function with source lists
-create_test_exec(test_SaferArray "${TEST_SAFERARRAY_SRC}")
-create_test_exec(test_DriverState "${TEST_DRIVERSTATE_SRC}")
-create_test_exec(test_KeyboardFourPushButtonsDriver "${TEST_KEYBOARD_SRC}")
-create_test_exec(test_AmbientLightSensorDriver "${TEST_AMBIENTLIGHT_SRC}")
-create_test_exec(test_DisplayPixelColor "${TEST_DISPLAYPIXELCOLOR_SRC}")
-create_test_exec(test_St7735DisplayBrightnessDriver "${TEST_ST7735BRIGHTNESS_SRC}")
-create_test_exec(test_UartDriver "${TEST_UART_SRC}")
-create_test_exec(test_PulseCounterDriver "${PULSE_COUNTER_DRIVER_SRC}")
-create_test_exec(test_PulseCounterMeasurementSource "${PULSE_COUNTER_MEASUREMENT_SOURCE_SRC}")
-create_test_exec(test_MeasurementDataStore "${MEASUREMENT_DATA_STORE_SRC}")
-create_test_exec(test_MeasurementCoordinator "${TEST_MEASUREMENT_COORDINATOR}")
-create_test_exec(test_WiFiMeasurementRecorder "${WIFI_MEASUREMENT_RECORDER}")
+
+
+create_test_exec(test_UartStateMachine "${TEST_ESP8266_UART_STATE_MACHINE_SRC}")
 
 # Custom target to run all tests
 add_custom_target(test

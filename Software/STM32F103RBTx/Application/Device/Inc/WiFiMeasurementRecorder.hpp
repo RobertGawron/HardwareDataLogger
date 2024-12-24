@@ -8,7 +8,10 @@
 #define WiFiMeasurementRecorder_H_
 
 #include "Device/Interfaces/IMeasurementRecorder.hpp"
+#include "Device/Inc/WiFiMeasurementSerializer.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
+
+#include <array>
 
 namespace Device
 {
@@ -30,32 +33,23 @@ namespace Device
          */
         explicit WiFiMeasurementRecorder(Driver::IUartDriver &driver);
 
-        /**
-         * @brief Deleted default constructor to prevent instantiation without a driver.
-         */
-        WiFiMeasurementRecorder() = delete;
+        WiFiMeasurementRecorder() = delete; ///< Deleted default constructor to prevent instantiation without a driver.
 
         /**
          * @brief Default destructor for WiFiMeasurementRecorder.
          */
         ~WiFiMeasurementRecorder() override = default;
 
-        /**
-         * @brief Deleted copy constructor to prevent copying.
-         */
-        WiFiMeasurementRecorder(const WiFiMeasurementRecorder &) = delete;
-
-        /**
-         * @brief Deleted assignment operator to prevent assignment.
-         * @return WiFiMeasurementRecorder& The assigned object.
-         */
-        WiFiMeasurementRecorder &operator=(const WiFiMeasurementRecorder &) = delete;
+        WiFiMeasurementRecorder(const WiFiMeasurementRecorder &) = delete;            ///< Deleted copy constructor to prevent copying.
+        WiFiMeasurementRecorder &operator=(const WiFiMeasurementRecorder &) = delete; ///< Deleted assignment operator to prevent assignment.
 
         /**
          * @brief Notifies the recorder to process new data.
          *
          * This method is called to notify the recorder that new measurement data is available and
          * should be sent to the ESP module via UART.
+         * @param measurement The measurement data to process.
+         * @return True if notification was successful, false otherwise.
          */
         bool notify(Device::MeasurementType &measurement) override;
 
@@ -96,19 +90,34 @@ namespace Device
          * @brief Flushes any remaining data to the ESP module.
          *
          * This method ensures that any remaining measurement data is sent to the ESP module via UART.
+         * @return True if flush operation was successful, false otherwise.
          */
         bool flush() override;
 
     private:
-        /**
-         * @brief Writes the measurement data to the ESP module via UART.
-         *
-         * This method sends the prepared measurement data to the ESP module for transmission over WiFi.
-         */
-        virtual bool write(Device::MeasurementType &measurement);
-
         /** @brief Reference to the UART driver used for communication with the ESP module. */
         Driver::IUartDriver &driver;
+
+        /** @brief Size of the SCPI message buffer. */
+        static constexpr std::size_t SerializedMessageSize = 30u;
+
+        /** @brief Object for generating SCPI-formatted measurement messages. */
+        WiFiMeasurementSerializer serializedMessage;
+
+        /**
+         * @brief Size of the output buffer after COBS encoding.
+         *
+         * Calculated according to COBS specification: ScpiBufferSize + (ScpiBufferSize / 254) + 2
+         */
+        static constexpr std::size_t OutputBufferSize = (SerializedMessageSize + (SerializedMessageSize / 254) + 2);
+
+        /** @brief Buffer for storing SCPI-formatted messages. */
+        std::array<std::uint8_t, SerializedMessageSize> encodedBuffer = {0};
+
+        /** @brief Buffer for storing data after COBS encoding. */
+        std::array<std::uint8_t, OutputBufferSize> dataLinkBuffer = {0};
+
+        uint32_t UartTxTimeout = 1000;
     };
 
 }

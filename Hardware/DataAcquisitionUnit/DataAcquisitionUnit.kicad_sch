@@ -1,0 +1,191 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "9.0")
+	(uuid "2dac91f6-5de1-492e-9a04-36ab71ef854f")
+	(paper "A4")
+	(lib_symbols)
+	(sheet
+		(at 158.75 76.2)
+		(size 12.7 3.81)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "09bf9bff-ec83-480a-9560-32811821a5d9")
+		(property "Sheetname" "UART"
+			(at 158.75 75.4884 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "UART.kicad_sch"
+			(at 158.75 80.5946 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(property "Field2" ""
+			(at 158.75 76.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "DataAcquisitionUnit"
+				(path "/2dac91f6-5de1-492e-9a04-36ab71ef854f"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 193.04 55.88)
+		(size 12.7 3.81)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "425124f7-0d85-436e-b9bf-10ba2c96dbc7")
+		(property "Sheetname" "MainBoardConnector"
+			(at 193.04 55.1684 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "MainBoardConnector.kicad_sch"
+			(at 193.04 60.2746 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "DataAcquisitionUnit"
+				(path "/2dac91f6-5de1-492e-9a04-36ab71ef854f"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 128.27 55.88)
+		(size 12.7 3.81)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "aa1d059a-d1f1-41b8-9a79-3e265566ceec")
+		(property "Sheetname" "PulseCounter"
+			(at 128.27 55.1684 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "PulseCounter.kicad_sch"
+			(at 128.27 60.2746 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "DataAcquisitionUnit"
+				(path "/2dac91f6-5de1-492e-9a04-36ab71ef854f"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 157.48 55.88)
+		(size 12.7 3.81)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "d316a48d-5cd3-4820-9bb3-4a62111e2c61")
+		(property "Sheetname" "PowerSupply"
+			(at 157.48 55.1684 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "PowerSupply.kicad_sch"
+			(at 157.48 60.2746 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "DataAcquisitionUnit"
+				(path "/2dac91f6-5de1-492e-9a04-36ab71ef854f"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

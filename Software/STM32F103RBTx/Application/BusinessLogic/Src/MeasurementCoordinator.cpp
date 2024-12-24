@@ -2,33 +2,38 @@
 #include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
 #include "Device/Inc/MeasurementType.hpp"
 
+#include <array>
 #include <cstddef>
 
 namespace BusinessLogic
 {
-
-    MeasurementCoordinator::MeasurementCoordinator(IMeasurementDataStore &_storage) : storage(_storage)
+    MeasurementCoordinator::MeasurementCoordinator(IMeasurementDataStore &_storage)
+        : storage(_storage)
     {
+        observers.fill(nullptr); // Initialize to nullptr
     }
 
     bool MeasurementCoordinator::initialize()
     {
         bool status = true;
 
-        // abort on first fail
-        for (std::size_t i = 0u; i < observers.size(); i++)
+        for (auto *observer : observers)
         {
-            status = observers[i]->initialize();
-
-            if (!status)
+            if (observer == nullptr)
             {
+                status = true;
                 break;
             }
 
-            status = observers[i]->start();
-
-            if (!status)
+            if (!observer->initialize())
             {
+                status = false;
+                break;
+            }
+
+            if (!observer->start())
+            {
+                status = false;
                 break;
             }
         }
@@ -39,35 +44,61 @@ namespace BusinessLogic
     bool MeasurementCoordinator::tick()
     {
         updateMeasurements();
-
-        return true;
+        bool status = true;
+        return status;
     }
 
-    // Updates measurements from all devices
     void MeasurementCoordinator::updateMeasurements()
     {
-        for (std::size_t i = 0u; i < observers.size(); i++)
+        for (auto *observer : observers)
         {
-            const bool isMeasurementReady = observers[i]->isMeasurementAvailable();
-
-            if (isMeasurementReady)
+            if (observer == nullptr)
             {
-                const Device::MeasurementType measurement = observers[i]->getMeasurement();
+                break;
+            }
+
+            if (observer->isMeasurementAvailable())
+            {
+                const Device::MeasurementType measurement = observer->getMeasurement();
                 storage.notifyObservers(measurement);
             }
         }
     }
 
-    // Register an input device observer
     bool MeasurementCoordinator::addObserver(Device::IMeasurementSource &observer)
     {
-        const bool status = observers.add(&observer);
+        bool status = true;
+
+        auto it = std::find(observers.begin(), observers.end(), nullptr);
+        if (it == observers.end())
+        {
+            status = false;
+        }
+        else
+        {
+            *it = &observer;
+        }
+
         return status;
     }
 
     bool MeasurementCoordinator::removeObserver(Device::IMeasurementSource &observer)
     {
-        const bool status = observers.remove(&observer);
+        bool status = false;
+        auto it = std::find(observers.begin(), observers.end(), &observer);
+        if (it != observers.end())
+        {
+            // Shift remaining elements left
+            const std::size_t shiftOffset = 1; // Offset to shift remaining elements
+            for (auto shiftIt = it; shiftIt != observers.end() - shiftOffset; ++shiftIt)
+            {
+                *shiftIt = *(shiftIt + shiftOffset);
+            }
+
+            *(observers.end() - shiftOffset) = nullptr; // Clear the last slot
+            status = true;
+        }
+
         return status;
     }
 }

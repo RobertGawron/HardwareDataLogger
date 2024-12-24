@@ -2,6 +2,10 @@
 #include "Device/Inc/MeasurementType.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
 
+#include <cstring>
+// #include <array>
+//  #include <iostream>
+
 namespace Device
 {
 
@@ -17,6 +21,7 @@ namespace Device
     bool UartMeasurementRecorder::notify(Device::MeasurementType &measurement)
     {
         (void)measurement; // Explicitly suppresses "unused parameter" warning
+
         return true;
     }
 

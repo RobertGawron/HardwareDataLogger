@@ -41,12 +41,11 @@ namespace Device
 
     MeasurementType PulseCounterMeasurementSource::getMeasurement()
     {
-        MeasurementType m;
-        m.source = getMyId();
-        m.data = pulseCounterDriver.getMeasurement();
+        MeasurementType measurement;
+        measurement.source = getMyId();
+        measurement.data = pulseCounterDriver.getMeasurement();
 
-        // printf("my id: %d\n", m.source);
-        return m;
+        return measurement;
     }
 
 }

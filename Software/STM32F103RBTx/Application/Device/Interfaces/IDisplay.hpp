@@ -1,3 +1,8 @@
+/**
+ * @file IDisplay.hpp
+ * @brief Defines the IDisplay interface for display device interaction.
+ */
+
 #ifndef IDisplay_h
 #define IDisplay_h
 
@@ -6,19 +11,22 @@
 
 namespace Device
 {
+    /**
+     * @class IDisplay
+     * @brief Interface for display devices based on the U8G2 graphics library.
+     */
     class IDisplay : public U8G2
     {
     public:
-        // todo
-        // IDisplay() : U8G2() {};
+        IDisplay() = default; ///< Default constructor.
+        virtual ~IDisplay() = default; ///< Virtual destructor.
 
-        IDisplay() = default;
-
-        virtual ~IDisplay() = default;
-
+        /**
+         * @brief Initializes the display.
+         * @return True if initialization succeeds, false otherwise.
+         */
         virtual bool initialize() = 0;
     };
+}
 
-};
-
-#endif
+#endif // IDisplay_h

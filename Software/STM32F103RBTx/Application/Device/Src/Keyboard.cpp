@@ -15,8 +15,12 @@ namespace Device
 
     bool Keyboard::init()
     {
-        const bool status = keyboardDriver.initialize();
-        keyboardDriver.start();
+        bool status = keyboardDriver.initialize();
+
+        if (status)
+        {
+            status = keyboardDriver.start();
+        }
         return status;
     }
 
