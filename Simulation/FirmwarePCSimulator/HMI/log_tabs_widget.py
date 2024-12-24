@@ -4,9 +4,11 @@ from enum import Enum
 
 class LogTabID(Enum):
     PULSE_COUNTER = 0
-    UART_1 = 1
-    UART_2 = 2
-    UART_3 = 3
+    STM32_UART_1 = 1
+    STM32_UART_2 = 2
+    STM32_UART_3 = 3
+    ESP8266_UART_0 = 4
+    ESP8266_UART_1 = 5
 
 class LogTabsWidget(QWidget):
     def __init__(self):
@@ -49,13 +51,16 @@ class LogTabsWidget(QWidget):
         Create tabs for UART logs.
         """
         uart_tabs = {
-            LogTabID.UART_1: "UART #1",
-            LogTabID.UART_2: "UART #2",
-            LogTabID.UART_3: "UART #3"
+            LogTabID.STM32_UART_1: "STM32 UART #1",
+            LogTabID.STM32_UART_2: "STM32 UART #2",
+            LogTabID.STM32_UART_3: "STM32 UART #3",
+            LogTabID.ESP8266_UART_0: "ESP8266 UART #0",
+            LogTabID.ESP8266_UART_1: "ESP8266 UART #1"
         }
         for tab_id, name in uart_tabs.items():
             log_output = QTextEdit()
             log_output.setReadOnly(True)
+            log_output.setFont(QFont("Courier", 10))  # Fixed-width font
             log_output.setPlaceholderText(f"Logs for {name}")
             
             # Store reference and add to the tab
@@ -72,5 +77,6 @@ class LogTabsWidget(QWidget):
         if tab_id in self.log_outputs:
             log_widget = self.log_outputs[tab_id]
             log_widget.append(f"[{timestamp}] {message}")
+            log_widget.verticalScrollBar().setValue(log_widget.verticalScrollBar().maximum())
         else:
             raise ValueError(f"Invalid tab ID: {tab_id}")

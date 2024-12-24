@@ -3,13 +3,13 @@ from datetime import datetime
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTabWidget
 from PyQt6.QtCore import Qt, QTimer
 
-from simulation_control_widget import SimulationControlWidget
-from direction_button_widget import DirectionButtonWidget
-from hardware_display_widget import HardwareDisplayWidget
-from simulation_speed_widget import SimulationSpeedWidget
-from measurement_data_input_widget import MeasurementDataInputWidget
-from log_tabs_widget import LogTabsWidget, LogTabID
-from data_visualization_widget import DataVisualizationWidget
+from HMI.simulation_control_widget import SimulationControlWidget
+from HMI.direction_button_widget import DirectionButtonWidget
+from HMI.hardware_display_widget import HardwareDisplayWidget
+from HMI.simulation_speed_widget import SimulationSpeedWidget
+from HMI.measurement_data_input_widget import MeasurementDataInputWidget
+from HMI.log_tabs_widget import LogTabsWidget, LogTabID
+from HMI.data_visualization_widget import DataVisualizationWidget
 
 
 class MainWindow(QMainWindow):
@@ -17,6 +17,8 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.simulation = simulation
+        self.simulation.set_esp8266_uart0_tx_callback(self.on_esp8266_tx)
+        self.simulation.set_esp8266_gpio_callback(self.update_leds)
 
         self.display_width = self.simulation.get_display_width()
         self.display_height = self.simulation.get_display_height()
@@ -100,3 +102,20 @@ class MainWindow(QMainWindow):
 
         self.data_visualization_tab.update_pulse_counters(timestamp, values)
         self.simulation.update_pulse_counters(values)
+
+    def on_esp8266_tx(self, message):
+        """
+        Handle ESP8266 UART transmission from the simulation.
+        :param message: The message transmitted.
+        """
+        timestamp = f"{datetime.now():%Y-%m-%d %H:%M:%S}"
+        self.log_tabs.add_log(LogTabID.ESP8266_UART_0, timestamp, message)
+
+
+    def update_leds(self, gpio, state):
+        """
+        Update the hardware display with pixel data from the simulation.
+        """
+        print(f"...................................................................Updating LED {gpio} to state {state}")
+        
+        self.hardware_display.set_led_state(gpio, state)

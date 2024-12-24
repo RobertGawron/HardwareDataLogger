@@ -123,7 +123,7 @@ RUN /workspace/venv/bin/pip install --upgrade pip && \
     PyQt6 \
     codechecker \
     prospector \
-    prospector2html
+    vjunit
 
 # Add virtual environment binaries to the PATH
 ENV PATH="/workspace/venv/bin:$PATH"

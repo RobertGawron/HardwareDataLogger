@@ -15,11 +15,11 @@ class DeviceUnderTest:
         Initializes the DeviceUnderTest class by loading the shared library for the simulation.
         The library path is dynamically constructed based on the script's location.
         """
-        dll_name: str = "libFirmwarePCSimulator.so"
+        dll_name: str = "libSimulatorSTM32F103RBTx.so"
         dll_abs_path: str = (
             os.path.dirname(os.path.abspath(__file__))
-            + "/../.."
-            + os.path.sep + "build" + os.path.sep + "Simulation/FirmwarePCSimulator/"
+            + "/../../.."
+            + os.path.sep + "build" + os.path.sep + "Simulation/FirmwarePCSimulator/STM32F103RBTx/"
             + os.path.sep + dll_name
         )
         self.dut: ctypes.CDLL = ctypes.CDLL(dll_abs_path)
