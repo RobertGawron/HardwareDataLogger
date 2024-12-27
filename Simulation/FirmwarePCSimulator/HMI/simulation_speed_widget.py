@@ -1,9 +1,34 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QGroupBox, QSlider, QLabel
+"""
+Module for managing the simulation speed widget in a PyQt6 GUI.
+
+This module provides the `SimulationSpeedWidget` class, which contains a slider
+for adjusting the speed of the firmware simulation.
+"""
+
+from PyQt6.QtWidgets import (
+    QWidget, QVBoxLayout, QGroupBox, QSlider, QLabel
+)
 from PyQt6.QtCore import Qt
 
 
 class SimulationSpeedWidget(QWidget):
+
+    """
+    Widget for controlling the simulation speed.
+
+    This widget provides a slider to adjust the speed multiplier of the
+    firmware simulation.
+    """
+
+    # pylint: disable=too-few-public-methods
+    # This is a GUI widget with small functionality
+
     def __init__(self, simulation):
+        """
+        Initialize the SimulationSpeedWidget.
+
+        :param simulation: Simulation instance to control simulation speed.
+        """
         super().__init__()
 
         self.simulation = simulation
@@ -40,7 +65,9 @@ class SimulationSpeedWidget(QWidget):
     def update_speed(self, value):
         """
         Update the simulation speed and the label text.
+
+        :param value: The new speed multiplier value from the slider.
         """
         self.current_speed = value
         self.label.setText(f"Current speed: x{self.current_speed}")
-        #self.simulation.set_speed(self.current_speed)  # Assuming simulation has a set_speed method
+        # self.simulation.set_speed(self.current_speed)  # Assuming simulation has a set_speed method

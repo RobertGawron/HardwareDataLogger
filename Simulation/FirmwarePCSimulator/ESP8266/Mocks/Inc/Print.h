@@ -20,6 +20,8 @@
 #ifndef Print_h
 #define Print_h
 
+// codechecker_suppress [all] excluded from CodeChecker analysis because i need compatibility with the Arduino code
+
 #include <stdint.h>
 #include <stddef.h>
 

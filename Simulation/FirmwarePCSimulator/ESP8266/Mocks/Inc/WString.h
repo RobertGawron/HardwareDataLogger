@@ -23,11 +23,14 @@
 #define String_class_h
 #ifdef __cplusplus
 
-//====================== hck =================================
+//====================== hack =================================
+
+// codechecker_suppress [all] excluded from CodeChecker analysis because i need compatibility with the Arduino code
+
 /*
 #include <pgmspace.h>
 */
-//====================== hck =================================
+//====================== hack =================================
 
 #include <cstdlib>
 #include <cstdint>

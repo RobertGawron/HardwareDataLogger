@@ -17,7 +17,7 @@ set(CODECHECKER_SOURCE_DIRS
 # Define the output directories for CodeChecker analysis and reports
 set(CODECHECKER_ANALYZE_DIR ${CMAKE_BINARY_DIR}/BuildArtifacts/StaticAnalysisIntermediary)
 set(CODECHECKER_REPORT_DIR ${CMAKE_BINARY_DIR}/BuildArtifacts/StaticAnalysis)
-set(CODECHECKER_SKIP_FILE ${CMAKE_SOURCE_DIR}/Software/CodeCheckerSkipList)
+set(CODECHECKER_SKIP_FILE ${CMAKE_SOURCE_DIR}/DevOps/Scripts/CodeCheckerSkipList)
 
 
 # Ensure the output directories exist

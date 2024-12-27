@@ -19,7 +19,7 @@
 #ifndef Arduino_h
 #define Arduino_h
 
-// Whole file was modified and maybe it was a bad decision.
+// codechecker_suppress [all] excluded from CodeChecker analysis because i need compatibility with the Arduino code
 
 #include <cstdint>
 

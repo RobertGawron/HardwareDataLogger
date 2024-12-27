@@ -1,8 +1,31 @@
-from PyQt6.QtWidgets import QWidget, QGroupBox, QVBoxLayout, QSlider, QLabel, QSizePolicy
+"""
+Module for managing the measurement data input widget in a PyQt6 GUI.
+
+This module provides the `MeasurementDataInputWidget` class, which contains sliders
+to adjust and simulate pulse counter values.
+"""
+
+from PyQt6.QtWidgets import (
+    QWidget, QGroupBox, QVBoxLayout, QSlider, QLabel, QSizePolicy
+)
 from PyQt6.QtCore import Qt
 
+
 class MeasurementDataInputWidget(QWidget):
+
+    """
+    Widget for adjusting measurement data inputs via sliders.
+
+    This widget allows users to simulate pulse counter values by adjusting sliders.
+    """
+
     def __init__(self, update_measurement_callback=None):
+        """
+        Initialize the MeasurementDataInputWidget.
+
+        :param update_measurement_callback: A callback function triggered when
+                                            slider values change.
+        """
         super().__init__()
 
         self.update_measurement_callback = update_measurement_callback
@@ -17,15 +40,17 @@ class MeasurementDataInputWidget(QWidget):
             # Label for the pulse counter
             slider_label = QLabel(f"Pulse Counter #{i}:")
             group_layout.addWidget(slider_label)
-            
+
             # Slider for the pulse counter
             slider = QSlider(Qt.Orientation.Horizontal)
             slider.setMinimum(1)
-            slider.setMaximum(500)  # Increased range for finer adjustment
-            slider.setSingleStep(1)  # Small step for smooth adjustments
-            slider.setPageStep(10)   # Page step for larger increments
-            slider.setValue(300)     # Default value in the middle
-            slider.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+            slider.setMaximum(500)
+            slider.setSingleStep(1)
+            slider.setPageStep(10)
+            slider.setValue(300)
+            slider.setSizePolicy(
+                QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
+            )
             slider.valueChanged.connect(self.on_slider_value_changed)
             group_layout.addWidget(slider)
 
@@ -37,15 +62,19 @@ class MeasurementDataInputWidget(QWidget):
         # Main layout for this widget
         main_layout = QVBoxLayout()
         main_layout.addWidget(group_box)
-        main_layout.setStretch(0, 1)  # Allow group box to expand to fill space
+        main_layout.setStretch(0, 1)
         self.setLayout(main_layout)
 
         # Set the size policy to make this widget expand in available space
-        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
+        )
 
     def on_slider_value_changed(self):
         """
-        Triggered when any slider value is changed. Calls the update_measurement_callback with the current values.
+        Triggered when any slider value is changed.
+
+        Calls the update_measurement_callback with the current slider values.
         """
         if self.update_measurement_callback:
             self.update_measurement_callback(self.get_pulse_counter_values())
@@ -53,6 +82,7 @@ class MeasurementDataInputWidget(QWidget):
     def get_pulse_counter_values(self):
         """
         Retrieve current values of all pulse counter sliders.
-        :return: list of int
+
+        :return: A list of int representing the slider values.
         """
         return [slider.value() for slider in self.pulse_sliders]

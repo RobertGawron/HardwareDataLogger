@@ -1,16 +1,38 @@
-from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QFrame, QHBoxLayout
+"""
+Module for visualizing ESP8266 hardware states and rendering a simulated display.
+
+This module provides the `HardwareDisplayWidget` class, which includes methods
+for updating pixel colors, managing LED states, and integrating with simulation data.
+"""
+
+from enum import Enum
+from PyQt6.QtWidgets import (
+    QWidget, QLabel, QVBoxLayout, QFrame, QHBoxLayout
+)
 from PyQt6.QtGui import QImage, QPixmap, QColor
 from PyQt6.QtCore import Qt
-from enum import Enum
+
 
 class ESP8266LED(Enum):
+
+    """Enumeration for ESP8266 LED identifiers."""
+
     WIFI_CONNECTION = 1
     DATA_RECEPTION = 2
 
+
 class HardwareDisplayWidget(QWidget):
+
+    """
+    Widget for simulating and visualizing hardware display.
+
+    This widget renders a simulated hardware display and manages LED indicators
+    for ESP8266 hardware states such as WiFi connection and data reception.
+    """
+
     def __init__(self, display_width: int, display_height: int):
         """
-        Widget to handle hardware display logic and rendering.
+        Initialize the HardwareDisplayWidget.
 
         :param display_width: Width of the display in pixels.
         :param display_height: Height of the display in pixels.
@@ -20,7 +42,9 @@ class HardwareDisplayWidget(QWidget):
         self.display_height = display_height
 
         # Create a QImage with specified width, height, and format
-        self.hw_display = QImage(self.display_width, self.display_height, QImage.Format.Format_RGB32)
+        self.hw_display = QImage(
+            self.display_width, self.display_height, QImage.Format.Format_RGB32
+        )
 
         # QLabel to display the image
         self.hw_display_label = QLabel()
@@ -34,7 +58,7 @@ class HardwareDisplayWidget(QWidget):
         # Add ESP8266 LEDs frame
         self.led_states = {
             ESP8266LED.WIFI_CONNECTION: "green",
-            ESP8266LED.DATA_RECEPTION: "#8B8000" # dark yellow
+            ESP8266LED.DATA_RECEPTION: "#8B8000",  # Dark yellow
         }
         self.led_widgets = {}
         esp_leds_frame = self.create_esp_leds_frame()
@@ -57,7 +81,9 @@ class HardwareDisplayWidget(QWidget):
         wifi_label = QLabel("WiFi Connection")
         wifi_circle = QLabel()
         wifi_circle.setFixedSize(20, 20)
-        wifi_circle.setStyleSheet("background-color: green; border-radius: 10px;")
+        wifi_circle.setStyleSheet(
+            "background-color: green; border-radius: 10px;"
+        )
         self.led_widgets[ESP8266LED.WIFI_CONNECTION] = wifi_circle
         wifi_layout.addWidget(wifi_label)
         wifi_layout.addWidget(wifi_circle)
@@ -68,7 +94,9 @@ class HardwareDisplayWidget(QWidget):
         data_label = QLabel("UART Reception")
         data_circle = QLabel()
         data_circle.setFixedSize(20, 20)
-        data_circle.setStyleSheet("background-color: yellow; border-radius: 10px;")
+        data_circle.setStyleSheet(
+            "background-color: yellow; border-radius: 10px;"
+        )
         self.led_widgets[ESP8266LED.DATA_RECEPTION] = data_circle
         data_layout.addWidget(data_label)
         data_layout.addWidget(data_circle)
@@ -82,17 +110,25 @@ class HardwareDisplayWidget(QWidget):
         Set the state of the specified LED.
 
         :param led: The LED to update (ESP8266LED enum).
-        :param power_on: True to power on (brighten), False to power off (return to original color).
+        :param power_on: True to power on (brighten), False to power off
+                         (return to original color).
         """
-        led =ESP8266LED.DATA_RECEPTION # hack
+        led = ESP8266LED.DATA_RECEPTION  # hack
+
         if led in self.led_widgets:
             led_widget = self.led_widgets[led]
             original_color = self.led_states[led]
             if power_on:
-                brighter_color = "lightgreen" if original_color == "green" else "#FFFF00"
-                led_widget.setStyleSheet(f"background-color: {brighter_color}; border-radius: 10px;")
+                brighter_color = (
+                    "lightgreen" if original_color == "green" else "#FFFF00"
+                )
+                led_widget.setStyleSheet(
+                    f"background-color: {brighter_color}; border-radius: 10px;"
+                )
             else:
-                led_widget.setStyleSheet(f"background-color: {original_color}; border-radius: 10px;")
+                led_widget.setStyleSheet(
+                    f"background-color: {original_color}; border-radius: 10px;"
+                )
 
     def update_pixel(self, x: int, y: int, color: QColor) -> None:
         """
@@ -107,13 +143,18 @@ class HardwareDisplayWidget(QWidget):
 
     def update_display(self) -> None:
         """
-        Convert the QImage to QPixmap, scale it by 2x, and set it to QLabel for display.
+        Convert the QImage to QPixmap, scale it by 2x, and set it to QLabel
+        for display.
+
         Avoid pixel aliasing using the `Qt.FastTransformation` scaling mode.
         """
         scaled_pixmap = QPixmap.fromImage(self.hw_display)
-        scaled_pixmap = scaled_pixmap.scaled(self.display_width * 2, self.display_height * 2, 
-                                            Qt.AspectRatioMode.IgnoreAspectRatio, 
-                                            Qt.TransformationMode.FastTransformation)
+        scaled_pixmap = scaled_pixmap.scaled(
+            self.display_width * 2,
+            self.display_height * 2,
+            Qt.AspectRatioMode.IgnoreAspectRatio,
+            Qt.TransformationMode.FastTransformation,
+        )
         self.hw_display_label.setPixmap(scaled_pixmap)
 
     def update_from_simulation(self, simulation) -> None:

@@ -1,0 +1,10 @@
+-*/Middlewares/*
+-*/Simulation/FirmwarePCSimulator/ESP8266/Mocks/Inc/Arduino.h
+-*/Simulation/FirmwarePCSimulator/ESP8266/Mocks/Inc/Client.h
+-*/Simulation/FirmwarePCSimulator/ESP8266/Mocks/Inc/ESP8266WiFi.h
+-*/Simulation/FirmwarePCSimulator/ESP8266/Mocks/Inc/HardwareSerial.h
+-*/Simulation/FirmwarePCSimulator/ESP8266/Mocks/Inc/Print.h
+-*/Simulation/FirmwarePCSimulator/ESP8266/Mocks/Inc/Printable.h
+-*/Simulation/FirmwarePCSimulator/ESP8266/Mocks/Inc/PubSubClient.h
+-*/Simulation/FirmwarePCSimulator/ESP8266/Mocks/Inc/stdlib_noniso.h
+-*/Simulation/FirmwarePCSimulator/ESP8266/Mocks/Inc/WString.h

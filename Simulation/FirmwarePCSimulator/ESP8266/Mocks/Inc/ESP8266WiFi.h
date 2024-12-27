@@ -36,7 +36,7 @@ extern "C" {
 #include "ESP8266WiFiScan.h"
 #include "ESP8266WiFiGeneric.h"
 */
-#include "WiFiClient.h"
+// #include "WiFiClient.h"
 
 /*#include "WiFiServer.h"
 #include "WiFiServerSecure.h"

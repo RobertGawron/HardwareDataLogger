@@ -19,6 +19,9 @@
 
 #ifndef client_h
 #define client_h
+
+// codechecker_suppress [all] excluded from CodeChecker analysis because i need compatibility with the Arduino code
+
 // #include "Print.h"
 #include "Client.h"
 // #include "Stream.h"

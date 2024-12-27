@@ -7,6 +7,8 @@
 #ifndef PubSubClient_h
 #define PubSubClient_h
 
+// codechecker_suppress [all] excluded from CodeChecker analysis because i need compatibility with the Arduino code
+
 #include <Arduino.h>
 #include "Client.h"
 #include "Print.h" // not included directly in the original code, base class for PubSubClient

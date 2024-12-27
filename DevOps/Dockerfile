@@ -104,6 +104,7 @@ RUN apt-get update && apt-get install -y \
     libfontconfig1 \
     libfreetype6 \
     lcov \
+    dos2unix \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 

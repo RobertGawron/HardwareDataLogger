@@ -12,8 +12,8 @@ if(DOXYGEN_EXECUTABLE)
     file(MAKE_DIRECTORY "${DOXYGEN_OUTPUT_DIR}")
 
     # Set the paths for the Doxyfile template and the final generated Doxyfile
-    set(DOXYFILE_IN "${CMAKE_CURRENT_LIST_DIR}/Doxyfile.in")
-    set(DOXYFILE_OUT "${CMAKE_CURRENT_LIST_DIR}/Doxyfile")
+    set(DOXYFILE_IN "${CMAKE_SOURCE_DIR}/DevOps/Scripts/Doxyfile.in")
+    set(DOXYFILE_OUT "${CMAKE_SOURCE_DIR}/DevOps/Scripts/Doxyfile")
 
     # Create a template Doxyfile with CMake variables
     configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
