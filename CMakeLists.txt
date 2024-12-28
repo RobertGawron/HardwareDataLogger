@@ -9,13 +9,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(USE_X86_HEADERS TRUE)  # Set this to TRUE for X86, FALSE for ARM
 
 add_subdirectory(Software/STM32F103RBTx/Application)
-add_subdirectory(Simulation/FirmwarePCSimulator)
+add_subdirectory(Simulation/FirmwarePCSimulator/STM32F103RBTx)
+add_subdirectory(Simulation/FirmwarePCSimulator/ESP8266)
 add_subdirectory(Test/Unit)
 
-include(Software/CStaticAnalysis.cmake)
-include(Software/ClassDiagram.cmake)
-include(Software/DocsCoverage.cmake)
-
-include(Simulation/FirmwarePCSimulator/PythonStaticAnalysis.cmake)
+# Include the DevOps scripts (static code analysis, etc.)
+include(DevOps/Cmake/CStaticAnalysis.cmake)
+include(DevOps/Cmake/PythonStaticAnalysis.cmake)
+include(DevOps/Cmake/DocsCoverage.cmake)
+include(DevOps/Cmake/ClassDiagram.cmake)
 
 

@@ -14,7 +14,10 @@
 #include "stm32f1xx_hal_tim.h"
 
 // I'm not sure if it should be here.
+extern UART_HandleTypeDef huart1;
+extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
+
 extern ADC_HandleTypeDef hadc1;
 extern TIM_HandleTypeDef htim3;
 
@@ -47,21 +50,34 @@ namespace BusinessLogic
 
     Driver::IUartDriver &PlatformFactoryStm32::createUartDriver(const Driver::UartIdentifier id)
     {
-        // TODO
-        static Driver::UartDriver driver{huart3};
-        return driver;
-    }
+        // hack
+        static Driver::UartDriverStub driver1(Driver::UartIdentifier::MeasurementReceiver);
+        static Driver::UartDriverStub driver2(Driver::UartIdentifier::DataTransmitterViaWiFi);
+        static Driver::UartDriverStub driver3(Driver::UartIdentifier::DataTransmitterViaUSB);
 
-    Driver::ISdCardDriver &PlatformFactoryStm32::createSdCardDriver()
-    {
-        static Driver::SdCardDriver driver;
-        return driver;
-    }
+        switch (id)
+        {
+        case Driver::UartIdentifier::MeasurementReceiver:
+            return driver1;
+            break;
+        case Driver::UartIdentifier::DataTransmitterViaWiFi:
+            return driver2;
+            break;
+        case Driver::UartIdentifier::DataTransmitterViaUSB:
+            return driver3;
+            break;
+        }
 
-    Driver::IPulseCounterDriver &PlatformFactoryStm32::createPulseCounterDriver(const Driver::PulseCounterIdentifier id)
-    {
-        // TODO
-        static Driver::PulseCounterDriver driver;
-        return driver;
+        Driver::ISdCardDriver &PlatformFactoryStm32::createSdCardDriver()
+        {
+            static Driver::SdCardDriver driver;
+            return driver;
+        }
+
+        Driver::IPulseCounterDriver &PlatformFactoryStm32::createPulseCounterDriver(const Driver::PulseCounterIdentifier id)
+        {
+            // TODO
+            static Driver::PulseCounterDriver driver;
+            return driver;
+        }
     }
-}
