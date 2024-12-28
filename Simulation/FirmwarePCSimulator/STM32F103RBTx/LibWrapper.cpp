@@ -68,3 +68,8 @@ void LibWrapper_UpdatePulseCounters(const std::array<std::uint16_t, PULSE_COUNTE
         setPulseCounter(i, pulseCounters.at(i));
     }
 }
+
+void LibWrapper_RegisterSerialTxCallback(SerialTxCallback callback)
+{
+    registerSerialTxCallback(callback);
+}

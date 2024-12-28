@@ -4,9 +4,12 @@
 #ifndef LibWrapper_h
 #define LibWrapper_h
 
+#include <functional>
 #include <cstdint>
 #include <array>
+
 #include "MyApplication.hpp"
+#include "HmiEventHandlers.hpp"
 
 constexpr std::size_t PULSE_COUNTER_COUNT = 4;
 
@@ -79,6 +82,8 @@ extern "C"
      * @param pulseCounters An array of pulse counter values.
      */
     void LibWrapper_UpdatePulseCounters(const std::array<std::uint16_t, PULSE_COUNTER_COUNT> &pulseCounters);
+
+    void LibWrapper_RegisterSerialTxCallback(SerialTxCallback callback);
 
 #ifdef __cplusplus
 }

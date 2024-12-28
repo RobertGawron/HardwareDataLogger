@@ -40,8 +40,25 @@ namespace BusinessLogic
 
     Driver::IUartDriver &PlatformFactoryStm32::createUartDriver(const Driver::UartIdentifier id)
     {
-        static Driver::UartDriverStub driver;
-        return driver;
+        // hack
+        static Driver::UartDriverStub driver1(Driver::UartIdentifier::MeasurementReceiver);
+        static Driver::UartDriverStub driver2(Driver::UartIdentifier::DataTransmitterViaWiFi);
+        static Driver::UartDriverStub driver3(Driver::UartIdentifier::DataTransmitterViaUSB);
+
+        switch (id)
+        {
+        case Driver::UartIdentifier::MeasurementReceiver:
+            return driver1;
+            break;
+        case Driver::UartIdentifier::DataTransmitterViaWiFi:
+            return driver2;
+            break;
+        case Driver::UartIdentifier::DataTransmitterViaUSB:
+            return driver3;
+            break;
+        }
+
+        // return driver;
     }
 
     Driver::ISdCardDriver &PlatformFactoryStm32::createSdCardDriver()

@@ -19,11 +19,13 @@ set(INCLUDE_DIRS
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Core/Inc
     ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/STM32F103RBTx/Application/Driver/Inc
     ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/STM32F103RBTx/System/
+    ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/STM32F103RBTx/
 )
 
 # Gather source files for the Driver and Platform components
 file(GLOB SIMULATOR_DRIVER_SRC
     "${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/STM32F103RBTx/Application/Driver/Src/*.cpp"
+     "${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/STM32F103RBTx/*.cpp"
    # "${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/St7735DisplayDriver.cpp"
     "${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp"
     "${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DisplayPixelColor.cpp"

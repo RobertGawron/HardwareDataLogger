@@ -1,3 +1,58 @@
+
+#include <Arduino.h>
+#include <HardwareSerial.h>
+#include <ESP8266WiFi.h>
+#include <PubSubClient.h>
+
+constexpr int USER_LED_GPIO = 13;
+constexpr int BAUD_RATE = 115200;
+constexpr size_t BUFFER_SIZE = 100;
+constexpr size_t OUTBUFFER_SIZE = 256;
+constexpr int PROCESSING_DELAY = 500;
+
+void setup()
+{
+  pinMode(USER_LED_GPIO, OUTPUT);
+
+  Serial.begin(BAUD_RATE);
+  Serial.print("Hello from ESP");
+}
+
+void loop()
+{
+  if (Serial.available() > 0)
+  {
+    // Light up the LED during the processing just for test
+    digitalWrite(USER_LED_GPIO, HIGH);
+
+    int incomingData = Serial.read();                          // Read the incoming data
+    uint8_t packetLength = static_cast<uint8_t>(incomingData); // Ensure proper conversion
+
+    // Read package
+    char buffer[BUFFER_SIZE];
+    Serial.readBytes(buffer, packetLength);
+
+    char outbuffer[OUTBUFFER_SIZE];
+    int pos = 0; // Current position in the buffer
+
+    pos += snprintf(outbuffer + pos, sizeof(outbuffer) - pos, "I got from STM32: ");
+
+    for (uint8_t i = 0; i < packetLength; i++)
+    {
+      pos += snprintf(outbuffer + pos, sizeof(outbuffer) - pos, "%c", buffer[i]);
+    }
+
+    Serial.println(outbuffer);
+
+    delay(PROCESSING_DELAY); // Simulate processing
+
+    digitalWrite(USER_LED_GPIO, LOW);
+
+    delay(PROCESSING_DELAY);
+  }
+}
+
+/*
 #include <Arduino.h>
 #include <HardwareSerial.h>
 #include <ESP8266WiFi.h>
@@ -103,60 +158,4 @@ void loop()
     Serial.println("Message published: " + msg);
   }
 }
-
-#if 0
-
-#include <Arduino.h>
-#include <HardwareSerial.h>
-#include <ESP8266WiFi.h>
-#include <PubSubClient.h>
-
-constexpr int USER_LED_GPIO = 13;
-constexpr int BAUD_RATE = 115200;
-constexpr size_t BUFFER_SIZE = 100;
-constexpr size_t OUTBUFFER_SIZE = 256;
-constexpr int PROCESSING_DELAY = 500;
-
-void setup()
-{
-  pinMode(USER_LED_GPIO, OUTPUT);
-
-  Serial.begin(BAUD_RATE);
-  Serial.print("Hello from ESP");
-}
-
-void loop()
-{
-  if (Serial.available() > 0)
-  {
-    // Light up the LED during the processing just for test
-    digitalWrite(USER_LED_GPIO, HIGH);
-
-    int incomingData = Serial.read();                          // Read the incoming data
-    uint8_t packetLength = static_cast<uint8_t>(incomingData); // Ensure proper conversion
-
-    // Read package
-    char buffer[BUFFER_SIZE];
-    Serial.readBytes(buffer, packetLength);
-
-    char outbuffer[OUTBUFFER_SIZE];
-    int pos = 0; // Current position in the buffer
-
-    pos += snprintf(outbuffer + pos, sizeof(outbuffer) - pos, "I got from STM32: ");
-
-    for (uint8_t i = 0; i < packetLength; i++)
-    {
-      pos += snprintf(outbuffer + pos, sizeof(outbuffer) - pos, "%c", buffer[i]);
-    }
-
-    Serial.println(outbuffer);
-
-    delay(PROCESSING_DELAY); // Simulate processing
-
-    digitalWrite(USER_LED_GPIO, LOW);
-
-    delay(PROCESSING_DELAY);
-  }
-}
-
-#endif
+*/

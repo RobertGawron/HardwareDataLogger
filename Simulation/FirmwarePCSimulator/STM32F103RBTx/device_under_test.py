@@ -8,7 +8,8 @@ including interactions with the display, keys, and pulse counters.
 import ctypes
 import os.path
 from enum import Enum
-from typing import List
+from typing import List, Callable
+
 
 
 class SimulationKey(Enum):
@@ -41,6 +42,8 @@ class DeviceUnderTest:
             + os.path.sep + dll_name
         )
         self.dut: ctypes.CDLL = ctypes.CDLL(dll_abs_path)
+
+        self._serial_tx_callback_c = None
 
     def init(self) -> None:
         """
@@ -126,3 +129,33 @@ class DeviceUnderTest:
         self.dut.LibWrapper_UpdatePulseCounters.restype = None
         self.dut.LibWrapper_UpdatePulseCounters.argtypes = [pulse_counters_array_type]
         self.dut.LibWrapper_UpdatePulseCounters(pulse_counters_array)
+
+    def register_serial_tx_callback(self, callback: Callable[[List[int], int, int], int]):
+        """
+        Register a Serial TX callback with the shared library.
+
+        The callback should be a Python function that accepts three arguments:
+        - `data` (List[int]): The data to transmit.
+        - `size` (int): The size of the data.
+        - `timeout` (int): Timeout in milliseconds.
+        The function should return an integer (`HAL_StatusTypeDef`).
+        """
+        # Define the C-compatible callback type
+        # C: typedef int (*SerialTxCallback)(const uint8_t*, uint16_t, uint32_t);
+        SerialTxCallbackType = ctypes.CFUNCTYPE(
+            ctypes.c_int,                   # return type
+            ctypes.POINTER(ctypes.c_uint8), # const uint8_t* pData
+            ctypes.c_uint16,                # uint16_t size
+            ctypes.c_uint32                 # uint32_t timeout
+        )
+
+        self.dut.LibWrapper_RegisterSerialTxCallback.argtypes = [SerialTxCallbackType]
+        self.dut.LibWrapper_RegisterSerialTxCallback.restype = None
+
+        # Wrap the Python callback
+        def wrapper(pData, size, timeout):
+            data = [pData[i] for i in range(size)]  # Convert to Python list
+            return callback(data, size, timeout)
+
+        self._serial_tx_callback_c = SerialTxCallbackType(wrapper)
+        self.dut.LibWrapper_RegisterSerialTxCallback(self._serial_tx_callback_c)

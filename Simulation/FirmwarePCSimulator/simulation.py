@@ -98,6 +98,8 @@ class Simulation:
             self.esp8266.register_uart0_tx_callback(self.esp8266_uart0_tx_callback)
             self.esp8266.register_gpio_state_callback(self.my_gpio_state_callback)
 
+            self.stm32.register_serial_tx_callback(self.STM32F103RBTx_uart_tx_callback)
+
             self.stm32.init()
             self.esp8266.init()
 
@@ -152,7 +154,7 @@ class Simulation:
         This internal method handles periodic updates to simulate device behavior.
         """
         while not self._stop_event.is_set():
-            timestamp = datetime.datetime.now().isoformat(timespec='seconds') + 'Z'
+            """timestamp = datetime.datetime.now().isoformat(timespec='seconds') + 'Z'
             value = round(random.uniform(0.0, 10.0), 2)
             data_string = f'MEAS:VOLT:DATA "{timestamp},{value}"'
             data_bytes = list(data_string.encode('ascii'))
@@ -162,6 +164,7 @@ class Simulation:
             timeout = 1000
 
             self.esp8266.uart0_tx(data_to_send, size, timeout)
+            """
 
             self.stm32.tick()
             self.esp8266.tick()
@@ -187,3 +190,22 @@ class Simulation:
     def key_released(self, key: SimulationKey):
         """Notify the STM32 simulation of a key release event."""
         self.stm32.key_released(key)
+
+    def STM32F103RBTx_uart_tx_callback(self, data: list, size: int, timeout: int) -> int:
+        """
+        Callback function for STM32F103RBTx UART transmission.
+
+        This callback prints the data being transmitted.
+        :param data: List of integers representing the transmitted bytes.
+        :param size: Number of bytes transmitted.
+        :param timeout: Timeout in milliseconds.
+        :return: Always returns 0 (HAL_OK) for success.
+        """
+        data_string = ''.join(map(chr, data))  # Convert byte list to string
+        print(f"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@UART TX Callback: Transmitting data: '{data_string}', Size: {size}, Timeout: {timeout}")
+
+
+        self.esp8266.uart0_tx(data, size, timeout)
+        
+
+        return 0  # HAL_OK equivalent

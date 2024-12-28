@@ -7,6 +7,7 @@
 #define UartDriverStub_h
 
 #include "Driver/Interfaces/IUartDriver.hpp"
+#include "Driver/Inc/UartIdentifier.hpp"
 
 namespace Driver
 {
@@ -21,11 +22,9 @@ namespace Driver
     class UartDriverStub : public IUartDriver
     {
     public:
-        /**
-         * @brief Default constructor.
-         *
-         */
-        UartDriverStub() = default;
+        UartDriverStub() = delete;
+
+        UartDriverStub(const Driver::UartIdentifier id);
 
         /**
          * @brief Virtual destructor for UartDriverStub.
@@ -101,6 +100,8 @@ namespace Driver
          * @return True if the reset operation is successful, otherwise false.
          */
         virtual bool onReset() override;
+
+        Driver::UartIdentifier hwId;
     };
 
 }
