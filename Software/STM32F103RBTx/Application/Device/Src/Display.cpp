@@ -8,6 +8,8 @@
 #include <cstdint>
 #include <cstdlib>
 
+#include <stdio.h>
+
 namespace Device
 {
     // Not used. Required by the u8g2 library, but this action is handled by the St7735DisplayDriver class.
@@ -124,6 +126,7 @@ namespace Device
 
         case U8X8_MSG_DISPLAY_DRAW_TILE:
         {
+
             const u8x8_tile_t *tiles = static_cast<u8x8_tile_t *>(argPtr);
 
             for (std::uint8_t t = 0; t < argInt; t++)
@@ -158,6 +161,80 @@ namespace Device
                     }
                 }
             }
+
+#if 0
+            u8x8_tile_t *tile = (u8x8_tile_t *)argPtr;
+            for (int i = 0; i < argInt; i++) // arg_int = number of tiles
+            {
+                int x = tile->x_pos * 8;
+                int y = tile->y_pos * 8;
+                int tile_width = 8;
+                int tile_height = 8;
+                //
+                // Now tile->cnt tells how many 8-pixel chunks in one row
+                // Typically this is 1, but can be more if the text is wide, etc.
+                int bytes_in_tile = tile->cnt * 8; // e.g., tile->cnt=1 => 8 bytes
+                                                   //
+                // tile->buf is the pointer to the actual pixel bits
+                const uint8_t *pixel_data = tile->tile_ptr;
+                for (auto i = 0; i < bytes_in_tile; i++)
+                {
+                    printf("%d ", tile[])
+                }
+                //
+                // Send to the display, e.g.:
+                //   set_address_window(x, y, x + tile_width - 1, y + tile_height - 1);
+                //   push_pixels(pixel_data, bytes_in_tile, ...);
+                //
+                // Move to next tile row in memory
+                tile++;
+            }
+#endif
+
+#if 0
+            const u8x8_tile_t *tiles = static_cast<u8x8_tile_t *>(argPtr);
+
+            printf("BUFFFF len = %d\n", argInt);
+            for (std::uint8_t t = 0; t < argInt; t++)
+            {
+                // lib api, can't change it
+                // codechecker_suppress [clang-diagnostic-unsafe-buffer-usage]
+                const u8x8_tile_t &tile = tiles[t]; // Access the current tile safely using an index
+
+                const std::uint8_t tile_x_start = tile.x_pos * TILE_PIXEL_HEIGHT; // Starting x position in pixels
+                const std::uint8_t tile_y_start = tile.y_pos * TILE_PIXEL_HEIGHT; // Starting y position in pixels
+
+                printf("tile_x_start tile_y_start %d %d\n", tile_x_start, tile_y_start);
+                // Treat each byte as a column of 8 vertical pixels.
+                constexpr std::uint8_t len = 8; // todo think about it
+                for (std::uint8_t col = 0; col < len; col++)
+                {
+                    // lib api, can't change it
+                    // codechecker_suppress [clang-diagnostic-unsafe-buffer-usage]
+                    const std::uint8_t col_data = tile.tile_ptr[col]; // This is a vertical column
+                    for (std::uint8_t bit = 0; bit < TILE_PIXEL_HEIGHT; bit++)
+                    {
+                        //
+                        Driver::DisplayPixelColor::PixelColor color = Driver::DisplayPixelColor::getColor(0x00, 0x00, 0x00);
+                        const std::uint8_t x = tile_x_start + col;
+                        const std::uint8_t y = tile_y_start + bit;
+
+                        if ((col_data & (1 << bit)) != 0)
+                        {
+                            // Now (col, bit) corresponds to (x, y) pixel offsets within the tile:
+                            color = Driver::DisplayPixelColor::getColor(DEFAULT_COLOR_RED, DEFAULT_COLOR_GREEN, DEFAULT_COLOR_BLUE);
+
+                            printf("tile_x_start *********** GOT IT ************ \n");
+                        }
+                        if (col_data)
+                            printf("tile_x_start *********** GOT IT ************ %d\n", col_data);
+
+                        displayDriver.setPixel(x, y, color);
+                    }
+                }
+            }
+
+#endif
         }
 
         break;
@@ -183,9 +260,20 @@ namespace Device
 
     void Display::u8g2_Setup_st7735(u8g2_t *u8g2Handler, const u8g2_cb_t *rotation, u8x8_msg_cb byte_cb, u8x8_msg_cb gpio_and_delay_cb)
     {
+#if 0
+void u8g2_SetupBuffer_SDL_128x64(u8g2_t *u8g2, const u8g2_cb_t *u8g2_cb)
+{
+  
+  static uint8_t buf[128*8];
+  
+  u8x8_Setup_SDL_128x64(u8g2_GetU8x8(u8g2));
+  u8g2_SetupBuffer(u8g2, buf, 8, u8g2_ll_hvline_vertical_top_lsb, u8g2_cb);
+}
+#endif
+
         // Calculate the number of tile rows needed for 128x128 resolution.
         // Each tile is 8 pixels high, so for a 128-pixel height:
-        constexpr std::uint8_t tile_buf_height = 16; // 128 / TILE_PIXEL_HEIGHT = 16 tiles.
+        constexpr std::uint8_t tile_buf_height = 2; // 128 / TILE_PIXEL_HEIGHT = 16 tiles.
 
         // Allocate buffer dynamically for 128x128 resolution.
         // Each tile is 8 pixels wide * 1 byte (8 bits) = 8 bytes per tile.
@@ -208,6 +296,34 @@ namespace Device
 
         // Configure the buffer and the rendering method (vertical top to bottom).
         u8g2_SetupBuffer(u8g2Handler, buf, tile_buf_height, u8g2_ll_hvline_vertical_top_lsb, rotation);
+
+        /*
+                // Calculate the number of tile rows needed for 128x128 resolution.
+                // Each tile is 8 pixels high, so for a 128-pixel height:
+                constexpr std::uint8_t tile_buf_height = 16; // 128 / TILE_PIXEL_HEIGHT = 16 tiles.
+
+                // Allocate buffer dynamically for 128x128 resolution.
+                // Each tile is 8 pixels wide * 1 byte (8 bits) = 8 bytes per tile.
+                // For 16 rows and 16 tiles per row:
+                // Total buffer size = 16 rows * 16 tiles/row * 8 bytes/tile = 2048 bytes.
+                constexpr std::size_t len = 128;
+                std::uint8_t *buf = static_cast<std::uint8_t *>(malloc(
+                    len * static_cast<std::size_t>(tile_buf_height)));
+
+                if (buf == nullptr)
+                {
+                    // printf("Error: Memory allocation failed for u8g2 buffer\n");
+                    return;
+                }
+
+                // Setup the display with the appropriate parameters.
+                // Note that this is u8g2 macro so I cant modify it to avoid warning
+                // codechecker_suppress [mold-style-cast, cppcheck-cstyleCast, clang-diagnostic-old-style-cast]
+                u8g2_SetupDisplay(u8g2Handler, trampolineU8x8DSt7735, u8x8_cad_001, byte_cb, gpio_and_delay_cb);
+
+                // Configure the buffer and the rendering method (vertical top to bottom).
+                u8g2_SetupBuffer(u8g2Handler, buf, tile_buf_height, u8g2_ll_hvline_vertical_top_lsb, rotation);
+        */
     }
 
     Display::Display(Driver::IDisplayDriver &_displayDriver) : displayDriver(_displayDriver)

@@ -8,6 +8,9 @@
 #define WiFiMeasurementRecorder_H_
 
 #include "Device/Interfaces/IMeasurementRecorder.hpp"
+#include "Device/Inc/ScpiMEASureMessage.hpp"
+#include "Device/Inc/UartDataLinkLayer.hpp"
+
 #include "Driver/Interfaces/IUartDriver.hpp"
 
 namespace Device
@@ -109,6 +112,11 @@ namespace Device
 
         /** @brief Reference to the UART driver used for communication with the ESP module. */
         Driver::IUartDriver &driver;
+
+        static constexpr std::size_t MaxBufferSize = 10;
+        ScpiMEASureMessage<MaxBufferSize> scpiMessageGenerator;
+
+        UartDataLinkLayer<MaxBufferSize, MaxBufferSize> dataLink; // overflow
     };
 
 }

@@ -15,41 +15,98 @@ void setup()
   pinMode(USER_LED_GPIO, OUTPUT);
 
   Serial.begin(BAUD_RATE);
+
+  //  Serial.read(); // Read and discard all data in the buffer
+
   Serial.print("Hello from ESP");
+  /*  delay(PROCESSING_DELAY);
+    delay(PROCESSING_DELAY);
+    delay(PROCESSING_DELAY);
+    Serial.read(); // Read and discard all data in the buffer
+
+    Serial.print("Hello from ESP ready");
+  */
 }
 
 void loop()
 {
-  if (Serial.available() > 0)
-  {
-    // Light up the LED during the processing just for test
-    digitalWrite(USER_LED_GPIO, HIGH);
-
-    int incomingData = Serial.read();                          // Read the incoming data
-    uint8_t packetLength = static_cast<uint8_t>(incomingData); // Ensure proper conversion
-
-    // Read package
-    char buffer[BUFFER_SIZE];
-    Serial.readBytes(buffer, packetLength);
-
-    char outbuffer[OUTBUFFER_SIZE];
-    int pos = 0; // Current position in the buffer
-
-    pos += snprintf(outbuffer + pos, sizeof(outbuffer) - pos, "I got from STM32: ");
-
-    for (uint8_t i = 0; i < packetLength; i++)
+  /*  if (Serial.available() > 0)
     {
-      pos += snprintf(outbuffer + pos, sizeof(outbuffer) - pos, "%c", buffer[i]);
-    }
+      Serial.println("Hi");
 
-    Serial.println(outbuffer);
+      // Light up the LED during the processing just for test
+      digitalWrite(USER_LED_GPIO, HIGH);
 
-    delay(PROCESSING_DELAY); // Simulate processing
+      int pktLen = Serial.read(); // Read the incoming data
 
-    digitalWrite(USER_LED_GPIO, LOW);
+      char buffer[BUFFER_SIZE];
 
-    delay(PROCESSING_DELAY);
-  }
+      Serial.print("len ");
+      Serial.println(pktLen);
+
+      for (int i = 0; i < pktLen; i++)
+      {
+        while (!Serial.available())
+        {
+        }
+
+        {
+          buffer[i] = Serial.read();
+        }
+
+        buffer[i + 1] = '\0';
+      }
+
+      Serial.println(buffer);
+    */
+  /*
+      Serial.println((int)incomingData);
+
+      if (incomingData != Serial.available())
+      {
+        Serial.println("IGNORE");
+        Serial.println(Serial.available());
+        Serial.flush();
+      }
+      else
+      {
+        uint8_t packetLength = static_cast<uint8_t>(incomingData);
+        char buffer[BUFFER_SIZE];
+        Serial.println("1");
+
+        Serial.readBytes(buffer, packetLength);
+        Serial.println("2");
+
+        Serial.println(buffer);
+        Serial.println("3");
+      }
+  */
+
+  /*
+      uint8_t packetLength = static_cast<uint8_t>(incomingData); // Ensure proper conversion
+
+      // Read package
+      char buffer[BUFFER_SIZE];
+      Serial.readBytes(buffer, packetLength);
+
+      char outbuffer[OUTBUFFER_SIZE];
+      int pos = 0; // Current position in the buffer
+
+      pos += snprintf(outbuffer + pos, sizeof(outbuffer) - pos, "I got from STM32: ");
+
+      for (uint8_t i = 0; i < packetLength; i++)
+      {
+        pos += snprintf(outbuffer + pos, sizeof(outbuffer) - pos, "%c", buffer[i]);
+      }
+
+      Serial.println(outbuffer);
+  */
+  // delay(PROCESSING_DELAY); // Simulate processing
+
+  digitalWrite(USER_LED_GPIO, LOW);
+
+  //  delay(PROCESSING_DELAY);
+  //}
 }
 
 /*

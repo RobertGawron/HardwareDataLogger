@@ -38,11 +38,11 @@ namespace Driver
         {
             serialTx(data, size, timeout);
 
-            for (std::size_t i = 0u; i < size; i++)
-            {
-                printf("UartDriverStub::transmit TX %d \n", (char)data[i]);
-            }
-            printf("\n");
+            /*  for (std::size_t i = 0u; i < size; i++)
+              {
+                  printf("UartDriverStub::transmit TX %d \n", (char)data[i]);
+              }
+              printf("\n");*/
         }
 
         return UartExchangeStatus::Ok;

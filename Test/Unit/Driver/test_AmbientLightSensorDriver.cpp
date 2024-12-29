@@ -2,8 +2,8 @@
 #include <gmock/gmock.h>
 #include "Driver/Inc/AmbientLightSensorDriver.hpp"
 #include "main.h"
-#include "stm32f1xx_hal_adc.h"
-
+// #include "stm32f1xx_hal_adc.h"
+#include "stm32f1xx_hal.h"
 using namespace testing;
 using namespace Driver;
 

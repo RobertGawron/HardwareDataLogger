@@ -56,7 +56,7 @@ namespace Driver
     {
         UartExchangeStatus status = UartExchangeStatus::DriverInIncorrectMode;
 
-        if (getState() == DriverState::State::Running)
+        //   if (getState() == DriverState::State::Running)
         {
             const HAL_StatusTypeDef halStatus = HAL_UART_Transmit(&uartHandler, data, size, timeout);
             status = getExchangeStatus(halStatus);

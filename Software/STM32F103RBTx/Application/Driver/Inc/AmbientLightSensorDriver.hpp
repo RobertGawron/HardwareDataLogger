@@ -2,8 +2,15 @@
 #define AMBIENTLIGHTSENSORDRIVER_H_
 
 #include "Driver/Interfaces/IAmbientLightSensorDriver.hpp"
-#include "stm32f1xx_hal.h"
+/*
+#include "stm32f1xx_hal_def.h"
+#include "stm32f1xx_hal_def.h"
+#include "stm32f1xx_hal_dma.h"
 #include "stm32f1xx_hal_adc.h"
+*/
+
+#include "stm32f1xx_hal.h"
+
 #include <cstdint>
 #include <cstddef>
 
@@ -33,7 +40,8 @@ namespace Driver
          *
          * Prevents the creation of a AmbientLightSensorDriver instance without specifying a UART handle.
          */
-        AmbientLightSensorDriver() = delete;
+        // AmbientLightSensorDriver() = delete;
+        AmbientLightSensorDriver() = default;
 
         /**
          * @brief Destructor for AmbientLightSensorDriver.

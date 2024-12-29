@@ -1,5 +1,13 @@
-#include "PlatformFactoryStm32.hpp"
 
+#include "PlatformFactoryStm32.hpp"
+/*#include "PlatformFactoryStm32.hpp"
+#include "stm32f1xx_hal_def.h"
+#include "stm32f1xx_hal_conf.h"
+#include "stm32f1xx.h"
+#include "stm32f1xx_hal_def.h"
+
+// stm32f1xx.h:254
+*/
 #include "Driver/Inc/AmbientLightSensorDriver.hpp"
 #include "Driver/Inc/St7735DisplayBrightnessDriver.hpp"
 #include "Driver/Inc/St7735DisplayDriver.hpp"
@@ -8,6 +16,8 @@
 #include "Driver/Inc/SdCardDriver.hpp"
 #include "Driver/Inc/PulseCounterDriver.hpp"
 
+// #include "stm32f1xx_hal_conf.h"
+#include "stm32f1xx_hal_def.h"
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_uart.h"
 #include "stm32f1xx_hal_adc.h"
@@ -51,33 +61,36 @@ namespace BusinessLogic
     Driver::IUartDriver &PlatformFactoryStm32::createUartDriver(const Driver::UartIdentifier id)
     {
         // hack
-        static Driver::UartDriverStub driver1(Driver::UartIdentifier::MeasurementReceiver);
-        static Driver::UartDriverStub driver2(Driver::UartIdentifier::DataTransmitterViaWiFi);
-        static Driver::UartDriverStub driver3(Driver::UartIdentifier::DataTransmitterViaUSB);
+        static Driver::UartDriver driver1(huart1);
+        static Driver::UartDriver driver2(huart2);
+        static Driver::UartDriver driver3(huart3);
 
         switch (id)
         {
         case Driver::UartIdentifier::MeasurementReceiver:
             return driver1;
             break;
-        case Driver::UartIdentifier::DataTransmitterViaWiFi:
+        case Driver::UartIdentifier::DataTransmitterViaUSB:
             return driver2;
             break;
-        case Driver::UartIdentifier::DataTransmitterViaUSB:
+        case Driver::UartIdentifier::DataTransmitterViaWiFi:
             return driver3;
             break;
         }
 
-        Driver::ISdCardDriver &PlatformFactoryStm32::createSdCardDriver()
-        {
-            static Driver::SdCardDriver driver;
-            return driver;
-        }
-
-        Driver::IPulseCounterDriver &PlatformFactoryStm32::createPulseCounterDriver(const Driver::PulseCounterIdentifier id)
-        {
-            // TODO
-            static Driver::PulseCounterDriver driver;
-            return driver;
-        }
+        return driver1; // tmp
     }
+
+    Driver::ISdCardDriver &PlatformFactoryStm32::createSdCardDriver()
+    {
+        static Driver::SdCardDriver driver;
+        return driver;
+    }
+
+    Driver::IPulseCounterDriver &PlatformFactoryStm32::createPulseCounterDriver(const Driver::PulseCounterIdentifier id)
+    {
+        // TODO
+        static Driver::PulseCounterDriver driver(id);
+        return driver;
+    }
+}

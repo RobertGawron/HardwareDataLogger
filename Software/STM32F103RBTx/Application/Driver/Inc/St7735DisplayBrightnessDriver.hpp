@@ -8,8 +8,12 @@
 #define St7735DisplayBrightnessDriver_H_
 
 #include "Driver/Interfaces/IDisplayBrightnessDriver.hpp"
+
+// #include "stm32f1xx_hal.h"
+// #include "stm32f1xx_hal_def.h"
+// #include "stm32f1xx_hal_tim.h"
+
 #include "stm32f1xx_hal.h"
-#include "stm32f1xx_hal_tim.h"
 
 #include <cstdint>
 
@@ -39,7 +43,8 @@ namespace Driver
          *
          * Deleted to prevent creation without a valid timer handle.
          */
-        St7735DisplayBrightnessDriver() = delete;
+        //   St7735DisplayBrightnessDriver() = delete;
+        St7735DisplayBrightnessDriver() = default;
 
         /**
          * @brief Default destructor for St7735DisplayBrightnessDriver.

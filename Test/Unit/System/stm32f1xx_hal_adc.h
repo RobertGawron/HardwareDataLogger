@@ -14,7 +14,7 @@ struct ADC_HandleTypeDef
 };
 
 // Mock class for HAL functions
-class MockHAL
+class MockHAL_ADC
 {
 public:
     MOCK_METHOD(HAL_StatusTypeDef, HAL_ADC_Start_DMA, (ADC_HandleTypeDef * hadc, std::uint32_t *pData, std::uint32_t Length), ());
@@ -22,17 +22,17 @@ public:
 };
 
 // Global pointer to the MockHAL instance, which will be set in the tests
-extern MockHAL *mockHAL;
+extern MockHAL_ADC *mockHAL_ADC;
 
 // Wrapper functions for the HAL functions that redirect to the mock
 inline HAL_StatusTypeDef HAL_ADC_Start_DMA(ADC_HandleTypeDef *hadc, std::uint32_t *pData, std::uint32_t Length)
 {
-    return mockHAL->HAL_ADC_Start_DMA(hadc, pData, Length);
+    return mockHAL_ADC->HAL_ADC_Start_DMA(hadc, pData, Length);
 }
 
 inline HAL_StatusTypeDef HAL_ADC_Stop_DMA(ADC_HandleTypeDef *hadc)
 {
-    return mockHAL->HAL_ADC_Stop_DMA(hadc);
+    return mockHAL_ADC->HAL_ADC_Stop_DMA(hadc);
 }
 
 #endif // stm32f1xx_hal_adc_h

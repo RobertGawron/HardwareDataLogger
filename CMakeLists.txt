@@ -5,14 +5,19 @@ project(HardwareDataLogger)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
+
 # Define the flag to choose between X86 and ARM headers
 set(USE_X86_HEADERS TRUE)  # Set this to TRUE for X86, FALSE for ARM
+
+set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -pg")
 
 add_subdirectory(Software/STM32F103RBTx/Application)
 add_subdirectory(Simulation/FirmwarePCSimulator/STM32F103RBTx)
 add_subdirectory(Simulation/FirmwarePCSimulator/ESP8266)
 add_subdirectory(Test/Unit)
-
+ 
 # Include the DevOps scripts (static code analysis, etc.)
 include(DevOps/Cmake/CStaticAnalysis.cmake)
 include(DevOps/Cmake/PythonStaticAnalysis.cmake)

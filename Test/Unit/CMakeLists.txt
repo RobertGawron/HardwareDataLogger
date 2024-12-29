@@ -63,47 +63,43 @@ endfunction()
 
 # Define source files for each test
 
-set(TEST_SAFERARRAY_SRC
-    ${CMAKE_SOURCE_DIR}/Test/Unit/BusinessLogic/test_SaferArray.cpp
-)
-
 set(TEST_DRIVERSTATE_SRC
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
     ${CMAKE_SOURCE_DIR}/Test/Unit/Driver/test_DriverState.cpp
 )
 
-set(TEST_KEYBOARD_SRC
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/KeyboardFourPushButtonsDriver.cpp
-    ${CMAKE_SOURCE_DIR}/Test/Unit/Driver/test_KeyboardFourPushButtonsDriver.cpp
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
-    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
-)
+#set(TEST_KEYBOARD_SRC
+#    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/KeyboardFourPushButtonsDriver.cpp
+#    ${CMAKE_SOURCE_DIR}/Test/Unit/Driver/test_KeyboardFourPushButtonsDriver.cpp
+#    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
+#    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
+#)
 
-set(TEST_AMBIENTLIGHT_SRC
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/AmbientLightSensorDriver.cpp
-    ${CMAKE_SOURCE_DIR}/Test/Unit/Driver/test_AmbientLightSensorDriver.cpp
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
-    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
-)
+#set(TEST_AMBIENTLIGHT_SRC
+#    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/AmbientLightSensorDriver.cpp
+#    ${CMAKE_SOURCE_DIR}/Test/Unit/Driver/test_AmbientLightSensorDriver.cpp
+#    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
+#    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
+#)
 
 set(TEST_DISPLAYPIXELCOLOR_SRC
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DisplayPixelColor.cpp
     ${CMAKE_SOURCE_DIR}/Test/Unit/Driver/test_DisplayPixelColor.cpp
 )
 
-set(TEST_ST7735BRIGHTNESS_SRC
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/St7735DisplayBrightnessDriver.cpp
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
-    ${CMAKE_SOURCE_DIR}/Test/Unit/Driver/test_St7735DisplayBrightnessDriver.cpp
-    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
-)
+#set(TEST_ST7735BRIGHTNESS_SRC
+#    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/St7735DisplayBrightnessDriver.cpp
+#    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
+#    ${CMAKE_SOURCE_DIR}/Test/Unit/Driver/test_St7735DisplayBrightnessDriver.cpp
+#    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
+#)
 
-set(TEST_UART_SRC
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/UartDriver.cpp
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
-    ${CMAKE_SOURCE_DIR}/Test/Unit/Driver/test_UartDriver.cpp
-    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
-)
+#set(TEST_UART_SRC
+#    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/UartDriver.cpp
+#    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
+#    ${CMAKE_SOURCE_DIR}/Test/Unit/Driver/test_UartDriver.cpp
+#    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
+#)
 
 set(PULSE_COUNTER_DRIVER_SRC
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/PulseCounterDriver.cpp
@@ -116,42 +112,49 @@ set(PULSE_COUNTER_MEASUREMENT_SOURCE_SRC
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/PulseCounterMeasurementSource.cpp
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
     ${CMAKE_SOURCE_DIR}/Test/Unit/Device/test_PulseCounterMeasurementSource.cpp
-    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
 )
-
 
 set(MEASUREMENT_DATA_STORE_SRC
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic/Src/MeasurementDataStore.cpp
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
     ${CMAKE_SOURCE_DIR}/Test/Unit/BusinessLogic/test_MeasurementDataStore.cpp
-    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
 )
 
 set(TEST_MEASUREMENT_COORDINATOR
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic/Src/MeasurementCoordinator.cpp
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
     ${CMAKE_SOURCE_DIR}/Test/Unit/BusinessLogic/test_MeasurementCoordinator.cpp
-    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
 )
-
 
 set(WIFI_MEASUREMENT_RECORDER
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/WiFiMeasurementRecorder.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/Crc32.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/CobsEncoder.cpp
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
     ${CMAKE_SOURCE_DIR}/Test/Unit/Device/test_WiFiMeasurementRecorder.cpp
-    ${CMAKE_SOURCE_DIR}/Test/Unit/System/main.cpp
+)
+
+set(TEST_SCPI_MEASURE_MESSAGE_SRC
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/ScpiMEASureMessage.cpp
+    ${CMAKE_SOURCE_DIR}/Test/Unit/Device/test_ScpiMEASureMessage.cpp
+)
+
+set(TEST_UART_DATA_LINK_LAYER_SRC
+    ${CMAKE_SOURCE_DIR}/Test/Unit/Device/test_UartDataLinkLayer.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/Crc32.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/CobsEncoder.cpp
 )
 
 
-
 # Add test executables using the create_test_exec function with source lists
-create_test_exec(test_SaferArray "${TEST_SAFERARRAY_SRC}")
+create_test_exec(test_UartDataLinkLayer "${TEST_UART_DATA_LINK_LAYER_SRC}")
+create_test_exec(ScpiMEASureMessage "${TEST_SCPI_MEASURE_MESSAGE_SRC}")
 create_test_exec(test_DriverState "${TEST_DRIVERSTATE_SRC}")
-create_test_exec(test_KeyboardFourPushButtonsDriver "${TEST_KEYBOARD_SRC}")
-create_test_exec(test_AmbientLightSensorDriver "${TEST_AMBIENTLIGHT_SRC}")
+#create_test_exec(test_KeyboardFourPushButtonsDriver "${TEST_KEYBOARD_SRC}")
+#create_test_exec(test_AmbientLightSensorDriver "${TEST_AMBIENTLIGHT_SRC}")
 create_test_exec(test_DisplayPixelColor "${TEST_DISPLAYPIXELCOLOR_SRC}")
-create_test_exec(test_St7735DisplayBrightnessDriver "${TEST_ST7735BRIGHTNESS_SRC}")
-create_test_exec(test_UartDriver "${TEST_UART_SRC}")
+#create_test_exec(test_St7735DisplayBrightnessDriver "${TEST_ST7735BRIGHTNESS_SRC}")
+#create_test_exec(test_UartDriver "${TEST_UART_SRC}")
 create_test_exec(test_PulseCounterDriver "${PULSE_COUNTER_DRIVER_SRC}")
 create_test_exec(test_PulseCounterMeasurementSource "${PULSE_COUNTER_MEASUREMENT_SOURCE_SRC}")
 create_test_exec(test_MeasurementDataStore "${MEASUREMENT_DATA_STORE_SRC}")

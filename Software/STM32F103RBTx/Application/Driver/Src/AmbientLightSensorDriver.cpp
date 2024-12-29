@@ -1,6 +1,6 @@
 #include "Driver/Inc/AmbientLightSensorDriver.hpp"
-#include "stm32f1xx_hal_adc.h"
-#include "stm32f1xx_hal_def.h"
+// #include "stm32f1xx_hal_adc.h"
+// #include "stm32f1xx_hal_def.h"
 
 #include <cstdint>
 
@@ -45,16 +45,18 @@ namespace Driver
 
     bool AmbientLightSensorDriver::startAdcWithDma()
     {
-        const HAL_StatusTypeDef statusFromHal = HAL_ADC_Start_DMA(&hadc, &adcBuffer[0u], AdcBufferSize);
+        //  const HAL_StatusTypeDef statusFromHal = HAL_ADC_Start_DMA(&hadc, &adcBuffer[0u], AdcBufferSize);
 
-        return (statusFromHal == HAL_OK);
+        //  return (statusFromHal == HAL_OK);
+        return true;
     }
 
     bool AmbientLightSensorDriver::stopAdcWithDma()
     {
-        const HAL_StatusTypeDef statusFromHal = HAL_ADC_Stop_DMA(&hadc);
+        //  const HAL_StatusTypeDef statusFromHal = HAL_ADC_Stop_DMA(&hadc);
 
-        return (statusFromHal == HAL_OK);
+        //   return (statusFromHal == HAL_OK);
+        return true;
     }
 
 }
