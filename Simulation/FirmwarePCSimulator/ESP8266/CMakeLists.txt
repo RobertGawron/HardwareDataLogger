@@ -7,49 +7,22 @@ project(SimulatorESP8266 LANGUAGES C CXX)
 # Enable position-independent code for compatibility with shared libraries
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -nostdinc")
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -nostdinc -nostdinc++")
-
-
 # Include directories scoped to each target
 set(INCLUDE_DIRS
 BEFORE # The BEFORE keyword ensures that these directories are prioritized over the system's include paths.
-
-
-    #${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Middlewares/Third_Party/u8g2/csrc
-    #${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Core/Inc
-    #${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/STM32F103RBTx/Application/Driver/Inc
-   # ${CMAKE_SOURCE_DIR}/Software/ESP8266/.pio/libdeps/huzzah/PubSubClient/src
-    ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/ESP8266/
-
-    ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/ESP8266/Mocks/Inc/
-    #${CMAKE_SOURCE_DIR}/Software/ESP8266/.pio/libdeps/huzzah/PubSubClient/src
-
-   # ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/ESP8266/framework-arduinoespressif8266/cores/esp8266/
-   # ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/ESP8266/framework-arduinoespressif8266/tools/sdk/include/
-   # ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/ESP8266/framework-arduinoespressif8266/variants/adafruit
-   # ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/ESP8266/framework-arduinoespressif8266/tools/sdk/lwip2/include/
-   # ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/ESP8266/framework-arduinoespressif8266/libraries/ESP8266WiFi/src/
-   # ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/ESP8266/toolchain-xtensa/xtensa-lx106-elf/include/
-    
-
-
-    
-
-    
-
-    
+    ${CMAKE_SOURCE_DIR}/Software/ESP8266/lib/Device/src
+    ${CMAKE_SOURCE_DIR}/Software/Common
+    ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/ESP8266
+    ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/ESP8266/Mocks/Inc
 )
 
 file(GLOB SIMULATOR_MAIN_SRC
     "${CMAKE_SOURCE_DIR}/Software/ESP8266/src/*.cpp"
-     "${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/ESP8266/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Software/ESP8266/lib/Device/src/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Software/Common/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/ESP8266/*.cpp"
     "${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/ESP8266/Mocks/Src/*.cpp"
-#    "${CMAKE_SOURCE_DIR}/Software/ESP8266/.pio/libdeps/huzzah/PubSubClient/src/*.cpp"
-
 )
-
 
 # Define DriverForSimulation as a shared library
 add_library(MainSource SHARED ${SIMULATOR_MAIN_SRC})

@@ -4,21 +4,43 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
+#include "UartStateMachine.hpp"
+
+#include <chrono>
+
 constexpr int USER_LED_GPIO = 13;
 constexpr int BAUD_RATE = 115200;
 constexpr size_t BUFFER_SIZE = 100;
 constexpr size_t OUTBUFFER_SIZE = 256;
 constexpr int PROCESSING_DELAY = 500;
 
+std::uint32_t BaudRate = 115200u;
+std::chrono::milliseconds UartTimeout = std::chrono::milliseconds(250);
+Device::UartStateMachine uart(Serial, 115200u /*, UartTimeout*/);
+
 void setup()
 {
   pinMode(USER_LED_GPIO, OUTPUT);
 
-  Serial.begin(BAUD_RATE);
+  // Serial.begin(BAUD_RATE);
 
-  //  Serial.read(); // Read and discard all data in the buffer
+  uart.open();
 
-  Serial.print("Hello from ESP");
+  std::array data = {
+      std::uint8_t{0x01},
+      std::uint8_t{0x02},
+      std::uint8_t{0x03},
+      std::uint8_t{0x04},
+      std::uint8_t{0x05}};
+
+  std::chrono::milliseconds UartSendTimeout = std::chrono::milliseconds(250);
+
+  uart.send<data.size()>(data, data.size(), UartSendTimeout);
+
+  // uart.open();
+  //   Serial.read(); // Read and discard all data in the buffer
+
+  // Serial.print("Hello from ESP");
   /*  delay(PROCESSING_DELAY);
     delay(PROCESSING_DELAY);
     delay(PROCESSING_DELAY);

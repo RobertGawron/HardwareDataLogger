@@ -36,6 +36,7 @@ file(GLOB_RECURSE BUSINESS_LOGIC_SRCS
 
 file(GLOB_RECURSE DEVICE_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Device/Src/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Common/*.cpp
 )
 
 file(GLOB_RECURSE DRIVER_SRCS
@@ -59,6 +60,7 @@ target_include_directories(BusinessLogic
     PUBLIC
         # "Public" includes for anything that depends on BusinessLogic
         ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../Common # for Common directory
 
         # Middlewares
         #${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/stm32-st7735/
@@ -80,19 +82,15 @@ target_include_directories(Device
     PUBLIC
         # "Public" includes for anything that depends on Device
         ${CMAKE_CURRENT_SOURCE_DIR}
-        # for hack
-        #${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/STM32F1xx_HAL_Driver/Inc
-        #${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/CMSIS/Device/ST/STM32F1xx/Include
-        #${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/CMSIS/Include
-        #${CMAKE_CURRENT_SOURCE_DIR}/../Core/Inc
-
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../Common # for Common directory
+ 
         # Middlewares
         #${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/stm32-st7735/
         ${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/u8g2/cppsrc
         ${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/u8g2/csrc
 )
 
-
+message(STATUS "Device include: ${CMAKE_CURRENT_SOURCE_DIR}/../../Common")
 
 
 target_link_libraries(Device
@@ -115,7 +113,7 @@ if(USE_X86_HEADERS)
         # "Public" includes for anything that depends on Driver
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_SOURCE_DIR}/Test/Unit/System
-
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../Common # for Common directory
 ) 
 else()
 
@@ -127,7 +125,8 @@ else()
         ${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/CMSIS/Device/ST/STM32F1xx/Include
         ${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/CMSIS/Include
         ${CMAKE_CURRENT_SOURCE_DIR}/../Core/Inc
- 
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../Common # for Common directory
+
         # Middlewares
         ${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/stm32-st7735/
         # Driver doesn't need u8g2 because this lib is high level.

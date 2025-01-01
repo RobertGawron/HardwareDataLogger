@@ -113,10 +113,17 @@ namespace Device
         /** @brief Reference to the UART driver used for communication with the ESP module. */
         Driver::IUartDriver &driver;
 
-        static constexpr std::size_t MaxBufferSize = 10;
-        ScpiMEASureMessage<MaxBufferSize> scpiMessageGenerator;
+        static constexpr std::size_t ScpiBufferSize = 30u;
+        ScpiMEASureMessage<ScpiBufferSize> scpiMessage;
 
-        UartDataLinkLayer<MaxBufferSize, MaxBufferSize> dataLink; // overflow
+        // from COBS specification
+        static constexpr std::size_t OutputBufferSize = (ScpiBufferSize + (ScpiBufferSize / 254) + 2);
+
+        UartDataLinkLayer<ScpiBufferSize, OutputBufferSize> dataLink;
+
+        // todo typedefs
+        std::array<std::uint8_t, ScpiBufferSize> scpiBuffer = {0};
+        std::array<std::uint8_t, OutputBufferSize> dataLinkBuffer = {0};
     };
 
 }

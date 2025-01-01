@@ -7,11 +7,12 @@ endif()
 
 # Define the source directories to analyze
 set(CODECHECKER_SOURCE_DIRS
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application
     ${CMAKE_SOURCE_DIR}/Software/ESP8266
-    ${CMAKE_SOURCE_DIR}../Test/Unit/
-    ${CMAKE_SOURCE_DIR}../Simulation/FirmwarePCSimulator/ESP8266/
-    ${CMAKE_SOURCE_DIR}../Simulation/FirmwarePCSimulator/STM32F103RBTx/
+    ${CMAKE_SOURCE_DIR}/Software/Common
+    ${CMAKE_SOURCE_DIR}../Test/Unit
+    ${CMAKE_SOURCE_DIR}../Simulation/FirmwarePCSimulator
+    ${CMAKE_SOURCE_DIR}../Simulation/FirmwarePCSimulator
 )
 
 # Define the output directories for CodeChecker analysis and reports

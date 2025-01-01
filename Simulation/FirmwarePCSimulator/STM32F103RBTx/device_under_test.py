@@ -11,7 +11,6 @@ from enum import Enum
 from typing import List, Callable
 
 
-
 class SimulationKey(Enum):
 
     """Enumeration for simulation key events."""
@@ -42,7 +41,6 @@ class DeviceUnderTest:
             + os.path.sep + dll_name
         )
         self.dut: ctypes.CDLL = ctypes.CDLL(dll_abs_path)
-
         self._serial_tx_callback_c = None
 
     def init(self) -> None:
@@ -141,21 +139,21 @@ class DeviceUnderTest:
         The function should return an integer (`HAL_StatusTypeDef`).
         """
         # Define the C-compatible callback type
-        # C: typedef int (*SerialTxCallback)(const uint8_t*, uint16_t, uint32_t);
-        SerialTxCallbackType = ctypes.CFUNCTYPE(
-            ctypes.c_int,                   # return type
-            ctypes.POINTER(ctypes.c_uint8), # const uint8_t* pData
-            ctypes.c_uint16,                # uint16_t size
-            ctypes.c_uint32                 # uint32_t timeout
+        # C: typedef int (*serial_tx_callback_type)(const uint8_t*, uint16_t, uint32_t);
+        serial_tx_callback_type = ctypes.CFUNCTYPE(
+            ctypes.c_int,                    # return type
+            ctypes.POINTER(ctypes.c_uint8),  # const uint8_t* pdata
+            ctypes.c_uint16,                 # uint16_t size
+            ctypes.c_uint32                  # uint32_t timeout
         )
 
-        self.dut.LibWrapper_RegisterSerialTxCallback.argtypes = [SerialTxCallbackType]
+        self.dut.LibWrapper_RegisterSerialTxCallback.argtypes = [serial_tx_callback_type]
         self.dut.LibWrapper_RegisterSerialTxCallback.restype = None
 
         # Wrap the Python callback
-        def wrapper(pData, size, timeout):
-            data = [pData[i] for i in range(size)]  # Convert to Python list
+        def wrapper(p_data, size, timeout):
+            data = [p_data[i] for i in range(size)]  # Convert to Python list
             return callback(data, size, timeout)
 
-        self._serial_tx_callback_c = SerialTxCallbackType(wrapper)
+        self._serial_tx_callback_c = serial_tx_callback_type(wrapper)
         self.dut.LibWrapper_RegisterSerialTxCallback(self._serial_tx_callback_c)

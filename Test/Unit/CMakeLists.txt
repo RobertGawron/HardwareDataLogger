@@ -50,6 +50,7 @@ function(create_test_exec TARGET_NAME SRC_FILES)
     # Add include directories for each test target
     target_include_directories(${TARGET_NAME} PRIVATE
         ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application
+        ${CMAKE_SOURCE_DIR}/Software/Common
         ${CMAKE_SOURCE_DIR}/Test/Unit/Device
         ${CMAKE_SOURCE_DIR}/Test/Unit/System
         ${GTEST_INCLUDE_DIRS}
@@ -128,8 +129,8 @@ set(TEST_MEASUREMENT_COORDINATOR
 
 set(WIFI_MEASUREMENT_RECORDER
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/WiFiMeasurementRecorder.cpp
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/Crc32.cpp
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/CobsEncoder.cpp
+    ${CMAKE_SOURCE_DIR}/Software/Common/Crc32.cpp
+    ${CMAKE_SOURCE_DIR}/Software/Common/CobsEncoder.cpp
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
     ${CMAKE_SOURCE_DIR}/Test/Unit/Device/test_WiFiMeasurementRecorder.cpp
 )
@@ -141,8 +142,8 @@ set(TEST_SCPI_MEASURE_MESSAGE_SRC
 
 set(TEST_UART_DATA_LINK_LAYER_SRC
     ${CMAKE_SOURCE_DIR}/Test/Unit/Device/test_UartDataLinkLayer.cpp
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/Crc32.cpp
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/CobsEncoder.cpp
+    ${CMAKE_SOURCE_DIR}/Software/Common/Crc32.cpp
+    ${CMAKE_SOURCE_DIR}/Software/Common/CobsEncoder.cpp
 )
 
 

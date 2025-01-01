@@ -17,6 +17,7 @@ set(INCLUDE_DIRS
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Middlewares/Third_Party/u8g2/cppsrc
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Middlewares/Third_Party/u8g2/csrc
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Core/Inc
+    ${CMAKE_SOURCE_DIR}/Software/Common
     ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/STM32F103RBTx/Application/Driver/Inc
     ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/STM32F103RBTx/System/
     ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator/STM32F103RBTx/

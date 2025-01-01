@@ -9,31 +9,30 @@
 
 namespace Device
 {
-    // We have buffer in only one length so only one instance will be generated.
     template <std::size_t BufferSize>
     class ScpiMEASureMessage
     {
     public:
-        bool generateMessage(Device::MeasurementType &measurement, std::array<std::uint8_t, BufferSize> &data, std::size_t &dataIndex)
+        bool generate(
+            Device::MeasurementType &measurement,
+            std::array<std::uint8_t, BufferSize> &data,
+            std::size_t offset,
+            std::size_t &msgLength)
         {
-            bool status = true; // Track overall status
-            // dataIndex = 0;           // We start writing at index 0
-            char deviceId[16] = {0}; // Temporary buffer for device ID
+            bool status = true;
+            std::size_t currentIndex = offset;
+            char deviceId[16] = {0};
 
-            // 1) Resolve Device ID string
             if (!getDeviceId(measurement.source, deviceId))
             {
                 status = false;
             }
 
-            // 2) If still OK, add the SCPI header
             if (status)
             {
-                status = addScpiHeader(deviceId, data, dataIndex);
+                status = addScpiHeader(deviceId, data, currentIndex);
             }
 
-            // 3) Check that the variant actually holds valid measurement data
-            //    (Assumes index() == 0 means "no data"; adjust if your variant uses a different scheme.)
             if (status)
             {
                 if (measurement.data.index() == 0)
@@ -42,85 +41,82 @@ namespace Device
                 }
             }
 
-            // 4) If still OK, add the measurement value itself
             if (status)
             {
-                // std::visit calls the matching lambda for whichever type is held in the variant
                 std::visit(
                     [&](auto &&value)
                     {
-                        // Combine the returned bool with our status
-                        status = status && addMeasurement(data, dataIndex, value);
+                        status = status && addMeasurement(data, currentIndex, value);
                     },
                     measurement.data);
             }
 
-            // 5) If still OK, finalize the SCPI message (closing quote, etc.)
             if (status)
             {
-                status = finalizeScpiMessage(data, dataIndex);
+                status = finalizeScpiMessage(data, currentIndex);
             }
 
-            // If any step above failed, zero out dataIndex
-            if (!status)
+            if (status)
             {
-                dataIndex = 0;
+                msgLength = currentIndex - offset;
+            }
+            else
+            {
+                msgLength = 0;
             }
 
-            // 6) Single return statement
             return status;
         }
 
     private:
-        bool addScpiHeader(const char *deviceId, std::array<std::uint8_t, BufferSize> &data, std::size_t &dataIndex)
+        bool addScpiHeader(const char *deviceId, std::array<std::uint8_t, BufferSize> &data, std::size_t &currentIndex)
         {
-            int written = snprintf(reinterpret_cast<char *>(data.data() + dataIndex),
-                                   BufferSize - dataIndex,
+            int written = snprintf(reinterpret_cast<char *>(data.data() + currentIndex),
+                                   BufferSize - currentIndex,
                                    "MEASure:%s:DATA \"2024-12-28T11:16:36Z,",
                                    deviceId);
-            if (written < 0 || static_cast<std::size_t>(written) >= BufferSize - dataIndex)
+            if (written < 0 || static_cast<std::size_t>(written) >= BufferSize - currentIndex)
             {
-                return false; // Buffer overflow or error
+                return false;
             }
 
-            dataIndex += static_cast<std::size_t>(written);
+            currentIndex += static_cast<std::size_t>(written);
             return true;
         }
 
         template <typename T>
-        bool addMeasurement(std::array<std::uint8_t, BufferSize> &data, std::size_t &dataIndex, T value)
+        bool addMeasurement(std::array<std::uint8_t, BufferSize> &data, std::size_t &currentIndex, T value)
         {
             int written = 0;
             if constexpr (std::is_same_v<T, std::uint8_t>)
             {
-                written = snprintf(reinterpret_cast<char *>(data.data() + dataIndex),
-                                   BufferSize - dataIndex,
+                written = snprintf(reinterpret_cast<char *>(data.data() + currentIndex),
+                                   BufferSize - currentIndex,
                                    "%u", value);
             }
             else if constexpr (std::is_same_v<T, std::uint16_t>)
             {
-                written = snprintf(reinterpret_cast<char *>(data.data() + dataIndex),
-                                   BufferSize - dataIndex,
+                written = snprintf(reinterpret_cast<char *>(data.data() + currentIndex),
+                                   BufferSize - currentIndex,
                                    "%hu", value);
             }
             else if constexpr (std::is_same_v<T, std::uint32_t>)
             {
-                written = snprintf(reinterpret_cast<char *>(data.data() + dataIndex),
-                                   BufferSize - dataIndex,
+                written = snprintf(reinterpret_cast<char *>(data.data() + currentIndex),
+                                   BufferSize - currentIndex,
                                    "%u", value);
             }
             else
             {
-                // unknow data format
                 return false;
             }
 
-            if ((written < 0) || (static_cast<std::size_t>(written) >= BufferSize - dataIndex))
+            if ((written < 0) || (static_cast<std::size_t>(written) >= BufferSize - currentIndex))
             {
-                return false; // Buffer overflow or error
+                return false;
             }
 
-            dataIndex += static_cast<std::size_t>(written);
+            currentIndex += static_cast<std::size_t>(written);
             return true;
         }
 
@@ -150,22 +146,16 @@ namespace Device
             return status;
         }
 
-        bool finalizeScpiMessage(std::array<std::uint8_t, BufferSize> &data, std::size_t &dataIndex) const
+        bool finalizeScpiMessage(std::array<std::uint8_t, BufferSize> &data, std::size_t &currentIndex) const
         {
-            if (dataIndex + 1 >= data.size())
+            if (currentIndex + 1 >= data.size())
             {
-                return false; // Buffer overflow
+                return false;
             }
-            data[dataIndex++] = '"'; // Close the quoted part
+            data[currentIndex++] = '"';
             return true;
         }
-
-        constexpr static std::uint8_t ByteMask = 0xFF;
-        constexpr static std::uint8_t ByteShift24 = 24;
-        constexpr static std::uint8_t ByteShift16 = 16;
-        constexpr static std::uint8_t ByteShift8 = 8;
     };
-
 }
 
 #endif

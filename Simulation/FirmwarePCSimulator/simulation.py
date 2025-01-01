@@ -10,8 +10,6 @@ and GPIO identifiers.
 
 import threading
 import time
-import datetime
-import random
 from typing import Tuple
 from enum import Enum
 
@@ -21,11 +19,7 @@ from ESP8266.device_under_test import DeviceUnderTest as Esp8266
 
 class SimulationKey(Enum):
 
-    """
-    Enumeration for simulation key events.
-
-    Defines key mappings for UP, DOWN, LEFT, and RIGHT keys.
-    """
+    """Enumeration for simulation key events."""
 
     UP = 0
     DOWN = 1
@@ -35,11 +29,7 @@ class SimulationKey(Enum):
 
 class GPIOID(Enum):
 
-    """
-    Enumeration for GPIO identifiers.
-
-    Maps GPIO pins to their corresponding identifiers.
-    """
+    """Enumeration for GPIO identifiers."""
 
     GPIO1 = 13
     GPIO2 = 2
@@ -48,15 +38,7 @@ class GPIOID(Enum):
 
 class Simulation:
 
-    """
-    Simulation class manages the interaction between STM32 and ESP8266 simulations.
-
-    This class provides methods to initialize, control, and interact with
-    the device-under-test (DUT) simulations. It handles tasks such as
-    starting and stopping the firmware, managing periodic ticks, updating
-    pulse counters, and retrieving display information. The class also
-    facilitates communication via UART and GPIO callbacks.
-    """
+    """Simulation class manages the interaction between STM32 and ESP8266 simulations."""
 
     def __init__(self):
         """
@@ -98,7 +80,7 @@ class Simulation:
             self.esp8266.register_uart0_tx_callback(self.esp8266_uart0_tx_callback)
             self.esp8266.register_gpio_state_callback(self.my_gpio_state_callback)
 
-            self.stm32.register_serial_tx_callback(self.STM32F103RBTx_uart_tx_callback)
+            self.stm32.register_serial_tx_callback(self.stm32_uart_tx_callback)
 
             self.stm32.init()
             self.esp8266.init()
@@ -121,11 +103,7 @@ class Simulation:
         self.start_firmware()
 
     def update_pulse_counters(self, values) -> None:
-        """
-        Update the pulse counters in the STM32 simulation.
-
-        :param values: List of pulse counter values.
-        """
+        """Update the pulse counters in the STM32 simulation."""
         self.stm32.update_pulse_counters(values)
 
     def get_display_width(self) -> int:
@@ -154,21 +132,8 @@ class Simulation:
         This internal method handles periodic updates to simulate device behavior.
         """
         while not self._stop_event.is_set():
-            """timestamp = datetime.datetime.now().isoformat(timespec='seconds') + 'Z'
-            value = round(random.uniform(0.0, 10.0), 2)
-            data_string = f'MEAS:VOLT:DATA "{timestamp},{value}"'
-            data_bytes = list(data_string.encode('ascii'))
-            data_to_send = [len(data_bytes)] + data_bytes
-
-            size = len(data_to_send)
-            timeout = 1000
-
-            self.esp8266.uart0_tx(data_to_send, size, timeout)
-            """
-
             self.stm32.tick()
             self.esp8266.tick()
-
             time.sleep(self.tick_interval)
 
     def _convert_rgb565_to_rgb8(self, rgb565: int) -> Tuple[int, int, int]:
@@ -191,21 +156,17 @@ class Simulation:
         """Notify the STM32 simulation of a key release event."""
         self.stm32.key_released(key)
 
-    def STM32F103RBTx_uart_tx_callback(self, data: list, size: int, timeout: int) -> int:
+    def stm32_uart_tx_callback(self, data: list, size: int, timeout: int) -> int:
         """
-        Callback function for STM32F103RBTx UART transmission.
+        Print the data transmitted from STM32F103RBTx UART and send it to ESP8266.
 
-        This callback prints the data being transmitted.
         :param data: List of integers representing the transmitted bytes.
         :param size: Number of bytes transmitted.
         :param timeout: Timeout in milliseconds.
         :return: Always returns 0 (HAL_OK) for success.
         """
         data_string = ''.join(map(chr, data))  # Convert byte list to string
-        print(f"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@UART TX Callback: Transmitting data: '{data_string}', Size: {size}, Timeout: {timeout}")
-
+        print(f"UART TX Callback: Transmitting data: '{data_string}', Size: {size}, Timeout: {timeout}")
 
         self.esp8266.uart0_tx(data, size, timeout)
-        
-
         return 0  # HAL_OK equivalent

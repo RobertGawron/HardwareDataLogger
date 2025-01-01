@@ -1,0 +1,14 @@
+{
+    "name": "Device",
+    "version": "1.0.0",
+    "description": "Device Level in HardwareDataLogger",
+    "authors": [
+        {
+            "name": "Robert Gawron",
+            "email": "your.email@example.com"
+        }
+    ],
+    "license": "MIT",
+    "frameworks": ["arduino", "mbed"],
+    "platforms": ["espressif32", "atmelavr", "ststm32"]
+}

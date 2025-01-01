@@ -61,6 +61,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     Drivers/STM32F1xx_HAL_Driver/Inc
     Drivers/CMSIS/Device/ST/STM32F1xx/Include
     Drivers/CMSIS/Include
+    ../Common
 ) 
 
 # Add project symbols (macros)
