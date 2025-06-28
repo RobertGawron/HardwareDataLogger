@@ -1,3 +1,5 @@
+#if 0
+
 #ifndef ISerialInterface_h
 #define ISerialInterface_h
 
@@ -123,5 +125,8 @@ public:
 };
 
 // extern virtual void serialEventRun() __attribute__((weak)) = 0;
+
+#endif
+
 
 #endif

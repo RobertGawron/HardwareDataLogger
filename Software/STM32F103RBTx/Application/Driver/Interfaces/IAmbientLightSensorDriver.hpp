@@ -42,7 +42,7 @@ namespace Driver
          *
          * @return The current ambient light level as a 32-bit unsigned integer.
          */
-        [[nodiscard]] virtual std::uint32_t getAmbientLightLevel() const = 0;
+        [[nodiscard]] virtual std::uint16_t getAmbientLightLevel() const = 0;
     };
 }
 

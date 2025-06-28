@@ -26,6 +26,8 @@ namespace Device
 
     bool Keyboard::tick()
     {
+        keyboardDriver.tick();
+        
         for (std::size_t i = 0; i < keyActionState.size(); ++i)
         {
             const auto keyId = static_cast<::Driver::KeyboardKeyIdentifier>(i);

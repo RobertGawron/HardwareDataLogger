@@ -1,3 +1,5 @@
+#if 0
+
 #ifndef UartStateMachine_h
 #define UartStateMachine_h
 
@@ -97,5 +99,8 @@ namespace Device
     };
 
 } // namespace Device
+
+#endif
+
 
 #endif

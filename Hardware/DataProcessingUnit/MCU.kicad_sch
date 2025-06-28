@@ -7431,7 +7431,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "Crystal"
+		(property "Value" "8M"
 			(at 87.63 147.3199 90)
 			(effects
 				(font
@@ -8187,7 +8187,7 @@
 				)
 			)
 		)
-		(property "Value" "6p8"
+		(property "Value" "10p"
 			(at 78.74 116.84 90)
 			(effects
 				(font
@@ -8514,7 +8514,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "32,768kHz"
+		(property "Value" "32,768kHz /12.5p"
 			(at 87.63 111.7599 90)
 			(effects
 				(font
@@ -8653,7 +8653,7 @@
 				)
 			)
 		)
-		(property "Value" "6p8"
+		(property "Value" "10p"
 			(at 78.74 97.79 90)
 			(effects
 				(font
@@ -8853,7 +8853,7 @@
 				)
 			)
 		)
-		(property "Value" "6p8"
+		(property "Value" "22p"
 			(at 78.74 152.4 90)
 			(effects
 				(font
@@ -10107,7 +10107,7 @@
 				)
 			)
 		)
-		(property "Value" "TBD"
+		(property "Value" "0R"
 			(at 88.9 134.62 90)
 			(effects
 				(font
@@ -11315,7 +11315,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "36k"
+		(property "Value" "39k"
 			(at 48.26 44.4499 0)
 			(effects
 				(font
@@ -11792,7 +11792,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100n"
+		(property "Value" "1u"
 			(at 35.56 120.6499 0)
 			(effects
 				(font
@@ -11931,7 +11931,7 @@
 				)
 			)
 		)
-		(property "Value" "6p8"
+		(property "Value" "22p"
 			(at 78.74 133.35 90)
 			(effects
 				(font
@@ -11999,7 +11999,7 @@
 				)
 			)
 		)
-		(property "Value" "TBD"
+		(property "Value" "0R"
 			(at 88.9 153.67 90)
 			(effects
 				(font

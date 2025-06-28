@@ -109,7 +109,6 @@
 			(psnegative no)
 			(psa4output no)
 			(plot_black_and_white yes)
-			(plotinvisibletext no)
 			(sketchpadsonfab no)
 			(plotpadnumbers no)
 			(hidednponfab no)
@@ -3924,7 +3923,7 @@
 				)
 			)
 		)
-		(property "Value" "32,768kHz"
+		(property "Value" "32,768kHz /12.5p"
 			(at 0 2.000001 45)
 			(layer "F.Fab")
 			(uuid "b3927c2d-7ab2-4000-9230-fe47332c3c9b")
@@ -4815,7 +4814,7 @@
 				)
 			)
 		)
-		(property "Value" "6p8"
+		(property "Value" "10p"
 			(at 0 1.679999 135)
 			(layer "F.Fab")
 			(uuid "3ddd3403-7a7b-4748-8ee4-b2160b8aa833")
@@ -5822,7 +5821,7 @@
 				)
 			)
 		)
-		(property "Value" "TBD"
+		(property "Value" "0R"
 			(at 0 1.65 45)
 			(layer "F.Fab")
 			(uuid "f2550767-daec-4939-bcaa-86dab871cd9d")
@@ -6490,7 +6489,7 @@
 				)
 			)
 		)
-		(property "Value" "TBD"
+		(property "Value" "0R"
 			(at 0 1.65 45)
 			(layer "F.Fab")
 			(uuid "16bec4aa-091b-4e58-8153-2a418d1fa790")
@@ -6892,7 +6891,7 @@
 				)
 			)
 		)
-		(property "Value" "Crystal"
+		(property "Value" "8M"
 			(at 0 3.55 135)
 			(layer "F.Fab")
 			(uuid "4ddfa6e3-e4e4-4e5a-b082-a8a7cef691fb")
@@ -7749,7 +7748,7 @@
 				)
 			)
 		)
-		(property "Value" "6p8"
+		(property "Value" "10p"
 			(at 0 1.679999 135)
 			(layer "F.Fab")
 			(uuid "b9e8811f-1e5f-4b90-973d-ffd35f499d55")
@@ -7951,7 +7950,7 @@
 				)
 			)
 		)
-		(property "Value" "6p8"
+		(property "Value" "22p"
 			(at 0 1.679999 45)
 			(layer "F.Fab")
 			(uuid "acc0a97b-39a4-49e7-a6d5-edf71c31f3e1")
@@ -8704,7 +8703,7 @@
 				(extension_offset 0.5)
 				(keep_text_aligned yes)
 			)
-			(gr_text "39,54"
+			(gr_text "39.54"
 				(at 192.27 129.15 0)
 				(layer "F.Fab")
 				(uuid "66a01b2a-c2c9-49b8-930b-214ad23b050b")
@@ -8780,7 +8779,7 @@
 				(extension_offset 0.5)
 				(keep_text_aligned yes)
 			)
-			(gr_text "79,5"
+			(gr_text "79.5"
 				(at 172.29 104.65 0)
 				(layer "User.1")
 				(uuid "cb7f0c33-b5cc-47b8-adab-02dc6646f0c6")
@@ -12280,7 +12279,7 @@
 				)
 			)
 		)
-		(property "Value" "6p8"
+		(property "Value" "22p"
 			(at 0 1.679999 45)
 			(layer "F.Fab")
 			(uuid "8319f64f-6838-43bd-80c6-39e816c5eb17")
@@ -13539,7 +13538,7 @@
 				)
 			)
 		)
-		(property "Value" "100n"
+		(property "Value" "1u"
 			(at 0 1.68 0)
 			(layer "F.Fab")
 			(uuid "4def28ba-2252-4b93-b2c4-fa9c44709969")
@@ -13831,7 +13830,7 @@
 			(extension_offset 0.5)
 			(keep_text_aligned yes)
 		)
-		(gr_text "85,0000 mm"
+		(gr_text "85.0000 mm"
 			(at 172.5 126.35 0)
 			(layer "Cmts.User")
 			(uuid "1b6fa873-e655-4f5c-b3c3-22f0bf0d5d9f")
@@ -13867,7 +13866,7 @@
 			(extension_offset 0.5)
 			(keep_text_aligned yes)
 		)
-		(gr_text "100,0000 mm"
+		(gr_text "100.0000 mm"
 			(at 124.6 70 90)
 			(layer "Cmts.User")
 			(uuid "6f9ebcfc-8e39-4ebd-b2b3-9989ec7d8311")
@@ -13903,7 +13902,7 @@
 			(extension_offset 0.5)
 			(keep_text_aligned yes)
 		)
-		(gr_text "60,0000 mm"
+		(gr_text "60.0000 mm"
 			(at 223.85 90 90)
 			(layer "Cmts.User")
 			(uuid "8d45f76f-7a78-49e5-96ea-ca7f556adf5d")
@@ -13939,7 +13938,7 @@
 			(extension_offset 0.5)
 			(keep_text_aligned yes)
 		)
-		(gr_text "100,0000 mm"
+		(gr_text "100.0000 mm"
 			(at 180 133.85 0)
 			(layer "Cmts.User")
 			(uuid "dffcf139-b671-4e55-bd56-d8ac259b9f30")
@@ -13976,7 +13975,7 @@
 			(extension_offset 0.5)
 			(keep_text_aligned yes)
 		)
-		(gr_text "42,5000 mm"
+		(gr_text "42.5000 mm"
 			(at 151.25 122.2 0)
 			(layer "Cmts.User")
 			(uuid "6b01e796-4f85-423e-afbd-300f8b97ecd4")

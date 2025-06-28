@@ -1371,7 +1371,7 @@
 				)
 			)
 		)
-		(property "Value" "100R"
+		(property "Value" "22R"
 			(at 96.52 125.3236 90)
 			(effects
 				(font
@@ -1591,15 +1591,15 @@
 		(fields_autoplaced yes)
 		(uuid "0cbc85a2-0d7a-4973-a6c7-55f489dc1dce")
 		(property "Reference" "R24"
-			(at 181.61 86.9856 90)
+			(at 181.61 77.47 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "100R"
-			(at 181.61 89.7607 90)
+		(property "Value" "22R"
+			(at 181.61 80.01 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1753,15 +1753,15 @@
 		(fields_autoplaced yes)
 		(uuid "2feafe81-25a6-4e05-a18c-f164ffc89912")
 		(property "Reference" "R26"
-			(at 96.52 136.5156 90)
+			(at 96.52 137.16 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "100R"
-			(at 96.52 139.2907 90)
+		(property "Value" "22R"
+			(at 96.52 139.7 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1827,7 +1827,7 @@
 				)
 			)
 		)
-		(property "Value" "100R"
+		(property "Value" "22R"
 			(at 181.61 75.7936 90)
 			(effects
 				(font
@@ -1894,7 +1894,7 @@
 				)
 			)
 		)
-		(property "Value" "100R"
+		(property "Value" "22R"
 			(at 97.79 75.7936 90)
 			(effects
 				(font
@@ -2179,15 +2179,15 @@
 		(fields_autoplaced yes)
 		(uuid "e748ffe8-c059-4534-bcab-468eb9dfe610")
 		(property "Reference" "R22"
-			(at 97.79 86.9856 90)
+			(at 97.79 87.63 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "100R"
-			(at 97.79 89.7607 90)
+		(property "Value" "22R"
+			(at 97.79 90.17 90)
 			(effects
 				(font
 					(size 1.27 1.27)

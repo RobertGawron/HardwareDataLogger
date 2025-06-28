@@ -28,6 +28,18 @@ Flashing the device is performed from the host machine.
 
 
 
+ # On linux:
+
+PermissionError: [Errno 13] Permission denied: '/dev/ttyUSB0'
+
+ Create rules file
+sudo nano /etc/udev/rules.d/99-esp.rules
+
+# ESP boards (CP210x, CH340, FTDI)
+SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", MODE="0666"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", MODE="0666"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", MODE="0666"
+
 Steps to Install PubSubClient in PlatformIO
 Install the Library via CLI:
 
@@ -63,3 +75,48 @@ Arduino.h
 
 
  platformio test -v -e unit_test
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

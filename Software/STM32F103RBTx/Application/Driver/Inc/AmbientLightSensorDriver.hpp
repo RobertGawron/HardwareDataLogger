@@ -7,15 +7,6 @@
 #include <cstdint>
 #include <cstddef>
 
-/**
- * @brief Size of the ADC buffer for light level measurements.
- */
-constexpr std::size_t AdcBufferSize = 10;
-
-/**
- * @brief Buffer storing raw ADC values for ambient light measurements.
- */
-extern std::uint32_t adcBuffer[AdcBufferSize];
 
 namespace Driver
 {
@@ -52,9 +43,9 @@ namespace Driver
          *
          * This method returns the current ambient light level measured by the sensor.
          * The value range depends on hardware configuration and sensor characteristics.
-         * @return std::uint32_t The current ambient light level.
+         * @return std::uint16_t The current ambient light level.
          */
-        [[nodiscard]] std::uint32_t getAmbientLightLevel() const override;
+        [[nodiscard]] std::uint16_t getAmbientLightLevel() const override;
 
     protected:
         /**
@@ -112,6 +103,16 @@ namespace Driver
          * Used to configure and control the ADC peripheral.
          */
         ADC_HandleTypeDef &hadc;
+
+        /**
+ * @brief Size of the ADC buffer for light level measurements.
+ */
+static constexpr std::size_t AdcBufferSize = 10;
+
+/**
+ * @brief Buffer storing raw ADC values for ambient light measurements.
+ */
+ std::uint16_t adcBuffer[AdcBufferSize];
     };
 
 }

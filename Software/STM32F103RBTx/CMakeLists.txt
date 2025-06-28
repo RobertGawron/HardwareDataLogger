@@ -1,79 +1,61 @@
 cmake_minimum_required(VERSION 3.22)
 
-#
-# This file is generated only once,
-# and is not re-generated if converter is called multiple times.
-# User is free to modify the file as much as necessary
-#
-
-# Setup compiler settings
-set(CMAKE_C_STANDARD 11)
+# Setup compiler before project()
+set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
 
-# Define the build type 
+# Define default build type
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Debug")
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
 endif()
 
-# Set the project name
-set(CMAKE_PROJECT_NAME HardwareDataLogger_STM32F103RBTx)
-
-# Include toolchain file
+# Include toolchain before project()
 include("cmake/gcc-arm-none-eabi.cmake")
- 
-# Enable compile command to ease indexing with e.g. clangd
-set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
- 
-# Enable CMake support for ASM and C languages
-enable_language(C CXX ASM)
 
+# Core project definition
+project(HardwareDataLogger_STM32F103RBTx LANGUAGES C CXX ASM)
+
+# Define STM32 device globally BEFORE CubeMX subdirectory
 add_compile_definitions(STM32F103xB)
 
-# Core project settings
-project(${CMAKE_PROJECT_NAME})
-message("Build type: " ${CMAKE_BUILD_TYPE})
+# Debug symbol handling
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(DEBUG_OPTIONS 
+        "$<$<COMPILE_LANGUAGE:C>:-g3>"
+        "$<$<COMPILE_LANGUAGE:CXX>:-g3>"
+        "$<$<COMPILE_LANGUAGE:ASM>:-g3>"
+    )
+endif()
 
-# Create an executable object type
-add_executable(${CMAKE_PROJECT_NAME})
+# Enable compile commands for tooling
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Add STM32CubeMX generated sources
+# Create executable
+add_executable(${PROJECT_NAME})
+
+# Add subdirectories - CubeMX MUST come first
 add_subdirectory(cmake/stm32cubemx)
-
-# Add subdirectory for the application
 add_subdirectory(Application)
- 
-# Link directories setup
-target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
-    # Add user defined library search paths
-)  
 
-# Add sources to executable
-target_sources(${CMAKE_PROJECT_NAME} PRIVATE
+# Target sources
+target_sources(${PROJECT_NAME} PRIVATE
     Core/Src/MyApplication.cpp
     Core/Src/PlatformFactoryStm32.cpp
 )
 
-# Add include paths
-target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
+# Include directories
+target_include_directories(${PROJECT_NAME} PRIVATE
     Core/Inc
     Application
     Drivers/STM32F1xx_HAL_Driver/Inc
     Drivers/CMSIS/Device/ST/STM32F1xx/Include
     Drivers/CMSIS/Include
     ../Common
-) 
-
-
-
-# Add project symbols (macros)
-target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
-    # Add user defined symbols
 )
 
-# Link with libraries
-target_link_libraries(${CMAKE_PROJECT_NAME} 
-#PRIVATE
+# Link libraries - plain signature to match CubeMX
+target_link_libraries(${PROJECT_NAME}
     stm32cubemx
     BusinessLogic
     Device
@@ -81,7 +63,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     u8g2
 )
 
-
-message("Include Paths: " ${CMAKE_INCLUDE_PATH})
-message("Definitions: " ${CMAKE_COMPILE_DEFINITIONS})
- 
+# Apply debug options
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_options(${PROJECT_NAME} PRIVATE ${DEBUG_OPTIONS})
+endif()

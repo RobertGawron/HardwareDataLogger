@@ -1,3 +1,5 @@
+#if 0
+
 #include "UartStateMachine.hpp"
 #include "CobsEncoder.hpp"
 #include "Crc32.hpp"
@@ -221,3 +223,6 @@ namespace Device
     }
 
 } // namespace Device
+
+
+#endif

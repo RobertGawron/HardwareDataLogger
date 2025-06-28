@@ -68,13 +68,13 @@ namespace BusinessLogic
         switch (id)
         {
         case Driver::UartIdentifier::MeasurementReceiver:
-            return driver1;
+            return driver3;
             break;
         case Driver::UartIdentifier::DataTransmitterViaUSB:
             return driver2;
             break;
         case Driver::UartIdentifier::DataTransmitterViaWiFi:
-            return driver3;
+            return driver1;
             break;
         }
 

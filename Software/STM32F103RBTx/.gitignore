@@ -5,7 +5,7 @@ cmake_install.cmake
 build/
 build.ninja
 compile_commands.json
-
+cmake/
 # Visual Studio Code specific files
 .vscode/
 *.code-workspace
