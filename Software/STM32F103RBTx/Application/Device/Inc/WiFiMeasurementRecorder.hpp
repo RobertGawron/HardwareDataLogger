@@ -7,9 +7,9 @@
 #ifndef WiFiMeasurementRecorder_H_
 #define WiFiMeasurementRecorder_H_
 
-#include "Device/Interfaces/IMeasurementRecorder.hpp"
+#include "Device/Interface/IMeasurementRecorder.hpp"
 #include "Device/Inc/WiFiMeasurementSerializer.hpp"
-#include "Driver/Interfaces/IUartDriver.hpp"
+#include "Driver/Interface/IUartDriver.hpp"
 
 #include <array>
 
@@ -86,23 +86,12 @@ namespace Device
          */
         bool onReset() override;
 
-        /**
-         * @brief Flushes any remaining data to the ESP module.
-         *
-         * This method ensures that any remaining measurement data is sent to the ESP module via UART.
-         * @return True if flush operation was successful, false otherwise.
-         */
-        bool flush() override;
-
     private:
         /** @brief Reference to the UART driver used for communication with the ESP module. */
         Driver::IUartDriver &driver;
 
-        /** @brief Size of the SCPI message buffer. */
+        /** @brief Size of the  message buffer. */
         static constexpr std::size_t SerializedMessageSize = 30u;
-
-        /** @brief Object for generating SCPI-formatted measurement messages. */
-        WiFiMeasurementSerializer serializedMessage;
 
         /**
          * @brief Size of the output buffer after COBS encoding.
@@ -117,7 +106,7 @@ namespace Device
         /** @brief Buffer for storing data after COBS encoding. */
         std::array<std::uint8_t, OutputBufferSize> dataLinkBuffer = {0};
 
-        uint32_t UartTxTimeout = 1000;
+        const uint32_t UartTxTimeout = 1000;
     };
 
 }

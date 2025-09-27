@@ -1,17 +1,26 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.28)
 
-# Setup compiler before project()
-set(CMAKE_C_STANDARD 17)
+# Use CubeMX toolchain by default
+if(NOT CMAKE_TOOLCHAIN_FILE)
+    set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/cmake/gcc-arm-none-eabi.cmake)
+endif()
+
+set(CMAKE_C_STANDARD 11)        # Standard for .c files (HAL, FatFs, u8g2)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
+
+set(CMAKE_CXX_STANDARD 20)      # Standard for .cpp files
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS ON)
+
+# This makes it apply to subdirectories too
+set(CMAKE_CXX_STANDARD 20 CACHE STRING "C++ standard" FORCE)
+
 
 # Define default build type
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
 endif()
-
-# Include toolchain before project()
-include("cmake/gcc-arm-none-eabi.cmake")
 
 # Core project definition
 project(HardwareDataLogger_STM32F103RBTx LANGUAGES C CXX ASM)
@@ -36,25 +45,32 @@ add_executable(${PROJECT_NAME})
 
 # Add subdirectories - CubeMX MUST come first
 add_subdirectory(cmake/stm32cubemx)
-add_subdirectory(Application)
+
+# Add Application subdirectory
+add_subdirectory(Application/Library/u8g2/)
+add_subdirectory(Application/BusinessLogic/)
+add_subdirectory(Application/Device/)
+add_subdirectory(Application/Driver/Hardware/)
+
 
 # Target sources
 target_sources(${PROJECT_NAME} PRIVATE
+    Application/Library/stm32-st7735/st7735.c
+    Application/Library/stm32-st7735/st7735_reg.c
     Core/Src/MyApplication.cpp
-    Core/Src/PlatformFactoryStm32.cpp
+    Core/Src/PlatformFactory.cpp
 )
 
 # Include directories
 target_include_directories(${PROJECT_NAME} PRIVATE
     Core/Inc
-    Application
+    Application/
     Drivers/STM32F1xx_HAL_Driver/Inc
     Drivers/CMSIS/Device/ST/STM32F1xx/Include
     Drivers/CMSIS/Include
-    ../Common
 )
 
-# Link libraries - plain signature to match CubeMX
+# Link libraries - BusinessLogic, Device, Driver are now built in Application subdirectory
 target_link_libraries(${PROJECT_NAME}
     stm32cubemx
     BusinessLogic

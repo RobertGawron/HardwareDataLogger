@@ -1,7 +1,7 @@
 
 
 #include "BusinessLogic/Inc/HmiMeasurementModel.hpp"
-#include "Device/Interfaces/IMeasurementReader.hpp"
+#include "Device/Interface/IMeasurementReader.hpp"
 #include "Device/Inc/MeasurementDeviceId.hpp"
 
 #include <cstdint>

@@ -1,9 +1,9 @@
 #include "Device/Inc/PulseCounterMeasurementSource.hpp"
 
-#include "Device/Interfaces/IMeasurementSource.hpp"
+#include "Device/Interface/IMeasurementSource.hpp"
 #include "Device/Inc/MeasurementType.hpp"
 #include "Device/Inc/MeasurementDeviceId.hpp"
-#include "Driver/Interfaces/IPulseCounterDriver.hpp"
+#include "Driver/Interface/IPulseCounterDriver.hpp"
 
 // #include <stdio.h>
 
@@ -41,9 +41,9 @@ namespace Device
 
     MeasurementType PulseCounterMeasurementSource::getMeasurement()
     {
-        MeasurementType measurement;
-        measurement.source = getMyId();
-        measurement.data = pulseCounterDriver.getMeasurement();
+        MeasurementType measurement{
+            .data = pulseCounterDriver.getMeasurement(),
+            .source = getMyId()};
 
         return measurement;
     }

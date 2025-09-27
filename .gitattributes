@@ -21,3 +21,11 @@ Software/STM32F103RBTx/Drivers/STM32F1xx_HAL_Driver/* linguist-vendored
 Software/STM32F103RBTx/Drivers/STM32F1xx_HAL_Driver/Inc/* linguist-vendored
 Software/STM32F103RBTx/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy/* linguist-vendored
 Software/STM32F103RBTx/Drivers/STM32F1xx_HAL_Driver/Src/* linguist-vendored
+Software/STM32F103RBTx/FATFS/* linguist-vendored
+Software/STM32F103RBTx/FATFS/App/* linguist-vendored
+Software/STM32F103RBTx/FATFS/Target/* linguist-vendored
+Software/STM32F103RBTx/Middlewares/* linguist-vendored
+Software/STM32F103RBTx/Middlewares/Third_Party/* linguist-vendored
+Software/STM32F103RBTx/Middlewares/Third_Party/FatFs/* linguist-vendored
+Software/STM32F103RBTx/Middlewares/Third_Party/FatFs/src/* linguist-vendored
+Software/STM32F103RBTx/Middlewares/Third_Party/FatFs/src/option/* linguist-vendored

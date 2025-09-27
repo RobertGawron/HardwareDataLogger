@@ -1,46 +1,98 @@
 #include "Device/Inc/SdCardMeasurementRecorder.hpp"
 #include "Device/Inc/MeasurementType.hpp"
-#include "Driver/Interfaces/ISdCardDriver.hpp"
+#include "Driver/Interface/ISdCardDriver.hpp"
+#include "Driver/Interface/SdCardStatus.hpp"
+
+#include <array>
+#include <cstddef>
+#include <cstdint>
+#include <span>
+#include <charconv>
+#include <variant>
 
 namespace Device
 {
-
-    SdCardMeasurementRecorder::SdCardMeasurementRecorder(Driver::ISdCardDriver &_driver) : driver(_driver)
+    SdCardMeasurementRecorder::SdCardMeasurementRecorder(Driver::ISdCardDriver &_driver)
+        : driver(_driver)
     {
     }
 
-    bool SdCardMeasurementRecorder::onInitialize()
+    [[nodiscard]] bool SdCardMeasurementRecorder::onInitialize()
     {
-        const bool status = driver.initialize();
-        return status;
+        return driver.initialize();
     }
 
-    bool SdCardMeasurementRecorder::onStart()
+    [[nodiscard]] bool SdCardMeasurementRecorder::onStart()
     {
-        const bool status = driver.start();
-        return status;
+        return driver.start();
     }
 
-    bool SdCardMeasurementRecorder::onStop()
+    [[nodiscard]] bool SdCardMeasurementRecorder::onStop()
     {
-        const bool status = driver.stop();
-        return status;
+        return driver.stop();
     }
 
-    bool SdCardMeasurementRecorder::onReset()
+    [[nodiscard]] bool SdCardMeasurementRecorder::onReset()
     {
-        const bool status = driver.reset();
-        return status;
-    }
-
-    bool SdCardMeasurementRecorder::flush()
-    {
-        return true;
+        return driver.reset();
     }
 
     bool SdCardMeasurementRecorder::notify(Device::MeasurementType &measurement)
     {
-        (void)measurement; // Explicitly suppresses "unused parameter" warning
-        return true;
+        bool status = false;
+
+        // Convert measurement to CSV format: "sourceId,measurement\n"
+        std::array<char, 64> csvBuffer{};
+        std::size_t offset = 0;
+
+        // Convert source ID to string
+        auto sourceResult = std::to_chars(
+            csvBuffer.data() + offset,
+            csvBuffer.data() + csvBuffer.size(),
+            static_cast<std::uint8_t>(measurement.source));
+
+        if (sourceResult.ec == std::errc{})
+        {
+            offset = sourceResult.ptr - csvBuffer.data();
+
+            // Add comma separator
+            if (offset < csvBuffer.size())
+            {
+                csvBuffer[offset++] = ',';
+
+                // Visit the variant and convert the measurement data to string
+                bool conversionSuccess = std::visit([&](auto value) -> bool
+                                                    {
+                            auto dataResult = std::to_chars(
+                                csvBuffer.data() + offset,
+                                csvBuffer.data() + csvBuffer.size(),
+                                value);
+
+                            if (dataResult.ec == std::errc{})
+                            {
+                                offset = dataResult.ptr - csvBuffer.data();
+                                return true;
+                            }
+                            return false; }, measurement.data);
+
+                if (conversionSuccess)
+                {
+                    // Add newline
+                    if (offset < csvBuffer.size())
+                    {
+                        csvBuffer[offset++] = '\n';
+
+                        // Write to SD card
+                        const std::span<const std::uint8_t> writeData{
+                            reinterpret_cast<const std::uint8_t *>(csvBuffer.data()),
+                            offset};
+
+                        status = (driver.write(writeData) == Driver::SdCardStatus::OK);
+                    }
+                }
+            }
+        }
+
+        return status;
     }
 }
