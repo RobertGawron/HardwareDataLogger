@@ -30,6 +30,3 @@ _autosave-*.kicad_sch
 
 # KiCad to Blender export files
 *.pcb3d
-
-# BOM extension files
-bom/
