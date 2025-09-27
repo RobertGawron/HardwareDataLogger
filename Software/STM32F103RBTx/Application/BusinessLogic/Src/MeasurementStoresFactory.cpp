@@ -23,6 +23,10 @@ namespace BusinessLogic
         sdCardRecorder.initialize();
         cacheRecorder.initialize();
 
+
+        int i = 0;
+wifiRecorder.start();
+
         return true;
     }
 

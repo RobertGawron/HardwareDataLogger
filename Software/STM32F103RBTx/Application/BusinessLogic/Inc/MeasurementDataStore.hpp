@@ -8,11 +8,12 @@
 #define MeasurementDataStore_H_
 
 #include "BusinessLogic/Interfaces/IMeasurementDataStore.hpp"
-#include "BusinessLogic/Inc/SaferArray.hpp"
 #include "Device/Interfaces/IMeasurementRecorder.hpp"
 #include "Device/Inc/MeasurementType.hpp"
 
 #include <cstdint>
+#include <array>
+#include <functional>
 
 namespace BusinessLogic
 {
@@ -106,7 +107,7 @@ namespace BusinessLogic
         static const std::uint8_t MaxObservers{4u};
 
         /** @brief Array to store references to registered observers. */
-        SaferArray<Device::IMeasurementRecorder, MaxObservers> observers;
+        std::array<Device::IMeasurementRecorder *, MaxObservers> observers;
     };
 }
 

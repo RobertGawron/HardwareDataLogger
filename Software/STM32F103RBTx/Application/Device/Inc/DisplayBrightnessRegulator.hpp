@@ -1,9 +1,6 @@
 /**
  * @file DisplayBrightnessRegulator.hpp
  * @brief Declaration of the DisplayBrightnessRegulator class for managing display brightness.
- *
- * This file contains the declaration of the DisplayBrightnessRegulator class, which adjusts the
- * backlight of an LCD display based on ambient light levels and user preferences.
  */
 
 #ifndef DisplayBrightnessRegulator_H_
@@ -18,17 +15,12 @@ namespace Device
     /**
      * @class DisplayBrightnessRegulator
      * @brief Regulates the brightness of an LCD display based on ambient light and user preferences.
-     *
-     * The DisplayBrightnessRegulator class is responsible for adjusting the backlight brightness of
-     * an LCD display according to the ambient light detected by a sensor and user-defined settings.
-     * It interacts with platform-specific drivers for the ambient light sensor and display backlight.
      */
     class DisplayBrightnessRegulator : public IDisplayBrightnessRegulator
     {
     public:
         /**
-         * @brief Constructs a DisplayBrightnessRegulator object with the given sensor and display drivers.
-         *
+         * @brief Constructs a DisplayBrightnessRegulator with specified sensor and display drivers.
          * @param _ambientLightSensorDriver Reference to the ambient light sensor driver.
          * @param _displayBrightnessDriver Reference to the display brightness driver.
          */
@@ -36,59 +28,39 @@ namespace Device
             Driver::IAmbientLightSensorDriver &_ambientLightSensorDriver,
             Driver::IDisplayBrightnessDriver &_displayBrightnessDriver);
 
-        /**
-         * @brief Default virtual destructor.
-         */
-        ~DisplayBrightnessRegulator() override = default;
+        ~DisplayBrightnessRegulator() override = default; ///< Default virtual destructor.
 
-        /**
-         * @brief Deleted copy constructor to prevent copying.
-         */
-        DisplayBrightnessRegulator(const DisplayBrightnessRegulator &) = delete;
-
-        /**
-         * @brief Deleted copy assignment operator to prevent copying.
-         */
-        DisplayBrightnessRegulator &operator=(const DisplayBrightnessRegulator &) = delete;
+        DisplayBrightnessRegulator(const DisplayBrightnessRegulator &) = delete; ///< Deleted copy constructor.
+        DisplayBrightnessRegulator &operator=(const DisplayBrightnessRegulator &) = delete; ///< Deleted copy assignment.
 
         /**
          * @brief Initializes the display brightness regulator.
-         *
-         * Sets up necessary configurations for the ambient light sensor and display brightness drivers.
-         *
          * @return true if initialization is successful, false otherwise.
          */
         bool init() override;
 
         /**
-         * @brief Ticks the brightness regulator state machine.
-         *
-         * This method should be called periodically to update the brightness level based on ambient light changes
-         * and user preferences.
+         * @brief Updates the brightness regulator state.
          */
         void tick() override;
 
         /**
-         * @brief Gets the current brightness level as a percentage.
-         *
-         * This method is primarily for debugging purposes and returns the current brightness level of the display
-         * as a percentage.
-         *
-         * @return The brightness level as a percentage (0-100).
+         * @brief Returns the current brightness level as a percentage.
+         * @return Brightness level (0-100).
          */
         [[nodiscard]] std::uint8_t getBrightnessPercentage() const override;
 
+        /**
+         * @brief Sets the display brightness level.
+         * @param level Brightness percentage (0-100).
+         * @return true if the level is set successfully.
+         */
         bool setBrightnessPercentage(std::uint8_t level) override;
 
     private:
-        /** @brief Reference to the platform-specific ambient light sensor driver. */
-        Driver::IAmbientLightSensorDriver &ambientLightSensorDriver;
-
-        /** @brief Reference to the platform-specific display brightness driver. */
-        Driver::IDisplayBrightnessDriver &displayBrightnessDriver;
-
-        /** @brief Current brightness level (0-100), used for temporary debugging. */
-        std::uint8_t level = 0u;
+        Driver::IAmbientLightSensorDriver &ambientLightSensorDriver; ///< Ambient light sensor driver.
+        Driver::IDisplayBrightnessDriver &displayBrightnessDriver;   ///< Display brightness driver.
+        std::uint8_t level = 0u; ///< Current brightness level (0-100).
     };
 }
 

@@ -1,10 +1,12 @@
 #include "Driver/Inc/AmbientLightSensorDriver.hpp"
+
 #include "stm32f1xx_hal_adc.h"
-#include "stm32f1xx_hal_def.h"
+
+// #include "stm32f1xx_hal_def.h"
 
 #include <cstdint>
 
-std::uint32_t adcBuffer[AdcBufferSize];
+
 
 namespace Driver
 {
@@ -36,18 +38,21 @@ namespace Driver
         return true;
     }
 
-    std::uint32_t AmbientLightSensorDriver::getAmbientLightLevel() const
-    {
-        const std::uint32_t adcResult = adcBuffer[0u];
-
-        return adcResult;
+uint16_t AmbientLightSensorDriver::getAmbientLightLevel() const {
+    // Calculate average of all buffer values
+    uint32_t sum = 0;
+    for (size_t i = 0; i < AdcBufferSize; i++) {
+        sum += adcBuffer[i];
     }
+    sum = static_cast<uint16_t>(sum / AdcBufferSize);
+    return sum;
+}
 
-    bool AmbientLightSensorDriver::startAdcWithDma()
-    {
-        const HAL_StatusTypeDef statusFromHal = HAL_ADC_Start_DMA(&hadc, &adcBuffer[0u], AdcBufferSize);
-
-        return (statusFromHal == HAL_OK);
+bool AmbientLightSensorDriver::startAdcWithDma() {
+    // Cast to uint32_t* for HAL compatibility
+    return (HAL_ADC_Start_DMA(&hadc, 
+             reinterpret_cast<uint32_t*>(adcBuffer), 
+             AdcBufferSize) == HAL_OK);
     }
 
     bool AmbientLightSensorDriver::stopAdcWithDma()

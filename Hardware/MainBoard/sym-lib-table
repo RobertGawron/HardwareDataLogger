@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name "MainBoard")(type "KiCad")(uri "${KIPRJMOD}/MainBoard.kicad_sym")(options "")(descr ""))
+ (lib (name "HardwareDataLogger")(type "KiCad")(uri "${KIPRJMOD}/../Library/HardwareDataLogger.kicad_sym")(options "")(descr ""))
+)

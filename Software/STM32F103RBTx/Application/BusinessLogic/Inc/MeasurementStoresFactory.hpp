@@ -8,8 +8,6 @@
 
 #include "BusinessLogic/Interfaces/IApplicationComponentFactory.hpp"
 #include "BusinessLogic/Inc/MeasurementDataStore.hpp"
-#include "BusinessLogic/Inc/HmiFactory.hpp"
-#include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
 #include "Device/Inc/WiFiMeasurementRecorder.hpp"
 #include "Device/Inc/SdCardMeasurementRecorder.hpp"
 #include "Device/Inc/CacheMeasurementRecorder.hpp"
@@ -22,23 +20,21 @@ namespace BusinessLogic
 {
     /**
      * @class MeasurementStoresFactory
-     * @brief Responsible for building and managing measurement data stores.
+     * @brief Factory for creating and managing measurement data storage components.
      *
-     * The MeasurementStoresFactory class constructs and manages components related to storing measurement data.
-     * It requires drivers for the UART and SD card interfaces and constructs other components by itself.
-     * This class is configurable based on the platform, whether it's running on firmware or in a simulation.
+     * Constructs and initializes concrete measurement recorder implementations (WiFi, SD Card, Cache)
+     * and registers them with the measurement coordinator. Implements the IApplicationComponentFactory
+     * interface for integration into the application component initialization system.
      */
     class MeasurementStoresFactory : public IApplicationComponentFactory
     {
     public:
         /**
-         * @brief Constructs the MeasurementStoresFactory with platform-specific drivers.
+         * @brief Constructs a MeasurementStoresFactory with required recorders and drivers.
          *
-         * This constructor requires a UART driver for WiFi communication and an SD card driver to handle data storage.
-         * The class constructs the measurement recorders and other components by itself.
-         *
-         * @param uartForWiFi Reference to the UART driver used for WiFi communication.
-         * @param sdCard Reference to the SD card driver used for data storage.
+         * @param cacheRecorder Reference to a pre-constructed cache recorder instance
+         * @param uartForWiFi Reference to UART driver for WiFi communication
+         * @param sdCard Reference to SD card driver for storage operations
          */
         explicit MeasurementStoresFactory(
             Device::CacheMeasurementRecorder &cacheRecorder,
@@ -51,34 +47,42 @@ namespace BusinessLogic
         ~MeasurementStoresFactory() override = default;
 
         /**
-         * @brief Deleted copy constructor to prevent copying.
+         * @brief Deleted copy constructor.
          */
         MeasurementStoresFactory(const MeasurementStoresFactory &) = delete;
 
         /**
-         * @brief Deleted assignment operator to prevent assignment.
-         * @return MeasurementStoresFactory& The assigned object.
+         * @brief Deleted copy assignment operator.
          */
         MeasurementStoresFactory &operator=(const MeasurementStoresFactory &) = delete;
 
         /**
-         * @brief Initializes the measurement data stores.
-         * @return true if initialization was successful, false otherwise.
+         * @brief Initializes all measurement recorder components.
+         * 
+         * Calls initialize() on each managed recorder (WiFi, SD Card, Cache).
+         * 
+         * @return Always returns true (initialization errors handled internally)
          */
         bool initialize() override;
 
-        //  virtual bool registerStoresToHmi(IHmiFactory &hmiFactory);
-
-        virtual bool registerStores(MeasurementDataStore &coordinator);
-        //  bool registerStoresToHmi(IHmiFactory &coordinator);
+        /**
+         * @brief Registers all recorders with the measurement data store.
+         * 
+         * Adds WiFi, SD Card, and Cache recorders as observers to the coordinator.
+         * 
+         * @param coordinator Reference to the measurement data coordinator
+         * @return true if all recorders registered successfully, false otherwise
+         */
+        bool registerStores(MeasurementDataStore &coordinator);
 
     private:
+        /** @brief Reference to the cache measurement recorder */
         Device::CacheMeasurementRecorder &cacheRecorder;
 
-        /** @brief WiFi measurement recorder used for storing measurements via WiFi. */
+        /** @brief WiFi measurement recorder instance */
         Device::WiFiMeasurementRecorder wifiRecorder;
 
-        /** @brief SD card measurement recorder used for storing measurements on an SD card. */
+        /** @brief SD card measurement recorder instance */
         Device::SdCardMeasurementRecorder sdCardRecorder;
     };
 }

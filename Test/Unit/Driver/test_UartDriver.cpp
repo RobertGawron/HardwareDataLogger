@@ -5,7 +5,6 @@
 #include "Driver/Inc/UartDriver.hpp"
 
 using namespace testing;
-using namespace Driver;
 
 // Global mock instance for HAL UART
 MockHAL_UART *mockHAL_UART;
@@ -14,13 +13,13 @@ class UartDriverTest : public Test
 {
 protected:
     UART_HandleTypeDef huart;
-    UartDriver *driver;
+    Driver::UartDriver *driver;
     MockHAL_UART mockHAL_UART_Instance;
 
     void SetUp() override
     {
         mockHAL_UART = &mockHAL_UART_Instance; // Assign the global mock instance
-        driver = new UartDriver(huart);
+        driver = new Driver::UartDriver(huart);
     }
 
     void TearDown() override
@@ -59,8 +58,8 @@ TEST_F(UartDriverTest, TransmitShouldSucceed)
             Return(HAL_OK)));
 
     // Execute the transmit method and verify that it returns the expected status
-    UartExchangeStatus status = driver->transmit(data, size, timeout);
-    EXPECT_EQ(status, UartExchangeStatus::Ok);
+    Driver::UartExchangeStatus status = driver->transmit(data, size, timeout);
+    EXPECT_EQ(status, Driver::UartExchangeStatus::Ok);
 }
 
 TEST_F(UartDriverTest, TransmitShouldFailOnError)
@@ -80,8 +79,8 @@ TEST_F(UartDriverTest, TransmitShouldFailOnError)
         .WillOnce(Return(HAL_ERROR));
 
     // Execute the transmit method and check the result
-    UartExchangeStatus status = driver->transmit(data, size, timeout);
-    EXPECT_EQ(status, UartExchangeStatus::ErrorFromHal);
+    Driver::UartExchangeStatus status = driver->transmit(data, size, timeout);
+    EXPECT_EQ(status, Driver::UartExchangeStatus::ErrorFromHal);
 }
 
 TEST_F(UartDriverTest, ReceiveShouldSucceed)
@@ -101,8 +100,8 @@ TEST_F(UartDriverTest, ReceiveShouldSucceed)
         .WillOnce(Return(HAL_OK));
 
     // Execute the receive method and check the result
-    UartExchangeStatus status = driver->receive(buffer, size, timeout);
-    EXPECT_EQ(status, UartExchangeStatus::Ok);
+    Driver::UartExchangeStatus status = driver->receive(buffer, size, timeout);
+    EXPECT_EQ(status, Driver::UartExchangeStatus::Ok);
 }
 
 TEST_F(UartDriverTest, ReceiveShouldFailOnTimeout)
@@ -122,8 +121,8 @@ TEST_F(UartDriverTest, ReceiveShouldFailOnTimeout)
         .WillOnce(Return(HAL_TIMEOUT));
 
     // Execute the receive method and check the result
-    UartExchangeStatus status = driver->receive(buffer, size, timeout);
-    EXPECT_EQ(status, UartExchangeStatus::Timeout);
+    Driver::UartExchangeStatus status = driver->receive(buffer, size, timeout);
+    EXPECT_EQ(status, Driver::UartExchangeStatus::Timeout);
 }
 
 TEST_F(UartDriverTest, ReceiveShouldFailOnError)
@@ -143,8 +142,8 @@ TEST_F(UartDriverTest, ReceiveShouldFailOnError)
         .WillOnce(Return(HAL_ERROR));
 
     // Execute the receive method and check the result
-    UartExchangeStatus status = driver->receive(buffer, size, timeout);
-    EXPECT_EQ(status, UartExchangeStatus::ErrorFromHal);
+    Driver::UartExchangeStatus status = driver->receive(buffer, size, timeout);
+    EXPECT_EQ(status, Driver::UartExchangeStatus::ErrorFromHal);
 }
 
 TEST_F(UartDriverTest, StopShouldSucceed)
@@ -156,7 +155,7 @@ TEST_F(UartDriverTest, StopShouldSucceed)
     EXPECT_TRUE(driver->start());
 
     EXPECT_TRUE(driver->stop());
-    EXPECT_TRUE(driver->isInState(DriverState::State::Stop));
+    EXPECT_TRUE(driver->isInState(Driver::DriverState::State::Stop));
 }
 
 TEST_F(UartDriverTest, ResetShouldSucceed)
@@ -168,5 +167,5 @@ TEST_F(UartDriverTest, ResetShouldSucceed)
     EXPECT_TRUE(driver->start());
 
     EXPECT_TRUE(driver->reset());
-    EXPECT_TRUE(driver->isInState(DriverState::State::Reset));
+    EXPECT_TRUE(driver->isInState(Driver::DriverState::State::Reset));
 }

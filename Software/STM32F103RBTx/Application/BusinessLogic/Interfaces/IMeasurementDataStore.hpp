@@ -7,7 +7,6 @@
 #ifndef IMeasurementDataStore_H_
 #define IMeasurementDataStore_H_
 
-#include "BusinessLogic/Inc/SaferArray.hpp"
 #include "Device/Interfaces/IMeasurementRecorder.hpp"
 #include "Device/Interfaces/IMeasurementSource.hpp"
 

@@ -62,6 +62,12 @@ namespace Driver
             status = getExchangeStatus(halStatus);
         }
 
+   // if (halStatus == HAL_BUSY || halStatus == HAL_ERROR) {
+        // Reset the UART peripheral to clear BUSY state
+   //     HAL_UART_Abort(&uartHandler);
+   // }
+
+
         return status;
     }
 
@@ -80,7 +86,6 @@ namespace Driver
 
     UartExchangeStatus UartDriver::getExchangeStatus(HAL_StatusTypeDef halStatus)
     {
-        // Use std::find_if for concise and safe lookup
         const auto *it = std::find_if(
             translation.begin(),
             translation.end(),

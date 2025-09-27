@@ -104,6 +104,7 @@ RUN apt-get update && apt-get install -y \
     libfontconfig1 \
     libfreetype6 \
     lcov \
+    dos2unix \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
@@ -123,7 +124,7 @@ RUN /workspace/venv/bin/pip install --upgrade pip && \
     PyQt6 \
     codechecker \
     prospector \
-    prospector2html
+    vjunit
 
 # Add virtual environment binaries to the PATH
 ENV PATH="/workspace/venv/bin:$PATH"

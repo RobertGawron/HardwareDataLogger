@@ -61,3 +61,22 @@ TEST_F(PulseCounterDriverTest, ClearMeasurementResetsCounter)
     driver->clearMeasurement();
     EXPECT_EQ(driver->getMeasurement(), 0u);
 }
+
+TEST_F(PulseCounterDriverTest, StopShouldClearCounter)
+{
+    auto idOfCounter = static_cast<std::uint8_t>(id);
+
+    driver->onInitialize();
+    driver->onStart();
+
+    incrementPulseCounter(idOfCounter);
+    EXPECT_EQ(driver->getMeasurement(), 1u);
+
+    EXPECT_TRUE(driver->onStop());
+    EXPECT_EQ(driver->getMeasurement(), 0u);  // Must be cleared
+}
+
+TEST_F(PulseCounterDriverTest, ResetShouldReturnTrue)
+{
+    EXPECT_TRUE(driver->onReset());  // Only verifies return value
+}

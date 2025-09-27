@@ -1,100 +1,115 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.22)
 project(ApplicationLib)
 
+# Set C++ standard to 17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
- 
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# For Debug
-#set(CMAKE_VERBOSE_MAKEFILE ON)
+# Interface library for common includes
+add_library(ApplicationInterfaces INTERFACE)
+target_include_directories(ApplicationInterfaces INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Common
+    ${CMAKE_CURRENT_SOURCE_DIR}/Library/u8g2/cppsrc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Library/u8g2/csrc
+)
 
-# Helper function to print include directories for a target
-function(print_include_dirs target_name)
-    message(STATUS "Include directories for target ${target_name}:")
-    get_target_property(include_dirs ${target_name} INCLUDE_DIRECTORIES)
-    foreach(dir ${include_dirs})
-        message(STATUS "  ${dir}")
-    endforeach()
-endfunction()
+# Add u8g2 subdirectory
+add_subdirectory(
+    ${CMAKE_CURRENT_SOURCE_DIR}/Library/u8g2
+    ${CMAKE_BINARY_DIR}/u8g2_build
+)
 
-# Enable coverage flags if in Debug mode and ENABLE_COVERAGE is defined
-if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND ENABLE_COVERAGE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fprofile-arcs -ftest-coverage")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lgcov --coverage")
-endif()
+# BusinessLogic library sources
+set(BUSINESS_LOGIC_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/BusinessLogic/Src/ApplicationBuilder.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/BusinessLogic/Src/HmiFactory.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/BusinessLogic/Src/HmiMeasurementModel.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/BusinessLogic/Src/HmiMui.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/BusinessLogic/Src/HmiMuiHandlers.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/BusinessLogic/Src/MeasurementCoordinator.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/BusinessLogic/Src/MeasurementDataStore.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/BusinessLogic/Src/MeasurementSourcesFactory.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/BusinessLogic/Src/MeasurementStoresFactory.cpp
+)
 
-# Compiler flags for ARM target and CPU (Cortex-M3) using the arm-none-eabi toolchain
+# Device library sources
+set(DEVICE_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/Device/Src/CacheMeasurementRecorder.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Device/Src/DisplayBrightnessRegulator.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Device/Src/Display.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Device/Src/Keyboard.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Device/Src/PulseCounterMeasurementSource.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Device/Src/SdCardMeasurementRecorder.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Device/Src/UartMeasurementRecorder.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Device/Src/UartMeasurementSource.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Device/Src/WiFiMeasurementRecorder.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Device/Src/WiFiMeasurementSerializer.cpp
+)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${TARGET_FLAGS}")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TARGET_FLAGS}")
+# Driver library sources
+set(DRIVER_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/Driver/Src/AmbientLightSensorDriver.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Driver/Src/DisplayPixelColor.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Driver/Src/DriverState.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Driver/Src/KeyboardFourPushButtonsDriver.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Driver/Src/PulseCounterDriver.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Driver/Src/SdCardDriver.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Driver/Src/St7735DisplayBrightnessDriver.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Driver/Src/St7735DisplayDriver.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Driver/Src/UartDriver.cpp
+    # From Common folder, shared with ESP
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Common/CobsEncoder.cpp  
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Common/Crc32.cpp
+    # From outside of Cube MX, its CMake doesnt know it
+    ${CMAKE_CURRENT_SOURCE_DIR}/../FATFS/Target/user_diskio_spi.c
+)
 
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
+# BusinessLogic library
+add_library(BusinessLogic STATIC)
+target_sources(BusinessLogic PRIVATE ${BUSINESS_LOGIC_SOURCES})
+target_link_libraries(BusinessLogic PRIVATE 
+    u8g2 
+    ApplicationInterfaces
+)
 
-#include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/STM32F1xx_HAL_Driver/Inc/")
-# Check if USE_X86_HEADERS is defined
+# Device library
+add_library(Device STATIC)
+target_sources(Device PRIVATE ${DEVICE_SOURCES})
+target_link_libraries(Device PRIVATE 
+    u8g2 
+    ApplicationInterfaces
+)
+
+# Driver library
+add_library(Driver STATIC)
+target_sources(Driver PRIVATE ${DRIVER_SOURCES})
+
 if(USE_X86_HEADERS)
-    # If USE_X86_HEADERS is true, include X86 headers for unit testing
-    include_directories("${CMAKE_SOURCE_DIR}/Test/Unit/System")
+    target_include_directories(Driver PUBLIC
+        ${CMAKE_SOURCE_DIR}/Test/Unit/System
+    )
 else()
-    # Else, include STM32-specific headers for the STM32F103RBTx
-    include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/STM32F1xx_HAL_Driver/Inc/")
-   
-    include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/CMSIS/Include")
-   
-    
-   # include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/FatFs/src/")
+    target_include_directories(Driver PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/STM32F1xx_HAL_Driver/Inc
+        ${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/CMSIS/Device/ST/STM32F1xx/Include
+        ${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/CMSIS/Include
+        ${CMAKE_CURRENT_SOURCE_DIR}/../Core/Inc
+        ${CMAKE_CURRENT_SOURCE_DIR}/Library/stm32-st7735/
+        # Not eassy this SD Card lib
+        ${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/FatFs/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/../FATFS/Target
+    )
 endif()
 
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/stm32-st7735/")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/u8g2/cppsrc")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/u8g2/csrc")
+# Link common interfaces to Driver
+target_link_libraries(Driver PUBLIC ApplicationInterfaces)
 
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Core/Inc/")
-#include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../FATFS/Target/")
-#include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../cubeide-sd-card/cubeide-sd-card/Drivers/CMSIS/Include/")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/CMSIS/Device/ST/STM32F1xx/Include/")
-
-#include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../FATFS/App/")
-
-
-file(GLOB BUSINESS_LOGIC_SRC "${CMAKE_CURRENT_SOURCE_DIR}/BusinessLogic/Src/*.cpp")
-file(GLOB DEVICE_SRC "${CMAKE_CURRENT_SOURCE_DIR}/Device/Src/*.cpp")
-file(GLOB DRIVER_SRC "${CMAKE_CURRENT_SOURCE_DIR}/Driver/Src/*.cpp")
-
-
-# Add u8g2 as a subdirectory
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/u8g2 ${CMAKE_BINARY_DIR}/u8g2_build)
-
-# Link the u8g2 library (produced by its own CMakeLists.txt) to ApplicationLib
-#target_link_libraries(${PROJECT_NAME} PRIVATE u8g2)
-
-
-# Add library target for each module
-add_library(BusinessLogic STATIC ${BUSINESS_LOGIC_SRC})
-add_library(Device STATIC ${DEVICE_SRC})
-add_library(Driver STATIC ${DRIVER_SRC})
-
-# Add include paths for Driver library
-target_include_directories(Driver PRIVATE
-    "${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/stm32-st7735/"
-)
-
-target_include_directories(BusinessLogic PUBLIC
-    "${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/u8g2/cppsrc"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/u8g2/csrc"
-)
-target_include_directories(Device PUBLIC
-    "${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/u8g2/cppsrc"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/u8g2/csrc"
-)
-
-print_include_dirs(BusinessLogic)
-print_include_dirs(Device)
-
-# Add the main ApplicationLib shared library and link the individual module libraries
-add_library(${PROJECT_NAME} STATIC ${BUSINESS_LOGIC_SRC} ${DEVICE_SRC} ${DRIVER_SRC})
-target_link_libraries(${PROJECT_NAME} PRIVATE u8g2)
-# Link the individual libraries to the main library
-#target_link_libraries(${PROJECT_NAME} PRIVATE BusinessLogic Device Driver)
+# Debug options using generator expressions
+foreach(lib IN ITEMS BusinessLogic Device Driver u8g2)
+    if(TARGET ${lib})
+        target_compile_options(${lib} PRIVATE 
+            $<$<CONFIG:Debug>:-g3>
+        )
+    endif()
+endforeach()

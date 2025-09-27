@@ -1,90 +1,69 @@
 cmake_minimum_required(VERSION 3.22)
 
-# Set the project name
-set(CMAKE_PROJECT_NAME NUCLEO-F103RB)
-
-# Setup compiler settings
-set(CMAKE_C_STANDARD 11)
+# Setup compiler before project()
+set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Define the build type
+# Define default build type
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Debug")
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
 endif()
 
-# Include toolchain file
+# Include toolchain before project()
 include("cmake/gcc-arm-none-eabi.cmake")
 
-# Enable compile command to ease indexing with e.g. clangd
-set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
+# Core project definition
+project(HardwareDataLogger_STM32F103RBTx LANGUAGES C CXX ASM)
 
-# Enable CMake support for ASM, C, and C++ languages
-enable_language(C CXX ASM)
-
-# Project settings
-project(${CMAKE_PROJECT_NAME})
-message("Build type: ${CMAKE_BUILD_TYPE}")
-
-# Define STM32F103xB device (specific to the NUCLEO-F103RB board)
+# Define STM32 device globally BEFORE CubeMX subdirectory
 add_compile_definitions(STM32F103xB)
 
-# Create the executable target
-add_executable(${CMAKE_PROJECT_NAME})
+# Debug symbol handling
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(DEBUG_OPTIONS 
+        "$<$<COMPILE_LANGUAGE:C>:-g3>"
+        "$<$<COMPILE_LANGUAGE:CXX>:-g3>"
+        "$<$<COMPILE_LANGUAGE:ASM>:-g3>"
+    )
+endif()
 
-# Add subdirectory for the application
+# Enable compile commands for tooling
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Create executable
+add_executable(${PROJECT_NAME})
+
+# Add subdirectories - CubeMX MUST come first
+add_subdirectory(cmake/stm32cubemx)
 add_subdirectory(Application)
 
-# Add STM32CubeMX generated sources
-add_subdirectory(cmake/stm32cubemx)
-
-
-
-# Add include paths
-include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/Application/
-    ${CMAKE_CURRENT_SOURCE_DIR}/Application/Driver/Inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/Middlewares/Third_Party/stm32-st7735
-    #${CMAKE_CURRENT_SOURCE_DIR}/cubeide-sd-card/cubeide-sd-card/Core/Inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Inc  # Corrected STM32F1xx driver include
-    ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Device/ST/STM32F1xx/Include  # Corrected CMSIS for STM32F1xx
-    ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Include
+# Target sources
+target_sources(${PROJECT_NAME} PRIVATE
+    Core/Src/MyApplication.cpp
+    Core/Src/PlatformFactoryStm32.cpp
 )
 
-
-# Gather C source files
-file(GLOB C_SOURCES
-    "${CMAKE_CURRENT_SOURCE_DIR}/Middlewares/Third_Party/stm32-st7735/*.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/*.c"  # Include C source files
+# Include directories
+target_include_directories(${PROJECT_NAME} PRIVATE
+    Core/Inc
+    Application
+    Drivers/STM32F1xx_HAL_Driver/Inc
+    Drivers/CMSIS/Device/ST/STM32F1xx/Include
+    Drivers/CMSIS/Include
+    ../Common
 )
 
-# Gather C++ source files
-file(GLOB CPP_SOURCES
-
-    "${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/*.cpp"  # Include C++ source files
-)
-
-# Add sources to the executable target
-target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${C_SOURCES} ${CPP_SOURCES})
-
-# Link directories setup
-target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
-    # Add user-defined library search paths (if any)
-)
-
-# Link external libraries (such as STM32CubeMX)
-target_link_libraries(${CMAKE_PROJECT_NAME}
+# Link libraries - plain signature to match CubeMX
+target_link_libraries(${PROJECT_NAME}
     stm32cubemx
-    ApplicationLib
-    # Add user-defined libraries (if any)
+    BusinessLogic
+    Device
+    Driver
+    u8g2
 )
 
-# Add project symbols (macros)
-target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
-    STM32F103xB   # Correct STM32F1 device macro for NUCLEO-F103RB
-)
- 
+# Apply debug options
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_options(${PROJECT_NAME} PRIVATE ${DEBUG_OPTIONS})
+endif()

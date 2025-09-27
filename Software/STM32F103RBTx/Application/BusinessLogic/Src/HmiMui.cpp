@@ -11,6 +11,8 @@
 #include "u8g2.h"
 #include "mui_u8g2.h"
 
+// #include <iostream>
+
 namespace BusinessLogic
 {
 
@@ -107,6 +109,7 @@ namespace BusinessLogic
 
     bool HmiMui::start()
     {
+        // #if 0
         display.begin();
 
         mui.begin(display, fds_data, muif_list, sizeof(muif_list) / sizeof(muif_t));
@@ -116,6 +119,7 @@ namespace BusinessLogic
         mui.gotoForm(/* form_id= */ 1, /* initial_cursor_position= */ 0);
         display.firstPage();
         display.setCursor(0, 0);
+        // #endif
 
         do
         {
@@ -138,44 +142,69 @@ namespace BusinessLogic
         menu_prev_pin   = up
         menu_home_pin   = left
         */
+        /*
+                if ((keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up) == Device::KeyboardKeyActionState::PressEndLong))
+                {
+                    mui.prevField();
+                }
 
-        if ((keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up) == Device::KeyboardKeyActionState::PressEndLong))
-        {
-            mui.prevField();
-        }
+                if ((keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Down) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Down) == Device::KeyboardKeyActionState::PressEndLong))
+                {
+                    mui.nextField();
+                }
 
-        if ((keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Down) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Down) == Device::KeyboardKeyActionState::PressEndLong))
-        {
-            mui.nextField();
-        }
+                if ((keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Left) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Left) == Device::KeyboardKeyActionState::PressEndLong))
+                {
+                    mui.leaveForm();
+                }
 
-        if ((keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Left) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Left) == Device::KeyboardKeyActionState::PressEndLong))
-        {
-            mui.leaveForm();
-        }
-
-        if ((keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Right) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Right) == Device::KeyboardKeyActionState::PressEndLong))
-        {
-            mui.sendSelect();
-        }
-
-        // display.clear();
-        // mui.gotoForm(2, 0);
-        // mui.nextField();
-        // mui.sendSelect();
-        display.clear();
-        do
-        {
-            mui.draw();
-        } while (display.nextPage() > 0u);
-
-        /*    printf("key state: %d %d %d %d\n",
-                   keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up),
-                   keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Down),
-                   keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Left),
-                   keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Right));
+                if ((keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Right) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Right) == Device::KeyboardKeyActionState::PressEndLong))
+                {
+                    mui.sendSelect();
+                }
+        */
+        /*   display.clear();
+           mui.gotoForm(2, 0);
+           mui.nextField();
+           mui.sendSelect();
+           display.clear();
           */
-        return true;
+
+        if (
+            (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up) == Device::KeyboardKeyActionState::PressEndLong) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Down) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Down) == Device::KeyboardKeyActionState::PressEndLong) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Left) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Left) == Device::KeyboardKeyActionState::PressEndLong) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Right) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Right) == Device::KeyboardKeyActionState::PressEndLong))
+        {
+
+         /*   display.clear();
+            do
+            {
+                mui.draw();
+            } while (display.nextPage() > 0u);
+       */ }
+
+         static int i = 0;
+         i++;
+         if (i == 100)
+         {
+             if (mui.isFormActive())
+             {
+                 i = 0;
+
+                 display.clear();
+                 do
+                 {
+                     //   std::cout << "==============================================> redraw" << std::endl;
+                     mui.draw();
+                 } while (display.nextPage() > 0u);
+             }
+         }
+
+         /*    printf("key state: %d %d %d %d\n",
+                    keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up),
+                    keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Down),
+                    keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Left),
+                    keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Right));
+           */
+         return true;
     }
 
 }

@@ -15,7 +15,10 @@ This project realizes a shield for the STM32F103RBTx with the following features
 * microSD card for permanent data storage.
 * WiFi capability for remote data transfer.
 
-![Picture of Hardware Data Logger](./Documentation/Pictures/Device_09_09_2024.jpg)
+![Picture of Hardware Data Logger](./Documentation/Pictures/Device_27_09_2025_1.jpg)
+
+![Picture of Hardware Data Logger](./Documentation/Pictures/Device_27_09_2025_2.jpg)
+
 
 ## Software
 

@@ -1,0 +1,140 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "9.0")
+	(uuid "18f4643d-59cf-40d8-90af-99b4dbe1f32f")
+	(paper "A4")
+	(lib_symbols)
+	(sheet
+		(at 70.485 60.96)
+		(size 12.7 3.81)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "1c1c9109-bbf5-4eeb-85ca-4e2143208b10")
+		(property "Sheetname" "ExtensionConnectors"
+			(at 70.485 60.2484 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "ExtensionConnectors.kicad_sch"
+			(at 70.485 65.3546 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "DataProcessingUnit"
+				(path "/18f4643d-59cf-40d8-90af-99b4dbe1f32f"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 70.485 74.93)
+		(size 12.7 3.81)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "3a4bab2f-13c9-4582-8461-46afa6c14ccd")
+		(property "Sheetname" "PowerSupply"
+			(at 70.485 74.2184 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "PowerSupply.kicad_sch"
+			(at 70.485 79.3246 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "DataProcessingUnit"
+				(path "/18f4643d-59cf-40d8-90af-99b4dbe1f32f"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 70.485 48.26)
+		(size 12.7 3.81)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "9bdfab82-cef8-460c-a16e-388f6d900e76")
+		(property "Sheetname" "MCU"
+			(at 70.485 47.5484 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "MCU.kicad_sch"
+			(at 70.485 52.6546 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "DataProcessingUnit"
+				(path "/18f4643d-59cf-40d8-90af-99b4dbe1f32f"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

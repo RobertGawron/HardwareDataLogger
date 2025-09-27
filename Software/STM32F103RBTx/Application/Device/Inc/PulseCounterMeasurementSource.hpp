@@ -24,38 +24,40 @@ namespace Device
     class PulseCounterMeasurementSource : public IMeasurementSource
     {
     public:
-        using MeasurementSizeType = Driver::IPulseCounterDriver::CounterSizeType;
-
         /**
-         * @brief Constructs a PulseCounterMeasurementSource with a reference to a PulseCounterDriver.
+         * @brief Constructs a PulseCounterMeasurementSource with device ID and pulse counter driver.
          *
+         * @param id The unique identifier for this measurement source.
          * @param pulseCounterDriver Reference to the driver responsible for interfacing with the pulse counter device.
          */
         explicit PulseCounterMeasurementSource(MeasurementDeviceId id, Driver::IPulseCounterDriver &pulseCounterDriver);
 
-        /**
-         * @brief Deleted default constructor to prevent instantiation without a driver.
-         */
-        PulseCounterMeasurementSource() = delete;
+        PulseCounterMeasurementSource() = delete; ///< Deleted default constructor to prevent instantiation without parameters.
 
         /**
          * @brief Default destructor for PulseCounterMeasurementSource.
          */
         ~PulseCounterMeasurementSource() override = default;
 
-        /**
-         * @brief Deleted copy constructor to prevent copying.
-         */
-        PulseCounterMeasurementSource(const PulseCounterMeasurementSource &) = delete;
+        PulseCounterMeasurementSource(const PulseCounterMeasurementSource &) = delete; ///< Deleted copy constructor to prevent copying.
+        PulseCounterMeasurementSource &operator=(const PulseCounterMeasurementSource &) = delete; ///< Deleted assignment operator to prevent assignment.
 
         /**
-         * @brief Deleted assignment operator to prevent assignment.
-         * @return PulseCounterMeasurementSource& The assigned object.
+         * @brief Initializes the pulse counter hardware and driver.
+         * @return True if initialization succeeded, false otherwise.
          */
-        PulseCounterMeasurementSource &operator=(const PulseCounterMeasurementSource &) = delete;
-
         bool initialize() override;
+        
+        /**
+         * @brief Starts the pulse counter measurement process.
+         * @return True if start succeeded, false otherwise.
+         */
         bool start() override;
+        
+        /**
+         * @brief Stops the pulse counter measurement process.
+         * @return True if stop succeeded, false otherwise.
+         */
         bool stop() override;
 
         /**
@@ -67,6 +69,8 @@ namespace Device
 
         /**
          * @brief Retrieves the current pulse count from the pulse counter device.
+         *
+         * @return The current measurement data including device ID and pulse count.
          */
         MeasurementType getMeasurement() override;
 

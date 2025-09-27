@@ -1,4 +1,3 @@
-
 #ifndef CacheMeasurementRecorder_H_
 #define CacheMeasurementRecorder_H_
 
@@ -11,95 +10,81 @@
 
 namespace Device
 {
-
+    /**
+     * @class CacheMeasurementRecorder
+     * @brief Caches and provides access to the latest measurements from various devices.
+     *
+     * Implements both IMeasurementRecorder (to record incoming measurements)
+     * and IMeasurementReader (to retrieve the last recorded value per source).
+     */
     class CacheMeasurementRecorder : public IMeasurementRecorder, public IMeasurementReader
     {
     public:
-        /**
-         * @brief Deleted default constructor to prevent instantiation without a driver.
-         */
-        CacheMeasurementRecorder() = default;
+        CacheMeasurementRecorder() = default;                             ///< Default constructor.
+        ~CacheMeasurementRecorder() override = default;                   ///< Default destructor.
+
+        CacheMeasurementRecorder(const CacheMeasurementRecorder &) = delete;          ///< Deleted copy constructor.
+        CacheMeasurementRecorder &operator=(const CacheMeasurementRecorder &) = delete; ///< Deleted assignment operator.
 
         /**
-         * @brief Default destructor for CacheMeasurementRecorder.
-         */
-        ~CacheMeasurementRecorder() override = default;
-
-        /**
-         * @brief Deleted copy constructor to prevent copying.
-         */
-        CacheMeasurementRecorder(const CacheMeasurementRecorder &) = delete;
-
-        /**
-         * @brief Deleted assignment operator to prevent assignment.
-         * @return CacheMeasurementRecorder& The assigned object.
-         */
-        CacheMeasurementRecorder &operator=(const CacheMeasurementRecorder &) = delete;
-
-        /**
-         * @brief Notifies the recorder to process new data.
-         *
-         * This method is called to notify the recorder that new measurement data is available and
-         * should be sent to the ESP module via UART.
+         * @brief Record a new measurement.
+         * @param measurement The measurement to record.
+         * @return true if the measurement was successfully recorded.
          */
         bool notify(Device::MeasurementType &measurement) override;
 
     protected:
         /**
-         * @brief Initializes the CacheMeasurementRecorder.
-         *
-         * This method is responsible for initializing the recorder, preparing it for operation.
-         * @return True if initialization was successful, false otherwise.
+         * @brief Initialize the recorder.
+         * @return true if initialization succeeded.
          */
         bool onInitialize() override;
 
         /**
-         * @brief Starts the CacheMeasurementRecorder.
-         *
-         * This method starts the recorder, enabling it to begin sending measurement data via UART.
-         * @return True if the recorder started successfully, false otherwise.
+         * @brief Start the recorder.
+         * @return true if startup succeeded.
          */
         bool onStart() override;
 
         /**
-         * @brief Stops the CacheMeasurementRecorder.
-         *
-         * This method stops the recorder, halting any further transmission of measurement data.
-         * @return True if the recorder stopped successfully, false otherwise.
+         * @brief Stop the recorder.
+         * @return true if shutdown succeeded.
          */
         bool onStop() override;
 
         /**
-         * @brief Resets the CacheMeasurementRecorder.
-         *
-         * This method resets the recorder, clearing any internal state or buffers.
-         * @return True if the recorder was reset successfully, false otherwise.
+         * @brief Reset the recorder state.
+         * @return true if reset succeeded.
          */
         bool onReset() override;
 
         /**
-         * @brief Flushes any remaining data to the ESP module.
-         *
-         * This method ensures that any remaining measurement data is sent to the ESP module via UART.
+         * @brief Ensure all pending data is processed.
+         * @return true if flush succeeded.
          */
         bool flush() override;
 
-        [[nodiscard]] std::uint32_t getLatestMeasurement(Device::MeasurementDeviceId source) const override;
+        /**
+         * @brief Retrieve the last measurement for a given device source.
+         * @param source Identifier of the measurement device.
+         * @return The last recorded value for that source.
+         */
+        [[nodiscard]] std::uint32_t getLatestMeasurement(MeasurementDeviceId source) const override;
 
     private:
         /**
-         * @brief Writes the measurement data to the ESP module via UART.
-         *
-         * This method sends the prepared measurement data to the ESP module for transmission over WiFi.
+         * @brief Internal write operation to update the cache.
+         * @param measurement The measurement to cache.
+         * @return true if the write was successful.
          */
         virtual bool write(Device::MeasurementType &measurement);
 
-        static constexpr std::size_t MeasurementSourceCount = static_cast<std::size_t>(MeasurementDeviceId::LAST_NOT_USED);
+        static constexpr std::size_t MeasurementSourceCount =
+            static_cast<std::size_t>(MeasurementDeviceId::LAST_NOT_USED); ///< Number of measurement sources.
 
-        // Map to store the last measurements for each source
-        std::array<std::uint32_t, MeasurementSourceCount> lastMeasurement = {0u};
+        std::array<std::uint32_t, MeasurementSourceCount> lastMeasurement = {0u}; ///< Cached values per source.
     };
 
-}
+} // namespace Device
 
 #endif // CacheMeasurementRecorder_H_

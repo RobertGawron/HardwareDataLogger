@@ -1,0 +1,5 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "DataProcessingUnit")(type "KiCad")(uri "${KIPRJMOD}/DataProcessingUnit.kicad_sym")(options "")(descr ""))
+  (lib (name "HardwareDataLogger")(type "KiCad")(uri "${KIPRJMOD}/../Library/HardwareDataLogger.kicad_sym")(options "")(descr ""))
+)
