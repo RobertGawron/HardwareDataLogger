@@ -32,12 +32,7 @@ namespace Driver
          */
         explicit UartDriver(UART_HandleTypeDef &uartHandler);
 
-        /**
-         * @brief Deleted default constructor.
-         *
-         * Prevents the creation of a UartDriver instance without specifying a UART handle.
-         */
-        UartDriver() = delete;
+        UartDriver() = delete; ///< Deleted default constructor prevents instantiation without UART handle.
 
         /**
          * @brief Virtual destructor for UartDriver.
@@ -46,16 +41,8 @@ namespace Driver
          */
         ~UartDriver() override = default;
 
-        /**
-         * @brief Deleted copy constructor to prevent copying.
-         */
-        UartDriver(const UartDriver &) = delete;
-
-        /**
-         * @brief Deleted assignment operator to prevent assignment.
-         * @return UartDriver& The assigned object.
-         */
-        UartDriver &operator=(const UartDriver &) = delete;
+        UartDriver(const UartDriver &) = delete; ///< Deleted copy constructor prevents copying.
+        UartDriver &operator=(const UartDriver &) = delete; ///< Deleted assignment operator prevents assignment.
 
         /**
          * @brief Transmits data over UART.
@@ -82,7 +69,12 @@ namespace Driver
         UartExchangeStatus receive(std::uint8_t *data, std::uint16_t size, std::uint32_t timeout) override;
 
     protected:
-           static UartExchangeStatus getExchangeStatus(HAL_StatusTypeDef halStatus);
+        /**
+         * @brief Converts HAL status codes to UartExchangeStatus.
+         * @param halStatus The HAL status code to convert.
+         * @return The corresponding UartExchangeStatus value.
+         */
+        static UartExchangeStatus getExchangeStatus(HAL_StatusTypeDef halStatus);
 
         /**
          * @brief Initializes the UART driver.
@@ -124,7 +116,7 @@ namespace Driver
         bool onReset() override;
 
     private:
-        /**
+        /** 
          * @brief UART handle from STM32 HAL library.
          *
          * This reference is used to interact with the UART peripheral.

@@ -1,5 +1,13 @@
-#include "PlatformFactoryStm32.hpp"
 
+#include "PlatformFactoryStm32.hpp"
+/*#include "PlatformFactoryStm32.hpp"
+#include "stm32f1xx_hal_def.h"
+#include "stm32f1xx_hal_conf.h"
+#include "stm32f1xx.h"
+#include "stm32f1xx_hal_def.h"
+
+// stm32f1xx.h:254
+*/
 #include "Driver/Inc/AmbientLightSensorDriver.hpp"
 #include "Driver/Inc/St7735DisplayBrightnessDriver.hpp"
 #include "Driver/Inc/St7735DisplayDriver.hpp"
@@ -8,13 +16,18 @@
 #include "Driver/Inc/SdCardDriver.hpp"
 #include "Driver/Inc/PulseCounterDriver.hpp"
 
+// #include "stm32f1xx_hal_conf.h"
+#include "stm32f1xx_hal_def.h"
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_uart.h"
 #include "stm32f1xx_hal_adc.h"
 #include "stm32f1xx_hal_tim.h"
 
 // I'm not sure if it should be here.
-extern UART_HandleTypeDef huart3;
+extern UART_HandleTypeDef huart1;
+extern UART_HandleTypeDef huart2;
+extern UART_HandleTypeDef husart3;
+
 extern ADC_HandleTypeDef hadc1;
 extern TIM_HandleTypeDef htim3;
 
@@ -47,9 +60,25 @@ namespace BusinessLogic
 
     Driver::IUartDriver &PlatformFactoryStm32::createUartDriver(const Driver::UartIdentifier id)
     {
-        // TODO
-        static Driver::UartDriver driver{huart3};
-        return driver;
+        // hack
+        static Driver::UartDriver driver1(huart1);
+        static Driver::UartDriver driver2(huart2);
+        static Driver::UartDriver driver3(husart3);
+
+        switch (id)
+        {
+        case Driver::UartIdentifier::MeasurementReceiver:
+            return driver3;
+            break;
+        case Driver::UartIdentifier::DataTransmitterViaUSB:
+            return driver2;
+            break;
+        case Driver::UartIdentifier::DataTransmitterViaWiFi:
+            return driver1;
+            break;
+        }
+
+        return driver1; // tmp
     }
 
     Driver::ISdCardDriver &PlatformFactoryStm32::createSdCardDriver()
@@ -61,7 +90,7 @@ namespace BusinessLogic
     Driver::IPulseCounterDriver &PlatformFactoryStm32::createPulseCounterDriver(const Driver::PulseCounterIdentifier id)
     {
         // TODO
-        static Driver::PulseCounterDriver driver;
+        static Driver::PulseCounterDriver driver(id);
         return driver;
     }
 }

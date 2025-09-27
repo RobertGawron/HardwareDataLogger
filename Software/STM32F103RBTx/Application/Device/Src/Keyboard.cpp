@@ -15,13 +15,19 @@ namespace Device
 
     bool Keyboard::init()
     {
-        const bool status = keyboardDriver.initialize();
-        keyboardDriver.start();
+        bool status = keyboardDriver.initialize();
+
+        if (status)
+        {
+            status = keyboardDriver.start();
+        }
         return status;
     }
 
     bool Keyboard::tick()
     {
+        keyboardDriver.tick();
+        
         for (std::size_t i = 0; i < keyActionState.size(); ++i)
         {
             const auto keyId = static_cast<::Driver::KeyboardKeyIdentifier>(i);

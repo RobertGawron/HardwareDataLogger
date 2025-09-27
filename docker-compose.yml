@@ -14,6 +14,8 @@ services:
       - ./Simulation:/workspace/Simulation
       - ./Test:/workspace/Test
       - ./DevOps/BuildArtifacts:/workspace/build/BuildArtifacts
+      - ./DevOps/Scripts:/workspace/DevOps/Scripts
+      - ./DevOps/Cmake:/workspace/DevOps/Cmake
       - ./CMakeLists.txt:/workspace/CMakeLists.txt
       - /tmp/.X11-unix:/tmp/.X11-unix   # Mount X server socket
     working_dir: /workspace

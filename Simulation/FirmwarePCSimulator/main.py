@@ -1,12 +1,21 @@
+"""
+Main application entry point for the Firmware Simulator.
+
+This module initializes the PyQt6 application, sets up the simulation
+and main window, and starts the application's event loop. It provides
+the foundation for visualizing and interacting with the firmware
+simulation.
+"""
+
 import sys
 from PyQt6.QtWidgets import QApplication
-from main_window import MainWindow
+from HMI.main_window import MainWindow
 from simulation import Simulation
 
 
 def main() -> None:
     """
-    Entry point for the application. Initializes the PyQt application, 
+    Entry point for the application. Initializes the PyQt application,
     sets up the simulation and main window, and starts the event loop.
     """
     app: QApplication = QApplication(sys.argv)

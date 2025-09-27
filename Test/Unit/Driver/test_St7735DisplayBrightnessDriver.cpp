@@ -1,7 +1,9 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "main.h"
-#include "stm32f1xx_hal_tim.h"
+// #include "stm32f1xx_hal_tim.h"
+#include "stm32f1xx_hal.h"
+
 #include "Driver/Inc/St7735DisplayBrightnessDriver.hpp"
 
 using namespace testing;

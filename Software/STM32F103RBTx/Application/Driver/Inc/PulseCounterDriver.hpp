@@ -10,6 +10,12 @@
 
 extern "C"
 {
+    /**
+     * @brief Increments the pulse counter in interrupt handler.
+     * 
+     * This function is called by the hardware interrupt handler when a pulse is detected.
+     * @param counterId Identifier of the pulse counter to increment.
+     */
     void incrementPulseCounter(std::uint8_t counterId);
 }
 
@@ -25,11 +31,17 @@ namespace Driver
     class PulseCounterDriver : public IPulseCounterDriver
     {
     public:
+        /** @brief Number of available pulse counters. */
         static const std::uint8_t PULSE_COUNTER_AMOUNT = 4u;
 
+        /**
+         * @brief Constructs a PulseCounterDriver with a specific device identifier.
+         * @param deviceIdentifier Identifier of the pulse counter device.
+         */
         explicit PulseCounterDriver(PulseCounterIdentifier deviceIdentifier);
 
-        PulseCounterDriver() = delete;
+        PulseCounterDriver() = delete; ///< Deleted default constructor prevents instantiation without identifier.
+
         /**
          * @brief Default destructor for PulseCounterDriver.
          *
@@ -37,18 +49,18 @@ namespace Driver
          */
         ~PulseCounterDriver() override = default;
 
-        /**
-         * @brief Deleted copy constructor to prevent copying.
-         */
-        PulseCounterDriver(const PulseCounterDriver &) = delete;
+        PulseCounterDriver(const PulseCounterDriver &) = delete; ///< Deleted copy constructor prevents copying.
+        PulseCounterDriver &operator=(const PulseCounterDriver &) = delete; ///< Deleted assignment operator prevents assignment.
 
         /**
-         * @brief Deleted assignment operator to prevent assignment.
-         * @return PulseCounterDriver& The assigned object.
+         * @brief Retrieves the current pulse count value.
+         * @return The current pulse count measurement.
          */
-        PulseCounterDriver &operator=(const PulseCounterDriver &) = delete;
-
         IPulseCounterDriver::CounterSizeType getMeasurement() override;
+        
+        /**
+         * @brief Resets the pulse counter to zero.
+         */
         void clearMeasurement() override;
 
         /**
@@ -84,6 +96,7 @@ namespace Driver
         bool onReset() override;
 
     private:
+        /** @brief Reference to the current pulse counter value. */
         CounterSizeType &value;
     };
 }

@@ -42,6 +42,17 @@ protected:
     }
 };
 
+class FailingResetDriver : public Driver::DriverState
+{
+protected:
+    bool onInitialize() override { return true; }
+    bool onStart() override { return true; }
+    bool onStop() override { return true; }
+
+    // Simulate failure
+    bool onReset() override { return false; }
+};
+
 // Test the initialize method
 TEST_F(DriverStateTest, InitializeTest)
 {
@@ -92,4 +103,36 @@ TEST_F(DriverStateTest, StopFailsIfNotRunning)
     driver.initialize();
     EXPECT_FALSE(driver.stop());
     EXPECT_EQ(driver.getState(), Driver::DriverState::State::Initialized);
+}
+
+
+TEST_F(DriverStateTest, IsInStateReflectsCurrentState)
+{
+    // Initially in Reset
+    EXPECT_TRUE(driver.isInState(Driver::DriverState::State::Reset));
+
+    driver.initialize();
+    EXPECT_TRUE(driver.isInState(Driver::DriverState::State::Initialized));
+    EXPECT_FALSE(driver.isInState(Driver::DriverState::State::Reset));
+
+    driver.start();
+    EXPECT_TRUE(driver.isInState(Driver::DriverState::State::Running));
+
+    driver.stop();
+    EXPECT_TRUE(driver.isInState(Driver::DriverState::State::Stop));
+
+    driver.reset();
+    EXPECT_TRUE(driver.isInState(Driver::DriverState::State::Reset));
+}
+
+TEST(DriverStateNegativeTest, ResetFailsWhenOnResetFails)
+{
+    FailingResetDriver driver;
+    driver.initialize();
+    driver.start();
+    driver.stop();
+
+    EXPECT_FALSE(driver.reset());
+    // State should remain unchanged from last successful state
+    EXPECT_EQ(driver.getState(), Driver::DriverState::State::Stop);
 }

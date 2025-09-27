@@ -13,103 +13,71 @@ namespace BusinessLogic
 {
     /**
      * @class HmiFactory
-     * @brief Factory class for creating HMI-related objects.
+     * @brief Concrete factory for creating and managing HMI components.
      *
-     * The HmiFactory class is responsible for creating all Human-Machine Interface (HMI) related components.
-     * It collaborates with the HmiBuilder to construct and provide instances of various components required
-     * for the HMI system. This includes components such as data models, input controllers, view managers,
-     * and platform-specific drivers.
+     * Constructs and initializes all Human-Machine Interface components including:
+     * - Measurement data model
+     * - Display controller
+     * - Brightness regulator
+     * - Input handler
+     * - MUI-based interface implementation
      *
-     * The factory pattern centralizes the creation logic of these components and manages their lifecycle.
-     * This class implements the IHmiFactory interface and provides high-level methods for initializing
-     * and managing the HMI system.
+     * Implements the IHmiFactory interface for system integration.
      */
     class HmiFactory : public IHmiFactory
     {
     public:
         /**
-         * @brief Constructs an HmiFactory instance.
-         *
-         * @param platformFactory Reference to an IPlatformFactory instance used for creating platform-specific
-         *                        components and drivers.
+         * @brief Constructs HmiFactory with required dependencies.
+         * @param reader Measurement data reader for model initialization
+         * @param platformFactory Platform-specific component factory
          */
         explicit HmiFactory(Device::IMeasurementReader &reader, IPlatformFactory &platformFactory);
 
-        /**
-         * @brief Deleted default constructor.
-         *
-         * Prevents the creation of HmiFactory instances without a platformFactory.
-         */
+        /** @brief Deleted default constructor */
         HmiFactory() = delete;
-
-        /**
-         * @brief Default destructor for HmiFactory.
-         */
+        
+        /** @brief Default destructor */
         ~HmiFactory() override = default;
-
-        /**
-         * @brief Deleted copy constructor to prevent copying of HmiFactory.
-         */
+        
+        /** @brief Deleted copy constructor */
         HmiFactory(const HmiFactory &) = delete;
-
-        /**
-         * @brief Deleted assignment operator to prevent assignment of HmiFactory.
-         *
-         * @return Reference to the HmiFactory instance.
-         */
+        
+        /** @brief Deleted copy assignment operator */
         HmiFactory &operator=(const HmiFactory &) = delete;
 
         /**
-         * @brief Initializes the HMI system components.
-         *
-         * This method sets up all necessary components and prepares the HMI system for operation.
-         *
-         * @return true if initialization is successful, false otherwise.
+         * @brief Initializes all HMI components.
+         * @return true if all components initialized successfully, false otherwise
          */
         bool initialize() override;
 
         /**
-         * @brief Starts the HMI system.
-         *
-         * This method begins the operation of the HMI system and its components.
-         *
-         * @return true if the system starts successfully, false otherwise.
+         * @brief Starts HMI system operation.
+         * @return true if system started successfully, false otherwise
          */
         bool start() override;
 
         /**
-         * @brief Provides periodic updates to the HMI system.
-         *
-         * This method is called periodically to update the HMI state.
-         *
-         * @return true if the tick operation is successful, false otherwise.
+         * @brief Processes periodic HMI updates.
+         * @return true if update processed successfully, false otherwise
          */
         bool tick() override;
 
     private:
+        /** @brief Measurement data model for HMI presentation */
         HmiMeasurementModel hmiMeasurementModel;
 
-        /**
-         * @brief Display driver used by the HMI system.
-         */
+        /** @brief Display controller implementation */
         Device::Display display;
 
-        /**
-         * @brief Display brightness regulator for managing screen brightness.
-         */
+        /** @brief Display brightness regulator */
         Device::DisplayBrightnessRegulator brightnessRegulator;
 
-        /**
-         * @brief Keyboard driver used for input in the HMI system.
-         */
+        /** @brief User input handler */
         Device::Keyboard keyboard;
 
-        /**
-         * @brief Instance of HMI implementation using the MUI library.
-         *
-         * Note: While directly exposing the use of the MUI library in the header file is not ideal, it is
-         * necessary here due to design constraints.
-         */
+        /** @brief MUI-based HMI implementation */
         HmiMui hmi;
     };
 }

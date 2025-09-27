@@ -1,0 +1,214 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam classFontSize 12
+skinparam classFontName Courier
+skinparam classBackgroundColor<<MainCpp>> LightGreen
+skinparam classBackgroundColor<<Highlighted>> LightYellow
+
+' GLOBAL FUNCTION POINTERS / CALLBACKS '
+entity "global onSerialTx : OnSerialTxCallback" as globalOnSerialTx
+entity "global onGpioChange : OnGpioChangeCallback" as globalOnGpioChange
+
+
+' ==============================
+' HmiEventHandlers
+' ==============================
+class HmiEventHandlers {
+  + registerOnSerialTx(callback : void(*)(char*)) : void
+  + registerOnGpioChange(callback : OnGpioChangeCallback) : void
+  + serialTx(data : char*) : void
+  + setPinState(gpioId : GPIO_ID, state : bool) : void
+  + serialRx(pData : uint8_t*, Size : uint16_t, Timeout : uint32_t) : HAL_StatusTypeDef
+  --
+  - onSerialTx : OnSerialTxCallback
+  - onGpioChange : OnGpioChangeCallback
+  - uartQueueTx : std::deque<uint8_t>
+}
+
+' ==============================
+' LibWrapper
+' ==============================
+class LibWrapper {
+  + LibWrapper_Init() : void
+  + LibWrapper_Tick() : void
+  + LibWrapper_RegisterOnSerialTx(callback : void(*)(char*)) : void
+  + LibWrapper_RegisterOnGpioChange(callback : void(*)(GPIO_ID, bool)) : void
+  + LibWrapper_OnSerialRx(pData : uint8_t*, Size : uint16_t, Timeout : uint32_t) : HAL_StatusTypeDef
+}
+
+' ==============================
+' Arduino
+' (Mocks/Inc/Arduino.h + Mocks/Src/Arduino.cpp)
+' ==============================
+class Arduino <<Highlighted>> {
+  + pinMode(pin : uint8_t, mode : uint8_t) : void
+  + digitalWrite(pin : uint8_t, val : uint8_t) : void
+  + digitalRead(pin : uint8_t) : int
+  + analogRead(pin : uint8_t) : int
+  + analogReference(mode : uint8_t) : void
+  + analogWrite(pin : uint8_t, val : int) : void
+  + analogWriteMode(pin : uint8_t, val : int, openDrain : bool) : void
+  + analogWriteFreq(freq : uint32_t) : void
+  + analogWriteResolution(res : int) : void
+  + analogWriteRange(range : uint32_t) : void
+  + delay(ms : unsigned long) : void
+  + millis() : unsigned long
+}
+
+' ==============================
+' Print
+' (Base class for printing)
+' ==============================
+class Print <<Highlighted>> {
+  -- Data --
+  - write_error : int
+  -- Key methods --
+  + virtual size_t write(uint8_t) = 0
+  + size_t write(const uint8_t*, size_t)
+  + size_t write(const char*)
+  + size_t printf(const char* format, ...)
+  + size_t println(void)
+  + size_t print(const char*)
+  + size_t print(int, int=DEC)
+  + size_t print(unsigned long long, int=DEC)
+  .. etc. ..
+}
+
+' ==============================
+' HardwareSerial
+' extends Print
+' (Mocks/Inc/HardwareSerial.h + .cpp)
+' ==============================
+class HardwareSerial <<Highlighted>> {
+  -- Constructors/Destructors --
+  + HardwareSerial(uart_nr : int)
+  + ~HardwareSerial()
+  + begin(baud : unsigned long)
+  + begin(baud : unsigned long, config : SerialConfig)
+  + begin(baud : unsigned long, config : SerialConfig, mode : SerialMode)
+  + begin(baud : unsigned long, config : SerialConfig, mode : SerialMode, tx_pin : uint8_t)
+  + end() : void
+  + available() : int
+  + read() : int
+  + write(c : uint8_t) : size_t
+  + write(buffer : uint8_t*, size : size_t) : size_t
+  + flush() : void
+  + isTxEnabled() : bool
+  + isRxEnabled() : bool
+}
+
+HardwareSerial --|> Print
+
+' Show the specific method of interest:
+note right of HardwareSerial::"write(const uint8_t*, size_t)"
+  calls HmiEventHandlers::serialTx((char*)buffer)  
+  which uses globalOnSerialTx
+end note
+
+' ==============================
+' Client (abstract)
+' ==============================
+class Client <<Highlighted>> {
+  <<abstract>>
+  + connect(ip : IPAddress, port : uint16_t) : int
+  + connect(host : char*, port : uint16_t) : int
+  + write(uint8_t) : size_t
+  + write(buf : uint8_t*, size : size_t) : size_t
+  + available() : int
+  + read() : int
+  + stop() : void
+  + connected() : uint8_t
+  + flush() : void
+}
+
+' ==============================
+' ESP8266WiFiClass
+' (extends Client)
+' ==============================
+class ESP8266WiFiClass <<Highlighted>> {
+  + begin(ssid : std::string, pass : std::string) : void
+  + connect(ip : IPAddress, port : uint16_t) : int
+  + connect(host : char*, port : uint16_t) : int
+  + write(uint8_t) : size_t
+  + write(buf : const uint8_t*, size : size_t) : size_t
+  + available() : int
+  + read() : int
+  + stop() : void
+  + connected() : uint8_t
+  + status() : int
+  + localIP() : IPAddress
+  + remoteIP() : IPAddress
+  + localPort() : uint16_t
+  + remotePort() : uint16_t
+}
+ESP8266WiFiClass --|> Client
+
+' ==============================
+' PubSubClient
+' extends Print
+' ==============================
+class PubSubClient <<Highlighted>> {
+  + PubSubClient(client : Client&) : void
+  + PubSubClient(const char*, uint16_t, MQTT_CALLBACK_SIGNATURE, Client&, Stream&)
+  + setServer(ip : IPAddress, port : uint16_t) : PubSubClient&
+  + setCallback(callback : MQTT_CALLBACK_SIGNATURE) : PubSubClient&
+  + connect(id : const char*) : bool
+  + connect(id : const char*, user : const char*, pass : const char*) : bool
+  + publish(topic : const char*, payload : const char*) : bool
+  + subscribe(topic : const char*) : bool
+  + loop() : bool
+  + connected() : bool
+  + state() : int
+}
+PubSubClient --|> Print
+PubSubClient --> Client : "uses client"
+
+' ==============================
+' String
+' ==============================
+class String <<Highlighted>>{
+  + String()
+  + String(const char* cstr)
+  + String(const String& str)
+  + String(String&& rval) noexcept
+  + length() : unsigned int
+  + operator=(const String& rhs) : String&
+  + operator+=(const String& rhs) : String&
+  + charAt(index : unsigned int) : char
+  + c_str() : const char*
+}
+
+' ==============================
+entity "main.cpp" as MainCpp <<MainCpp>> {
+  + setup() : void
+  + loop() : void
+}
+
+' ==============================
+' RELATIONSHIPS
+' ==============================
+' HmiEventHandlers <-> global function pointers
+HmiEventHandlers o-- OnSerialTxCallback : "onSerialTx"
+HmiEventHandlers o-- OnGpioChangeCallback : "onGpioChange"
+
+' LibWrapper calls into HmiEventHandlers
+LibWrapper --> HmiEventHandlers : uses
+LibWrapper --> MainCpp : "calls setup() and loop()"
+
+' Arduino -> HmiEventHandlers::setPinState
+Arduino --> HmiEventHandlers : "digitalWrite() calls setPinState"
+HmiEventHandlers --> globalOnGpioChange : "calls onGpioChange() if set"
+
+' HardwareSerial -> HmiEventHandlers::serialTx
+HardwareSerial --> HmiEventHandlers : "write(...) calls serialTx"
+HmiEventHandlers --> globalOnSerialTx : "calls onSerialTx() if set"
+
+' MainCpp relationships
+MainCpp --> Arduino : "calls"
+MainCpp --> HardwareSerial : "calls"
+MainCpp --> PubSubClient : "calls"
+MainCpp --> ESP8266WiFiClass : "calls"
+
+' Print and String relationship
+Print --> String : "uses"
+@enduml

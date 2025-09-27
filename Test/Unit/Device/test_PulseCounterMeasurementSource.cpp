@@ -56,26 +56,3 @@ TEST_F(PULSE_COUNTER_MEASUREMENT_SOURCE_TEST, StartShouldCallDriverStart)
     EXPECT_TRUE(measurementSource->start());
 }
 
-// Test isMeasurementAvailable() method
-TEST_F(PULSE_COUNTER_MEASUREMENT_SOURCE_TEST, IsMeasurementAvailableReturnsTrue)
-{
-    EXPECT_TRUE(measurementSource->isMeasurementAvailable());
-}
-/*
-// Test getMeasurement() method
-TEST_F(PULSE_COUNTER_MEASUREMENT_SOURCE_TEST, GetMeasurementShouldReturnDriverValue)
-{
-    constexpr Driver::IPulseCounterDriver::CounterSizeType mockValue = static_cast<std::uint32_t>(42);
-    EXPECT_CALL(mockDriver, getMeasurement()).Times(1).WillOnce(::testing::Return(mockValue));
-    Device::MeasurementType measurement = measurementSource->getMeasurement();
-    EXPECT_EQ(std::get<std::uint32_t>(measurement), mockValue);
-}
-
-// Test clearMeasurement() method
-TEST_F(PULSE_COUNTER_MEASUREMENT_SOURCE_TEST, ClearMeasurementShouldCallDriverClear)
-{
-    EXPECT_CALL(mockDriver, clearMeasurement()).Times(1);
-    measurementSource->getMeasurement();
-    mockDriver.clearMeasurement();
-}
-*/

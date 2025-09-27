@@ -35,4 +35,4 @@ main_window.py: Main window of the application.
 
 ## Setup
 
-[Setup Manual](../Documentation/Manuals/SetupFirmwareSimulation.md)
+[Setup Manual](../../Documentation/Manuals/SetupFirmwareSimulation.md)

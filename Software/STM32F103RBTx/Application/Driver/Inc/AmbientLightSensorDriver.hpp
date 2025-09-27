@@ -3,133 +3,116 @@
 
 #include "Driver/Interfaces/IAmbientLightSensorDriver.hpp"
 #include "stm32f1xx_hal.h"
-#include "stm32f1xx_hal_adc.h"
+
 #include <cstdint>
 #include <cstddef>
 
-// declare a buffer to hold ADC values
-constexpr std::size_t AdcBufferSize = 10;
-extern std::uint32_t adcBuffer[AdcBufferSize];
 
 namespace Driver
 {
     /**
-     * @brief AmbientLightSensorDriver class provides functionality to interact with an ambient light sensor.
+     * @class AmbientLightSensorDriver
+     * @brief Provides functionality to interact with an ambient light sensor using ADC and DMA.
      *
-     * This class interfaces with an ADC connected to a voltage divider that includes a resistor and a phototransistor.
-     * The light level readings are dependent on the type of photoelement sensor used, and the resistor value, which was chosen experimentally.
-     * The class also leverages DMA for efficient data acquisition, reducing CPU load.
+     * This class interfaces with an ADC connected to a voltage divider circuit containing
+     * a phototransistor. Light level readings depend on the photoelement sensor characteristics
+     * and resistor values chosen experimentally. The driver uses DMA for efficient data acquisition
+     * to minimize CPU load during continuous light level monitoring.
      */
     class AmbientLightSensorDriver : public IAmbientLightSensorDriver
     {
     public:
         /**
-         * @brief Constructor for AmbientLightSensorDriver.
+         * @brief Constructs an AmbientLightSensorDriver with an ADC handle.
+         * @param hadc Reference to the STM32 HAL ADC handle.
          */
         explicit AmbientLightSensorDriver(ADC_HandleTypeDef &hadc);
 
-        /**
-         * @brief Deleted default constructor.
-         *
-         * Prevents the creation of a AmbientLightSensorDriver instance without specifying a UART handle.
-         */
-        AmbientLightSensorDriver() = delete;
+        AmbientLightSensorDriver() = default; ///< Default constructor.
 
         /**
          * @brief Destructor for AmbientLightSensorDriver.
          */
         ~AmbientLightSensorDriver() override = default;
 
-        /**
-         * @brief Deleted copy constructor to prevent copying.
-         */
-        AmbientLightSensorDriver(const AmbientLightSensorDriver &) = delete;
-
-        /**
-         * @brief Deleted copy assignment operator to prevent assignment.
-         */
-        AmbientLightSensorDriver &operator=(const AmbientLightSensorDriver &) = delete;
+        AmbientLightSensorDriver(const AmbientLightSensorDriver &) = delete; ///< Deleted copy constructor prevents copying.
+        AmbientLightSensorDriver &operator=(const AmbientLightSensorDriver &) = delete; ///< Deleted assignment operator prevents assignment.
 
         /**
          * @brief Retrieves the current ambient light level.
          *
          * This method returns the current ambient light level measured by the sensor.
-         * The range of the returned value is dependent on the hardware configuration and sensor characteristics.
-         *
-         * @return std::uint32_t The current ambient light level.
+         * The value range depends on hardware configuration and sensor characteristics.
+         * @return std::uint16_t The current ambient light level.
          */
-        [[nodiscard]] std::uint32_t getAmbientLightLevel() const override;
+        [[nodiscard]] std::uint16_t getAmbientLightLevel() const override;
 
     protected:
         /**
          * @brief Initializes the Ambient Light Sensor Driver.
          *
-         * This method is called during the initialization phase of the driver. It ensures that the ADC
-         * and DMA are properly configured and ready for use, but it does not start the ADC conversion itself.
-         *
-         * @return true if the initialization is successful, false otherwise.
+         * Configures ADC and DMA but doesn't start conversions. Called during driver initialization.
+         * @return true if initialization succeeds, false otherwise.
          */
         bool onInitialize() override;
 
         /**
-         * @brief Starts the ADC and DMA transfer.
+         * @brief Starts ADC conversions and DMA transfers.
          *
-         * This method begins the ADC conversion process and sets up the DMA to transfer the ADC data to
-         * the buffer. It ensures that the system is ready to acquire ambient light sensor readings continuously.
-         *
-         * @return true if the ADC and DMA start successfully, false otherwise.
+         * Begins continuous ambient light measurements. Called when driver starts.
+         * @return true if ADC/DMA start successfully, false otherwise.
          */
         bool onStart() override;
 
         /**
-         * @brief Stops the ADC and DMA transfer.
+         * @brief Stops ADC conversions and DMA transfers.
          *
-         * This method halts the ADC conversion process and stops the DMA from transferring data. It is used
-         * when the system no longer needs to acquire data from the ambient light sensor.
-         *
-         * @return true if the ADC and DMA stop successfully, false otherwise.
+         * Halts light measurements. Called when driver stops.
+         * @return true if ADC/DMA stop successfully, false otherwise.
          */
         bool onStop() override;
 
         /**
-         * @brief Resets the Ambient Light Sensor Driver.
+         * @brief Resets the driver to initial state.
          *
-         * This method resets the driver, stopping any ongoing ADC and DMA operations and returning the
-         * system to its initial state. It can be used to reinitialize the system or handle error conditions.
-         *
-         * @return true if the reset is successful, false otherwise.
+         * Stops any ongoing operations and resets hardware. Called during driver reset.
+         * @return true if reset succeeds, false otherwise.
          */
         bool onReset() override;
 
         /**
-         * @brief Starts the ADC conversion using DMA for data transfer.
+         * @brief Configures and starts ADC conversion with DMA.
          *
-         * This method configures and starts the ADC in combination with DMA to handle data transfer
-         * efficiently without burdening the CPU. The DMA continuously transfers the ADC conversion results
-         * into a buffer, allowing the system to read the latest ambient light levels.
-         *
-         * @return true if ADC and DMA setup is successful, false otherwise.
+         * Enables efficient data transfer without CPU involvement.
+         * @return true if ADC/DMA start successfully, false otherwise.
          */
         bool startAdcWithDma();
 
         /**
-         * @brief Stops the ADC conversion and DMA transfer.
+         * @brief Stops ADC conversion and DMA transfers.
          *
-         * This method stops the ongoing ADC conversions and halts the DMA transfer process. It is typically
-         * used when the ambient light measurements are no longer needed, or before resetting or shutting down
-         * the system.
-         *
-         * @return true if the ADC and DMA stop successfully, false otherwise.
+         * Halts all data acquisition. Typically called before shutdown or reset.
+         * @return true if ADC/DMA stop successfully, false otherwise.
          */
         bool stopAdcWithDma();
 
     private:
-        /**
-         * @brief ADC handle from STM32 HAL library.
+        /** 
+         * @brief Reference to STM32 HAL ADC handle.
          *
-         * This reference is used to interact with the UART peripheral.
+         * Used to configure and control the ADC peripheral.
          */
         ADC_HandleTypeDef &hadc;
+
+        /**
+ * @brief Size of the ADC buffer for light level measurements.
+ */
+static constexpr std::size_t AdcBufferSize = 10;
+
+/**
+ * @brief Buffer storing raw ADC values for ambient light measurements.
+ */
+ std::uint16_t adcBuffer[AdcBufferSize];
     };
 
 }

@@ -8,6 +8,12 @@
 
 # Building and Running Firmware PC Simulation
 
+When running docker container on Linux machine, allow docker to create windows
+
+```
+xhost +local:docker
+```
+
 ### Build the Firmware (PC Variant)
 
 ```
@@ -17,16 +23,16 @@ cd /workspace/build/ && cmake .. && make -j24
 ### Start the Simulation
 
 ```
-cd /workspace/Simulation/FirmwarePCSimulator/ && python3 main.py
-```
+cd /workspace/build/ && cmake .. && make -j24 && cd /workspace/Simulation/FirmwarePCSimulator/ && /workspace/venv/bin/python3 main.py
+ ```
 
 ### All-in-One Command
 
 ```
-cd /workspace/build/ && cmake .. && make -j24 && cd /workspace/Simulation/FirmwarePCSimulator/ && python3 main.py
+cd /workspace/build/ && cmake .. && make -j24 &&  cd /workspace/build/ && cmake .. && make -j24 && cd /workspace/Simulation/FirmwarePCSimulator/ && /workspace/venv/bin/python3 main.py
 ```
 
-### Troubleshooting tunneling GUI to host enviroment
+### Troubleshooting tunneling GUI to host environment
 
 The simulation is a desktop application that runs in Docker. Docker needs to be configured to display the simulation window. To test this, you can temporarily install some X11 applications and run them:
 
