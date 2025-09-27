@@ -1,6 +1,9 @@
-ClassDiagram/
-CodeCoverage/
-DocsCoverage/
-PythonStaticAnalysis/
-StaticAnalysis/ 
-StaticAnalysisIntermediary/
+# Ignore everything
+*
+
+# Allow directory traversal
+!*/
+
+# Keep essential files
+!.gitignore
+!README.md

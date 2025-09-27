@@ -6,8 +6,8 @@
 #ifndef SdCardMeasurementRecorder_H_
 #define SdCardMeasurementRecorder_H_
 
-#include "Device/Interfaces/IMeasurementRecorder.hpp"
-#include "Driver/Interfaces/ISdCardDriver.hpp"
+#include "Device/Interface/IMeasurementRecorder.hpp"
+#include "Driver/Interface/ISdCardDriver.hpp"
 
 namespace Device
 {
@@ -49,7 +49,7 @@ namespace Device
          */
         SdCardMeasurementRecorder &operator=(const SdCardMeasurementRecorder &) = delete;
 
-            /**
+        /**
          * @brief Flushes any remaining data to the SD card.
          *
          * This method ensures that any remaining buffered data is written to the SD card.

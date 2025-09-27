@@ -1,7 +1,7 @@
-#include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
+#include "BusinessLogic/Interface/IPlatformFactory.hpp"
 #include "BusinessLogic/Inc/ApplicationBuilder.hpp"
-#include "Driver/Inc/PulseCounterIdentifier.hpp"
-#include "Driver/Inc/UartIdentifier.hpp"
+#include "Driver/Interface/PulseCounterIdentifier.hpp"
+#include "Driver/Interface/UartIdentifier.hpp"
 
 namespace BusinessLogic
 {
@@ -25,21 +25,16 @@ namespace BusinessLogic
     bool ApplicationBuilder::initialize()
     {
         // can we recover from fault at any place here? I dont know.
-        bool status = false;
 
         // clang-format off
-                if ( sourceBuilder.initialize()
-                    && storesBuilder.initialize()
-                    && dataStore.initialize()
-                    && measurementCoordinator.initialize()
-                    && hmiFactory.initialize())
+        const bool status = sourceBuilder.initialize()
+                            && storesBuilder.initialize()
+                            && dataStore.initialize()
+                            && measurementCoordinator.initialize()
+                            && hmiFactory.initialize()
+                            && sourceBuilder.registerSources(measurementCoordinator)
+                            && storesBuilder.registerStores(dataStore);
         // clang-format on
-        {
-            status = true;
-        }
-
-        sourceBuilder.registerSources(measurementCoordinator);
-        storesBuilder.registerStores(dataStore);
 
         //  storesBuilder.registerStoresToHmi(hmiFactory);
 
@@ -49,15 +44,7 @@ namespace BusinessLogic
     bool ApplicationBuilder::start()
     {
         // can we recover from fault at any place here? I dont know.
-        bool status = false;
-
-        // clang-format off
-        if (/*measurementCoordinator.start()
-            &&*/ hmiFactory.start())
-        // clang-format on
-        {
-            status = true;
-        }
+        bool status = hmiFactory.start();
 
         return status;
     }

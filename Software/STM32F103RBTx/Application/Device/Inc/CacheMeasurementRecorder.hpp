@@ -1,8 +1,8 @@
 #ifndef CacheMeasurementRecorder_H_
 #define CacheMeasurementRecorder_H_
 
-#include "Device/Interfaces/IMeasurementRecorder.hpp"
-#include "Device/Interfaces/IMeasurementReader.hpp"
+#include "Device/Interface/IMeasurementRecorder.hpp"
+#include "Device/Interface/IMeasurementReader.hpp"
 #include "Device/Inc/MeasurementDeviceId.hpp"
 
 #include <array>
@@ -20,10 +20,10 @@ namespace Device
     class CacheMeasurementRecorder : public IMeasurementRecorder, public IMeasurementReader
     {
     public:
-        CacheMeasurementRecorder() = default;                             ///< Default constructor.
-        ~CacheMeasurementRecorder() override = default;                   ///< Default destructor.
+        CacheMeasurementRecorder() = default;           ///< Default constructor.
+        ~CacheMeasurementRecorder() override = default; ///< Default destructor.
 
-        CacheMeasurementRecorder(const CacheMeasurementRecorder &) = delete;          ///< Deleted copy constructor.
+        CacheMeasurementRecorder(const CacheMeasurementRecorder &) = delete;            ///< Deleted copy constructor.
         CacheMeasurementRecorder &operator=(const CacheMeasurementRecorder &) = delete; ///< Deleted assignment operator.
 
         /**
