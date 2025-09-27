@@ -1,6 +1,6 @@
 services:
   dev:
-    image:  logger-dev:latest 
+    image: ${DOCKER_IMAGE:-logger-dev:latest}  # Use env var or fallback to local build
     build:
       context: .
       dockerfile: DevOps/Dockerfile
@@ -12,7 +12,7 @@ services:
     volumes:
       - ./Software:/workspace/Software
       - ./Simulation:/workspace/Simulation
-      - ./Test:/workspace/Test
+      - ./IntegrationTest:/workspace/IntegrationTest
       - ./DevOps/BuildArtifacts:/workspace/build/BuildArtifacts
       - ./DevOps/Scripts:/workspace/DevOps/Scripts
       - ./DevOps/Cmake:/workspace/DevOps/Cmake

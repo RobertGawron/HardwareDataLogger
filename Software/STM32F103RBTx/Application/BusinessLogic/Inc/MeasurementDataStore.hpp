@@ -7,8 +7,8 @@
 #ifndef MeasurementDataStore_H_
 #define MeasurementDataStore_H_
 
-#include "BusinessLogic/Interfaces/IMeasurementDataStore.hpp"
-#include "Device/Interfaces/IMeasurementRecorder.hpp"
+#include "BusinessLogic/Interface/IMeasurementDataStore.hpp"
+#include "Device/Interface/IMeasurementRecorder.hpp"
 #include "Device/Inc/MeasurementType.hpp"
 
 #include <cstdint>

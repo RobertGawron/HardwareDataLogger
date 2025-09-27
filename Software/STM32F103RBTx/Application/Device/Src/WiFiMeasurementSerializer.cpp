@@ -1,6 +1,6 @@
 #include "Device/Inc/WiFiMeasurementSerializer.hpp"
 #include "Device/Inc/MeasurementType.hpp"
-#include "Crc32.hpp"
+#include "Device/Inc/Crc32.hpp"
 
 #include <cstring>
 #include <variant>

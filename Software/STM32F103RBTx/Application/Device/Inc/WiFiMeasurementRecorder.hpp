@@ -7,9 +7,9 @@
 #ifndef WiFiMeasurementRecorder_H_
 #define WiFiMeasurementRecorder_H_
 
-#include "Device/Interfaces/IMeasurementRecorder.hpp"
+#include "Device/Interface/IMeasurementRecorder.hpp"
 #include "Device/Inc/WiFiMeasurementSerializer.hpp"
-#include "Driver/Interfaces/IUartDriver.hpp"
+#include "Driver/Interface/IUartDriver.hpp"
 
 #include <array>
 
