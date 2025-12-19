@@ -1,0 +1,23 @@
+[target.xtensa-esp32-none-elf]
+# runner = "espflash --monitor"
+runner = "wokwi-server --chip esp32"
+rustflags = [
+
+  "-C", "link-arg=-nostartfiles",
+  "-C", "link-arg=-Wl,-T,linkall.x",
+]
+
+[target.xtensa-esp8266-none-elf]
+# runner = "espflash --monitor"
+runner = "wokwi-server --chip esp8266"
+rustflags = [
+  "-C", "link-arg=-nostartfiles",
+  "-C", "link-arg=-Wl,-Tlink.x",
+]
+
+[build]
+target = "xtensa-esp8266-none-elf"
+
+
+[unstable]
+build-std = ["core"]
