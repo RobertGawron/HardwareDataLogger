@@ -1,17 +1,19 @@
+#include "BusinessLogic/Interfaces/IMeasurementDataStore.hpp"
 #include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
-#include "BusinessLogic/Inc/MeasurementDataStore.hpp"
+#include "Device/Interfaces/IMeasurementRecorder.hpp"
 #include "Device/Interfaces/IMeasurementSource.hpp"
+#include "Device/Inc/MeasurementDeviceId.hpp"
+#include "Device/Inc/MeasurementType.hpp"
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <cstdint>
-#include <variant>
+#include <memory>
 
-// Mock class for Device::IMeasurementSource
+// --- Mocks ---
+
 class MockMeasurementSource : public Device::IMeasurementSource
 {
 public:
-    explicit MockMeasurementSource(Device::MeasurementDeviceId id)
-        : IMeasurementSource(id) {}
+    explicit MockMeasurementSource(Device::MeasurementDeviceId id) : IMeasurementSource(id) {}
 
     MOCK_METHOD(bool, initialize, (), (override));
     MOCK_METHOD(bool, start, (), (override));
@@ -20,7 +22,6 @@ public:
     MOCK_METHOD(bool, stop, (), (override));
 };
 
-// Mock class for BusinessLogic::MeasurementDataStore
 class MockMeasurementDataStore : public BusinessLogic::IMeasurementDataStore
 {
 public:
@@ -31,92 +32,96 @@ public:
     MOCK_METHOD(bool, start, (), (override));
 };
 
-// Test Fixture for MeasurementCoordinator
+// --- Test Fixture ---
+
 class MeasurementCoordinatorTest : public ::testing::Test
 {
-protected:
+private:
+    // Private fields
+    std::unique_ptr<BusinessLogic::MeasurementCoordinator> coordinator;
     MockMeasurementDataStore mockStorage;
     MockMeasurementSource mockSource1{Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_1};
     MockMeasurementSource mockSource2{Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_2};
-    BusinessLogic::MeasurementCoordinator *coordinator;
 
+protected:
     void SetUp() override
     {
-        coordinator = new BusinessLogic::MeasurementCoordinator(mockStorage);
+        coordinator = std::make_unique<BusinessLogic::MeasurementCoordinator>(mockStorage);
     }
 
-    void TearDown() override
-    {
-        delete coordinator;
-    }
+public:
+    // Public Getters
+    BusinessLogic::MeasurementCoordinator &getCoordinator() { return *coordinator; }
+    MockMeasurementDataStore &getMockStorage() { return mockStorage; }
+    MockMeasurementSource &getMockSource1() { return mockSource1; }
+    MockMeasurementSource &getMockSource2() { return mockSource2; }
 };
 
-// Test initialize() method
+// --- Test Cases ---
+
 TEST_F(MeasurementCoordinatorTest, InitializeShouldCallInitializeAndStartOnAllObservers)
 {
-    EXPECT_CALL(mockSource1, initialize()).WillOnce(::testing::Return(true));
-    EXPECT_CALL(mockSource1, start()).WillOnce(::testing::Return(true));
-    EXPECT_CALL(mockSource2, initialize()).WillOnce(::testing::Return(true));
-    EXPECT_CALL(mockSource2, start()).WillOnce(::testing::Return(true));
+    EXPECT_CALL(getMockSource1(), initialize()).WillOnce(::testing::Return(true));
+    EXPECT_CALL(getMockSource1(), start()).WillOnce(::testing::Return(true));
+    EXPECT_CALL(getMockSource2(), initialize()).WillOnce(::testing::Return(true));
+    EXPECT_CALL(getMockSource2(), start()).WillOnce(::testing::Return(true));
 
-    coordinator->addObserver(mockSource1);
-    coordinator->addObserver(mockSource2);
+    getCoordinator().addObserver(getMockSource1());
+    getCoordinator().addObserver(getMockSource2());
 
-    EXPECT_TRUE(coordinator->initialize());
+    EXPECT_TRUE(getCoordinator().initialize());
 }
 
-// Test tick() method
 TEST_F(MeasurementCoordinatorTest, TickShouldUpdateMeasurements)
 {
-    EXPECT_CALL(mockSource1, isMeasurementAvailable()).WillOnce(::testing::Return(true));
-    EXPECT_CALL(mockSource1, getMeasurement()).WillOnce(::testing::Return(Device::MeasurementType{}));
-    EXPECT_CALL(mockStorage, notifyObservers(::testing::_)).Times(1);
+    // Arrange
+    EXPECT_CALL(getMockSource1(), isMeasurementAvailable()).WillOnce(::testing::Return(true));
+    EXPECT_CALL(getMockSource1(), getMeasurement()).WillOnce(::testing::Return(Device::MeasurementType{}));
+    EXPECT_CALL(getMockStorage(), notifyObservers(::testing::_))
+        .Times(1)
+        .WillOnce(::testing::Return(true));
 
-    EXPECT_CALL(mockSource2, isMeasurementAvailable()).WillOnce(::testing::Return(false));
-    EXPECT_CALL(mockSource2, getMeasurement()).Times(0);
+    EXPECT_CALL(getMockSource2(), isMeasurementAvailable()).WillOnce(::testing::Return(false));
+    EXPECT_CALL(getMockSource2(), getMeasurement()).Times(0);
 
-    coordinator->addObserver(mockSource1);
-    coordinator->addObserver(mockSource2);
+    // Act
+    getCoordinator().addObserver(getMockSource1());
+    getCoordinator().addObserver(getMockSource2());
 
-    EXPECT_TRUE(coordinator->tick());
+    // Assert
+    EXPECT_TRUE(getCoordinator().tick());
 }
 
-// Test tick() when no observers are present
 TEST_F(MeasurementCoordinatorTest, TickSucceedsWithNoObservers)
 {
-    EXPECT_TRUE(coordinator->tick());
+    EXPECT_TRUE(getCoordinator().tick());
 }
 
-// Test addObserver() method
 TEST_F(MeasurementCoordinatorTest, AddObserverShouldAddObserversSuccessfully)
 {
-    EXPECT_TRUE(coordinator->addObserver(mockSource1));
-    EXPECT_TRUE(coordinator->addObserver(mockSource2));
+    EXPECT_TRUE(getCoordinator().addObserver(getMockSource1()));
+    EXPECT_TRUE(getCoordinator().addObserver(getMockSource2()));
 }
 
-// Test removeObserver() method
 TEST_F(MeasurementCoordinatorTest, RemoveObserverShouldRemoveObserversSuccessfully)
 {
-    coordinator->addObserver(mockSource1);
-    EXPECT_TRUE(coordinator->removeObserver(mockSource1));
+    getCoordinator().addObserver(getMockSource1());
+    EXPECT_TRUE(getCoordinator().removeObserver(getMockSource1()));
 }
 
-// Test removeObserver() with non-existent observer
 TEST_F(MeasurementCoordinatorTest, RemoveObserverFailsForNonExistentObserver)
 {
-    EXPECT_FALSE(coordinator->removeObserver(mockSource1));
+    EXPECT_FALSE(getCoordinator().removeObserver(getMockSource1()));
 }
 
-// Test initialize() failure when one observer fails to initialize
 TEST_F(MeasurementCoordinatorTest, InitializeFailsIfAnyObserverFailsToInitialize)
 {
-    EXPECT_CALL(mockSource1, initialize()).WillOnce(::testing::Return(false));
-    EXPECT_CALL(mockSource1, start()).Times(0);
-    EXPECT_CALL(mockSource2, initialize()).Times(0);
-    EXPECT_CALL(mockSource2, start()).Times(0);
+    EXPECT_CALL(getMockSource1(), initialize()).WillOnce(::testing::Return(false));
+    EXPECT_CALL(getMockSource1(), start()).Times(0);
+    EXPECT_CALL(getMockSource2(), initialize()).Times(0);
 
-    coordinator->addObserver(mockSource1);
-    coordinator->addObserver(mockSource2);
+    getCoordinator().addObserver(getMockSource1());
+    getCoordinator().addObserver(getMockSource2());
 
-    EXPECT_FALSE(coordinator->initialize());
+    EXPECT_FALSE(getCoordinator().initialize());
 }

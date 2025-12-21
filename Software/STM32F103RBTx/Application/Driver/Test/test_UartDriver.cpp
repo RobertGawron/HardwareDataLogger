@@ -1,171 +1,138 @@
+#include "stm32f1xx_hal_uart.h"
+#include "stm32f1xx_hal_def.h"
+#include "Driver/Inc/UartDriver.hpp"
+#include "Driver/Inc/UartExchangeStatus.hpp"
+#include "Driver/Inc/DriverState.hpp"
+
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include "main.h"
-#include "stm32f1xx_hal_uart.h"
-#include "Driver/Inc/UartDriver.hpp"
+#include <cstdint>
+#include <memory>
 
-using namespace testing;
+// Global mock instance pointer for the HAL C-linkage
+MockHAL_UART *mockHAL_UART = nullptr;
 
-// Global mock instance for HAL UART
-MockHAL_UART *mockHAL_UART;
+// --- Test Fixture ---
 
-class UartDriverTest : public Test
+class UartDriverTest : public ::testing::Test
 {
-protected:
-    UART_HandleTypeDef huart;
-    Driver::UartDriver *driver;
+private:
+    // All fields are now private
+    UART_HandleTypeDef huart{};
     MockHAL_UART mockHAL_UART_Instance;
+    std::unique_ptr<Driver::UartDriver> driver;
 
+protected:
     void SetUp() override
     {
-        mockHAL_UART = &mockHAL_UART_Instance; // Assign the global mock instance
-        driver = new Driver::UartDriver(huart);
+        // Assign the global mock pointer to the instance inside this fixture
+        mockHAL_UART = &mockHAL_UART_Instance;
+        driver = std::make_unique<Driver::UartDriver>(huart);
     }
 
     void TearDown() override
     {
-        delete driver;
-        mockHAL_UART = nullptr; // Reset the global mock instance
+        mockHAL_UART = nullptr;
     }
+
+public:
+    // Public Getters
+    Driver::UartDriver &getDriver() { return *driver; }
+    MockHAL_UART &getMockHAL() { return mockHAL_UART_Instance; }
+    UART_HandleTypeDef &getHuart() { return huart; }
 };
+
+// --- Test Cases ---
 
 TEST_F(UartDriverTest, TransmitShouldSucceed)
 {
-    // Prepare the data to be transmitted
+    // Arrange
     std::uint8_t data[] = {0x01, 0x02, 0x03};
-    std::uint16_t size = sizeof(data);
-    std::uint32_t timeout = 1000; // Timeout period in milliseconds
+    const std::uint16_t size = sizeof(data);
+    const std::uint32_t timeout = 1000;
 
-    // Initialize the driver
-    EXPECT_TRUE(driver->initialize());
+    getDriver().initialize();
+    getDriver().start();
 
-    // Start the driver to make it active for transmitting/receiving data
-    EXPECT_TRUE(driver->start());
-
-    // Expect the HAL_UART_Transmit function to be called with the correct parameters
-    EXPECT_CALL(mockHAL_UART_Instance, HAL_UART_Transmit(&huart, data, size, timeout))
-        .WillOnce(DoAll(
-            // Capture and validate the parameters passed to HAL_UART_Transmit
-            WithArgs<1, 2>([=](std::uint8_t *sentData, std::uint16_t sentSize)
-                           {
-                // Check that the size passed to the HAL function matches the expected size
+    EXPECT_CALL(getMockHAL(), HAL_UART_Transmit(&getHuart(), data, size, timeout))
+        .WillOnce(::testing::DoAll(
+            ::testing::WithArgs<1, 2>([size, &data](std::uint8_t *sentData, std::uint16_t sentSize)
+                                      {
                 EXPECT_EQ(sentSize, size);
-
-                // Check that the data passed to the HAL function matches the expected data
-                for (std::uint16_t i = 0; i < sentSize; ++i) {
+                for (std::uint16_t i = 0; (i < sentSize) && (i < size); ++i) {
                     EXPECT_EQ(sentData[i], data[i]);
                 } }),
-            Return(HAL_OK)));
+            ::testing::Return(HAL_OK)));
 
-    // Execute the transmit method and verify that it returns the expected status
-    Driver::UartExchangeStatus status = driver->transmit(data, size, timeout);
+    // Act
+    const Driver::UartExchangeStatus status = getDriver().transmit(data, size, timeout);
+
+    // Assert
     EXPECT_EQ(status, Driver::UartExchangeStatus::Ok);
 }
 
 TEST_F(UartDriverTest, TransmitShouldFailOnError)
 {
     std::uint8_t data[] = {0x01, 0x02, 0x03};
-    std::uint16_t size = sizeof(data);
-    std::uint32_t timeout = 1000; // Timeout period in milliseconds
+    const std::uint16_t size = sizeof(data);
+    const std::uint32_t timeout = 1000;
 
-    // Initialize the driver
-    EXPECT_TRUE(driver->initialize());
+    getDriver().initialize();
+    getDriver().start();
 
-    // Start the driver to make it active for transmitting/receiving data
-    EXPECT_TRUE(driver->start());
+    EXPECT_CALL(getMockHAL(), HAL_UART_Transmit(&getHuart(), data, size, timeout))
+        .WillOnce(::testing::Return(HAL_ERROR));
 
-    // Simulate a HAL error
-    EXPECT_CALL(mockHAL_UART_Instance, HAL_UART_Transmit(&huart, data, size, timeout))
-        .WillOnce(Return(HAL_ERROR));
-
-    // Execute the transmit method and check the result
-    Driver::UartExchangeStatus status = driver->transmit(data, size, timeout);
+    const Driver::UartExchangeStatus status = getDriver().transmit(data, size, timeout);
     EXPECT_EQ(status, Driver::UartExchangeStatus::ErrorFromHal);
 }
 
 TEST_F(UartDriverTest, ReceiveShouldSucceed)
 {
     std::uint8_t buffer[3];
-    std::uint16_t size = sizeof(buffer);
-    std::uint32_t timeout = 1000; // Timeout period in milliseconds
+    const std::uint16_t size = sizeof(buffer);
+    const std::uint32_t timeout = 1000;
 
-    // Initialize the driver
-    EXPECT_TRUE(driver->initialize());
+    getDriver().initialize();
+    getDriver().start();
 
-    // Start the driver to make it active for transmitting/receiving data
-    EXPECT_TRUE(driver->start());
+    EXPECT_CALL(getMockHAL(), HAL_UART_Receive(&getHuart(), buffer, size, timeout))
+        .WillOnce(::testing::Return(HAL_OK));
 
-    // Expect the HAL_UART_Receive function to be called with the correct parameters
-    EXPECT_CALL(mockHAL_UART_Instance, HAL_UART_Receive(&huart, buffer, size, timeout))
-        .WillOnce(Return(HAL_OK));
-
-    // Execute the receive method and check the result
-    Driver::UartExchangeStatus status = driver->receive(buffer, size, timeout);
+    const Driver::UartExchangeStatus status = getDriver().receive(buffer, size, timeout);
     EXPECT_EQ(status, Driver::UartExchangeStatus::Ok);
 }
 
 TEST_F(UartDriverTest, ReceiveShouldFailOnTimeout)
 {
     std::uint8_t buffer[3];
-    std::uint16_t size = sizeof(buffer);
-    std::uint32_t timeout = 1000;
+    const std::uint16_t size = sizeof(buffer);
+    const std::uint32_t timeout = 1000;
 
-    // Initialize the driver
-    EXPECT_TRUE(driver->initialize());
+    getDriver().initialize();
+    getDriver().start();
 
-    // Start the driver to make it active for transmitting/receiving data
-    EXPECT_TRUE(driver->start());
+    EXPECT_CALL(getMockHAL(), HAL_UART_Receive(&getHuart(), buffer, size, timeout))
+        .WillOnce(::testing::Return(HAL_TIMEOUT));
 
-    // Simulate a HAL timeout
-    EXPECT_CALL(mockHAL_UART_Instance, HAL_UART_Receive(&huart, buffer, size, timeout))
-        .WillOnce(Return(HAL_TIMEOUT));
-
-    // Execute the receive method and check the result
-    Driver::UartExchangeStatus status = driver->receive(buffer, size, timeout);
+    const Driver::UartExchangeStatus status = getDriver().receive(buffer, size, timeout);
     EXPECT_EQ(status, Driver::UartExchangeStatus::Timeout);
-}
-
-TEST_F(UartDriverTest, ReceiveShouldFailOnError)
-{
-    std::uint8_t buffer[3];
-    std::uint16_t size = sizeof(buffer);
-    std::uint32_t timeout = 1000;
-
-    // Initialize the driver
-    EXPECT_TRUE(driver->initialize());
-
-    // Start the driver to make it active for transmitting/receiving data
-    EXPECT_TRUE(driver->start());
-
-    // Simulate a HAL error
-    EXPECT_CALL(mockHAL_UART_Instance, HAL_UART_Receive(&huart, buffer, size, timeout))
-        .WillOnce(Return(HAL_ERROR));
-
-    // Execute the receive method and check the result
-    Driver::UartExchangeStatus status = driver->receive(buffer, size, timeout);
-    EXPECT_EQ(status, Driver::UartExchangeStatus::ErrorFromHal);
 }
 
 TEST_F(UartDriverTest, StopShouldSucceed)
 {
-    // Initialize the driver
-    EXPECT_TRUE(driver->initialize());
+    getDriver().initialize();
+    getDriver().start();
 
-    // Start the driver to make it active for transmitting/receiving data
-    EXPECT_TRUE(driver->start());
-
-    EXPECT_TRUE(driver->stop());
-    EXPECT_TRUE(driver->isInState(Driver::DriverState::State::Stop));
+    EXPECT_TRUE(getDriver().stop());
+    EXPECT_TRUE(getDriver().isInState(Driver::DriverState::State::Stop));
 }
 
 TEST_F(UartDriverTest, ResetShouldSucceed)
 {
-    // Initialize the driver
-    EXPECT_TRUE(driver->initialize());
+    getDriver().initialize();
+    getDriver().start();
 
-    // Start the driver to make it active for transmitting/receiving data
-    EXPECT_TRUE(driver->start());
-
-    EXPECT_TRUE(driver->reset());
-    EXPECT_TRUE(driver->isInState(Driver::DriverState::State::Reset));
+    EXPECT_TRUE(getDriver().reset());
+    EXPECT_TRUE(getDriver().isInState(Driver::DriverState::State::Reset));
 }

@@ -1,12 +1,17 @@
 #include "Device/Inc/WiFiMeasurementRecorder.hpp"
+#include "Device/Inc/MeasurementDeviceId.hpp"
+#include "Device/Inc/MeasurementType.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
 #include "Driver/Inc/UartExchangeStatus.hpp"
+
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <memory>
 #include <cstdint>
 #include <cstring>
 
-// Mock for IUartDriver
+// --- Mocks ---
+
 class MockUartDriver : public Driver::IUartDriver
 {
 public:
@@ -18,90 +23,93 @@ public:
     MOCK_METHOD(Driver::UartExchangeStatus, receive, (std::uint8_t *data, std::uint16_t size, std::uint32_t timeout), (override));
 };
 
+// --- Test Fixture ---
+
 class WiFiMeasurementRecorderTest : public ::testing::Test
 {
-protected:
+private:
+    // Fields are now private
     MockUartDriver mockDriver;
-    Device::WiFiMeasurementRecorder *recorder;
+    std::unique_ptr<Device::WiFiMeasurementRecorder> recorder;
 
+protected:
     void SetUp() override
     {
-        recorder = new Device::WiFiMeasurementRecorder(mockDriver);
+        recorder = std::make_unique<Device::WiFiMeasurementRecorder>(mockDriver);
     }
 
-    void TearDown() override
-    {
-        delete recorder;
-    }
+public:
+    // Public getters
+    MockUartDriver &getMockDriver() { return mockDriver; }
+    Device::WiFiMeasurementRecorder &getRecorder() { return *recorder; }
 };
 
-// Test onInitialize()
+// --- Test Cases ---
+
 TEST_F(WiFiMeasurementRecorderTest, OnInitializeCallsDriverInitialize)
 {
-    EXPECT_CALL(mockDriver, onInitialize()).WillOnce(::testing::Return(true));
-    EXPECT_TRUE(recorder->initialize());
+    EXPECT_CALL(getMockDriver(), onInitialize()).WillOnce(::testing::Return(true));
+    EXPECT_TRUE(getRecorder().initialize());
 }
 
 TEST_F(WiFiMeasurementRecorderTest, OnInitializeFailsIfDriverInitializeFails)
 {
-    EXPECT_CALL(mockDriver, onInitialize()).WillOnce(::testing::Return(false));
-    EXPECT_FALSE(recorder->initialize());
+    EXPECT_CALL(getMockDriver(), onInitialize()).WillOnce(::testing::Return(false));
+    EXPECT_FALSE(getRecorder().initialize());
 }
 
-// Test onStart()
 TEST_F(WiFiMeasurementRecorderTest, OnStartCallsDriverStart)
 {
-    EXPECT_CALL(mockDriver, onInitialize()).WillOnce(::testing::Return(true));
-    EXPECT_TRUE(recorder->initialize());
+    EXPECT_CALL(getMockDriver(), onInitialize()).WillOnce(::testing::Return(true));
+    getRecorder().initialize();
 
-    EXPECT_CALL(mockDriver, onStart()).WillOnce(::testing::Return(true));
-    EXPECT_TRUE(recorder->start());
+    EXPECT_CALL(getMockDriver(), onStart()).WillOnce(::testing::Return(true));
+    EXPECT_TRUE(getRecorder().start());
 }
 
 TEST_F(WiFiMeasurementRecorderTest, OnStartFailsIfDriverStartFails)
 {
-    EXPECT_CALL(mockDriver, onInitialize()).WillOnce(::testing::Return(true));
-    EXPECT_TRUE(recorder->initialize());
+    EXPECT_CALL(getMockDriver(), onInitialize()).WillOnce(::testing::Return(true));
+    getRecorder().initialize();
 
-    EXPECT_CALL(mockDriver, onStart()).WillOnce(::testing::Return(false));
-    EXPECT_FALSE(recorder->start());
+    EXPECT_CALL(getMockDriver(), onStart()).WillOnce(::testing::Return(false));
+    EXPECT_FALSE(getRecorder().start());
 }
 
-// Test onStop()
 TEST_F(WiFiMeasurementRecorderTest, OnStopCallsDriverStop)
 {
-    EXPECT_CALL(mockDriver, onInitialize()).WillOnce(::testing::Return(true));
-    EXPECT_TRUE(recorder->initialize());
+    EXPECT_CALL(getMockDriver(), onInitialize()).WillOnce(::testing::Return(true));
+    getRecorder().initialize();
 
-    EXPECT_CALL(mockDriver, onStart()).WillOnce(::testing::Return(true));
-    EXPECT_TRUE(recorder->start());
+    EXPECT_CALL(getMockDriver(), onStart()).WillOnce(::testing::Return(true));
+    getRecorder().start();
 
-    EXPECT_CALL(mockDriver, onStop()).WillOnce(::testing::Return(true));
-    EXPECT_TRUE(recorder->stop());
+    EXPECT_CALL(getMockDriver(), onStop()).WillOnce(::testing::Return(true));
+    EXPECT_TRUE(getRecorder().stop());
 }
 
 TEST_F(WiFiMeasurementRecorderTest, OnStopFailsIfDriverStopFails)
 {
-    EXPECT_CALL(mockDriver, onInitialize()).WillOnce(::testing::Return(true));
-    EXPECT_TRUE(recorder->initialize());
+    EXPECT_CALL(getMockDriver(), onInitialize()).WillOnce(::testing::Return(true));
+    getRecorder().initialize();
 
-    EXPECT_CALL(mockDriver, onStart()).WillOnce(::testing::Return(true));
-    EXPECT_TRUE(recorder->start());
+    EXPECT_CALL(getMockDriver(), onStart()).WillOnce(::testing::Return(true));
+    getRecorder().start();
 
-    EXPECT_CALL(mockDriver, onStop()).WillOnce(::testing::Return(false));
-    EXPECT_FALSE(recorder->stop());
+    EXPECT_CALL(getMockDriver(), onStop()).WillOnce(::testing::Return(false));
+    EXPECT_FALSE(getRecorder().stop());
 }
 
 TEST_F(WiFiMeasurementRecorderTest, OnResetReturnsTrue)
 {
-    EXPECT_CALL(mockDriver, onInitialize()).WillOnce(::testing::Return(true));
-    EXPECT_TRUE(recorder->initialize());
+    EXPECT_CALL(getMockDriver(), onInitialize()).WillOnce(::testing::Return(true));
+    getRecorder().initialize();
 
-    EXPECT_CALL(mockDriver, onStart()).WillOnce(::testing::Return(true));
-    EXPECT_TRUE(recorder->start());
+    EXPECT_CALL(getMockDriver(), onStart()).WillOnce(::testing::Return(true));
+    getRecorder().start();
 
-    EXPECT_CALL(mockDriver, onReset()).WillOnce(::testing::Return(true));
-    EXPECT_TRUE(recorder->reset());
+    EXPECT_CALL(getMockDriver(), onReset()).WillOnce(::testing::Return(true));
+    EXPECT_TRUE(getRecorder().reset());
 }
 
 TEST_F(WiFiMeasurementRecorderTest, NotifySucceedsWhenTransmitOk)
@@ -110,10 +118,10 @@ TEST_F(WiFiMeasurementRecorderTest, NotifySucceedsWhenTransmitOk)
     measurement.source = Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_1;
     measurement.data = static_cast<std::uint8_t>(0x42);
 
-    EXPECT_CALL(mockDriver, transmit(::testing::_, ::testing::_, ::testing::_))
+    EXPECT_CALL(getMockDriver(), transmit(::testing::_, ::testing::_, ::testing::_))
         .WillOnce(::testing::Return(Driver::UartExchangeStatus::Ok));
 
-    EXPECT_TRUE(recorder->notify(measurement));
+    EXPECT_TRUE(getRecorder().notify(measurement));
 }
 
 TEST_F(WiFiMeasurementRecorderTest, NotifyFailsWhenTransmitFails)
@@ -122,8 +130,8 @@ TEST_F(WiFiMeasurementRecorderTest, NotifyFailsWhenTransmitFails)
     measurement.source = Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_1;
     measurement.data = static_cast<std::uint8_t>(0x42);
 
-    EXPECT_CALL(mockDriver, transmit(::testing::_, ::testing::_, ::testing::_))
+    EXPECT_CALL(getMockDriver(), transmit(::testing::_, ::testing::_, ::testing::_))
         .WillOnce(::testing::Return(Driver::UartExchangeStatus::Timeout));
 
-    EXPECT_FALSE(recorder->notify(measurement));
+    EXPECT_FALSE(getRecorder().notify(measurement));
 }

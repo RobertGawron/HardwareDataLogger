@@ -1,121 +1,133 @@
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
-#include "main.h"
-// #include "stm32f1xx_hal_tim.h"
 #include "stm32f1xx_hal.h"
-
 #include "Driver/Inc/St7735DisplayBrightnessDriver.hpp"
 
-using namespace testing;
-using namespace Driver;
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
+#include <memory>
+#include <cstdint>
 
-MockTimer *mockTimer; // This allows the production code to access the mock
+// Global pointer for production code access (MockTimer definition assumed in separate file)
+extern MockTimer *mockTimer;
 
-class St7735DisplayBrightnessDriverTest : public Test
+class St7735DisplayBrightnessDriverTest : public ::testing::Test
 {
-protected:
-    TIM_HandleTypeDef htim;
-    St7735DisplayBrightnessDriver *driver;
+private:
+    // Encapsulated fields
+    TIM_HandleTypeDef htim{};
     MockTimer mockTimerInstance;
+    std::unique_ptr<Driver::St7735DisplayBrightnessDriver> driver;
 
+protected:
     void SetUp() override
     {
         mockTimer = &mockTimerInstance; // Assign the global mock instance
-        driver = new St7735DisplayBrightnessDriver(htim);
+        driver = std::make_unique<Driver::St7735DisplayBrightnessDriver>(htim);
     }
 
     void TearDown() override
     {
-        delete driver;
         mockTimer = nullptr; // Reset the global mock instance
     }
+
+public:
+    // Public Getters
+    Driver::St7735DisplayBrightnessDriver &getDriver() { return *driver; }
+    MockTimer &getMockTimer() { return mockTimerInstance; }
+    TIM_HandleTypeDef &getHtim() { return htim; }
 };
+
+// --- Test Cases ---
 
 TEST_F(St7735DisplayBrightnessDriverTest, InitializeShouldSucceed)
 {
     // Expect the clock enable function to be called once
-    EXPECT_CALL(mockTimerInstance, __HAL_RCC_TIM3_CLK_ENABLE())
+    EXPECT_CALL(getMockTimer(), __HAL_RCC_TIM3_CLK_ENABLE())
         .Times(1);
 
     // Expect the PWM initialization function to be called once
-    EXPECT_CALL(mockTimerInstance, HAL_TIM_PWM_Init(_))
-        .WillOnce(Return(HAL_OK));
+    EXPECT_CALL(getMockTimer(), HAL_TIM_PWM_Init(::testing::_))
+        .WillOnce(::testing::Return(HAL_OK));
 
     // Expect the PWM channel configuration function to be called once
-    EXPECT_CALL(mockTimerInstance, HAL_TIM_PWM_ConfigChannel(_, _, _))
-        .WillOnce(Return(HAL_OK));
+    EXPECT_CALL(getMockTimer(), HAL_TIM_PWM_ConfigChannel(::testing::_, ::testing::_, ::testing::_))
+        .WillOnce(::testing::Return(HAL_OK));
 
-    EXPECT_TRUE(driver->initialize());
-    EXPECT_TRUE(driver->isInState(DriverState::State::Initialized));
+    EXPECT_TRUE(getDriver().initialize());
+    EXPECT_TRUE(getDriver().isInState(Driver::DriverState::State::Initialized));
 }
 
 TEST_F(St7735DisplayBrightnessDriverTest, StartShouldSucceed)
 {
     // Ensure proper initialization is expected
-    EXPECT_CALL(mockTimerInstance, __HAL_RCC_TIM3_CLK_ENABLE()).Times(AtLeast(1));
-    EXPECT_CALL(mockTimerInstance, HAL_TIM_PWM_Init(_)).WillOnce(Return(HAL_OK));
-    EXPECT_CALL(mockTimerInstance, HAL_TIM_PWM_ConfigChannel(_, _, _)).WillOnce(Return(HAL_OK));
+    EXPECT_CALL(getMockTimer(), __HAL_RCC_TIM3_CLK_ENABLE()).Times(::testing::AtLeast(1));
+    EXPECT_CALL(getMockTimer(), HAL_TIM_PWM_Init(::testing::_)).WillOnce(::testing::Return(HAL_OK));
+    EXPECT_CALL(getMockTimer(), HAL_TIM_PWM_ConfigChannel(::testing::_, ::testing::_, ::testing::_))
+        .WillOnce(::testing::Return(HAL_OK));
 
-    // This initializes the driver which includes the above calls
-    ASSERT_TRUE(driver->initialize());
+    ASSERT_TRUE(getDriver().initialize());
 
     // Expectations for the start process
-    EXPECT_CALL(mockTimerInstance, HAL_TIM_PWM_Start(_, _)).WillOnce(Return(HAL_OK));
-    EXPECT_CALL(mockTimerInstance, __HAL_TIM_SET_COMPARE(_, _, _)).Times(AtLeast(1));
+    EXPECT_CALL(getMockTimer(), HAL_TIM_PWM_Start(::testing::_, ::testing::_))
+        .WillOnce(::testing::Return(HAL_OK));
+    EXPECT_CALL(getMockTimer(), __HAL_TIM_SET_COMPARE(::testing::_, ::testing::_, ::testing::_))
+        .Times(::testing::AtLeast(1));
 
-    // Execute the test
-    EXPECT_TRUE(driver->start());
+    EXPECT_TRUE(getDriver().start());
 }
 
 TEST_F(St7735DisplayBrightnessDriverTest, StopShouldSucceed)
 {
-    // Ensure it starts first
-    EXPECT_CALL(mockTimerInstance, __HAL_RCC_TIM3_CLK_ENABLE()).Times(AtLeast(1));
-    EXPECT_CALL(mockTimerInstance, HAL_TIM_PWM_Init(_)).WillOnce(Return(HAL_OK));
-    EXPECT_CALL(mockTimerInstance, HAL_TIM_PWM_ConfigChannel(_, _, _)).WillOnce(Return(HAL_OK));
+    // Arrange initialization and start calls
+    EXPECT_CALL(getMockTimer(), __HAL_RCC_TIM3_CLK_ENABLE()).Times(::testing::AtLeast(1));
+    EXPECT_CALL(getMockTimer(), HAL_TIM_PWM_Init(::testing::_)).WillOnce(::testing::Return(HAL_OK));
+    EXPECT_CALL(getMockTimer(), HAL_TIM_PWM_ConfigChannel(::testing::_, ::testing::_, ::testing::_))
+        .WillOnce(::testing::Return(HAL_OK));
+    ASSERT_TRUE(getDriver().initialize());
 
-    ASSERT_TRUE(driver->initialize());
+    EXPECT_CALL(getMockTimer(), HAL_TIM_PWM_Start(::testing::_, ::testing::_))
+        .WillOnce(::testing::Return(HAL_OK));
+    EXPECT_CALL(getMockTimer(), __HAL_TIM_SET_COMPARE(::testing::_, ::testing::_, ::testing::_))
+        .Times(::testing::AtLeast(1));
+    ASSERT_TRUE(getDriver().start());
 
-    EXPECT_CALL(mockTimerInstance, HAL_TIM_PWM_Start(_, _)).WillOnce(Return(HAL_OK));
-    EXPECT_CALL(mockTimerInstance, __HAL_TIM_SET_COMPARE(_, _, _)).Times(AtLeast(1));
+    // Expect stop call
+    EXPECT_CALL(getMockTimer(), HAL_TIM_PWM_Stop(::testing::_, ::testing::_))
+        .WillOnce(::testing::Return(HAL_OK));
 
-    ASSERT_TRUE(driver->start());
+    // Act
+    EXPECT_TRUE(getDriver().stop());
 
-    EXPECT_CALL(mockTimerInstance, HAL_TIM_PWM_Stop(_, _)).WillOnce(Return(HAL_OK));
-    EXPECT_TRUE(driver->stop());
-
-    EXPECT_TRUE(driver->isInState(DriverState::State::Stop));
-    EXPECT_CALL(mockTimerInstance, __HAL_TIM_SET_COMPARE(_, _, _)).Times(0); // Expect no setting of compare value during stop
+    // Assert
+    EXPECT_TRUE(getDriver().isInState(Driver::DriverState::State::Stop));
 }
 
 TEST_F(St7735DisplayBrightnessDriverTest, ResetShouldSucceed)
 {
-    EXPECT_TRUE(driver->reset());
-    EXPECT_TRUE(driver->isInState(DriverState::State::Reset));
+    EXPECT_TRUE(getDriver().reset());
+    EXPECT_TRUE(getDriver().isInState(Driver::DriverState::State::Reset));
 }
 
 TEST_F(St7735DisplayBrightnessDriverTest, SetBrightnessWithinValidRange)
 {
-    const std::uint8_t validBrightness = 50;                            // Choose a valid brightness value within the range
-    const std::uint32_t expectedPulse = (validBrightness * 4799) / 100; // Assuming the `calculatePulseFromBrightness` uses this formula
+    const std::uint8_t validBrightness = 50;
+    const std::uint32_t expectedPulse = (validBrightness * 4799) / 100;
 
-    // Expect the set compare function to be called with the calculated pulse
-    EXPECT_CALL(mockTimerInstance, __HAL_TIM_SET_COMPARE(&htim, TIM_CHANNEL_2, expectedPulse))
+    EXPECT_CALL(getMockTimer(), __HAL_TIM_SET_COMPARE(&getHtim(), TIM_CHANNEL_2, expectedPulse))
         .Times(1)
-        .WillOnce(Return());
+        .WillOnce(::testing::Return());
 
-    bool result = driver->setBrightness(validBrightness);
+    bool result = getDriver().setBrightness(validBrightness);
     EXPECT_TRUE(result);
 }
 
 TEST_F(St7735DisplayBrightnessDriverTest, SetBrightnessOutsideValidRange)
 {
-    const std::uint8_t invalidBrightness = 101; // Choose an invalid brightness value
+    const std::uint8_t invalidBrightness = 101;
 
     // The set compare function should not be called
-    EXPECT_CALL(mockTimerInstance, __HAL_TIM_SET_COMPARE(&htim, TIM_CHANNEL_2, _))
+    EXPECT_CALL(getMockTimer(), __HAL_TIM_SET_COMPARE(::testing::_, ::testing::_, ::testing::_))
         .Times(0);
 
-    bool result = driver->setBrightness(invalidBrightness);
+    bool result = getDriver().setBrightness(invalidBrightness);
     EXPECT_FALSE(result);
 }

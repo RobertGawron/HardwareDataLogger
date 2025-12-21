@@ -259,7 +259,7 @@ jobs:
 
       - name: Run Static Analysis
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make pystatic"
+          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make pstatic"
 
       - name: Upload Static Analysis (Python) Results
         if: always()
@@ -306,7 +306,7 @@ jobs:
 
       - name: Run Static Analysis
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace/build && cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug .. && make static"
+          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace/build && cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug .. && make cstatic"
 
       - name: Upload Static Analysis Results
         if: always()

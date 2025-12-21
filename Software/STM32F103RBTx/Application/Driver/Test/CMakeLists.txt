@@ -62,10 +62,11 @@ function(create_test_exec TARGET_NAME)
 endfunction()
 
 
-#create_test_exec(test_AmbientLightSensorDriver 
-#    ../Src/AmbientLightSensorDriver.cpp 
-#    test_AmbientLightSensorDriver.cpp
-#)
+create_test_exec(test_AmbientLightSensorDriver 
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/AmbientLightSensorDriver.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp 
+    test_AmbientLightSensorDriver.cpp
+)
 
 create_test_exec(test_DisplayPixelColor 
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DisplayPixelColor.cpp 
@@ -80,7 +81,7 @@ create_test_exec(test_DriverState
 create_test_exec(test_KeyboardDriver 
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/KeyboardFourPushButtonsDriver.cpp 
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Test/Stubs/main.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Test/Stubs/stm32f1xx_hal_gpio.cpp
     test_KeyboardFourPushButtonsDriver.cpp
 )
 

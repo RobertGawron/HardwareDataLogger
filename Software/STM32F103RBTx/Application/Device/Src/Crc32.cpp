@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include <cstddef>
-
+#include <iterator> // for std::next
 namespace Device
 {
     namespace
@@ -15,21 +15,30 @@ namespace Device
     std::uint32_t Crc32::compute(const uint8_t *data, std::size_t length)
     {
         std::uint32_t crc = INITIAL_CRC;
-        for (std::size_t i = 0; i < length; ++i)
+
+        // C++17: Calculate end pointer using std::next to avoid raw arithmetic warnings
+        const auto *end = std::next(data, length);
+
+        // Iterate using pointers instead of index 'data[i]'
+        for (auto *it = data; it != end; ++it)
         {
-            crc ^= data[i];
+            crc ^= *it;
+
             for (std::size_t j = 0; j < BITS_PER_BYTE; ++j)
             {
-                if ((crc & 1) != 0) // Explicitly check if the least significant bit is set
+                const bool isLsbSet = (crc & 1) != 0;
+
+                // Always shift right
+                crc >>= 1;
+
+                // Apply polynomial only if LSB was set
+                if (isLsbSet)
                 {
-                    crc = (crc >> 1) ^ POLYNOMIAL;
-                }
-                else
-                {
-                    crc >>= 1;
+                    crc ^= POLYNOMIAL;
                 }
             }
         }
+
         return ~crc;
     }
 }

@@ -1,9 +1,3 @@
-# Get the number of available processors
-include(ProcessorCount)
-ProcessorCount(NPROC)
-if(NOT NPROC OR NPROC EQUAL 0)
-    set(NPROC 1) # Fallback to 1 if ProcessorCount fails
-endif()
 
 # Define the source directories to analyze
 set(CODECHECKER_SOURCE_DIRS
@@ -22,13 +16,14 @@ set(CODECHECKER_SKIP_FILE ${CMAKE_SOURCE_DIR}/DevOps/Scripts/CodeCheckerSkipList
 file(MAKE_DIRECTORY ${CODECHECKER_ANALYZE_DIR})
 file(MAKE_DIRECTORY ${CODECHECKER_REPORT_DIR})
 
+# --jobs 1 is the max amount accepted by Github CI
 # Add a custom target for CodeChecker analysis
-add_custom_target(static
-    COMMAND cpulimit -l 80 -- CodeChecker analyze compile_commands.json
+add_custom_target(cstatic
+    COMMAND CodeChecker analyze compile_commands.json
         --output ${CODECHECKER_ANALYZE_DIR}
         --file ${CODECHECKER_SOURCE_DIRS}
         --skip ${CODECHECKER_SKIP_FILE}
-        --jobs ${NPROC}
+        --jobs 1
         --enable-all
         --disable checker:clang-diagnostic-c++98-compat
         --disable modernize-use-trailing-return-type
@@ -50,7 +45,7 @@ add_custom_target(static
 )
 
 # Add a custom command to generate the HTML report
-add_custom_command(TARGET static POST_BUILD
+add_custom_command(TARGET cstatic POST_BUILD
     COMMAND CodeChecker parse ${CODECHECKER_ANALYZE_DIR}
         --skip ${CODECHECKER_SKIP_FILE}
         --export html
@@ -60,7 +55,7 @@ add_custom_command(TARGET static POST_BUILD
 )
 
 # Add a custom command to check for errors and fail the build if any are found
-add_custom_command(TARGET static POST_BUILD
+add_custom_command(TARGET cstatic POST_BUILD
     COMMAND bash -c "if [ -n \"\$(CodeChecker parse ${CODECHECKER_ANALYZE_DIR} --print-issues | grep -i 'error')\" ]; then echo 'CodeChecker found errors!'; exit 1; fi"
     COMMENT "Failing the build if CodeChecker finds errors..."
     VERBATIM

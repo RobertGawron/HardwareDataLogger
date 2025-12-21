@@ -1,14 +1,14 @@
 #include "Device/Inc/PulseCounterMeasurementSource.hpp"
+#include "Device/Inc/MeasurementDeviceId.hpp"
 #include "Driver/Interfaces/IPulseCounterDriver.hpp"
+#include "Driver/Inc/PulseCounterIdentifier.hpp"
+
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <cstdint>
-#include <array>
-#include <variant>
+#include <memory>
 
-constexpr Driver::PulseCounterIdentifier id = Driver::PulseCounterIdentifier::bncA;
+// --- Mocks ---
 
-// Mock class for IPulseCounterDriver
 class MockPulseCounterDriver : public Driver::IPulseCounterDriver
 {
 public:
@@ -20,39 +20,55 @@ public:
     MOCK_METHOD(bool, onReset, (), (override));
 };
 
-// Test Fixture for PULSE_COUNTER_MEASUREMENT_SOURCE
-class PULSE_COUNTER_MEASUREMENT_SOURCE_TEST : public ::testing::Test
-{
-protected:
-    MockPulseCounterDriver mockDriver;
-    Device::PulseCounterMeasurementSource *measurementSource;
+// --- Test Fixture ---
 
+class PulseCounterMeasurementSourceTest : public ::testing::Test
+{
+private:
+    // All fields are now private
+    MockPulseCounterDriver mockDriver;
+    std::unique_ptr<Device::PulseCounterMeasurementSource> measurementSource;
+
+protected:
     void SetUp() override
     {
-        Device::MeasurementDeviceId id = Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_1;
-        measurementSource = new Device::PulseCounterMeasurementSource(id, mockDriver);
+        const Device::MeasurementDeviceId id = Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_1;
+        measurementSource = std::make_unique<Device::PulseCounterMeasurementSource>(id, mockDriver);
     }
 
-    void TearDown() override
-    {
-        delete measurementSource;
-    }
+public:
+    // Public getters to access private members
+    MockPulseCounterDriver &getMockDriver() { return mockDriver; }
+    Device::PulseCounterMeasurementSource &getMeasurementSource() { return *measurementSource; }
 };
 
-// Test initialize() method
-TEST_F(PULSE_COUNTER_MEASUREMENT_SOURCE_TEST, InitializeShouldCallDriverInitialize)
+// --- Test Cases ---
+
+TEST_F(PulseCounterMeasurementSourceTest, InitializeShouldCallDriverInitialize)
 {
-    EXPECT_CALL(mockDriver, onInitialize()).Times(1).WillOnce(::testing::Return(true));
-    EXPECT_TRUE(measurementSource->initialize());
+    // Arrange & Assert
+    EXPECT_CALL(getMockDriver(), onInitialize())
+        .Times(1)
+        .WillOnce(::testing::Return(true));
+
+    // Act
+    EXPECT_TRUE(getMeasurementSource().initialize());
 }
 
-// Test start() method
-TEST_F(PULSE_COUNTER_MEASUREMENT_SOURCE_TEST, StartShouldCallDriverStart)
+TEST_F(PulseCounterMeasurementSourceTest, StartShouldCallDriverStart)
 {
-    EXPECT_CALL(mockDriver, onInitialize()).Times(1).WillOnce(::testing::Return(true));
-    EXPECT_TRUE(measurementSource->initialize());
+    // Arrange: Initialization must happen first
+    EXPECT_CALL(getMockDriver(), onInitialize())
+        .Times(1)
+        .WillOnce(::testing::Return(true));
 
-    EXPECT_CALL(mockDriver, onStart()).Times(1).WillOnce(::testing::Return(true));
-    EXPECT_TRUE(measurementSource->start());
+    getMeasurementSource().initialize();
+
+    // Assert: Expect start call
+    EXPECT_CALL(getMockDriver(), onStart())
+        .Times(1)
+        .WillOnce(::testing::Return(true));
+
+    // Act
+    EXPECT_TRUE(getMeasurementSource().start());
 }
-

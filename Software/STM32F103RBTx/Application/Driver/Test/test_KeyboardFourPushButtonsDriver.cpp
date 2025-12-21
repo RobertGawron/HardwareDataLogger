@@ -1,28 +1,36 @@
+#include "stm32f1xx_hal_gpio.h"
+#include "Driver/Inc/KeyboardKeyIdentifier.hpp"
+#include "Driver/Inc/KeyboardKeyState.hpp"
+#include "Driver/Inc/KeyboardFourPushButtonsDriver.hpp"
+#include "Driver/Inc/DriverState.hpp"
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include "main.h"
-#include "stm32f1xx_hal_gpio.h"
-#include "Driver/Inc/KeyboardFourPushButtonsDriver.hpp"
-
-using namespace testing;
+#include <cstdint>
 
 class MockHAL_GPIO;
 
 // Define the mockHAL_GPIO pointer expected by HAL_GPIO_ReadPin wrapper
 MockHAL_GPIO *mockHAL_GPIO = nullptr;
 
-class KeyboardFourPushButtonsDriverTest : public ::testing::Test {
-protected:
-    MockHAL_GPIO mockHALInstance;
-
-    void SetUp() override {
+class KeyboardFourPushButtonsDriverTest : public ::testing::Test
+{
+public:
+    void SetUp() override
+    {
         mockHAL_GPIO = &mockHALInstance;
     }
 
-    void TearDown() override {
+    void TearDown() override
+    {
         mockHAL_GPIO = nullptr;
     }
+
+    // Getter for accessing private member
+    MockHAL_GPIO &getMockHALInstance() { return mockHALInstance; }
+
+private:
+    MockHAL_GPIO mockHALInstance;
 };
 
 // Test the initialize method
@@ -71,13 +79,13 @@ TEST_F(KeyboardFourPushButtonsDriverTest, TickUpdatesKeyStatesWhenRunning)
     driver.start();
 
     // Set expectations for HAL_GPIO_ReadPin to return GPIO_PIN_SET
-    EXPECT_CALL(mockHALInstance, HAL_GPIO_ReadPin(_, _))
-        .Times(driver.AmountOfKeys)
-        .WillRepeatedly(Return(GPIO_PIN_SET));
+    EXPECT_CALL(getMockHALInstance(), HAL_GPIO_ReadPin(::testing::_, ::testing::_))
+        .Times(Driver::KeyboardFourPushButtonsDriver::AmountOfKeys)
+        .WillRepeatedly(::testing::Return(GPIO_PIN_SET));
 
     EXPECT_TRUE(driver.tick());
 
-    for (std::uint8_t i = 0u; i < driver.AmountOfKeys; i++)
+    for (std::uint8_t i = 0u; i < Driver::KeyboardFourPushButtonsDriver::AmountOfKeys; i++)
     {
         EXPECT_EQ(driver.getKeyState(static_cast<Driver::KeyboardKeyIdentifier>(i)), Driver::KeyboardKeyState::NotPressed);
     }
@@ -90,7 +98,7 @@ TEST_F(KeyboardFourPushButtonsDriverTest, TickDoesNothingWhenNotRunning)
     // No expectation since HAL_GPIO_ReadPin should not be called
     EXPECT_FALSE(driver.tick());
 
-    for (std::uint8_t i = 0u; i < driver.AmountOfKeys; i++)
+    for (std::uint8_t i = 0u; i < Driver::KeyboardFourPushButtonsDriver::AmountOfKeys; i++)
     {
         EXPECT_EQ(driver.getKeyState(static_cast<Driver::KeyboardKeyIdentifier>(i)), Driver::KeyboardKeyState::DriverNotOperational);
     }
@@ -104,12 +112,12 @@ TEST_F(KeyboardFourPushButtonsDriverTest, GetKeyStateNothingWhenIncorrectKey)
     driver.start();
 
     // Set expectations for HAL_GPIO_ReadPin to return GPIO_PIN_SET
-    EXPECT_CALL(mockHALInstance, HAL_GPIO_ReadPin(_, _))
-        .Times(driver.AmountOfKeys)
-        .WillRepeatedly(Return(GPIO_PIN_SET));
+    EXPECT_CALL(getMockHALInstance(), HAL_GPIO_ReadPin(::testing::_, ::testing::_))
+        .Times(Driver::KeyboardFourPushButtonsDriver::AmountOfKeys)
+        .WillRepeatedly(::testing::Return(GPIO_PIN_SET));
 
     EXPECT_TRUE(driver.tick());
 
-    std::uint8_t incorrectKey = driver.AmountOfKeys;
+    const std::uint8_t incorrectKey = Driver::KeyboardFourPushButtonsDriver::AmountOfKeys;
     EXPECT_EQ(driver.getKeyState(static_cast<Driver::KeyboardKeyIdentifier>(incorrectKey)), Driver::KeyboardKeyState::UnknownKeyAsked);
 }

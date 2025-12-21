@@ -1,9 +1,14 @@
 #include "Device/Inc/Keyboard.hpp"
+#include "Device/Inc/KeyboardKeyActionState.hpp"
 #include "Driver/Interfaces/IKeyboardDriver.hpp"
 #include "Driver/Inc/KeyboardKeyState.hpp"
 #include "Driver/Inc/KeyboardKeyIdentifier.hpp"
+
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <memory>
+
+// --- Mocks ---
 
 class MockKeyboardDriver : public Driver::IKeyboardDriver
 {
@@ -20,69 +25,83 @@ public:
     MOCK_METHOD(Driver::KeyboardKeyState, getKeyState, (Driver::KeyboardKeyIdentifier key), (const, override));
 };
 
+// --- Test Fixture ---
+
 class KeyboardTest : public ::testing::Test
 {
-protected:
+private:
+    // Encapsulated fields
     MockKeyboardDriver mockDriver;
-    Device::Keyboard *keyboard;
+    std::unique_ptr<Device::Keyboard> keyboard;
 
+protected:
     void SetUp() override
     {
-        keyboard = new Device::Keyboard(mockDriver);
+        keyboard = std::make_unique<Device::Keyboard>(mockDriver);
     }
 
-    void TearDown() override
-    {
-        delete keyboard;
-    }
+public:
+    // Public Getters
+    MockKeyboardDriver &getMockDriver() { return mockDriver; }
+    Device::Keyboard &getKeyboard() { return *keyboard; }
 };
+
+// --- Test Cases ---
 
 TEST_F(KeyboardTest, InitSuccessWhenDriverInitAndStartSucceed)
 {
-    EXPECT_CALL(mockDriver, initialize()).WillOnce(::testing::Return(true));
-    EXPECT_CALL(mockDriver, start()).WillOnce(::testing::Return(true));
-    EXPECT_TRUE(keyboard->init());
+    EXPECT_CALL(getMockDriver(), initialize()).WillOnce(::testing::Return(true));
+    EXPECT_CALL(getMockDriver(), start()).WillOnce(::testing::Return(true));
+
+    EXPECT_TRUE(getKeyboard().init());
 }
 
 TEST_F(KeyboardTest, InitFailsWhenDriverInitFails)
 {
-    EXPECT_CALL(mockDriver, initialize()).WillOnce(::testing::Return(false));
-    EXPECT_FALSE(keyboard->init());
+    EXPECT_CALL(getMockDriver(), initialize()).WillOnce(::testing::Return(false));
+
+    EXPECT_FALSE(getKeyboard().init());
 }
 
 TEST_F(KeyboardTest, TickTransitionsToPressStart)
 {
-    EXPECT_CALL(mockDriver, getKeyState(::testing::_))
+    // Default behavior for other keys
+    EXPECT_CALL(getMockDriver(), getKeyState(::testing::_))
         .Times(::testing::AtLeast(1))
         .WillRepeatedly(::testing::Return(Driver::KeyboardKeyState::NotPressed));
 
-    EXPECT_CALL(mockDriver, getKeyState(Driver::KeyboardKeyIdentifier::Up))
+    // Specific behavior for Up key
+    EXPECT_CALL(getMockDriver(), getKeyState(Driver::KeyboardKeyIdentifier::Up))
         .WillOnce(::testing::Return(Driver::KeyboardKeyState::Pressed));
 
-    keyboard->tick();
+    getKeyboard().tick();
 
-    EXPECT_EQ(keyboard->getKeyState(Driver::KeyboardKeyIdentifier::Up), Device::KeyboardKeyActionState::PressStart);
+    EXPECT_EQ(getKeyboard().getKeyState(Driver::KeyboardKeyIdentifier::Up),
+              Device::KeyboardKeyActionState::PressStart);
 }
 
 TEST_F(KeyboardTest, TickHandlesKeyHoldAndReleaseShort)
 {
-    EXPECT_CALL(mockDriver, getKeyState(::testing::_))
+    EXPECT_CALL(getMockDriver(), getKeyState(::testing::_))
         .Times(::testing::AtLeast(1))
         .WillRepeatedly(::testing::Return(Driver::KeyboardKeyState::NotPressed));
 
-    EXPECT_CALL(mockDriver, getKeyState(Driver::KeyboardKeyIdentifier::Down))
+    EXPECT_CALL(getMockDriver(), getKeyState(Driver::KeyboardKeyIdentifier::Down))
         .WillOnce(::testing::Return(Driver::KeyboardKeyState::Pressed))
         .WillOnce(::testing::Return(Driver::KeyboardKeyState::Pressed))
         .WillOnce(::testing::Return(Driver::KeyboardKeyState::NotPressed));
 
-    keyboard->tick();
-    keyboard->tick();
-    keyboard->tick();
+    getKeyboard().tick(); // PressStart
+    getKeyboard().tick(); // PressHold
+    getKeyboard().tick(); // PressEndShort
 
-    EXPECT_EQ(keyboard->getKeyState(Driver::KeyboardKeyIdentifier::Down), Device::KeyboardKeyActionState::PressEndShort);
+    EXPECT_EQ(getKeyboard().getKeyState(Driver::KeyboardKeyIdentifier::Down),
+              Device::KeyboardKeyActionState::PressEndShort);
 }
 
 TEST_F(KeyboardTest, TickHandlesFailState)
 {
-    EXPECT_EQ(keyboard->getKeyState(static_cast<Driver::KeyboardKeyIdentifier>(99)), Device::KeyboardKeyActionState::Fail);
+    // Accessing an invalid identifier should return Fail state
+    EXPECT_EQ(getKeyboard().getKeyState(static_cast<Driver::KeyboardKeyIdentifier>(99)),
+              Device::KeyboardKeyActionState::Fail);
 }

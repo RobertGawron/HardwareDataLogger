@@ -3,11 +3,10 @@
 #include "Driver/Inc/DriverState.hpp"
 #include "Driver/Inc/KeyboardKeyIdentifier.hpp"
 
-#include "main.h" // TODO: Maybe remove
 #include "stm32f1xx_hal_gpio.h"
 
 #include <cstdint>
-#include <algorithm> // For std::find_if
+#include <algorithm> // for std::find_if
 
 namespace Driver
 {

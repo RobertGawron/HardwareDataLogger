@@ -1,10 +1,12 @@
 #include "BusinessLogic/Inc/MeasurementDataStore.hpp"
 #include "Device/Interfaces/IMeasurementRecorder.hpp"
-#include "Driver/Inc/UartExchangeStatus.hpp"
+#include "Device/Inc/MeasurementType.hpp"
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <memory>
 
-// Mock class for Device::IMeasurementRecorder
+// --- Mocks ---
+
 class MockMeasurementRecorder : public Device::IMeasurementRecorder
 {
 public:
@@ -18,89 +20,61 @@ public:
     MOCK_METHOD(bool, flush, (), (override));
 };
 
-// Test Fixture for BusinessLogic::MeasurementDataStore
+// --- Test Fixture ---
+
 class MeasurementDataStoreTest : public ::testing::Test
 {
-protected:
-    BusinessLogic::MeasurementDataStore *dataStore;
+private:
+    // All fields are now private
+    std::unique_ptr<BusinessLogic::MeasurementDataStore> dataStore;
     MockMeasurementRecorder mockRecorder1;
     MockMeasurementRecorder mockRecorder2;
 
+protected:
     void SetUp() override
     {
-        dataStore = new BusinessLogic::MeasurementDataStore();
+        dataStore = std::make_unique<BusinessLogic::MeasurementDataStore>();
     }
 
-    void TearDown() override
-    {
-        delete dataStore;
-    }
+public:
+    // Public getters to access private members
+    BusinessLogic::MeasurementDataStore &getDataStore() { return *dataStore; }
+    MockMeasurementRecorder &getMockRecorder1() { return mockRecorder1; }
+    MockMeasurementRecorder &getMockRecorder2() { return mockRecorder2; }
 };
 
-// Test initialize() method
+// --- Test Cases ---
+
 TEST_F(MeasurementDataStoreTest, InitializeShouldCallInitializeOnAllObservers)
 {
-    EXPECT_CALL(mockRecorder1, initialize()).WillOnce(::testing::Return(true));
-    EXPECT_CALL(mockRecorder2, initialize()).WillOnce(::testing::Return(true));
+    EXPECT_CALL(getMockRecorder1(), initialize()).WillOnce(::testing::Return(true));
+    EXPECT_CALL(getMockRecorder2(), initialize()).WillOnce(::testing::Return(true));
 
-    dataStore->addObserver(mockRecorder1);
-    dataStore->addObserver(mockRecorder2);
+    getDataStore().addObserver(getMockRecorder1());
+    getDataStore().addObserver(getMockRecorder2());
 
-    EXPECT_TRUE(dataStore->initialize());
+    EXPECT_TRUE(getDataStore().initialize());
 }
 
-// Test start() method
 TEST_F(MeasurementDataStoreTest, StartShouldCallStartOnAllObservers)
 {
-    EXPECT_CALL(mockRecorder1, start()).WillOnce(::testing::Return(true));
-    EXPECT_CALL(mockRecorder2, start()).WillOnce(::testing::Return(true));
+    EXPECT_CALL(getMockRecorder1(), start()).WillOnce(::testing::Return(true));
+    EXPECT_CALL(getMockRecorder2(), start()).WillOnce(::testing::Return(true));
 
-    dataStore->addObserver(mockRecorder1);
-    dataStore->addObserver(mockRecorder2);
+    getDataStore().addObserver(getMockRecorder1());
+    getDataStore().addObserver(getMockRecorder2());
 
-    EXPECT_TRUE(dataStore->start());
+    EXPECT_TRUE(getDataStore().start());
 }
 
-// Test addObserver() method
 TEST_F(MeasurementDataStoreTest, AddObserverShouldAddObserverSuccessfully)
 {
-    EXPECT_TRUE(dataStore->addObserver(mockRecorder1));
-    EXPECT_TRUE(dataStore->addObserver(mockRecorder2));
+    EXPECT_TRUE(getDataStore().addObserver(getMockRecorder1()));
+    EXPECT_TRUE(getDataStore().addObserver(getMockRecorder2()));
 }
 
-// Test removeObserver() method
 TEST_F(MeasurementDataStoreTest, RemoveObserverShouldRemoveObserverSuccessfully)
 {
-    dataStore->addObserver(mockRecorder1);
-    EXPECT_TRUE(dataStore->removeObserver(mockRecorder1));
+    getDataStore().addObserver(getMockRecorder1());
+    EXPECT_TRUE(getDataStore().removeObserver(getMockRecorder1()));
 }
-/*
-TEST_F(MeasurementDataStoreTest, NotifyObserversShouldCallNotifyOnAllObserversWithCorrectValue)
-{
-    Device::MeasurementType mockMeasurement{42u}; // The expected measurement value
-
-    // Check that notify is called with the exact value 42u
-    EXPECT_CALL(mockRecorder1, notify(::testing::_))
-        .Times(1)
-        .WillOnce(::testing::Invoke([](Device::MeasurementType &measurement) -> bool
-                                    {
-                                        EXPECT_TRUE(std::holds_alternative<uint32_t>(measurement));
-                                        EXPECT_EQ(std::get<uint32_t>(measurement), 42u);
-                                        return true; // Must return bool
-                                    }));
-
-    EXPECT_CALL(mockRecorder2, notify(::testing::_))
-        .Times(1)
-        .WillOnce(::testing::Invoke([](Device::MeasurementType &measurement) -> bool
-                                    {
-                                        EXPECT_TRUE(std::holds_alternative<uint32_t>(measurement));
-                                        EXPECT_EQ(std::get<uint32_t>(measurement), 42u);
-                                        return true; // Must return bool
-                                    }));
-
-    dataStore->addObserver(mockRecorder1);
-    dataStore->addObserver(mockRecorder2);
-
-    dataStore->notifyObservers(mockMeasurement);
-}
-*/

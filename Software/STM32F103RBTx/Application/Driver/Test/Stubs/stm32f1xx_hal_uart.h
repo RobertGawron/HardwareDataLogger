@@ -3,7 +3,6 @@
 
 #include <gmock/gmock.h>
 #include <stdint.h>
-#include "main.h"
 
 #include "stm32f1xx_hal_def.h"
 

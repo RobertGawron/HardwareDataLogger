@@ -43,8 +43,7 @@ namespace Driver
          *
          * Deleted to prevent creation without a valid timer handle.
          */
-        //   St7735DisplayBrightnessDriver() = delete;
-        St7735DisplayBrightnessDriver() = default;
+        St7735DisplayBrightnessDriver() = delete;
 
         /**
          * @brief Default destructor for St7735DisplayBrightnessDriver.

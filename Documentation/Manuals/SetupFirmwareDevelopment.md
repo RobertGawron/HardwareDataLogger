@@ -11,13 +11,13 @@ cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug ..
 ## Run C++ Static Analysis
 
 ```
-cd /workspace/build && cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug .. && make static
+cd /workspace/build && cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug .. && make cstatic
 ```
 
-## Run Pÿthon Static Analysis
+## Run Python Static Analysis
 
 ```
-cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make pystatic
+cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make pstatic
 ```
 
 ## Run Code Coverage

@@ -9,9 +9,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_library(ApplicationInterfaces INTERFACE)
 target_include_directories(ApplicationInterfaces INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Common
+    ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32F1xx_HAL_Driver/Inc/
     ${CMAKE_CURRENT_SOURCE_DIR}/Library/u8g2/cppsrc
     ${CMAKE_CURRENT_SOURCE_DIR}/Library/u8g2/csrc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Library/stm32-st7735/
 )
 
 # Add u8g2 subdirectory
@@ -45,7 +46,12 @@ set(DEVICE_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Device/Src/UartMeasurementSource.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Device/Src/WiFiMeasurementRecorder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Device/Src/WiFiMeasurementSerializer.cpp
-)
+
+    # a hack, should be in driver
+    ${CMAKE_CURRENT_SOURCE_DIR}/Library/stm32-st7735/st7735_reg.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Library/stm32-st7735/st7735.c
+
+    )
 
 # Driver library sources
 set(DRIVER_SOURCES
@@ -90,6 +96,18 @@ if(USE_X86_HEADERS)
     )
 else()
     target_include_directories(Driver PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/STM32F1xx_HAL_Driver/Inc
+        ${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/CMSIS/Device/ST/STM32F1xx/Include
+        ${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/CMSIS/Include
+        ${CMAKE_CURRENT_SOURCE_DIR}/../Core/Inc
+        ${CMAKE_CURRENT_SOURCE_DIR}/Library/stm32-st7735/
+        # Not eassy this SD Card lib
+        ${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/FatFs/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/../FATFS/Target
+    )
+
+## for tests only!!!!!
+        target_include_directories(Device PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/STM32F1xx_HAL_Driver/Inc
         ${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/CMSIS/Device/ST/STM32F1xx/Include
         ${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/CMSIS/Include

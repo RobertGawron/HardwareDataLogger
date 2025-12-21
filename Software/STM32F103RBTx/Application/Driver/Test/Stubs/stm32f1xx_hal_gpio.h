@@ -3,9 +3,24 @@
 
 #include <gmock/gmock.h>
 #include <stdint.h>
-#include "main.h"
 
 #include "stm32f1xx_hal_def.h"
+
+struct GPIO_TypeDef
+{
+    std::uint32_t ID; // Simple identifier, just to make the struct non-empty
+};
+
+enum GPIO_PinState : std::uint8_t
+{
+    GPIO_PIN_RESET = 0,
+    GPIO_PIN_SET
+};
+
+extern GPIO_TypeDef portPinLeft;
+extern GPIO_TypeDef portPinRight;
+extern GPIO_TypeDef portPinUp;
+extern GPIO_TypeDef portPinDown;
 
 // Mock class for HAL functions
 class MockHAL_GPIO

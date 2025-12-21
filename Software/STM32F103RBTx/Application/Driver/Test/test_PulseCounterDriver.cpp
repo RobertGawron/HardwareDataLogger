@@ -1,82 +1,91 @@
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
+#include "Driver/Inc/PulseCounterIdentifier.hpp"
 #include "Driver/Inc/PulseCounterDriver.hpp"
-#include <cstdint>
-#include <array>
 
-constexpr Driver::PulseCounterIdentifier id = Driver::PulseCounterIdentifier::bncA;
+#include <gtest/gtest.h>
+#include <cstdint>
+#include <memory>
+
+namespace
+{
+    constexpr Driver::PulseCounterIdentifier id = Driver::PulseCounterIdentifier::bncA;
+}
+
+// --- Test Fixture ---
 
 class PulseCounterDriverTest : public ::testing::Test
 {
-protected:
-    Driver::PulseCounterDriver *driver;
+private:
+    // Encapsulated field
+    std::unique_ptr<Driver::PulseCounterDriver> driver;
 
+protected:
     void SetUp() override
     {
-        driver = new Driver::PulseCounterDriver(static_cast<Driver::PulseCounterIdentifier>(id));
+        driver = std::make_unique<Driver::PulseCounterDriver>(static_cast<Driver::PulseCounterIdentifier>(id));
     }
 
-    void TearDown() override
-    {
-        delete driver;
-    }
+public:
+    // Public Getter
+    Driver::PulseCounterDriver &getDriver() { return *driver; }
 };
+
+// --- Test Cases ---
 
 TEST_F(PulseCounterDriverTest, InitializeShouldResetCounters)
 {
-    EXPECT_TRUE(driver->onInitialize());
-    EXPECT_EQ(driver->getMeasurement(), 0u);
+    EXPECT_TRUE(getDriver().onInitialize());
+    EXPECT_EQ(getDriver().getMeasurement(), 0u);
 }
 
 TEST_F(PulseCounterDriverTest, StartShouldResetCounters)
 {
-    EXPECT_TRUE(driver->onStart());
-    EXPECT_EQ(driver->getMeasurement(), 0u);
+    EXPECT_TRUE(getDriver().onStart());
+    EXPECT_EQ(getDriver().getMeasurement(), 0u);
 }
 
 TEST_F(PulseCounterDriverTest, IncrementCounterIncreasesCorrectValue)
 {
     auto idOfCounter = static_cast<std::uint8_t>(id);
 
-    EXPECT_TRUE(driver->onInitialize());
-    EXPECT_TRUE(driver->onStart());
+    EXPECT_TRUE(getDriver().onInitialize());
+    EXPECT_TRUE(getDriver().onStart());
 
     incrementPulseCounter(idOfCounter);
-    EXPECT_EQ(driver->getMeasurement(), 1u);
+    EXPECT_EQ(getDriver().getMeasurement(), 1u);
 
     incrementPulseCounter(idOfCounter);
-    EXPECT_EQ(driver->getMeasurement(), 2u);
+    EXPECT_EQ(getDriver().getMeasurement(), 2u);
 }
 
 TEST_F(PulseCounterDriverTest, ClearMeasurementResetsCounter)
 {
     auto idOfCounter = static_cast<std::uint8_t>(id);
 
-    EXPECT_TRUE(driver->onInitialize());
-    EXPECT_TRUE(driver->onStart());
+    EXPECT_TRUE(getDriver().onInitialize());
+    EXPECT_TRUE(getDriver().onStart());
 
     incrementPulseCounter(idOfCounter);
-    EXPECT_EQ(driver->getMeasurement(), 1u);
+    EXPECT_EQ(getDriver().getMeasurement(), 1u);
 
-    driver->clearMeasurement();
-    EXPECT_EQ(driver->getMeasurement(), 0u);
+    getDriver().clearMeasurement();
+    EXPECT_EQ(getDriver().getMeasurement(), 0u);
 }
 
 TEST_F(PulseCounterDriverTest, StopShouldClearCounter)
 {
     auto idOfCounter = static_cast<std::uint8_t>(id);
 
-    driver->onInitialize();
-    driver->onStart();
+    getDriver().onInitialize();
+    getDriver().onStart();
 
     incrementPulseCounter(idOfCounter);
-    EXPECT_EQ(driver->getMeasurement(), 1u);
+    EXPECT_EQ(getDriver().getMeasurement(), 1u);
 
-    EXPECT_TRUE(driver->onStop());
-    EXPECT_EQ(driver->getMeasurement(), 0u);  // Must be cleared
+    EXPECT_TRUE(getDriver().onStop());
+    EXPECT_EQ(getDriver().getMeasurement(), 0u); // Must be cleared
 }
 
 TEST_F(PulseCounterDriverTest, ResetShouldReturnTrue)
 {
-    EXPECT_TRUE(driver->onReset());  // Only verifies return value
+    EXPECT_TRUE(getDriver().onReset()); // Only verifies return value
 }
