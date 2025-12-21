@@ -52,7 +52,13 @@
           "min_clearance": 0.508
         }
       },
-      "diff_pair_dimensions": [],
+      "diff_pair_dimensions": [
+        {
+          "gap": 0.0,
+          "via_gap": 0.0,
+          "width": 0.0
+        }
+      ],
       "drc_exclusions": [],
       "meta": {
         "filename": "board_design_settings.json",
@@ -191,6 +197,7 @@
       "track_widths": [
         0.0,
         0.3048,
+        1.0,
         6.0
       ],
       "tuning_pattern_settings": {
@@ -227,6 +234,10 @@
         {
           "diameter": 0.45,
           "drill": 0.3
+        },
+        {
+          "diameter": 0.6,
+          "drill": 0.4
         }
       ],
       "zones_allow_external_fillets": false,
@@ -464,6 +475,7 @@
       "single_global_label": "ignore",
       "unannotated": "error",
       "unconnected_wire_endpoint": "warning",
+      "undefined_netclass": "error",
       "unit_value_mismatch": "error",
       "unresolved_variable": "error",
       "wire_dangling": "error"
@@ -643,12 +655,12 @@
       "MainBoardConnector"
     ],
     [
-      "c0ade90a-d447-456b-975c-76e822529942",
-      "PowerSupply"
-    ],
-    [
       "2b79897d-52c9-4d84-bbd4-b2d45af99ada",
       "WiFi"
+    ],
+    [
+      "097c6198-7414-46b7-a29c-2ab22bad5270",
+      "SerialProgrammer"
     ],
     [
       "c9452f86-226d-4605-84ad-9a9774faea3a",

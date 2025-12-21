@@ -2818,7 +2818,7 @@
 		(descr "SMD pad as test Point, diameter 1.5mm")
 		(tags "test point SMD pad")
 		(property "Reference" "TP3"
-			(at 2.075 1.325 180)
+			(at 1.8 1.3 180)
 			(layer "F.SilkS")
 			(uuid "4c758136-ae7c-4d9d-89c8-25d22241a9b3")
 			(effects
@@ -13801,7 +13801,7 @@
 		(descr "SMD pad as test Point, diameter 1.5mm")
 		(tags "test point SMD pad")
 		(property "Reference" "TP8"
-			(at -1.975 0 180)
+			(at 0.2 3 180)
 			(layer "F.SilkS")
 			(uuid "ece886a5-d05a-48ad-9978-62e99be60071")
 			(effects
@@ -15017,7 +15017,7 @@
 		(descr "SMD pad as test Point, diameter 1.5mm")
 		(tags "test point SMD pad")
 		(property "Reference" "TP4"
-			(at 2.075 2.125 180)
+			(at 0 2.8 180)
 			(layer "F.SilkS")
 			(uuid "a51a0079-b9d2-45a4-a4b0-2e1571851350")
 			(effects
@@ -15228,8 +15228,8 @@
 			)
 		)
 	)
-	(gr_text "GPIO1-TP3, GPIO2-TP4, \nGPIO3TP7, GPIO4-TP8"
-		(at 163.85 98.4 -0)
+	(gr_text "GPIO1-TP3, GPIO2-TP4, \nGPIO3-TP7, GPIO4-TP8"
+		(at 163.85 98.4 0)
 		(layer "B.SilkS")
 		(uuid "7c2591c6-fbef-43de-a9eb-3c49e76ed845")
 		(effects
