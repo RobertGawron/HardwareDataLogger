@@ -10,8 +10,6 @@ set(CODECHECKER_SOURCE_DIRS
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver
-    ${CMAKE_SOURCE_DIR}/Software/ESP8266
-    ${CMAKE_SOURCE_DIR}/Software/Common
     ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator
 )
 
@@ -23,11 +21,10 @@ set(CODECHECKER_SKIP_FILE ${CMAKE_SOURCE_DIR}/DevOps/Scripts/CodeCheckerSkipList
 # Ensure the output directories exist
 file(MAKE_DIRECTORY ${CODECHECKER_ANALYZE_DIR})
 file(MAKE_DIRECTORY ${CODECHECKER_REPORT_DIR})
-    message(WARNING  ${CODECHECKER_SKIP_FILE})
 
 # Add a custom target for CodeChecker analysis
 add_custom_target(static
-    COMMAND CodeChecker analyze compile_commands.json
+    COMMAND cpulimit -l 50 -- CodeChecker analyze compile_commands.json
         --output ${CODECHECKER_ANALYZE_DIR}
         --file ${CODECHECKER_SOURCE_DIRS}
         --skip ${CODECHECKER_SKIP_FILE}

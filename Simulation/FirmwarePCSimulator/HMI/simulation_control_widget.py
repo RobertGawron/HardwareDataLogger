@@ -1,17 +1,16 @@
 """
-Module for managing the simulation control widget in a PyQt6 GUI.
+Module for managing the simulation control widget in a GTK GUI.
 
 This module provides the `SimulationControlWidget` class, which contains buttons
 for starting, stopping, and reloading the firmware simulation.
 """
 
-from PyQt6.QtWidgets import (
-    QWidget, QGridLayout, QPushButton, QGroupBox, QVBoxLayout
-)
-from PyQt6.QtCore import Qt
+import gi
+gi.require_version('Gtk', '4.0')
+from gi.repository import Gtk
 
 
-class SimulationControlWidget(QWidget):
+class SimulationControlWidget(Gtk.Box):
 
     """
     Widget for controlling the simulation firmware.
@@ -28,34 +27,42 @@ class SimulationControlWidget(QWidget):
 
         :param simulation: Simulation instance to control firmware operations.
         """
-        super().__init__()
+        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=0)
 
         self.simulation = simulation
 
         # Create buttons
-        self.button_start = QPushButton("Start")
-        self.button_stop = QPushButton("Stop")
-        self.button_reload = QPushButton("Reload")
+        self.button_start = Gtk.Button(label="Start")
+        self.button_stop = Gtk.Button(label="Stop")
+        self.button_reload = Gtk.Button(label="Reload")
 
         # Connect button signals to simulation methods
-        self.button_start.clicked.connect(self.simulation.start_firmware)
-        self.button_stop.clicked.connect(self.simulation.stop_firmware)
-        self.button_reload.clicked.connect(self.simulation.reload_firmware)
+        self.button_start.connect("clicked", lambda btn: self.simulation.start_firmware())
+        self.button_stop.connect("clicked", lambda btn: self.simulation.stop_firmware())
+        self.button_reload.connect("clicked", lambda btn: self.simulation.reload_firmware())
 
         # Create a grid layout and add buttons to the layout
-        button_layout = QGridLayout()
-        button_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        button_layout.addWidget(self.button_start, 0, 1)
-        button_layout.addWidget(self.button_stop, 0, 2)
-        button_layout.addWidget(self.button_reload, 0, 3)
+        button_grid = Gtk.Grid()
+        button_grid.set_valign(Gtk.Align.START)
+        button_grid.set_column_spacing(5)
+        button_grid.set_row_spacing(5)
+        button_grid.attach(self.button_start, 1, 0, 1, 1)
+        button_grid.attach(self.button_stop, 2, 0, 1, 1)
+        button_grid.attach(self.button_reload, 3, 0, 1, 1)
 
-        # Add buttons to a group box with a title "Device Status"
-        group_box = QGroupBox("Device Status")
-        group_layout = QVBoxLayout()
-        group_layout.addLayout(button_layout)
-        group_box.setLayout(group_layout)
+        # Create a frame with a title "Device Status"
+        frame = Gtk.Frame()
+        frame.set_label("Device Status")
+        
+        # Create a box for the frame content
+        frame_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        frame_box.set_margin_start(10)
+        frame_box.set_margin_end(10)
+        frame_box.set_margin_top(10)
+        frame_box.set_margin_bottom(10)
+        frame_box.append(button_grid)
+        
+        frame.set_child(frame_box)
 
-        # Main layout for this widget
-        main_layout = QVBoxLayout()
-        main_layout.addWidget(group_box)
-        self.setLayout(main_layout)
+        # Add the frame to this widget
+        self.append(frame)

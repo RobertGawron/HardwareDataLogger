@@ -58,9 +58,8 @@ set(DRIVER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Driver/Src/St7735DisplayBrightnessDriver.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Driver/Src/St7735DisplayDriver.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Driver/Src/UartDriver.cpp
-    # From Common folder, shared with ESP
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Common/CobsEncoder.cpp  
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Common/Crc32.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Device/Src/CobsEncoder.cpp  
+    ${CMAKE_CURRENT_SOURCE_DIR}/Device/Src/Crc32.cpp
     # From outside of Cube MX, its CMake doesnt know it
     ${CMAKE_CURRENT_SOURCE_DIR}/../FATFS/Target/user_diskio_spi.c
 )

@@ -27,6 +27,10 @@ log = "0.4"
 esp-idf-svc = "0.51"
 esp-idf-hal = "0.45"
 anyhow = "1.0"
+embedded-svc = "0.28.1"
+heapless = "0.9.1"
+toml-cfg = "0.2" # Check for the latest version
+serde = { version = "1", features = ["derive"] }
 
 # --- Optional Embassy Integration ---
 # esp-idf-svc = { version = "0.51", features = ["critical-section", "embassy-time-driver", "embassy-sync"] }

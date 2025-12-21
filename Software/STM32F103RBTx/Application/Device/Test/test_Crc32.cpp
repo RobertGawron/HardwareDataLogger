@@ -1,4 +1,4 @@
-#include "Crc32.hpp"
+#include "Device/Inc/Crc32.hpp"
 #include <gtest/gtest.h>
 #include <cstdint>
 #include <cstring>

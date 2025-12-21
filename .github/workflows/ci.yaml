@@ -14,6 +14,7 @@ jobs:
   build:
     name: Build Docker Image
     runs-on: ubuntu-latest
+    timeout-minutes: 360  # Increase to 6 hours (the max for hosted runners)
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,9 +30,17 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and Push Docker Image
-        run: |
-          docker build -t ghcr.io/robertgawron/hardwaredatalogger:${{ github.sha }} -f DevOps/Dockerfile .
-          docker push ghcr.io/robertgawron/hardwaredatalogger:${{ github.sha }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: DevOps/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/robertgawron/hardwaredatalogger:${{ github.sha }}
+            ghcr.io/robertgawron/hardwaredatalogger:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: false
 
   # Parallel Jobs: Unit Tests, Code Coverage, etc.
   unit-tests:
@@ -68,7 +77,7 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake .. && make -j24 && cd /workspace/build/Test/Unit/ && ctest --output-on-failure"
+          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make test_biz && make test_dev && make test_drv"
         
       - name: Clean up Docker containers
         run: |
@@ -156,7 +165,7 @@ jobs:
 
       - name: Run Code Coverage
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace/build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j$(nproc) && make coverage"
+          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make test_biz && make test_dev && make test_drv && make cov"
 
       - name: Upload Code Coverage Results
         if: always()
@@ -203,7 +212,7 @@ jobs:
 
       - name: Run Docs Coverage
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace/build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j$(nproc) && make docs"
+          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make docs"
 
       - name: Upload Docs Coverage Results
         if: always()
@@ -250,9 +259,7 @@ jobs:
 
       - name: Run Static Analysis
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "\
-            set -e; \
-            cd /workspace/build && cmake .. && make pystatic"
+          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make pystatic"
 
       - name: Upload Static Analysis (Python) Results
         if: always()
@@ -299,9 +306,7 @@ jobs:
 
       - name: Run Static Analysis
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "\
-            set -e; \
-            cd /workspace/build && cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CXX_STANDARD=17 .. && make static"
+          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace/build && cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug .. && make static"
 
       - name: Upload Static Analysis Results
         if: always()

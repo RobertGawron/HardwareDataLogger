@@ -11,7 +11,6 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # Include toolchain before project()
-include("cmake/gcc-arm-none-eabi.cmake")
 
 # Core project definition
 project(HardwareDataLogger_STM32F103RBTx LANGUAGES C CXX ASM)

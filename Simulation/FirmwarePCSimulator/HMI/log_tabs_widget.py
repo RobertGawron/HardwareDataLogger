@@ -1,15 +1,14 @@
 """
-Module for managing log tabs in a PyQt6 GUI application.
+Module for managing log tabs in a GTK GUI application.
 
 This module defines a `LogTabsWidget` class for displaying log messages
 in categorized tabs, such as Pulse Counter and various UART channels.
 """
 
 from enum import Enum
-from PyQt6.QtWidgets import (
-    QWidget, QVBoxLayout, QTabWidget, QTextEdit
-)
-from PyQt6.QtGui import QFont
+import gi
+gi.require_version('Gtk', '4.0')
+from gi.repository import Gtk, Pango
 
 
 class LogTabID(Enum):
@@ -24,7 +23,7 @@ class LogTabID(Enum):
     ESP8266_UART_1 = 5
 
 
-class LogTabsWidget(QWidget):
+class LogTabsWidget(Gtk.Box):
 
     """
     Widget for managing log tabs and displaying categorized log messages.
@@ -39,16 +38,14 @@ class LogTabsWidget(QWidget):
 
         Sets up the tabbed interface and initializes log storage for each tab.
         """
-        super().__init__()
+        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=0)
 
-        # Main layout for the widget
-        main_layout = QVBoxLayout()
-        self.setLayout(main_layout)
+        # Create the notebook (tab widget)
+        self.tabs = Gtk.Notebook()
+        self.tabs.set_hexpand(True)
+        self.tabs.set_vexpand(True)
 
-        # Create the tab widget
-        self.tabs = QTabWidget()
-
-        # Store references to text edits for each tab
+        # Store references to text views for each tab
         self.log_outputs = {}
 
         # Add a single Pulse Counter tab
@@ -58,18 +55,33 @@ class LogTabsWidget(QWidget):
         self.create_uart_tabs()
 
         # Add tabs to the layout
-        main_layout.addWidget(self.tabs)
+        self.append(self.tabs)
 
     def create_pulse_counter_tab(self):
         """Create a single tab for Pulse Counter with fixed-width font log output."""
-        # Create a QTextEdit for log output
-        log_output = QTextEdit()
-        log_output.setReadOnly(True)
-        log_output.setFont(QFont("Courier", 10))  # Fixed-width font
+        # Create a scrolled window
+        scrolled_window = Gtk.ScrolledWindow()
+        scrolled_window.set_hexpand(True)
+        scrolled_window.set_vexpand(True)
+        
+        # Create a TextView for log output
+        log_view = Gtk.TextView()
+        log_view.set_editable(False)
+        log_view.set_cursor_visible(False)
+        log_view.set_monospace(True)  # Fixed-width font
+        
+        # Set font description
+        font_desc = Pango.FontDescription.from_string("Monospace 10")
+        log_view.override_font(font_desc)
+        
+        scrolled_window.set_child(log_view)
 
         # Store reference and add to the tab
-        self.log_outputs[LogTabID.PULSE_COUNTER] = log_output
-        self.tabs.addTab(log_output, "Pulse Counter")
+        self.log_outputs[LogTabID.PULSE_COUNTER] = log_view
+        
+        # Create tab label
+        tab_label = Gtk.Label(label="Pulse Counter")
+        self.tabs.append_page(scrolled_window, tab_label)
 
     def create_uart_tabs(self):
         """Create tabs for UART logs."""
@@ -81,14 +93,32 @@ class LogTabsWidget(QWidget):
             LogTabID.ESP8266_UART_1: "ESP8266 UART #1",
         }
         for tab_id, name in uart_tabs.items():
-            log_output = QTextEdit()
-            log_output.setReadOnly(True)
-            log_output.setFont(QFont("Courier", 10))  # Fixed-width font
-            log_output.setPlaceholderText(f"Logs for {name}")
+            # Create a scrolled window
+            scrolled_window = Gtk.ScrolledWindow()
+            scrolled_window.set_hexpand(True)
+            scrolled_window.set_vexpand(True)
+            
+            # Create a TextView for log output
+            log_view = Gtk.TextView()
+            log_view.set_editable(False)
+            log_view.set_cursor_visible(False)
+            log_view.set_monospace(True)  # Fixed-width font
+            
+            # Set font description
+            font_desc = Pango.FontDescription.from_string("Monospace 10")
+            log_view.override_font(font_desc)
+            
+            # Set placeholder (using buffer with gray text as placeholder)
+            buffer = log_view.get_buffer()
+            
+            scrolled_window.set_child(log_view)
 
             # Store reference and add to the tab
-            self.log_outputs[tab_id] = log_output
-            self.tabs.addTab(log_output, name)
+            self.log_outputs[tab_id] = log_view
+            
+            # Create tab label
+            tab_label = Gtk.Label(label=name)
+            self.tabs.append_page(scrolled_window, tab_label)
 
     def add_log(self, tab_id, timestamp, message):
         """
@@ -99,10 +129,16 @@ class LogTabsWidget(QWidget):
         :param message: Log message content.
         """
         if tab_id in self.log_outputs:
-            log_widget = self.log_outputs[tab_id]
-            log_widget.append(f"[{timestamp}] {message}")
-            log_widget.verticalScrollBar().setValue(
-                log_widget.verticalScrollBar().maximum()
-            )
+            log_view = self.log_outputs[tab_id]
+            buffer = log_view.get_buffer()
+            
+            # Get end iterator and insert text
+            end_iter = buffer.get_end_iter()
+            buffer.insert(end_iter, f"[{timestamp}] {message}\n")
+            
+            # Scroll to the end
+            end_mark = buffer.create_mark(None, buffer.get_end_iter(), False)
+            log_view.scroll_to_mark(end_mark, 0.0, True, 0.0, 1.0)
+            buffer.delete_mark(end_mark)
         else:
             raise ValueError(f"Invalid tab ID: {tab_id}")

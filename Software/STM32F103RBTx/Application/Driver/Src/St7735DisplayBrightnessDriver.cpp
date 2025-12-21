@@ -1,9 +1,7 @@
 #include "Driver/Inc/St7735DisplayBrightnessDriver.hpp"
 
-// #include "stm32f1xx_hal_def.h"
 #include "stm32f1xx_hal_tim.h"
 
-// #include "stm32f1xx_hal.h"
 #include <cstdint>
 
 namespace Driver

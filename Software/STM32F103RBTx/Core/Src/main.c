@@ -134,28 +134,10 @@ __HAL_AFIO_REMAP_SWJ_DISABLE();
   MX_USART1_UART_Init();
   MX_USART3_Init();
   MX_ADC2_Init();
- // MX_IWDG_Init();
+  MX_IWDG_Init();
   MX_SPI1_Init();
-
-{
-int x =  SPI1->CR1;
-int y = SPI1->CR2;
-int z =  SPI1->SR;
-}
-
- /* HAL_SPI_StateTypeDef dupa = HAL_SPI_GetState(&hspi1);
-  if (dupa == HAL_SPI_STATE_READY) {
-    // SPI is initialized and enabled
-volatile int isOK;
-  }*/
- // MX_WWDG_Init();
+  MX_WWDG_Init();
   MX_FATFS_Init();
-
-{
-int x =  SPI1->CR1;
-int y = SPI1->CR2;
-int z =  SPI1->SR;
-}
   /* USER CODE BEGIN 2 */
 
 // TODO
@@ -837,8 +819,7 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
-
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.

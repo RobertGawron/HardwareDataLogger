@@ -1,24 +1,25 @@
 """
-Module for visualizing data using a custom PyQt6 widget integrated
+Module for visualizing data using a custom GTK widget integrated
 with Matplotlib.
 
 This module defines a `DataVisualizationWidget` class, which provides a
 graphical representation of pulse counter data over time.
 """
 
-from PyQt6.QtWidgets import QWidget, QVBoxLayout
-from PyQt6.QtCore import Qt
+import gi
+gi.require_version('Gtk', '4.0')
+from gi.repository import Gtk
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_gtk4agg import FigureCanvasGTK4Agg as FigureCanvas
 
 
-class DataVisualizationWidget(QWidget):
+class DataVisualizationWidget(Gtk.Box):
 
     """
     Widget for visualizing pulse counter data.
 
     This widget uses Matplotlib to display pulse counter values over time
-    in a PyQt6 application.
+    in a GTK application.
     """
 
     # pylint: disable=too-few-public-methods
@@ -26,24 +27,25 @@ class DataVisualizationWidget(QWidget):
 
     def __init__(self):
         """Initialize the DataVisualizationWidget."""
-        super().__init__()
-
-        # Main layout for the Data Visualization Widget
-        self.layout = QVBoxLayout()
-        self.layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        
+        # Set alignment to top
+        self.set_valign(Gtk.Align.START)
 
         # Create a Matplotlib figure and canvas
         self.figure, self.ax = plt.subplots()
         self.canvas = FigureCanvas(self.figure)
+        
+        # Set the canvas to expand and fill
+        self.canvas.set_hexpand(True)
+        self.canvas.set_vexpand(True)
 
-        # Add the canvas to the layout
-        self.layout.addWidget(self.canvas)
+        # Add the canvas to the box
+        self.append(self.canvas)
 
         # Initialize data storage for pulse counters
         self.time_stamps = []
         self.pulse_counters = {i: [] for i in range(4)}  # 4 pulse counters
-
-        self.setLayout(self.layout)
 
     def update_pulse_counters(self, timestamp, new_values):
         """

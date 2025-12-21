@@ -1,13 +1,17 @@
-FROM ubuntu:24.04
-
-# Set the working directory
-WORKDIR /workspace
+FROM ubuntu:24.04 AS base
 
 # Avoid prompts from apt
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install all required dependencies
-RUN apt-get update && apt-get install -y \
+# Set the working directory
+WORKDIR /workspace
+
+# ---------------------------------------------------------------------
+# STAGE 1: System dependencies (changes rarely)
+# ---------------------------------------------------------------------
+FROM base AS system-deps
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
     git \
@@ -68,18 +72,25 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     libssl-dev \
     libudev-dev \
+    ca-certificates \
+    cpulimit \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # ---------------------------------------------------------------------
-# PYTHON SETUP
+# STAGE 2: Python environment (changes occasionally)
 # ---------------------------------------------------------------------
+FROM system-deps AS python-env
 
-# Create a virtual environment in /workspace/venv
+# Create a virtual environment
 RUN python3 -m venv /workspace/venv
 
-# Activate the virtual environment and install the packages
-RUN /workspace/venv/bin/pip install --upgrade pip && \
-    /workspace/venv/bin/pip install \
+# Set environment variables for Python
+ENV PATH="/workspace/venv/bin:$PATH"
+ENV QT_PLUGIN_PATH="/workspace/venv/lib/python3.12/site-packages/PyQt6/Qt6/plugins"
+
+# Upgrade pip and install Python packages
+RUN /workspace/venv/bin/pip install --no-cache-dir --upgrade pip && \
+    /workspace/venv/bin/pip install --no-cache-dir \
     cpplint \
     gprof2dot \
     coverxygen \
@@ -91,63 +102,57 @@ RUN /workspace/venv/bin/pip install --upgrade pip && \
     prospector \
     vjunit
 
-# Add virtual environment binaries to the PATH
-ENV PATH="/workspace/venv/bin:$PATH"
-
-# Set the QT_PLUGIN_PATH environment variable
-ENV QT_PLUGIN_PATH="/workspace/venv/lib/python3.12/site-packages/PyQt6/Qt6/plugins"
-
-
 # ---------------------------------------------------------------------
-# RUST & ESP32 TOOLCHAIN SETUP
+# STAGE 3: Rust toolchain (slowest, changes rarely)
 # ---------------------------------------------------------------------
+FROM python-env AS rust-toolchain
 
-# 1. Install rustup specifically for the Root user
-# We set the default toolchain to 'stable' because espup needs a base to work from
+# Install rustup for root user
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- \
     --default-toolchain stable -y --profile minimal
 
-# 2. CRITICAL: Manually set the PATH so the rest of the RUN commands see 'rustup' and 'cargo'
+# Set PATH for Rust
 ENV PATH="/root/.cargo/bin:${PATH}"
 
-# 3. Install extra crates
-RUN ARCH=$(rustc -Vv | grep host | cut -d ' ' -f 2) && \
+# Install Rust tools in a single layer
+ARG ARCH
+RUN if [ -z "$ARCH" ]; then ARCH=$(uname -m)-unknown-linux-gnu; fi && \
     curl -L "https://github.com/esp-rs/espup/releases/latest/download/espup-${ARCH}" -o "/root/.cargo/bin/espup" && \
     chmod u+x "/root/.cargo/bin/espup" && \
-    curl -L "https://github.com/esp-rs/espflash/releases/latest/download/cargo-espflash-${ARCH}.zip" -o "/root/.cargo/bin/cargo-espflash.zip" && \
-    unzip "/root/.cargo/bin/cargo-espflash.zip" -d "/root/.cargo/bin/" && \
-    curl -L "https://github.com/esp-rs/embuild/releases/latest/download/ldproxy-${ARCH}.zip" -o "/root/.cargo/bin/ldproxy.zip" && \
-    unzip "/root/.cargo/bin/ldproxy.zip" -d "/root/.cargo/bin/" && \
-    rm /root/.cargo/bin/*.zip && \
+    curl -L "https://github.com/esp-rs/espflash/releases/latest/download/cargo-espflash-${ARCH}.zip" -o "/tmp/cargo-espflash.zip" && \
+    unzip "/tmp/cargo-espflash.zip" -d "/root/.cargo/bin/" && \
+    curl -L "https://github.com/esp-rs/embuild/releases/latest/download/ldproxy-${ARCH}.zip" -o "/tmp/ldproxy.zip" && \
+    unzip "/tmp/ldproxy.zip" -d "/root/.cargo/bin/" && \
+    rm /tmp/*.zip && \
     chmod u+x /root/.cargo/bin/cargo-espflash /root/.cargo/bin/ldproxy
 
-# 4. Install Xtensa Rust
-# Note: Since we are root, we export to /root/export-esp.sh
+# ---------------------------------------------------------------------
+# STAGE 4: ESP32 toolchain (slowest part)
+# ---------------------------------------------------------------------
+FROM rust-toolchain AS esp-toolchain
+
 ARG ESP_BOARD=all
+ARG GITHUB_TOKEN
 
-RUN if [ -n "${GITHUB_TOKEN}" ]; then export GITHUB_TOKEN=${GITHUB_TOKEN}; fi \
-    && espup install \
+# Install Xtensa Rust
+RUN if [ -n "${GITHUB_TOKEN}" ]; then export GITHUB_TOKEN=${GITHUB_TOKEN}; fi && \
+    espup install \
     --targets "${ESP_BOARD}" \
-    --log-level debug \
-    --export-file /root/export-esp.sh
+    --log-level info \
+    --export-file /root/export-esp.sh && \
+    rustup default esp
 
-# 5. Set default toolchain to the one espup just created
-RUN rustup default esp
-
-# 6. Make sure the ESP environment is loaded for future shells
+# Set up bash environment
 RUN echo "source /root/export-esp.sh" >> /root/.bashrc
 
-
-# Activate ESP environment
-RUN echo "source /home/${CONTAINER_USER}/export-esp.sh" >> ~/.bashrc
-
-
 # ---------------------------------------------------------------------
-# FINAL CONFIGURATION
+# FINAL STAGE: Runtime environment
 # ---------------------------------------------------------------------
+FROM esp-toolchain AS final
 
+# Create build directory
 RUN mkdir -p /workspace/build
-WORKDIR /workspace/build
 
+WORKDIR /workspace/build
 
 CMD ["bash"]

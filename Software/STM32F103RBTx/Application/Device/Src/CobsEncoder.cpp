@@ -1,4 +1,4 @@
-#include "CobsEncoder.hpp"
+#include "Device/Inc/CobsEncoder.hpp"
 
 #include <cstddef>
 #include <cstdint>

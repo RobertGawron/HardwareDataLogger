@@ -1,18 +1,17 @@
 """
-Module for creating a direction button widget in a PyQt6 GUI.
+Module for creating a direction button widget in a GTK GUI.
 
 This widget provides directional buttons (Up, Down, Left, Right) and
 integrates with a simulation to trigger key press and release events.
 """
 
-from PyQt6.QtWidgets import (
-    QWidget, QGridLayout, QPushButton, QGroupBox, QVBoxLayout
-)
-from PyQt6.QtCore import Qt
+import gi
+gi.require_version('Gtk', '4.0')
+from gi.repository import Gtk
 from simulation import SimulationKey
 
 
-class DirectionButtonWidget(QWidget):
+class DirectionButtonWidget(Gtk.Box):
 
     """
     Widget for managing directional hardware buttons.
@@ -31,60 +30,60 @@ class DirectionButtonWidget(QWidget):
 
         :param simulation: Simulation instance to handle button events.
         """
-        super().__init__()
+        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=0)
 
         self.simulation = simulation
 
         # Create buttons
-        self.button_up = QPushButton("Up")
-        self.button_down = QPushButton("Down")
-        self.button_left = QPushButton("Left")
-        self.button_right = QPushButton("Right")
+        self.button_up = Gtk.Button(label="Up")
+        self.button_down = Gtk.Button(label="Down")
+        self.button_left = Gtk.Button(label="Left")
+        self.button_right = Gtk.Button(label="Right")
 
         # Create a grid layout and add buttons to the layout
-        button_layout = QGridLayout()
-        button_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        button_layout.addWidget(self.button_up, 0, 1)
-        button_layout.addWidget(self.button_down, 1, 1)
-        button_layout.addWidget(self.button_left, 1, 0)
-        button_layout.addWidget(self.button_right, 1, 2)
+        button_grid = Gtk.Grid()
+        button_grid.set_valign(Gtk.Align.START)
+        button_grid.set_row_spacing(5)
+        button_grid.set_column_spacing(5)
+        button_grid.attach(self.button_up, 1, 0, 1, 1)
+        button_grid.attach(self.button_down, 1, 1, 1, 1)
+        button_grid.attach(self.button_left, 0, 1, 1, 1)
+        button_grid.attach(self.button_right, 2, 1, 1, 1)
 
-        # Connect signals for pressed/released
-        self.button_up.pressed.connect(
-            lambda: self.simulation.key_pressed(SimulationKey.UP)
-        )
-        self.button_up.released.connect(
-            lambda: self.simulation.key_released(SimulationKey.UP)
-        )
+        # Create gesture controllers for pressed/released events
+        self._setup_button_gestures(self.button_up, SimulationKey.UP)
+        self._setup_button_gestures(self.button_down, SimulationKey.DOWN)
+        self._setup_button_gestures(self.button_left, SimulationKey.LEFT)
+        self._setup_button_gestures(self.button_right, SimulationKey.RIGHT)
 
-        self.button_down.pressed.connect(
-            lambda: self.simulation.key_pressed(SimulationKey.DOWN)
-        )
-        self.button_down.released.connect(
-            lambda: self.simulation.key_released(SimulationKey.DOWN)
-        )
+        # Create a frame to enclose buttons with a title
+        frame = Gtk.Frame()
+        frame.set_label("Hardware Buttons")
+        frame.set_child(button_grid)
+        frame.set_margin_start(5)
+        frame.set_margin_end(5)
+        frame.set_margin_top(5)
+        frame.set_margin_bottom(5)
 
-        self.button_left.pressed.connect(
-            lambda: self.simulation.key_pressed(SimulationKey.LEFT)
-        )
-        self.button_left.released.connect(
-            lambda: self.simulation.key_released(SimulationKey.LEFT)
-        )
+        # Add the frame to this widget
+        self.append(frame)
 
-        self.button_right.pressed.connect(
-            lambda: self.simulation.key_pressed(SimulationKey.RIGHT)
-        )
-        self.button_right.released.connect(
-            lambda: self.simulation.key_released(SimulationKey.RIGHT)
-        )
+    def _setup_button_gestures(self, button, key):
+        """
+        Set up gesture controllers for button press and release events.
 
-        # Group box to enclose buttons with a frame and title
-        group_box = QGroupBox("Hardware Buttons")
-        group_layout = QVBoxLayout()
-        group_layout.addLayout(button_layout)
-        group_box.setLayout(group_layout)
-
-        # Set the main layout for this widget
-        main_layout = QVBoxLayout()
-        main_layout.addWidget(group_box)
-        self.setLayout(main_layout)
+        :param button: The Gtk.Button to configure.
+        :param key: The SimulationKey associated with this button.
+        """
+        # Create a gesture controller for the button
+        gesture = Gtk.GestureClick.new()
+        gesture.set_button(1)  # Left mouse button
+        
+        # Connect pressed signal
+        gesture.connect("pressed", lambda g, n, x, y: self.simulation.key_pressed(key))
+        
+        # Connect released signal
+        gesture.connect("released", lambda g, n, x, y: self.simulation.key_released(key))
+        
+        # Add the gesture to the button
+        button.add_controller(gesture)

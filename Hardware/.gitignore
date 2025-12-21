@@ -30,3 +30,7 @@ _autosave-*.kicad_sch
 
 # KiCad to Blender export files
 *.pcb3d
+
+# Add-ons files
+gerber_to_order/
+bom/

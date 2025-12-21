@@ -1,4 +1,4 @@
-#include "CobsEncoder.hpp"
+#include "Device/Inc/CobsEncoder.hpp"
 #include <gtest/gtest.h>
 #include <array>
 #include <cstdint>
