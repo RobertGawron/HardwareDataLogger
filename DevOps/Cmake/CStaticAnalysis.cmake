@@ -24,7 +24,7 @@ file(MAKE_DIRECTORY ${CODECHECKER_REPORT_DIR})
 
 # Add a custom target for CodeChecker analysis
 add_custom_target(static
-    COMMAND cpulimit -l 50 -- CodeChecker analyze compile_commands.json
+    COMMAND cpulimit -l 70 -- CodeChecker analyze compile_commands.json
         --output ${CODECHECKER_ANALYZE_DIR}
         --file ${CODECHECKER_SOURCE_DIRS}
         --skip ${CODECHECKER_SKIP_FILE}
