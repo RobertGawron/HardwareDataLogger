@@ -1,7 +1,0 @@
-setup.py
-stm32f103_simulator/__init__.py
-stm32f103_simulator/stm32f103.py
-stm32f103_simulator.egg-info/PKG-INFO
-stm32f103_simulator.egg-info/SOURCES.txt
-stm32f103_simulator.egg-info/dependency_links.txt
-stm32f103_simulator.egg-info/top_level.txt
