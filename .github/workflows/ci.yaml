@@ -73,15 +73,15 @@ jobs:
 
       - name: Run Docker Compose
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
+          docker-compose -f docker-compose.yml -f docker-compose.yml up -d
 
       - name: Run Unit Tests
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make test_biz && make test_dev && make test_drv"
+          docker-compose -f docker-compose.yml -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make test_biz && make test_dev && make test_drv"
         
       - name: Clean up Docker containers
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml down
+          docker-compose -f docker-compose.yml -f docker-compose.yml down
 
   system-tests:
     name: Run System Tests
@@ -113,11 +113,11 @@ jobs:
 
       - name: Run Docker Compose
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
+          docker-compose -f docker-compose.yml -f docker-compose.yml up -d
 
       - name: Run System Tests
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace/build/ && cmake .. && make -j24 && cd /workspace/Test/System && pytest test_*.py -s  --html=/workspace/build/BuildArtifacts/SystemTests.html"
+          docker-compose -f docker-compose.yml -f docker-compose.yml exec -T dev bash -c "cd /workspace/build/ && cmake .. && make -j24 && cd /workspace/Test/System && pytest test_*.py -s  --html=/workspace/build/BuildArtifacts/SystemTests.html"
 
       - name: Upload System Tests Results
         if: always()
@@ -128,7 +128,7 @@ jobs:
 
       - name: Clean up Docker containers
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml down
+          docker-compose -f docker-compose.yml -f docker-compose.yml down
         
 
   code-coverage:
@@ -161,11 +161,11 @@ jobs:
 
       - name: Run Docker Compose
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
+          docker-compose -f docker-compose.yml -f docker-compose.yml up -d
 
       - name: Run Code Coverage
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make test_biz && make test_dev && make test_drv && make cov"
+          docker-compose -f docker-compose.yml -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make test_biz && make test_dev && make test_drv && make cov"
 
       - name: Upload Code Coverage Results
         if: always()
@@ -176,7 +176,7 @@ jobs:
 
       - name: Clean up Docker containers
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml down
+          docker-compose -f docker-compose.yml -f docker-compose.yml down
 
   docs-coverage:
     name: Run Docs Coverage
@@ -208,11 +208,11 @@ jobs:
 
       - name: Run Docker Compose
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
+          docker-compose -f docker-compose.yml -f docker-compose.yml up -d
 
       - name: Run Docs Coverage
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make docs"
+          docker-compose -f docker-compose.yml -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make docs"
 
       - name: Upload Docs Coverage Results
         if: always()
@@ -223,7 +223,7 @@ jobs:
         
       - name: Clean up Docker containers
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml down
+          docker-compose -f docker-compose.yml -f docker-compose.yml down
 
   static-analysis-python:
     name: Run Static Analysis (python)
@@ -255,11 +255,11 @@ jobs:
 
       - name: Run Docker Compose
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
+          docker-compose -f docker-compose.yml -f docker-compose.yml up -d
 
       - name: Run Static Analysis
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make pstatic"
+          docker-compose -f docker-compose.yml -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make pstatic"
 
       - name: Upload Static Analysis (Python) Results
         if: always()
@@ -270,7 +270,7 @@ jobs:
 
       - name: Clean up Docker containers
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml down
+          docker-compose -f docker-compose.yml -f docker-compose.yml down
 
   static-analysis-c:
     name: Run Static Analysis (cpp)
@@ -302,11 +302,11 @@ jobs:
 
       - name: Run Docker Compose
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
+          docker-compose -f docker-compose.yml -f docker-compose.yml up -d
 
       - name: Run Static Analysis
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml exec -T dev bash -c "cd /workspace/build && cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug .. && make cstatic"
+          docker-compose -f docker-compose.yml -f docker-compose.yml exec -T dev bash -c "cd /workspace/build && cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug .. && make cstatic"
 
       - name: Upload Static Analysis Results
         if: always()
@@ -317,4 +317,4 @@ jobs:
 
       - name: Clean up Docker containers
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.ci.yml down          
+          docker-compose -f docker-compose.yml -f docker-compose.yml down          
