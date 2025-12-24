@@ -1,18 +1,12 @@
-# Purpouse
+# Purpose
 
-This is a mock library that replaces real drivers that uses low level libraries (HAL etc.). It's used to build PC based variant of the firmware used for sstel tests ans simulation. 
+The firmware can be compiled into a library that can run on a PC. This allows for easy development of the non-hardware-related logic. To enable this, a mock version of the drivers used by the firmware exists. These drivers here:
+    * Do not have dependencies on HAL or other low-level libraries.
+    * Have the extra capability to trigger events and receive data from the firmware (e.g., calling the system tick, getting data from UART, etc.).
 
-# Content
-
-This folder contains:
-
-* C++ mocks for drivers in Driver/ folder
-* C++ mock for PlatformFactoryStm32.cpp
-* CMake to build the C++ code into a library
-* low level C library wrapper: device_under_test.py
-* high level wrapper that provides easy to use API to interact with the firmware's drivers:  simulation.py
+In addition, there is a Python package that wraps this library and provides an easy-to-use interface for tests or simulation.
 
 # Assumptions
 
-* No high abstractiosn libs are included here, no GUI, test framewroks etc
-* Mock only and all cpp files from Driver/ folder
+    * No high-abstraction libraries are included here (e.g., no GUI, test frameworks, etc.).
+    * The mock covers only the .cpp files from the Driver/ folder, meaning no mocks are needed or should be created for the BusinessLogic and Device folders.
