@@ -1,7 +1,7 @@
 #ifndef ISdCardDriver_H_
 #define ISdCardDriver_H_
 
-#include "Driver/Inc/DriverState.hpp"
+#include "Driver/Interfaces/DriverState.hpp"
 
 namespace Driver
 {

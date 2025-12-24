@@ -18,7 +18,7 @@
 #include "Driver/Interfaces/ISdCardDriver.hpp"
 #include "Driver/Inc/UartIdentifier.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
-#include "Driver/Inc/PulseCounterIdentifier.hpp"
+#include "Driver/Interfaces/PulseCounterIdentifier.hpp"
 #include "Driver/Interfaces/IPulseCounterDriver.hpp"
 
 namespace BusinessLogic

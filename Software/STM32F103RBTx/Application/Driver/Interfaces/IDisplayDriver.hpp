@@ -7,7 +7,7 @@
 #define IDISPLAYDRIVER_H_
 
 #include <cstdint>
-#include "Driver/Inc/DriverState.hpp"
+#include "Driver/Interfaces/DriverState.hpp"
 #include "Driver/Inc/DisplayPixelColor.hpp"
 
 namespace Driver
@@ -29,7 +29,8 @@ namespace Driver
          * @enum StatusEnum
          * @brief Operation status codes for display operations.
          */
-        enum class StatusEnum : std::uint8_t {
+        enum class StatusEnum : std::uint8_t
+        {
             Ok = 0u,  ///< Operation completed successfully.
             Fail = 1u ///< Operation failed.
         };
@@ -40,13 +41,13 @@ namespace Driver
          * @enum OrientationEnum
          * @brief Display orientation options.
          */
-        enum class OrientationEnum : std::uint8_t {
+        enum class OrientationEnum : std::uint8_t
+        {
             Horizontal = 0u, ///< Display is in horizontal orientation.
             Vertical = 1u    ///< Display is in vertical orientation.
         };
 
         using Orientation = OrientationEnum; ///< Alias for OrientationEnum.
-
 
         /**
          * @brief Virtual destructor for IDisplayDriver.

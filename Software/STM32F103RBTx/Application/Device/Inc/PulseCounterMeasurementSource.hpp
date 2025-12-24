@@ -9,7 +9,7 @@
 
 #include "Device/Interfaces/IMeasurementSource.hpp"
 #include "Device/Inc/MeasurementDeviceId.hpp"
-#include "Driver/Inc/PulseCounterDriver.hpp"
+#include "Driver/Interfaces/IPulseCounterDriver.hpp"
 
 namespace Device
 {
@@ -39,7 +39,7 @@ namespace Device
          */
         ~PulseCounterMeasurementSource() override = default;
 
-        PulseCounterMeasurementSource(const PulseCounterMeasurementSource &) = delete; ///< Deleted copy constructor to prevent copying.
+        PulseCounterMeasurementSource(const PulseCounterMeasurementSource &) = delete;            ///< Deleted copy constructor to prevent copying.
         PulseCounterMeasurementSource &operator=(const PulseCounterMeasurementSource &) = delete; ///< Deleted assignment operator to prevent assignment.
 
         /**
@@ -47,13 +47,13 @@ namespace Device
          * @return True if initialization succeeded, false otherwise.
          */
         bool initialize() override;
-        
+
         /**
          * @brief Starts the pulse counter measurement process.
          * @return True if start succeeded, false otherwise.
          */
         bool start() override;
-        
+
         /**
          * @brief Stops the pulse counter measurement process.
          * @return True if stop succeeded, false otherwise.

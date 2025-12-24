@@ -6,8 +6,8 @@
 #ifndef IPulseCounterDriver_h
 #define IPulseCounterDriver_h
 
-#include "Driver/Inc/DriverState.hpp"
-#include "Driver/Inc/PulseCounterIdentifier.hpp"
+#include "Driver/Interfaces/DriverState.hpp"
+#include "Driver/Interfaces/PulseCounterIdentifier.hpp"
 
 namespace Driver
 {
@@ -22,9 +22,9 @@ namespace Driver
     class IPulseCounterDriver : public DriverState
     {
     public:
-        /** 
+        /**
          * @brief Type representing the counter value size.
-         * 
+         *
          * Defines the integer type used for storing pulse count values.
          */
         using CounterSizeType = std::uint32_t;
@@ -43,11 +43,11 @@ namespace Driver
 
         /**
          * @brief Retrieves the current pulse count value.
-         * 
+         *
          * @return The current pulse count value.
          */
         virtual CounterSizeType getMeasurement() = 0;
-        
+
         /**
          * @brief Resets the pulse counter to zero.
          */

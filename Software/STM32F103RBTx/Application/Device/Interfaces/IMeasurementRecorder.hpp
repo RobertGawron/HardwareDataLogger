@@ -2,7 +2,7 @@
 #define MeasurementRecorder_h
 
 #include "Device/Inc/MeasurementType.hpp"
-#include "Driver/Inc/DriverState.hpp"
+#include "Driver/Interfaces/DriverState.hpp"
 
 /**
  * @file MeasurementRecorder.h

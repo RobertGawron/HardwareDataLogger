@@ -2,7 +2,7 @@
 #include "Device/Inc/MeasurementDeviceId.hpp"
 #include "Device/Inc/MeasurementType.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
-#include "Driver/Inc/UartExchangeStatus.hpp"
+#include "Driver/Interfaces/UartExchangeStatus.hpp"
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>

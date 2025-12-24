@@ -12,7 +12,7 @@
 #include "Device/Interfaces/IKeyboard.hpp"
 #include "Device/Inc/KeyboardKeyActionState.hpp"
 #include "Driver/Interfaces/IKeyboardDriver.hpp"
-#include "Driver/Inc/KeyboardKeyIdentifier.hpp"
+#include "Driver/Interfaces/KeyboardKeyIdentifier.hpp"
 
 #include <cstdint>
 #include <array> // For std::array

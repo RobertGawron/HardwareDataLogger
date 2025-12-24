@@ -7,7 +7,7 @@
 #define IAMBIENTLIGHTSENSORDRIVER_H_
 
 #include <cstdint>
-#include "Driver/Inc/DriverState.hpp"
+#include "Driver/Interfaces/DriverState.hpp"
 
 namespace Driver
 {
@@ -31,7 +31,7 @@ namespace Driver
          */
         ~IAmbientLightSensorDriver() override = default;
 
-        IAmbientLightSensorDriver(const IAmbientLightSensorDriver &) = delete; ///< Deleted copy constructor.
+        IAmbientLightSensorDriver(const IAmbientLightSensorDriver &) = delete;            ///< Deleted copy constructor.
         IAmbientLightSensorDriver &operator=(const IAmbientLightSensorDriver &) = delete; ///< Deleted assignment operator.
 
         /**
@@ -42,7 +42,7 @@ namespace Driver
          *
          * @return The current ambient light level as a 32-bit unsigned integer.
          */
-        [[nodiscard]] virtual std::uint16_t getAmbientLightLevel() const = 0;
+        [[nodiscard]] virtual std::uint32_t getAmbientLightLevel() const = 0;
     };
 }
 

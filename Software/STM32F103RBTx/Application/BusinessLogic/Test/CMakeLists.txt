@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.28)
 project(BusinessLogicUnitTests)
 
 # 1. Setup Environment
@@ -63,12 +63,12 @@ endfunction()
 
 create_test_exec(test_MeasurementDataStore
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic/Src/MeasurementDataStore.cpp
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp
     test_MeasurementDataStore.cpp
 )
 
 create_test_exec(test_MeasurementCoordinator
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic//Src/MeasurementCoordinator.cpp
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp
     test_MeasurementCoordinator.cpp
 )

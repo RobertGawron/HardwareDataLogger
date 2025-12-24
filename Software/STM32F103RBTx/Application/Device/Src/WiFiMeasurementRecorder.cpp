@@ -2,7 +2,7 @@
 #include "Device/Inc/MeasurementType.hpp"
 #include "Device/Inc/CobsEncoder.hpp"
 
-#include "Driver/Inc/UartExchangeStatus.hpp"
+#include "Driver/Interfaces/UartExchangeStatus.hpp"
 #include "Driver/Interfaces/IUartDriver.hpp"
 
 #include <array>

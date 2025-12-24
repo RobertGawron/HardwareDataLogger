@@ -1,7 +1,7 @@
 #include "Device/Inc/Keyboard.hpp"
 #include "Device/Inc/KeyboardKeyActionState.hpp"
-#include "Driver/Inc/KeyboardKeyState.hpp"
-#include "Driver/Inc/KeyboardKeyIdentifier.hpp"
+#include "Driver/Interfaces/KeyboardKeyState.hpp"
+#include "Driver/Interfaces/KeyboardKeyIdentifier.hpp"
 #include "Driver/Interfaces/IKeyboardDriver.hpp"
 
 #include <cstdint>
@@ -27,7 +27,7 @@ namespace Device
     bool Keyboard::tick()
     {
         keyboardDriver.tick();
-        
+
         for (std::size_t i = 0; i < keyActionState.size(); ++i)
         {
             const auto keyId = static_cast<::Driver::KeyboardKeyIdentifier>(i);

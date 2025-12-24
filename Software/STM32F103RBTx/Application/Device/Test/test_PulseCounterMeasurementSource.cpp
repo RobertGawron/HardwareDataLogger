@@ -1,7 +1,7 @@
 #include "Device/Inc/PulseCounterMeasurementSource.hpp"
 #include "Device/Inc/MeasurementDeviceId.hpp"
 #include "Driver/Interfaces/IPulseCounterDriver.hpp"
-#include "Driver/Inc/PulseCounterIdentifier.hpp"
+#include "Driver/Interfaces/PulseCounterIdentifier.hpp"
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>

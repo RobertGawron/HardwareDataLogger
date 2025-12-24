@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.28)
 project(BusinessLogicUnitTests)
 
 # 1. Setup Environment
@@ -63,13 +63,13 @@ endfunction()
 
 create_test_exec(test_Keyboard 
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/Keyboard.cpp 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp
     test_Keyboard.cpp
 )
 
 create_test_exec(test_PulseCounterSource 
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/PulseCounterMeasurementSource.cpp 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp
     test_PulseCounterMeasurementSource.cpp
 )
 
@@ -78,14 +78,14 @@ create_test_exec(test_WiFiRecorder
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/WiFiMeasurementSerializer.cpp
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/CobsEncoder.cpp
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/Crc32.cpp
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp 
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp 
     test_WiFiMeasurementRecorder.cpp
 )
 
 create_test_exec(test_WiFiSerializer 
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/WiFiMeasurementSerializer.cpp
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/Crc32.cpp 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Src/DriverState.cpp 
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp 
     test_WiFiMeasurementSerializer.cpp
 )
 
