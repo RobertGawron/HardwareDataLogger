@@ -8,7 +8,7 @@
 
 #include <cstdint>
 #include "Driver/Interface/DriverState.hpp"
-#include "Driver/Inc/DisplayPixelColor.hpp"
+#include "Driver/Interface/DisplayPixelColor.hpp"
 
 namespace Driver
 {

@@ -38,5 +38,6 @@ docker-compose down --remove-orphans
 
 Oneliner to build and start:
 
+```
 docker-compose build dev && docker-compose up -d --remove-orphans && docker-compose exec dev bash
-
+```

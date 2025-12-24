@@ -11,12 +11,6 @@
 
 namespace Driver
 {
-    /**
-     * @class KeyboardDriverStub
-     * @brief Periodically reads the state of four push buttons via GPIO.
-     *
-     * This class represents the raw state of keys read from GPIO pins on a microcontroller to which the buttons are connected. Note that there is no HW debouncing circuit and there is no pull-up resistor o the pCB (the pull-up resistor is configured in CubeMX)
-     */
     class KeyboardDriverStub : public IKeyboardDriver
     {
     public:

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.28)
 project(HardwareDataLogger)
 
 # Global compiler settings (use sparingly)
@@ -6,12 +6,22 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
+set(COMPILE_FOR_PC TRUE)
+
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -pg")
     
     add_subdirectory(Software/STM32F103RBTx/Application/BusinessLogic/Test)
     add_subdirectory(Software/STM32F103RBTx/Application/Device/Test)
-    add_subdirectory(Software/STM32F103RBTx/Application/Driver/Test)
+    add_subdirectory(Software/STM32F103RBTx/Application/Driver/Hardware/Test)
+
+    # TODO made custom build for it
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+    add_subdirectory(Software/STM32F103RBTx/Application/Library/u8g2/)
+    add_subdirectory(Software/STM32F103RBTx/Application/BusinessLogic/)
+    add_subdirectory(Software/STM32F103RBTx/Application/Device/)
+    add_subdirectory(Software/STM32F103RBTx/Application/Driver/Host)
+    
 
     # Run Business Logic tests
     add_custom_target(ut_biz
@@ -36,6 +46,9 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
         COMMENT "Running All Unit Tests..."
     )
+
+ 
+
 
     # Code coverage for C++
     include(Software/STM32F103RBTx/Application/CodeCoverage.cmake)

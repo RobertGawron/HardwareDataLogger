@@ -34,7 +34,7 @@ class DeviceUnderTest:
         """Initialize the DeviceUnderTest class."""
         dll_name: str = "libSimulatorSTM32F103RBTx.so"
         dll_abs_path: str = (
-            "/workspace/build/Software/STM32F103RBTx/Application/MockHardware/libsimulator_stm32f103.so"
+            "/workspace/build/Software/STM32F103RBTx/Application/Driver/Host/libsimulator_stm32f103.so"
         )
         self.dut: ctypes.CDLL = ctypes.CDLL(dll_abs_path)
         self._serial_tx_callback_c = None

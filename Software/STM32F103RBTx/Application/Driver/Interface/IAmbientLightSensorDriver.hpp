@@ -6,8 +6,8 @@
 #ifndef IAMBIENTLIGHTSENSORDRIVER_H_
 #define IAMBIENTLIGHTSENSORDRIVER_H_
 
-#include <cstdint>
 #include "Driver/Interface/DriverState.hpp"
+#include <cstdint>
 
 namespace Driver
 {

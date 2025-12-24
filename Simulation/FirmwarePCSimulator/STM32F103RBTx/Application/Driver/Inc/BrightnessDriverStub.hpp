@@ -7,7 +7,7 @@
 #ifndef BrightnessDriverStub_H_
 #define BrightnessDriverStub_H_
 
-#include "Driver/Interfaces/IDisplayBrightnessDriver.hpp"
+#include "Driver/Interface/IDisplayBrightnessDriver.hpp"
 
 #include <stdint.h>
 

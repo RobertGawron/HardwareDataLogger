@@ -16,7 +16,7 @@
 #include "Driver/Interface/IDisplayDriver.hpp"
 #include "Driver/Interface/IKeyboardDriver.hpp"
 #include "Driver/Interface/ISdCardDriver.hpp"
-#include "Driver/Inc/UartIdentifier.hpp"
+#include "Driver/Interface/UartIdentifier.hpp"
 #include "Driver/Interface/IUartDriver.hpp"
 #include "Driver/Interface/PulseCounterIdentifier.hpp"
 #include "Driver/Interface/IPulseCounterDriver.hpp"

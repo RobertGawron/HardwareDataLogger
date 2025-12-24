@@ -1,6 +1,6 @@
 ## Prerequisites
 
-* [Install Docker and log into the container.](./SetupDockerContainers.md)
+* [Install Docker and log into the container.](./SetupDockerContainer.md)
 * Install CubeMX
 * Install VisualStudioCode
 * Generate the project in STM32CubeMX, which will create the CMake setup.

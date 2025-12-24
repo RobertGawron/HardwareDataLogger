@@ -6,7 +6,7 @@
 #ifndef SdCardDriverStub_H_
 #define SdCardDriverStub_H_
 
-#include "Driver/Interfaces/ISdCardDriver.hpp"
+#include "Driver/Interface/ISdCardDriver.hpp"
 
 namespace Driver
 {

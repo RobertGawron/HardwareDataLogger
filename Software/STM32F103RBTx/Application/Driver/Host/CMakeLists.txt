@@ -12,21 +12,26 @@ set(MOCK_ROOT "${APP_ROOT}/Driver/Host")
 add_library(SimulatorIncludes INTERFACE)
 target_include_directories(SimulatorIncludes INTERFACE
     ${APP_ROOT}
-    ${APP_ROOT}/Driver/Inc
-    ${APP_ROOT}/Driver/Interfaces
+    ${APP_ROOT}/Driver/Interface
     ${APP_ROOT}/Library/stm32-st7735
     ${APP_ROOT}/Library/u8g2/cppsrc
     ${APP_ROOT}/Library/u8g2/csrc
     ${CORE_ROOT}/Inc
-    ${MOCK_ROOT}/Driver/Inc
-    ${MOCK_ROOT}/System
+    ${MOCK_ROOT}/Inc
     ${MOCK_ROOT}
 )
 
 # Collect driver simulation sources that exist
 set(DRIVER_SOURCES)
-file(GLOB MOCK_DRIVER_SOURCES "${MOCK_ROOT}/*.cpp")
+
+file(GLOB MOCK_ROOT_SOURCES "${MOCK_ROOT}/*.cpp")
+list(APPEND DRIVER_SOURCES ${MOCK_ROOT_SOURCES})
+
+file(GLOB MOCK_DRIVER_SOURCES "${MOCK_ROOT}/Src/*.cpp")
 list(APPEND DRIVER_SOURCES ${MOCK_DRIVER_SOURCES})
+
+
+
 
 # Add specific driver sources if they exist
 foreach(src IN ITEMS
@@ -46,27 +51,9 @@ else()
     message(WARNING "No driver simulation sources found")
 endif()
 
-# Collect platform simulation sources
-set(PLATFORM_SOURCES)
-foreach(src IN ITEMS
-    "${CORE_ROOT}/Src/MyApplication.cpp"
-    "${MOCK_ROOT}/PlatformFactoryStm32.cpp"
-)
-    if(EXISTS ${src})
-        list(APPEND PLATFORM_SOURCES ${src})
-    endif()
-endforeach()
-
-# Only create library if we have sources
-if(PLATFORM_SOURCES)
-    add_library(PlatformSimulation SHARED ${PLATFORM_SOURCES})
-    target_link_libraries(PlatformSimulation PRIVATE SimulatorIncludes)
-else()
-    message(WARNING "No platform simulation sources found")
-endif()
-
 # Main simulator library
-add_library(SimulatorSTM32F103RBTx SHARED 
+add_library(SimulatorSTM32F103RBTx SHARED
+    "${APP_ROOT}/../Core/Src/MyApplication.cpp"
     "${MOCK_ROOT}/LibWrapper.cpp"
     "${MOCK_ROOT}/HmiEventHandlers.cpp"
 )

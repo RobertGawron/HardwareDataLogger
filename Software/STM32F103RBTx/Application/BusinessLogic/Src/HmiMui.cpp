@@ -109,7 +109,7 @@ namespace BusinessLogic
 
     bool HmiMui::start()
     {
-        // #if 0
+#if 0
         display.begin();
 
         mui.begin(display, fds_data, muif_list, sizeof(muif_list) / sizeof(muif_t));
@@ -126,6 +126,8 @@ namespace BusinessLogic
             mui.draw();
         } while (display.nextPage() > 0u);
 
+        return true;
+#endif
         return true;
     }
 

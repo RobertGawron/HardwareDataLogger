@@ -7,7 +7,7 @@
 #define UartDriverStub_h
 
 #include "Driver/Interface/IUartDriver.hpp"
-#include "Driver/Inc/UartIdentifier.hpp"
+#include "Driver/Interface/UartIdentifier.hpp"
 
 namespace Driver
 {

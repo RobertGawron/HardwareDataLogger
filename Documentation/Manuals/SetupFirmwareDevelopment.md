@@ -1,6 +1,6 @@
 ## Prerequisites
 
-[Install Docker and log into the container.](./SetupDockerContainers.md)
+[Install Docker and log into the container.](./SetupDockerContainer.md)
 
 ## Run Unit Tests
 

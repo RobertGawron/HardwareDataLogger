@@ -12,7 +12,7 @@ services:
     volumes:
       - ./Software:/workspace/Software
       - ./Simulation:/workspace/Simulation
-      - ./Test:/workspace/Test
+      - ./IntegrationTest:/workspace/IntegrationTest
       - ./DevOps/BuildArtifacts:/workspace/build/BuildArtifacts
       - ./DevOps/Scripts:/workspace/DevOps/Scripts
       - ./DevOps/Cmake:/workspace/DevOps/Cmake

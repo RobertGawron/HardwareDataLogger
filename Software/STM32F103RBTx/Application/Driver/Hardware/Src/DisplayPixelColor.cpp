@@ -1,4 +1,4 @@
-#include "Driver/Hardware/Inc/DisplayPixelColor.hpp"
+#include "Driver/Interface/DisplayPixelColor.hpp"
 
 namespace Driver
 {

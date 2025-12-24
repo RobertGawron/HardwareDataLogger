@@ -1,7 +1,7 @@
 #ifndef PlatformFactoryStm32_h
 #define PlatformFactoryStm32_h
 
-#include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
+#include "BusinessLogic/Interface/IPlatformFactory.hpp"
 namespace BusinessLogic
 {
     class PlatformFactoryStm32 : public IPlatformFactory
