@@ -25,21 +25,16 @@ namespace BusinessLogic
     bool ApplicationBuilder::initialize()
     {
         // can we recover from fault at any place here? I dont know.
-        bool status = false;
 
         // clang-format off
-                if ( sourceBuilder.initialize()
-                    && storesBuilder.initialize()
-                    && dataStore.initialize()
-                    && measurementCoordinator.initialize()
-                    && hmiFactory.initialize())
+        const bool status = sourceBuilder.initialize()
+                            && storesBuilder.initialize()
+                            && dataStore.initialize()
+                            && measurementCoordinator.initialize()
+                            && hmiFactory.initialize()
+                            && sourceBuilder.registerSources(measurementCoordinator)
+                            && storesBuilder.registerStores(dataStore);
         // clang-format on
-        {
-            status = true;
-        }
-
-        sourceBuilder.registerSources(measurementCoordinator);
-        storesBuilder.registerStores(dataStore);
 
         //  storesBuilder.registerStoresToHmi(hmiFactory);
 

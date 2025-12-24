@@ -44,7 +44,7 @@ namespace Driver
          * @param key The identifier of the button whose state is requested.
          * @return The current state of the button (`KeyboardKeyState`).
          */
-        [[nodiscard]] KeyboardKeyState getKeyState(const KeyboardKeyIdentifier key) const override;
+        [[nodiscard]] KeyboardKeyState getKeyState(KeyboardKeyIdentifier key) const override;
 
         /**
          * @brief Number of keys supported by the keyboard.

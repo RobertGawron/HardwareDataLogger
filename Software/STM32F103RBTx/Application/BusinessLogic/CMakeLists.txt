@@ -24,6 +24,6 @@ target_include_directories(BusinessLogic PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/Interfaces
     ${CMAKE_CURRENT_SOURCE_DIR}/..
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Library/u8g2/cppsrc
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Library/u8g2/csrc
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/u8g2/cppsrc
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/u8g2/csrc
 )

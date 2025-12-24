@@ -19,29 +19,23 @@ namespace BusinessLogic
 
     bool MeasurementStoresFactory::initialize()
     {
-        wifiRecorder.initialize();
-        sdCardRecorder.initialize();
-        cacheRecorder.initialize();
+        // clang-format off
+        const bool status = wifiRecorder.initialize() 
+                            && sdCardRecorder.initialize() 
+                            && cacheRecorder.initialize() 
+                            && wifiRecorder.start();
+        // clang-format on
 
-        int i = 0;
-        wifiRecorder.start();
-
-        return true;
+        return status;
     }
 
     bool MeasurementStoresFactory::registerStores(MeasurementDataStore &coordinator)
     {
-
-        bool status = false;
-
         // clang-format off
-            if (coordinator.addObserver(wifiRecorder) 
-                && coordinator.addObserver(sdCardRecorder)
-                && coordinator.addObserver(cacheRecorder))
+        const bool status = coordinator.addObserver(wifiRecorder) 
+                            && coordinator.addObserver(sdCardRecorder)
+                            && coordinator.addObserver(cacheRecorder);
         // clang-format on
-        {
-            status = true;
-        }
 
         return status;
     }

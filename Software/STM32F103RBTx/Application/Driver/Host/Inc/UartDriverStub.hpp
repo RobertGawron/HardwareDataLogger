@@ -11,20 +11,13 @@
 
 namespace Driver
 {
-    /**
-     * @class UartDriverStub
-     * @brief Implementation of UART communication using STM32 HAL.
-     *
-     * This class implements the `IUartDriver` interface to handle UART communication
-     * using the STM32 HAL library. It provides methods for initializing the UART peripheral,
-     * transmitting and receiving data, and additional methods for handling driver state transitions.
-     */
+
     class UartDriverStub : public IUartDriver
     {
     public:
         UartDriverStub() = delete;
 
-        UartDriverStub(const Driver::UartIdentifier id);
+        explicit UartDriverStub(const Driver::UartIdentifier id);
 
         /**
          * @brief Virtual destructor for UartDriverStub.

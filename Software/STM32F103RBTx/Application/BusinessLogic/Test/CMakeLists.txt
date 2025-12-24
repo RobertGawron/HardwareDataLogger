@@ -49,6 +49,8 @@ function(create_test_exec TARGET_NAME)
 
     target_include_directories(${TARGET_NAME} PRIVATE
         ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/
+        ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Library/u8g2/cppsrc/
+        ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Library/u8g2/csrc/
         ${GTEST_INCLUDE_DIRS}
         ${GMOCK_INCLUDE_DIR}
     )
@@ -68,7 +70,26 @@ create_test_exec(test_MeasurementDataStore
 )
 
 create_test_exec(test_MeasurementCoordinator
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic//Src/MeasurementCoordinator.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic/Src/MeasurementCoordinator.cpp
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp
     test_MeasurementCoordinator.cpp
+)
+
+
+create_test_exec(test_MeasurementStoresFactory
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic/Src/MeasurementStoresFactory.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp
+    test_MeasurementStoresFactory.cpp
+)
+
+create_test_exec(test_ApplicationBuilder
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic/Src/ApplicationBuilder.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp
+    test_ApplicationBuilder.cpp
+)
+
+create_test_exec(test_MeasurementSourcesFactory
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic/Src/MeasurementSourcesFactory.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp
+    test_MeasurementSourcesFactory.cpp
 )
