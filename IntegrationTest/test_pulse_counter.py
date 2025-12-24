@@ -10,14 +10,7 @@ import logging
 import sys
 from pathlib import Path
 
-# Add the path to Simulation/FirmwarePCSimulator to sys.path
-simulation_path = Path(__file__).parent.parent.parent / "Simulation" / "FirmwarePCSimulator"
-sys.path.append(str(simulation_path))
-
-# pylint: disable=import-error, wrong-import-position
-# flake8: noqa: E402
-#from simulation import Simulation
-from device_under_test import DeviceUnderTest
+from stm32f103_simulator import STM32F103
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +54,7 @@ def test_pulse_counter_start():
     #dut.set_esp8266_gpio_callback(gpio_state_callback)
 
     #dut.start_firmware()
-    stm32_dut: DeviceUnderTest = DeviceUnderTest()
+    stm32_dut: STM32F103 = STM32F103()
     stm32_dut.register_serial_tx_callback(stm32_uart_tx_callback)
     stm32_dut.init()
     

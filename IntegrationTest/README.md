@@ -12,5 +12,18 @@ These tests are not unit tests. The unit tests are located in the directories wh
 
 # Running tests
 
-cd /workspace/build/ && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j24 && cd /workspace/IntegrationTest && pytest test_*.py -s  --html=/workspace/build/BuildArtifacts/IntegrationTest.html
+On first run, install the firmware wrapper package:
 
+```
+pip install -e /workspace/Software/STM32F103RBTx/Application/Driver/Host/Python/ 
+```
+
+Then use this one-liner:
+
+```
+cd /workspace/build/ && \
+    cmake -DCMAKE_BUILD_TYPE=Debug .. && \
+    make -j24 && \
+    cd /workspace/IntegrationTest && \
+    pytest test_*.py -s  --html=/workspace/build/BuildArtifacts/IntegrationTest.html
+```

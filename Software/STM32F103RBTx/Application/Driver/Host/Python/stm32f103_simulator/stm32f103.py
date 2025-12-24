@@ -21,7 +21,7 @@ class SimulationKey(Enum):
     RIGHT = 3
 
 
-class DeviceUnderTest:
+class STM32F103:
 
     """
     Interface for the STM32 firmware simulation.
@@ -31,7 +31,7 @@ class DeviceUnderTest:
     """
 
     def __init__(self) -> None:
-        """Initialize the DeviceUnderTest class."""
+        """Initialize the STM32F103 class."""
         dll_name: str = "libSimulatorSTM32F103RBTx.so"
         dll_abs_path: str = (
             "/workspace/build/Software/STM32F103RBTx/Application/Driver/Host/libsimulator_stm32f103.so"

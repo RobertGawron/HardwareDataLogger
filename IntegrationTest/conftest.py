@@ -15,18 +15,6 @@ from PIL import Image
 import pytest
 import pytest_html
 
-# Add the path to Simulation/FirmwarePCSimulator to sys.path
-# pylint: disable=import-error, wrong-import-position
-simulation_path = Path("/workspace/Software/STM32F103RBTx/Application/Driver/Host")
-sys.path.append(str(simulation_path))
-
-print(f"Adding to sys.path: {simulation_path}")
-print(f"Path exists: {simulation_path.exists()}")
-print(f"simulation.py exists: {(simulation_path / 'simulation.py').exists()}")
-
-# pylint: disable=import-error, wrong-import-position
-# flake8: noqa: E402
-from device_under_test import DeviceUnderTest
 
 logger = logging.getLogger(__name__)
 
