@@ -44,15 +44,7 @@ namespace BusinessLogic
     bool ApplicationBuilder::start()
     {
         // can we recover from fault at any place here? I dont know.
-        bool status = false;
-
-        // clang-format off
-        if (/*measurementCoordinator.start()
-            &&*/ hmiFactory.start())
-        // clang-format on
-        {
-            status = true;
-        }
+        bool status = hmiFactory.start();
 
         return status;
     }

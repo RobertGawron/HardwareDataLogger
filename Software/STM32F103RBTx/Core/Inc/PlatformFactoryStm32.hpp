@@ -2,6 +2,7 @@
 #define PlatformFactoryStm32_h
 
 #include "BusinessLogic/Interface/IPlatformFactory.hpp"
+
 namespace BusinessLogic
 {
     class PlatformFactoryStm32 : public IPlatformFactory
@@ -19,7 +20,7 @@ namespace BusinessLogic
         Driver::IKeyboardDriver &createKeyboardDriver() override;
         Driver::IUartDriver &createUartDriver(const Driver::UartIdentifier id) override;
         Driver::ISdCardDriver &createSdCardDriver() override;
-        Driver::IPulseCounterDriver &createPulseCounterDriver(const Driver::PulseCounterIdentifier id) override;
+        Driver::IPulseCounterDriver &createPulseCounterDriver(Driver::PulseCounterIdentifier id) override;
     };
 }
 

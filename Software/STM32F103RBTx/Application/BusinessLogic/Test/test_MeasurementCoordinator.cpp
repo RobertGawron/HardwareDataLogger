@@ -125,3 +125,16 @@ TEST_F(MeasurementCoordinatorTest, InitializeFailsIfAnyObserverFailsToInitialize
 
     EXPECT_FALSE(getCoordinator().initialize());
 }
+
+TEST_F(MeasurementCoordinatorTest, InitializeFailsIfAnyObserverFailsToStart)
+{
+    EXPECT_CALL(getMockSource1(), initialize()).WillOnce(::testing::Return(true));
+    EXPECT_CALL(getMockSource1(), start()).WillOnce(::testing::Return(false));
+    EXPECT_CALL(getMockSource2(), initialize()).Times(0);
+    EXPECT_CALL(getMockSource2(), start()).Times(0);
+
+    getCoordinator().addObserver(getMockSource1());
+    getCoordinator().addObserver(getMockSource2());
+
+    EXPECT_FALSE(getCoordinator().initialize());
+}

@@ -11,7 +11,7 @@ namespace BusinessLogic
     MeasurementCoordinator::MeasurementCoordinator(IMeasurementDataStore &_storage)
         : storage(_storage)
     {
-        observers.fill(nullptr); // Initialize to nullptr
+        observers.fill(nullptr);
     }
 
     bool MeasurementCoordinator::initialize()
@@ -89,7 +89,6 @@ namespace BusinessLogic
         if (auto *it = std::find(observers.begin(), observers.end(), &observer); it != observers.end())
         {
             // Use std::move to shift elements left.
-            // std::next(it) replaces 'it + 1' to avoid raw pointer arithmetic warnings.
             std::move(std::next(it), observers.end(), it);
 
             // Clear the last slot (which is now a duplicate of the 2nd to last)
