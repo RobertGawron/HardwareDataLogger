@@ -1,4 +1,4 @@
-#include "BusinessLogic/Interfaces/IMeasurementDataStore.hpp"
+#include "BusinessLogic/Interface/IMeasurementDataStore.hpp"
 #include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
 #include "Device/Inc/MeasurementType.hpp"
 

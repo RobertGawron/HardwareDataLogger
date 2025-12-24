@@ -4,7 +4,7 @@
 #include "MyApplication.hpp"
 
 #include "KeyboardDriverStub.hpp"
-#include "Driver/Interfaces/KeyboardKeyState.hpp"
+#include "Driver/Interface/KeyboardKeyState.hpp"
 #include "PulseCounterDriverStub.hpp"
 
 #include "St7735DisplayDriverStub.hpp"

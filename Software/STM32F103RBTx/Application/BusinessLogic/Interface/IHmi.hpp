@@ -6,10 +6,10 @@
 #ifndef IHmi_h
 #define IHmi_h
 
-#include "Device/Interfaces/IKeyboard.hpp"
-#include "Device/Interfaces/IDisplay.hpp"
-#include "Device/Interfaces/IDisplayBrightnessRegulator.hpp"
-#include "Device/Interfaces/IMeasurementRecorder.hpp"
+#include "Device/Interface/IKeyboard.hpp"
+#include "Device/Interface/IDisplay.hpp"
+#include "Device/Interface/IDisplayBrightnessRegulator.hpp"
+#include "Device/Interface/IMeasurementRecorder.hpp"
 #include "BusinessLogic/Inc/HmiMeasurementModel.hpp"
 
 namespace BusinessLogic

@@ -8,7 +8,7 @@
 #ifndef ST7735DisplayDISPLAY_H_
 #define ST7735DisplayDISPLAY_H_
 #include "st7735.h"
-#include "Driver/Interfaces/IDisplayDriver.hpp"
+#include "Driver/Interface/IDisplayDriver.hpp"
 #include "Driver/Inc/DisplayPixelColor.hpp"
 namespace Driver
 {

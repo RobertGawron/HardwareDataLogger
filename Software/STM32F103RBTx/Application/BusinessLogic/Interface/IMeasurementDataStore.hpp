@@ -7,8 +7,8 @@
 #ifndef IMeasurementDataStore_H_
 #define IMeasurementDataStore_H_
 
-#include "Device/Interfaces/IMeasurementRecorder.hpp"
-#include "Device/Interfaces/IMeasurementSource.hpp"
+#include "Device/Interface/IMeasurementRecorder.hpp"
+#include "Device/Interface/IMeasurementSource.hpp"
 
 #include <cstdint>
 

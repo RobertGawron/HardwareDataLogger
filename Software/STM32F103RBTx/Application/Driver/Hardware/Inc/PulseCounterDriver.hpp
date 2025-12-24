@@ -6,13 +6,13 @@
 #ifndef PulseCounterDriver_h
 #define PulseCounterDriver_h
 
-#include "Driver/Interfaces/IPulseCounterDriver.hpp"
+#include "Driver/Interface/IPulseCounterDriver.hpp"
 
 extern "C"
 {
     /**
      * @brief Increments the pulse counter in interrupt handler.
-     * 
+     *
      * This function is called by the hardware interrupt handler when a pulse is detected.
      * @param counterId Identifier of the pulse counter to increment.
      */
@@ -49,7 +49,7 @@ namespace Driver
          */
         ~PulseCounterDriver() override = default;
 
-        PulseCounterDriver(const PulseCounterDriver &) = delete; ///< Deleted copy constructor prevents copying.
+        PulseCounterDriver(const PulseCounterDriver &) = delete;            ///< Deleted copy constructor prevents copying.
         PulseCounterDriver &operator=(const PulseCounterDriver &) = delete; ///< Deleted assignment operator prevents assignment.
 
         /**
@@ -57,7 +57,7 @@ namespace Driver
          * @return The current pulse count measurement.
          */
         IPulseCounterDriver::CounterSizeType getMeasurement() override;
-        
+
         /**
          * @brief Resets the pulse counter to zero.
          */

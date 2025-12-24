@@ -7,8 +7,8 @@
 #ifndef MeasurementCoordinator_h
 #define MeasurementCoordinator_h
 
-#include "BusinessLogic/Interfaces/IMeasurementDataStore.hpp"
-#include "Device/Interfaces/IMeasurementSource.hpp"
+#include "BusinessLogic/Interface/IMeasurementDataStore.hpp"
+#include "Device/Interface/IMeasurementSource.hpp"
 
 #include <cstdint>
 #include <array>

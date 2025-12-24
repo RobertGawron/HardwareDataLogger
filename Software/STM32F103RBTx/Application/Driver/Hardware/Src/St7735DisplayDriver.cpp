@@ -1,6 +1,6 @@
 #include "Driver/Hardware/Inc/St7735DisplayDriver.hpp"
 #include "Driver/Hardware/Inc/DisplayPixelColor.hpp"
-#include "Driver/Interfaces/IDisplayDriver.hpp"
+#include "Driver/Interface/IDisplayDriver.hpp"
 
 // todo remove suppression when the lib is fully integrated
 // codechecker_suppress [misc-include-cleaner]

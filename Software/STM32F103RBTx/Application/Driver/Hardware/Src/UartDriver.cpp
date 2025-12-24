@@ -1,6 +1,6 @@
 #include "Driver/Hardware/Inc/UartDriver.hpp"
-#include "Driver/Interfaces/UartExchangeStatus.hpp"
-#include "Driver/Interfaces/DriverState.hpp"
+#include "Driver/Interface/UartExchangeStatus.hpp"
+#include "Driver/Interface/DriverState.hpp"
 
 #include "stm32f1xx_hal_uart.h"
 #include "stm32f1xx_hal_def.h"

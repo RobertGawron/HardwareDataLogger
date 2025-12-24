@@ -1,5 +1,5 @@
 #include "Driver/Hardware/Inc/AmbientLightSensorDriver.hpp"
-#include "Driver/Interfaces/DriverState.hpp"
+#include "Driver/Interface/DriverState.hpp"
 
 #include "stm32f1xx_hal_adc.h"
 #include "stm32f1xx_hal_def.h"

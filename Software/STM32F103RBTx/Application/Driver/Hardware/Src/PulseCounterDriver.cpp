@@ -1,6 +1,6 @@
-#include "Driver/Interfaces/IPulseCounterDriver.hpp"
+#include "Driver/Interface/IPulseCounterDriver.hpp"
 #include "Driver/Hardware/Inc/PulseCounterDriver.hpp"
-#include "Driver/Interfaces/PulseCounterIdentifier.hpp"
+#include "Driver/Interface/PulseCounterIdentifier.hpp"
 
 #include <cstdint>
 #include <cstddef> // For std::size_t

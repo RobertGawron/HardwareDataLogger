@@ -1,7 +1,7 @@
-#include "BusinessLogic/Interfaces/IMeasurementDataStore.hpp"
+#include "BusinessLogic/Interface/IMeasurementDataStore.hpp"
 #include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
-#include "Device/Interfaces/IMeasurementRecorder.hpp"
-#include "Device/Interfaces/IMeasurementSource.hpp"
+#include "Device/Interface/IMeasurementRecorder.hpp"
+#include "Device/Interface/IMeasurementSource.hpp"
 #include "Device/Inc/MeasurementDeviceId.hpp"
 #include "Device/Inc/MeasurementType.hpp"
 #include <gtest/gtest.h>

@@ -1,8 +1,8 @@
 #include "BusinessLogic/Inc/MeasurementStoresFactory.hpp"
 #include "BusinessLogic/Inc/MeasurementDataStore.hpp"
 #include "Device/Inc/CacheMeasurementRecorder.hpp"
-#include "Driver/Interfaces/IUartDriver.hpp"
-#include "Driver/Interfaces/ISdCardDriver.hpp"
+#include "Driver/Interface/IUartDriver.hpp"
+#include "Driver/Interface/ISdCardDriver.hpp"
 
 namespace BusinessLogic
 {
@@ -23,9 +23,8 @@ namespace BusinessLogic
         sdCardRecorder.initialize();
         cacheRecorder.initialize();
 
-
         int i = 0;
-wifiRecorder.start();
+        wifiRecorder.start();
 
         return true;
     }

@@ -2,7 +2,7 @@
 #ifndef PulseCounterDriverStub_h
 #define PulseCounterDriverStub_h
 
-#include "Driver/Interfaces/IPulseCounterDriver.hpp"
+#include "Driver/Interface/IPulseCounterDriver.hpp"
 
 extern "C"
 {

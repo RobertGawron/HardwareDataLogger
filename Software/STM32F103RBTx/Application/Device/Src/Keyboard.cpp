@@ -1,8 +1,8 @@
 #include "Device/Inc/Keyboard.hpp"
 #include "Device/Inc/KeyboardKeyActionState.hpp"
-#include "Driver/Interfaces/KeyboardKeyState.hpp"
-#include "Driver/Interfaces/KeyboardKeyIdentifier.hpp"
-#include "Driver/Interfaces/IKeyboardDriver.hpp"
+#include "Driver/Interface/KeyboardKeyState.hpp"
+#include "Driver/Interface/KeyboardKeyIdentifier.hpp"
+#include "Driver/Interface/IKeyboardDriver.hpp"
 
 #include <cstdint>
 #include <cstddef> // For std::size_t

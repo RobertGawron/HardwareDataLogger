@@ -1,4 +1,4 @@
-#include "Driver/Interfaces/PulseCounterIdentifier.hpp"
+#include "Driver/Interface/PulseCounterIdentifier.hpp"
 #include "Driver/Hardware/Inc/PulseCounterDriver.hpp"
 
 #include <gtest/gtest.h>

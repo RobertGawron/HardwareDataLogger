@@ -1,5 +1,5 @@
 #include "BusinessLogic/Inc/MeasurementDataStore.hpp"
-#include "Device/Interfaces/IMeasurementRecorder.hpp"
+#include "Device/Interface/IMeasurementRecorder.hpp"
 #include "Device/Inc/MeasurementType.hpp"
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>

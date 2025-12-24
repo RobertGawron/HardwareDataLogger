@@ -9,8 +9,8 @@
  * for controlling and regulating the brightness of a display based on ambient light levels and user preferences.
  */
 
-#include "Driver/Interfaces/IAmbientLightSensorDriver.hpp"
-#include "Driver/Interfaces/IDisplayBrightnessDriver.hpp"
+#include "Driver/Interface/IAmbientLightSensorDriver.hpp"
+#include "Driver/Interface/IDisplayBrightnessDriver.hpp"
 
 namespace Device
 {
@@ -41,7 +41,7 @@ namespace Device
          */
         virtual ~IDisplayBrightnessRegulator() = default;
 
-        IDisplayBrightnessRegulator(const IDisplayBrightnessRegulator &) = delete; ///< Deleted copy constructor prevents copying.
+        IDisplayBrightnessRegulator(const IDisplayBrightnessRegulator &) = delete;            ///< Deleted copy constructor prevents copying.
         IDisplayBrightnessRegulator &operator=(const IDisplayBrightnessRegulator &) = delete; ///< Deleted assignment operator prevents assignment.
 
         /**

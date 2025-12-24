@@ -1,7 +1,7 @@
 #ifndef AMBIENTLIGHTSENSORDRIVER_H_
 #define AMBIENTLIGHTSENSORDRIVER_H_
 
-#include "Driver/Interfaces/IAmbientLightSensorDriver.hpp"
+#include "Driver/Interface/IAmbientLightSensorDriver.hpp"
 #include "stm32f1xx_hal.h"
 
 #include <cstdint>

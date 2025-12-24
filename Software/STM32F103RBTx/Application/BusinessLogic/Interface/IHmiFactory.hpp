@@ -6,10 +6,10 @@
 #ifndef IHmiFactory_h
 #define IHmiFactory_h
 
-#include "Device/Interfaces/IKeyboard.hpp"
+#include "Device/Interface/IKeyboard.hpp"
 #include "Device/Inc/DisplayBrightnessRegulator.hpp"
-#include "Device/Interfaces/IMeasurementRecorder.hpp"
-#include "Driver/Interfaces/IDisplayDriver.hpp"
+#include "Device/Interface/IMeasurementRecorder.hpp"
+#include "Driver/Interface/IDisplayDriver.hpp"
 
 namespace BusinessLogic
 {

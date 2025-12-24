@@ -7,7 +7,7 @@
 #define IDisplayBrightnessDriver_H_
 
 #include <cstdint>
-#include "Driver/Interfaces/DriverState.hpp"
+#include "Driver/Interface/DriverState.hpp"
 
 namespace Driver
 {

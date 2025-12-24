@@ -7,7 +7,7 @@
 #ifndef ST7735DisplayDISPLAY_H_
 #define ST7735DisplayDISPLAY_H_
 
-#include "Driver/Interfaces/IDisplayDriver.hpp"
+#include "Driver/Interface/IDisplayDriver.hpp"
 
 namespace Driver
 {

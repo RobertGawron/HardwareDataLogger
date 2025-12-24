@@ -6,8 +6,8 @@
 #ifndef KeyboardDriverStub_H_
 #define KeyboardDriverStub_H_
 
-#include "Driver/Interfaces/IKeyboardDriver.hpp"
-#include "Driver/Interfaces/KeyboardKeyState.hpp"
+#include "Driver/Interface/IKeyboardDriver.hpp"
+#include "Driver/Interface/KeyboardKeyState.hpp"
 
 namespace Driver
 {

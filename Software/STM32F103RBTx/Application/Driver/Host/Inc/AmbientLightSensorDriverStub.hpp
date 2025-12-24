@@ -1,7 +1,7 @@
 #ifndef AmbientLightSensorDriverStub_H_
 #define AmbientLightSensorDriverStub_H_
 
-#include "Driver/Interfaces/IAmbientLightSensorDriver.hpp"
+#include "Driver/Interface/IAmbientLightSensorDriver.hpp"
 
 #include <stdint.h>
 

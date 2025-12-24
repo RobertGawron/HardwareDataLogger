@@ -1,7 +1,7 @@
 #include "BusinessLogic/Inc/HmiMuiHandlers.hpp"
 #include "BusinessLogic/Inc/HmiMeasurementModel.hpp"
 #include "Device/Inc/MeasurementDeviceId.hpp"
-#include "Device/Interfaces/IDisplay.hpp"
+#include "Device/Interface/IDisplay.hpp"
 
 #include <array>
 #include <algorithm> // For std::find_if

@@ -6,7 +6,7 @@
 #ifndef UartDriver_h
 #define UartDriver_h
 
-#include "Driver/Interfaces/IUartDriver.hpp"
+#include "Driver/Interface/IUartDriver.hpp"
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_uart.h"
 
@@ -41,7 +41,7 @@ namespace Driver
          */
         ~UartDriver() override = default;
 
-        UartDriver(const UartDriver &) = delete; ///< Deleted copy constructor prevents copying.
+        UartDriver(const UartDriver &) = delete;            ///< Deleted copy constructor prevents copying.
         UartDriver &operator=(const UartDriver &) = delete; ///< Deleted assignment operator prevents assignment.
 
         /**
@@ -116,7 +116,7 @@ namespace Driver
         bool onReset() override;
 
     private:
-        /** 
+        /**
          * @brief UART handle from STM32 HAL library.
          *
          * This reference is used to interact with the UART peripheral.

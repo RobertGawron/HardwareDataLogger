@@ -2,7 +2,7 @@
 #define IMeasurementReader_h
 
 #include "Device/Inc/MeasurementType.hpp"
-#include "Driver/Interfaces/DriverState.hpp"
+#include "Driver/Interface/DriverState.hpp"
 
 namespace Device
 {

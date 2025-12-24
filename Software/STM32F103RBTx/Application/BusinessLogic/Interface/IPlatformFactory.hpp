@@ -11,15 +11,15 @@
 #ifndef IPlatformFactory_h
 #define IPlatformFactory_h
 
-#include "Driver/Interfaces/IAmbientLightSensorDriver.hpp"
-#include "Driver/Interfaces/IDisplayBrightnessDriver.hpp"
-#include "Driver/Interfaces/IDisplayDriver.hpp"
-#include "Driver/Interfaces/IKeyboardDriver.hpp"
-#include "Driver/Interfaces/ISdCardDriver.hpp"
+#include "Driver/Interface/IAmbientLightSensorDriver.hpp"
+#include "Driver/Interface/IDisplayBrightnessDriver.hpp"
+#include "Driver/Interface/IDisplayDriver.hpp"
+#include "Driver/Interface/IKeyboardDriver.hpp"
+#include "Driver/Interface/ISdCardDriver.hpp"
 #include "Driver/Inc/UartIdentifier.hpp"
-#include "Driver/Interfaces/IUartDriver.hpp"
-#include "Driver/Interfaces/PulseCounterIdentifier.hpp"
-#include "Driver/Interfaces/IPulseCounterDriver.hpp"
+#include "Driver/Interface/IUartDriver.hpp"
+#include "Driver/Interface/PulseCounterIdentifier.hpp"
+#include "Driver/Interface/IPulseCounterDriver.hpp"
 
 namespace BusinessLogic
 {

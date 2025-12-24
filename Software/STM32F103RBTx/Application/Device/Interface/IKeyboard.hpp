@@ -2,8 +2,8 @@
 #define IKeyboard_h
 
 #include "Device/Inc/KeyboardKeyActionState.hpp"
-#include "Driver/Interfaces/IKeyboardDriver.hpp"
-#include "Driver/Interfaces/KeyboardKeyIdentifier.hpp"
+#include "Driver/Interface/IKeyboardDriver.hpp"
+#include "Driver/Interface/KeyboardKeyIdentifier.hpp"
 
 #include <cstdint>
 

@@ -7,7 +7,7 @@
 #define IDISPLAYDRIVER_H_
 
 #include <cstdint>
-#include "Driver/Interfaces/DriverState.hpp"
+#include "Driver/Interface/DriverState.hpp"
 #include "Driver/Inc/DisplayPixelColor.hpp"
 
 namespace Driver

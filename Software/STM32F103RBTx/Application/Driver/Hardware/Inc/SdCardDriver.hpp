@@ -6,7 +6,7 @@
 #ifndef SDCARDDRIVER_H_
 #define SDCARDDRIVER_H_
 
-#include "Driver/Interfaces/ISdCardDriver.hpp"
+#include "Driver/Interface/ISdCardDriver.hpp"
 
 namespace Driver
 {

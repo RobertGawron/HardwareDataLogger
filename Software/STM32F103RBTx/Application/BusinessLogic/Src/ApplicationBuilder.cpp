@@ -1,6 +1,6 @@
-#include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
+#include "BusinessLogic/Interface/IPlatformFactory.hpp"
 #include "BusinessLogic/Inc/ApplicationBuilder.hpp"
-#include "Driver/Interfaces/PulseCounterIdentifier.hpp"
+#include "Driver/Interface/PulseCounterIdentifier.hpp"
 #include "Driver/Inc/UartIdentifier.hpp"
 
 namespace BusinessLogic
