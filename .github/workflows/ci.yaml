@@ -44,7 +44,7 @@ jobs:
 
   # Parallel Jobs: Unit Tests, Code Coverage, etc.
   unit-tests:
-    name: Run Unit Tests
+    name: Run Unit Tests (cpp, STM32 firmware)
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -84,7 +84,7 @@ jobs:
           docker-compose -f docker-compose.yml -f docker-compose.yml down
 
   system-tests:
-    name: Run System Tests
+    name: Run Integration Tests (STM32 + ESP32)
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -115,16 +115,16 @@ jobs:
         run: |
           docker-compose -f docker-compose.yml -f docker-compose.yml up -d
 
-      - name: Run System Tests
+      - name: Run Integration Tests
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.yml exec -T dev bash -c "cd /workspace/build/ && cmake .. && make -j24 && cd /workspace/Test/System && pytest test_*.py -s  --html=/workspace/build/BuildArtifacts/SystemTests.html"
+          docker-compose -f docker-compose.yml -f docker-compose.yml exec -T dev bash -c "cd /workspace/build/ && cmake .. && make -j24 && cd /workspace/IntegrationTest && pytest test_*.py -s  --html=/workspace/build/BuildArtifacts/IntegrationTest.html"
 
-      - name: Upload System Tests Results
+      - name: Upload Integration Tests Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: system-tests-results
-          path: DevOps/BuildArtifacts/SystemTests.html
+          name: integration-tests-results
+          path: DevOps/BuildArtifacts/IntegrationTest.html
 
       - name: Clean up Docker containers
         run: |
@@ -132,7 +132,7 @@ jobs:
         
 
   code-coverage:
-    name: Run Code Coverage
+    name: Run Code Coverage (STM32)
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -226,7 +226,7 @@ jobs:
           docker-compose -f docker-compose.yml -f docker-compose.yml down
 
   static-analysis-python:
-    name: Run Static Analysis (python)
+    name: Run Static Analysis (Python)
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -272,7 +272,7 @@ jobs:
         run: |
           docker-compose -f docker-compose.yml -f docker-compose.yml down
 
-  static-analysis-c:
+  static-analysis-cpp:
     name: Run Static Analysis (cpp)
     runs-on: ubuntu-latest
     needs: build
