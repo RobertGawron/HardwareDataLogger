@@ -117,7 +117,7 @@ jobs:
 
       - name: Run Integration Tests
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.yml exec -T dev bash -c "cd /workspace/build/ && cmake .. && make -j24 && cd /workspace/IntegrationTest && pytest test_*.py -s  --html=/workspace/build/BuildArtifacts/IntegrationTest.html"
+          docker-compose -f docker-compose.yml -f docker-compose.yml exec -T dev bash -c "cd /workspace/build/ && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j24 && cd /workspace/IntegrationTest && pytest test_*.py -s  --html=/workspace/build/BuildArtifacts/IntegrationTest.html"
 
       - name: Upload Integration Tests Results
         if: always()
@@ -130,7 +130,6 @@ jobs:
         run: |
           docker-compose -f docker-compose.yml -f docker-compose.yml down
         
-
   code-coverage:
     name: Run Code Coverage (STM32)
     runs-on: ubuntu-latest
