@@ -47,25 +47,33 @@ public:
 TEST_F(UartDriverTest, TransmitShouldSucceed)
 {
     // Arrange
-    std::uint8_t data[] = {0x01, 0x02, 0x03};
-    const std::uint16_t size = sizeof(data);
+    // 1. Use std::array instead of raw C-array
+    std::array<std::uint8_t, 3> data = {0x01, 0x02, 0x03};
     const std::uint32_t timeout = 1000;
 
     getDriver().initialize();
     getDriver().start();
 
-    EXPECT_CALL(getMockHAL(), HAL_UART_Transmit(&getHuart(), data, size, timeout))
+    EXPECT_CALL(getMockHAL(), HAL_UART_Transmit(&getHuart(), ::testing::_, ::testing::_, timeout))
         .WillOnce(::testing::DoAll(
-            ::testing::WithArgs<1, 2>([size, &data](std::uint8_t *sentData, std::uint16_t sentSize)
+            ::testing::WithArgs<1, 2>([&data](std::uint8_t *sentData, std::uint16_t sentSize)
                                       {
-                EXPECT_EQ(sentSize, size);
-                for (std::uint16_t i = 0; (i < sentSize) && (i < size); ++i) {
-                    EXPECT_EQ(sentData[i], data[i]);
+                // 2. Validate pointer is not null to satisfy static analysis
+                EXPECT_NE(sentData, nullptr);
+                
+                // 3. Check size match
+                EXPECT_EQ(sentSize, data.size());
+
+                // 4. Use std::equal instead of manual loop
+                // This prevents "unsafe buffer access" warnings because the STL handles the iteration logic
+                if (sentData != nullptr && sentSize == data.size()) {
+                    EXPECT_TRUE(std::equal(data.begin(), data.end(), sentData));
                 } }),
             ::testing::Return(HAL_OK)));
 
     // Act
-    const Driver::UartExchangeStatus status = getDriver().transmit(data, size, timeout);
+    // 5. Use .data() to get the raw pointer required by the C interface
+    const Driver::UartExchangeStatus status = getDriver().transmit(data.data(), data.size(), timeout);
 
     // Assert
     EXPECT_EQ(status, Driver::UartExchangeStatus::Ok);

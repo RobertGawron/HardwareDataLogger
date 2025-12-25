@@ -27,7 +27,7 @@ namespace Driver
          */
         explicit AmbientLightSensorDriver(ADC_HandleTypeDef &hadc);
 
-        AmbientLightSensorDriver() = default; ///< Default constructor.
+        AmbientLightSensorDriver() = delete; ///< Default constructor.
 
         /**
          * @brief Destructor for AmbientLightSensorDriver.
@@ -111,7 +111,7 @@ namespace Driver
         /**
          * @brief Buffer storing raw ADC values for ambient light measurements.
          */
-        std::uint16_t adcBuffer[AdcBufferSize];
+        std::array<std::uint16_t, AdcBufferSize> adcBuffer{};
     };
 
 }
