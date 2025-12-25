@@ -609,7 +609,7 @@
 			(embedded_fonts no)
 		)
 	)
-	(text "U3 is a fixed 3v3 voltage variant"
+	(text "U2 is a fixed 3v3 voltage variant"
 		(exclude_from_sim no)
 		(at 85.09 48.006 0)
 		(effects

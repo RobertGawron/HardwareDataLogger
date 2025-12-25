@@ -1591,7 +1591,7 @@
 		(fields_autoplaced yes)
 		(uuid "0cbc85a2-0d7a-4973-a6c7-55f489dc1dce")
 		(property "Reference" "R24"
-			(at 181.61 77.47 90)
+			(at 181.61 87.63 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1599,7 +1599,7 @@
 			)
 		)
 		(property "Value" "22R"
-			(at 181.61 80.01 90)
+			(at 181.61 90.17 90)
 			(effects
 				(font
 					(size 1.27 1.27)

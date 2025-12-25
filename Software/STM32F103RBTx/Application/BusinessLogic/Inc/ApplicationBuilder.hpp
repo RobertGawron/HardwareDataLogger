@@ -6,8 +6,8 @@
 #ifndef APPLICATIONBUILDER_H_
 #define APPLICATIONBUILDER_H_
 
-#include "BusinessLogic/Interfaces/IApplicationComponentFactory.hpp"
-#include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
+#include "BusinessLogic/Interface/IApplicationComponentFactory.hpp"
+#include "BusinessLogic/Interface/IPlatformFactory.hpp"
 #include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
 #include "BusinessLogic/Inc/MeasurementDataStore.hpp"
 #include "BusinessLogic/Inc/MeasurementSourcesFactory.hpp"
@@ -60,9 +60,9 @@ namespace BusinessLogic
 
         /**
          * @brief Initializes all application components.
-         * 
+         *
          * Calls initialize() on all managed factories and components.
-         * 
+         *
          * @return true if all components initialized successfully, false otherwise
          */
         bool initialize() override;
@@ -91,7 +91,7 @@ namespace BusinessLogic
 
         /**
          * @brief Cache measurement recorder (directly managed)
-         * 
+         *
          * Required by both stores factory and HMI, managed directly
          * here rather than through stores factory.
          */

@@ -6,13 +6,13 @@
 #ifndef MeasurementStoresFactory_h
 #define MeasurementStoresFactory_h
 
-#include "BusinessLogic/Interfaces/IApplicationComponentFactory.hpp"
+#include "BusinessLogic/Interface/IApplicationComponentFactory.hpp"
 #include "BusinessLogic/Inc/MeasurementDataStore.hpp"
 #include "Device/Inc/WiFiMeasurementRecorder.hpp"
 #include "Device/Inc/SdCardMeasurementRecorder.hpp"
 #include "Device/Inc/CacheMeasurementRecorder.hpp"
-#include "Driver/Interfaces/IUartDriver.hpp"
-#include "Driver/Interfaces/ISdCardDriver.hpp"
+#include "Driver/Interface/IUartDriver.hpp"
+#include "Driver/Interface/ISdCardDriver.hpp"
 
 #include <cstdint>
 
@@ -58,18 +58,18 @@ namespace BusinessLogic
 
         /**
          * @brief Initializes all measurement recorder components.
-         * 
+         *
          * Calls initialize() on each managed recorder (WiFi, SD Card, Cache).
-         * 
+         *
          * @return Always returns true (initialization errors handled internally)
          */
         bool initialize() override;
 
         /**
          * @brief Registers all recorders with the measurement data store.
-         * 
+         *
          * Adds WiFi, SD Card, and Cache recorders as observers to the coordinator.
-         * 
+         *
          * @param coordinator Reference to the measurement data coordinator
          * @return true if all recorders registered successfully, false otherwise
          */

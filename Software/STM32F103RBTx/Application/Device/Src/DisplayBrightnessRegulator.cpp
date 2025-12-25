@@ -1,6 +1,6 @@
 #include "Device/Inc/DisplayBrightnessRegulator.hpp"
-#include "Driver/Interfaces/IDisplayBrightnessDriver.hpp"
-#include "Driver/Interfaces/IAmbientLightSensorDriver.hpp"
+#include "Driver/Interface/IDisplayBrightnessDriver.hpp"
+#include "Driver/Interface/IAmbientLightSensorDriver.hpp"
 
 #include <cstdint>
 #include <cstddef>

@@ -1,8 +1,8 @@
 #include "BusinessLogic/Inc/MeasurementDataStore.hpp"
 #include "Device/Inc/MeasurementType.hpp"
 
-#include <cstddef>
 #include <algorithm>
+#include <iterator> // for std::begin std::end
 
 namespace BusinessLogic
 {
@@ -50,8 +50,7 @@ namespace BusinessLogic
     {
         bool status = false;
 
-        auto it = std::find(std::begin(observers), std::end(observers), nullptr);
-        if (it != std::end(observers))
+        if (auto *it = std::find(std::begin(observers), std::end(observers), nullptr); it != std::end(observers))
         {
             *it = &observer;
             status = true;
@@ -63,17 +62,14 @@ namespace BusinessLogic
     bool MeasurementDataStore::removeObserver(Device::IMeasurementRecorder &observer)
     {
         bool status = false;
-        const std::size_t shiftOffset = 1; // Offset to shift remaining elements
 
-        auto it = std::find(std::begin(observers), std::end(observers), &observer);
-        if (it != std::end(observers))
+        if (auto *it = std::find(std::begin(observers), std::end(observers), &observer); it != std::end(observers))
         {
-            // Shift remaining elements to the left
-            for (auto shiftIt = it; shiftIt != std::end(observers) - shiftOffset; ++shiftIt)
-            {
-                *shiftIt = *(shiftIt + shiftOffset);
-            }
-            *(std::end(observers) - shiftOffset) = nullptr; // Clear the last slot
+            // Use std::move to shift remaining elements left.
+            std::move(std::next(it), std::end(observers), it);
+
+            // Clear the last slot using std::prev to avoid 'end - 1' arithmetic
+            *std::prev(std::end(observers)) = nullptr;
             status = true;
         }
 
@@ -88,7 +84,7 @@ namespace BusinessLogic
         {
             if (observer != nullptr)
             {
-                observer->notify(measurement);
+                status &= observer->notify(measurement);
             }
         }
 

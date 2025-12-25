@@ -173,7 +173,7 @@
 					(hide yes)
 				)
 			)
-			(property "ki_fp_filters" "USB*"
+			(property "ki_fp_filters" "USB*Micro*B*"
 				(at 0 0 0)
 				(effects
 					(font
@@ -5780,7 +5780,7 @@
 			)
 		)
 	)
-	(global_label "USB_DM"
+	(global_label "USB_N"
 		(shape bidirectional)
 		(at 187.96 97.79 0)
 		(fields_autoplaced yes)
@@ -5792,7 +5792,7 @@
 		)
 		(uuid "239f15b3-b154-4c41-aada-28f0b2db8ae1")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 199.5555 97.79 0)
+			(at 198.1646 97.79 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6308,7 +6308,7 @@
 			)
 		)
 	)
-	(global_label "USB_DP"
+	(global_label "USB_P"
 		(shape bidirectional)
 		(at 54.61 62.23 0)
 		(fields_autoplaced yes)
@@ -6320,7 +6320,7 @@
 		)
 		(uuid "91b99721-685f-46d3-8b2d-bb3990aa80db")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 66.0241 62.23 0)
+			(at 64.7541 62.23 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6396,7 +6396,7 @@
 			)
 		)
 	)
-	(global_label "USB_DM"
+	(global_label "USB_N"
 		(shape bidirectional)
 		(at 54.61 64.77 0)
 		(fields_autoplaced yes)
@@ -6408,7 +6408,7 @@
 		)
 		(uuid "9c0c681a-e7fb-4ca5-99dc-ef58c4fefe8e")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 66.2055 64.77 0)
+			(at 64.8146 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6990,7 +6990,7 @@
 			)
 		)
 	)
-	(global_label "USB_DP"
+	(global_label "USB_P"
 		(shape bidirectional)
 		(at 187.96 100.33 0)
 		(fields_autoplaced yes)
@@ -7002,7 +7002,7 @@
 		)
 		(uuid "fd2f3498-62a9-40df-bc90-8691aebb3050")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 199.3741 100.33 0)
+			(at 198.1041 100.33 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7431,7 +7431,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "8M"
+		(property "Value" "Crystal"
 			(at 87.63 147.3199 90)
 			(effects
 				(font
@@ -8187,7 +8187,7 @@
 				)
 			)
 		)
-		(property "Value" "10p"
+		(property "Value" "6p8"
 			(at 78.74 116.84 90)
 			(effects
 				(font
@@ -8514,7 +8514,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "32,768kHz /12.5p"
+		(property "Value" "32,768kHz"
 			(at 87.63 111.7599 90)
 			(effects
 				(font
@@ -8653,7 +8653,7 @@
 				)
 			)
 		)
-		(property "Value" "10p"
+		(property "Value" "6p8"
 			(at 78.74 97.79 90)
 			(effects
 				(font
@@ -8853,7 +8853,7 @@
 				)
 			)
 		)
-		(property "Value" "22p"
+		(property "Value" "6p8"
 			(at 78.74 152.4 90)
 			(effects
 				(font
@@ -9535,85 +9535,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:USB_B_Micro")
-		(at 22.86 62.23 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "817890f1-b09e-49ad-9386-9b5b02a026d1")
-		(property "Reference" "J1"
-			(at 24.3078 50.3682 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "USB_B_Micro"
-			(at 24.3078 52.6796 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Connector_USB:USB_Micro-B_Molex-105017-0001"
-			(at 26.67 63.5 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 26.67 63.5 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 22.86 62.23 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "70cc3e1a-c881-419b-9c47-347a6e746364")
-		)
-		(pin "2"
-			(uuid "2e267ac8-1783-492f-9526-74ba1c986353")
-		)
-		(pin "3"
-			(uuid "637669dc-8d17-4267-9884-b24d27267d35")
-		)
-		(pin "4"
-			(uuid "619d39a9-005f-4820-b2d4-f7ce46336b51")
-		)
-		(pin "5"
-			(uuid "db7d47fa-d8f0-4c15-9386-8f3a1aecd06f")
-		)
-		(pin "6"
-			(uuid "ce68639c-52d6-4023-a0e4-cb7ecbcc9a36")
-		)
-		(instances
-			(project "DataProcessingUnit"
-				(path "/18f4643d-59cf-40d8-90af-99b4dbe1f32f/9bdfab82-cef8-460c-a16e-388f6d900e76"
-					(reference "J1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:C")
 		(at 222.25 27.94 0)
 		(unit 1)
@@ -10107,7 +10028,7 @@
 				)
 			)
 		)
-		(property "Value" "0R"
+		(property "Value" "TBD"
 			(at 88.9 134.62 90)
 			(effects
 				(font
@@ -11097,6 +11018,85 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:USB_B_Micro")
+		(at 22.86 62.23 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "d045261d-037d-482c-b224-bc26d3e362bb")
+		(property "Reference" "J2"
+			(at 24.3078 50.3682 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "USB_B_Micro"
+			(at 24.3078 52.6796 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "HardwareDataLogger:USB_Micro-B_Molex-105017-0001_Extra_Mechanical_Pads"
+			(at 26.67 63.5 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 26.67 63.5 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "USB Micro Type B connector"
+			(at 22.86 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "f0b97397-523a-4fbf-a6aa-fd50b529b9c8")
+		)
+		(pin "2"
+			(uuid "529e9e26-50fc-4804-a158-3117340fe533")
+		)
+		(pin "3"
+			(uuid "142cfaa5-a601-4fd2-9c40-fe12c1600325")
+		)
+		(pin "4"
+			(uuid "458a12bc-01fd-4597-b636-268d0a037374")
+		)
+		(pin "5"
+			(uuid "477bfee4-4bea-4192-9ccc-de73b49d1021")
+		)
+		(pin "6"
+			(uuid "e72a3ba5-7949-43e4-8d47-de27ba15b081")
+		)
+		(instances
+			(project "DataProcessingUnit"
+				(path "/18f4643d-59cf-40d8-90af-99b4dbe1f32f/9bdfab82-cef8-460c-a16e-388f6d900e76"
+					(reference "J2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+3.3V")
 		(at 234.95 118.11 0)
 		(unit 1)
@@ -11315,7 +11315,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "39k"
+		(property "Value" "36k"
 			(at 48.26 44.4499 0)
 			(effects
 				(font
@@ -11792,7 +11792,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1u"
+		(property "Value" "100n"
 			(at 35.56 120.6499 0)
 			(effects
 				(font
@@ -11931,7 +11931,7 @@
 				)
 			)
 		)
-		(property "Value" "22p"
+		(property "Value" "6p8"
 			(at 78.74 133.35 90)
 			(effects
 				(font
@@ -11999,7 +11999,7 @@
 				)
 			)
 		)
-		(property "Value" "0R"
+		(property "Value" "TBD"
 			(at 88.9 153.67 90)
 			(effects
 				(font

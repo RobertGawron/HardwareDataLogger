@@ -6,8 +6,8 @@
  * @brief Declaration of the HmiMui class implementing IHmi with MUI/U8g2.
  */
 
-#include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
-#include "BusinessLogic/Interfaces/IHmi.hpp"
+#include "BusinessLogic/Interface/IPlatformFactory.hpp"
+#include "BusinessLogic/Interface/IHmi.hpp"
 #include "U8g2lib.h"
 #include "MUIU8g2.h"
 
@@ -37,13 +37,13 @@ namespace BusinessLogic
 
         /** @brief Deleted default constructor */
         HmiMui() = delete;
-        
+
         /** @brief Default virtual destructor */
         ~HmiMui() override = default;
-        
+
         /** @brief Deleted copy constructor */
         HmiMui(const HmiMui &) = delete;
-        
+
         /** @brief Deleted copy assignment operator */
         HmiMui &operator=(const HmiMui &) = delete;
 
@@ -66,11 +66,11 @@ namespace BusinessLogic
         bool tick() override;
 
     private:
-        HmiMeasurementModel &hmiMeasurementModel;      ///< Measurement data provider
-        Device::IDisplay &display;                     ///< Display rendering interface
+        HmiMeasurementModel &hmiMeasurementModel;                        ///< Measurement data provider
+        Device::IDisplay &display;                                       ///< Display rendering interface
         Device::IDisplayBrightnessRegulator &displayBrightnessRegulator; ///< Brightness controller
-        Device::IKeyboard &keyboard;                   ///< User input handler
-        MUIU8G2 mui;                                   ///< MUI framework instance
+        Device::IKeyboard &keyboard;                                     ///< User input handler
+        MUIU8G2 mui;                                                     ///< MUI framework instance
     };
 }
 

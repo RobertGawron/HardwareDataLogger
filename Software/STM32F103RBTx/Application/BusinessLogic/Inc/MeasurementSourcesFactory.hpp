@@ -6,12 +6,12 @@
 #ifndef MeasurementSourcesFactory_h
 #define MeasurementSourcesFactory_h
 
-#include "BusinessLogic/Interfaces/IApplicationComponentFactory.hpp"
+#include "BusinessLogic/Interface/IApplicationComponentFactory.hpp"
 #include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
 #include "Device/Inc/PulseCounterMeasurementSource.hpp"
 #include "Device/Inc/UartMeasurementSource.hpp"
-#include "Driver/Interfaces/IPulseCounterDriver.hpp"
-#include "Driver/Interfaces/IUartDriver.hpp"
+#include "Driver/Interface/IPulseCounterDriver.hpp"
+#include "Driver/Interface/IUartDriver.hpp"
 #include <array>
 
 namespace BusinessLogic

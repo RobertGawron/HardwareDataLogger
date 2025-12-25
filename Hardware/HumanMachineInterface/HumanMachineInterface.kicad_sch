@@ -3378,6 +3378,10 @@
 		(uuid "aef3cf41-a146-4406-8a25-fec4a4e0b46e")
 	)
 	(no_connect
+		(at 220.98 41.91)
+		(uuid "b3e74459-2d0c-4f51-9504-1e0c7e7296bc")
+	)
+	(no_connect
 		(at 219.71 83.82)
 		(uuid "b4d62e3d-9e53-46a2-b6c1-f409fc66c4b4")
 	)
@@ -3418,12 +3422,12 @@
 		(uuid "cdd5e736-dbe1-4fe1-acd8-ca0c6382801b")
 	)
 	(no_connect
-		(at 220.98 36.83)
-		(uuid "d0aed2fc-6e35-4e31-8cce-e36d310c4b3e")
-	)
-	(no_connect
 		(at 219.71 91.44)
 		(uuid "e7a07746-1e1a-41bf-b779-5f03b4ef7b0b")
+	)
+	(no_connect
+		(at 220.98 34.29)
+		(uuid "f09141b1-01a6-4ec1-86e9-4a712c346e19")
 	)
 	(no_connect
 		(at 241.3 59.69)
@@ -3440,10 +3444,6 @@
 	(no_connect
 		(at 220.98 49.53)
 		(uuid "facf5273-2bac-4074-843e-6ada071f6a1a")
-	)
-	(no_connect
-		(at 220.98 31.75)
-		(uuid "ff0b6f7a-43d8-467d-bacc-78d425badaaa")
 	)
 	(wire
 		(pts
@@ -4707,28 +4707,6 @@
 			)
 		)
 	)
-	(global_label "GPIO_10"
-		(shape bidirectional)
-		(at 220.98 34.29 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "26927a44-ba0d-439a-a02b-9ffbb539bcde")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 209.0216 34.29 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
-	)
 	(global_label "GPIO_13"
 		(shape bidirectional)
 		(at 241.3 29.21 0)
@@ -4839,29 +4817,7 @@
 			)
 		)
 	)
-	(global_label "GPIO_4"
-		(shape bidirectional)
-		(at 220.98 41.91 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "424755d9-ed78-404d-be3b-ee24b3c7475a")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 210.2311 41.91 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "GPIO_4"
+	(global_label "GPIO_8"
 		(shape bidirectional)
 		(at 50.8 129.54 180)
 		(fields_autoplaced yes)
@@ -5191,7 +5147,7 @@
 			)
 		)
 	)
-	(global_label "GPIO_10"
+	(global_label "GPIO_12"
 		(shape bidirectional)
 		(at 50.8 134.62 180)
 		(fields_autoplaced yes)
@@ -5204,6 +5160,50 @@
 		(uuid "bec81850-0004-485f-ba33-41c0b6a01aeb")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 38.8416 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "GPIO_12"
+		(shape bidirectional)
+		(at 220.98 31.75 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "c5015e0f-96d4-4b83-8aef-33657e3c75b3")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 209.0216 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "GPIO_8"
+		(shape bidirectional)
+		(at 220.98 36.83 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "ca9f5231-2a92-47d3-9c7b-6f9a539af152")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 210.2311 36.83 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6034,7 +6034,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Button_Switch_SMD:SW_SPST_PTS645"
+		(property "Footprint" "Button_Switch_SMD:SW_SPST_PTS645Sx43SMTR92"
 			(at 132.08 34.29 0)
 			(effects
 				(font
@@ -6052,7 +6052,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Push button switch, generic, two pins"
 			(at 137.16 34.29 0)
 			(effects
 				(font
@@ -6761,7 +6761,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Button_Switch_SMD:SW_SPST_PTS645"
+		(property "Footprint" "Button_Switch_SMD:SW_SPST_PTS645Sx43SMTR92"
 			(at 78.74 34.29 0)
 			(effects
 				(font
@@ -6779,7 +6779,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Push button switch, generic, two pins"
 			(at 83.82 34.29 0)
 			(effects
 				(font
@@ -7096,7 +7096,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Button_Switch_SMD:SW_SPST_PTS645"
+		(property "Footprint" "Button_Switch_SMD:SW_SPST_PTS645Sx43SMTR92"
 			(at 54.61 34.29 0)
 			(effects
 				(font
@@ -7114,7 +7114,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Push button switch, generic, two pins"
 			(at 59.69 34.29 0)
 			(effects
 				(font
@@ -7364,7 +7364,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Button_Switch_SMD:SW_SPST_PTS645"
+		(property "Footprint" "Button_Switch_SMD:SW_SPST_PTS645Sx43SMTR92"
 			(at 106.68 34.29 0)
 			(effects
 				(font
@@ -7382,7 +7382,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Push button switch, generic, two pins"
 			(at 111.76 34.29 0)
 			(effects
 				(font

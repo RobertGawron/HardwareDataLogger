@@ -11,7 +11,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(INCLUDE_DIRS
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Inc/
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Interfaces/
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Interface/
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Library/stm32-st7735
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Library/stm32-st7735
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Library/u8g2/cppsrc

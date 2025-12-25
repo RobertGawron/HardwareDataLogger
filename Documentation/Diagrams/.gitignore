@@ -1,4 +1,11 @@
-*.png
-*.jpg
-*.jpeg
-*.gif
+# 1. Ignore everything
+*
+
+# 2. But do not ignore directories (otherwise Git can't find files inside them)
+!*/
+
+# 3. Allow specific file extensions
+!.gitignore
+!*.md
+!*.plantuml
+!*.svg

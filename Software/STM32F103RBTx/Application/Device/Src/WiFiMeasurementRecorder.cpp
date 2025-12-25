@@ -1,10 +1,9 @@
 #include "Device/Inc/WiFiMeasurementRecorder.hpp"
 #include "Device/Inc/MeasurementType.hpp"
+#include "Device/Inc/CobsEncoder.hpp"
 
-#include "Driver/Inc/UartExchangeStatus.hpp"
-#include "Driver/Interfaces/IUartDriver.hpp"
-
-#include "CobsEncoder.hpp"
+#include "Driver/Interface/UartExchangeStatus.hpp"
+#include "Driver/Interface/IUartDriver.hpp"
 
 #include <array>
 #include <cstddef> // For std::size_t

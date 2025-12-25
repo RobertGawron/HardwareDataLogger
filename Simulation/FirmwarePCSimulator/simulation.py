@@ -49,10 +49,10 @@ class Simulation:
         self._tick_thread: threading.Thread | None = None
         self._stop_event: threading.Event = threading.Event()
 
-        self.stm32: STM32F103RBTx = STM32F103RBTx()
-        self.esp8266: Esp8266 = Esp8266()
+        #self.stm32: STM32F103RBTx = STM32F103RBTx()
+        #self.esp8266: Esp8266 = Esp8266()
 
-        self.esp8266_uart0_tx_callback = None
+        #self.esp8266_uart0_tx_callback = None
         self.my_gpio_state_callback = None
 
     def set_esp8266_uart0_tx_callback(self, callback):
@@ -80,10 +80,10 @@ class Simulation:
             self.esp8266.register_uart0_tx_callback(self.esp8266_uart0_tx_callback)
             self.esp8266.register_gpio_state_callback(self.my_gpio_state_callback)
 
-            self.stm32.register_serial_tx_callback(self.stm32_uart_tx_callback)
+            #self.stm32.register_serial_tx_callback(self.stm32_uart_tx_callback)
 
-            self.stm32.init()
-            self.esp8266.init()
+            #self.stm32.init()
+            #self.esp8266.init()
 
             self._stop_event.clear()
             self._tick_thread = threading.Thread(
@@ -104,15 +104,15 @@ class Simulation:
 
     def update_pulse_counters(self, values) -> None:
         """Update the pulse counters in the STM32 simulation."""
-        self.stm32.update_pulse_counters(values)
+        pass#self.stm32.update_pulse_counters(values)
 
     def get_display_width(self) -> int:
         """Get the display width from the STM32 DUT."""
-        return self.stm32.get_display_width()
+        return 10#self.stm32.get_display_width()
 
     def get_display_height(self) -> int:
         """Get the display height from the STM32 DUT."""
-        return self.stm32.get_display_height()
+        return 10#self.stm32.get_display_height()
 
     def get_display_pixel(self, x: int, y: int) -> Tuple[int, int, int]:
         """
@@ -122,7 +122,7 @@ class Simulation:
         :param y: Y-coordinate of the pixel.
         :return: RGB color tuple.
         """
-        pixel_rgb565: int = self.stm32.get_display_pixel(x, y)
+        pixel_rgb565: int = 5#self.stm32.get_display_pixel(x, y)
         return self._convert_rgb565_to_rgb8(pixel_rgb565)
 
     def _run_periodic_tick(self) -> None:
@@ -132,8 +132,8 @@ class Simulation:
         This internal method handles periodic updates to simulate device behavior.
         """
         while not self._stop_event.is_set():
-            self.stm32.tick()
-            self.esp8266.tick()
+            #self.stm32.tick()
+            #self.esp8266.tick()
             time.sleep(self.tick_interval)
 
     def _convert_rgb565_to_rgb8(self, rgb565: int) -> Tuple[int, int, int]:
@@ -150,11 +150,13 @@ class Simulation:
 
     def key_pressed(self, key: SimulationKey):
         """Notify the STM32 simulation of a key press event."""
-        self.stm32.key_pressed(key)
+        #self.stm32.key_pressed(key)
+        pass
 
     def key_released(self, key: SimulationKey):
         """Notify the STM32 simulation of a key release event."""
-        self.stm32.key_released(key)
+        #self.stm32.key_released(key)
+        pass
 
     def stm32_uart_tx_callback(self, data: list, size: int, timeout: int) -> int:
         """
@@ -168,5 +170,5 @@ class Simulation:
         data_string = ''.join(map(chr, data))  # Convert byte list to string
         print(f"UART TX Callback: Transmitting data: '{data_string}', Size: {size}, Timeout: {timeout}")
 
-        self.esp8266.uart0_tx(data, size, timeout)
+        #self.esp8266.uart0_tx(data, size, timeout)
         return 0  # HAL_OK equivalent

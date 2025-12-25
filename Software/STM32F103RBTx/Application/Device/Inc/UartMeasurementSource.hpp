@@ -6,9 +6,9 @@
 #ifndef UartMeasurementSource_H_
 #define UartMeasurementSource_H_
 
-#include "Device/Interfaces/IMeasurementSource.hpp"
+#include "Device/Interface/IMeasurementSource.hpp"
 #include "Device/Inc/MeasurementDeviceId.hpp"
-#include "Driver/Interfaces/IUartDriver.hpp"
+#include "Driver/Interface/IUartDriver.hpp"
 
 namespace Device
 {
@@ -25,7 +25,7 @@ namespace Device
     public:
         /**
          * @brief Constructs a UartMeasurementSource with a device ID and UART driver reference.
-         * 
+         *
          * @param id Unique identifier for the measurement source device
          * @param driver Reference to the UART driver responsible for communication
          */
@@ -48,54 +48,54 @@ namespace Device
 
         /**
          * @brief Deleted assignment operator to prevent assignment.
-         * 
+         *
          * @return UartMeasurementSource& The assigned object (not implemented)
          */
         UartMeasurementSource &operator=(const UartMeasurementSource &) = delete;
 
         /**
          * @brief Initializes the UART measurement source.
-         * 
+         *
          * @return true if initialization succeeded, false otherwise
          */
         bool initialize() override;
 
         /**
          * @brief Starts measurement collection from the UART device.
-         * 
+         *
          * @return true if start succeeded, false otherwise
          */
         bool start() override;
 
         /**
          * @brief Stops measurement collection from the UART device.
-         * 
+         *
          * @return true if stop succeeded, false otherwise
          */
         bool stop() override;
 
         /**
          * @brief Checks if new measurement data is available from the UART device.
-         * 
+         *
          * @return true if new measurement data is available, false otherwise
          */
         bool isMeasurementAvailable() override;
 
         /**
          * @brief Retrieves the current measurement data from the UART device.
-         * 
+         *
          * @return MeasurementType The latest measurement data received via UART
          */
         MeasurementType getMeasurement() override;
 
     private:
-        /** 
-         * @brief Unique identifier for this measurement source 
+        /**
+         * @brief Unique identifier for this measurement source
          */
         MeasurementDeviceId deviceId;
-        
-        /** 
-         * @brief Reference to the UART driver used for communication 
+
+        /**
+         * @brief Reference to the UART driver used for communication
          */
         Driver::IUartDriver &driver;
     };

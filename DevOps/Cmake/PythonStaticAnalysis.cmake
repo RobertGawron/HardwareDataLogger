@@ -15,7 +15,7 @@ file(MAKE_DIRECTORY ${PYTHON_REPORT_DIR})
 set(PYTHON_STATIC_ANALYSIS_SCRIPT "${CMAKE_SOURCE_DIR}/DevOps/Scripts/PythonStaticAnalysis.sh")
 
 # Add a custom target for Python static analysis
-add_custom_target(pystatic
+add_custom_target(pstatic
     COMMAND bash -c " \
         dos2unix ${PYTHON_STATIC_ANALYSIS_SCRIPT} && source ${PYTHON_STATIC_ANALYSIS_SCRIPT}"
     COMMENT "Running Python static analysis with Prospector and generating reports..."

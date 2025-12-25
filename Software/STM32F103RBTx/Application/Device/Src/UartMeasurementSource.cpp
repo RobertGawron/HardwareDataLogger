@@ -1,9 +1,9 @@
 #include "Device/Inc/UartMeasurementSource.hpp"
 
-#include "Device/Interfaces/IMeasurementSource.hpp"
+#include "Device/Interface/IMeasurementSource.hpp"
 #include "Device/Inc/MeasurementType.hpp"
 #include "Device/Inc/MeasurementDeviceId.hpp"
-#include "Driver/Interfaces/IUartDriver.hpp"
+#include "Driver/Interface/IUartDriver.hpp"
 
 #include <cstdint>
 

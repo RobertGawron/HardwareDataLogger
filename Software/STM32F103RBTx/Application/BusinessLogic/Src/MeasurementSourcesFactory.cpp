@@ -3,8 +3,8 @@
 #include "Device/Inc/PulseCounterMeasurementSource.hpp"
 #include "Device/Inc/MeasurementDeviceId.hpp"
 
-#include "Driver/Interfaces/IUartDriver.hpp"
-#include "Driver/Interfaces/IPulseCounterDriver.hpp"
+#include "Driver/Interface/IUartDriver.hpp"
+#include "Driver/Interface/IPulseCounterDriver.hpp"
 
 #include <cstdint>
 

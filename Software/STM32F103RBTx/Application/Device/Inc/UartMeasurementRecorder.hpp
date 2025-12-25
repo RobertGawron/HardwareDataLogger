@@ -7,8 +7,8 @@
 #ifndef UartMeasurementRecorder_H_
 #define UartMeasurementRecorder_H_
 
-#include "Device/Interfaces/IMeasurementRecorder.hpp"
-#include "Driver/Interfaces/IUartDriver.hpp"
+#include "Device/Interface/IMeasurementRecorder.hpp"
+#include "Driver/Interface/IUartDriver.hpp"
 
 namespace Device
 {
@@ -46,7 +46,7 @@ namespace Device
          */
         UartMeasurementRecorder &operator=(const UartMeasurementRecorder &) = delete;
 
-             /**
+        /**
          * @brief Flushes any remaining data to the COM port via UART.
          *
          * This method ensures that any remaining buffered data is sent to the COM port via UART.

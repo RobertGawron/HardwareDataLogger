@@ -1,7 +1,7 @@
-#include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
+#include "BusinessLogic/Interface/IPlatformFactory.hpp"
 #include "BusinessLogic/Inc/HmiFactory.hpp"
 #include "BusinessLogic/Inc/HmiMui.hpp"
-#include "Device/Interfaces/IMeasurementReader.hpp"
+#include "Device/Interface/IMeasurementReader.hpp"
 #include "Device/Inc/Keyboard.hpp"
 #include "Device/Inc/DisplayBrightnessRegulator.hpp"
 

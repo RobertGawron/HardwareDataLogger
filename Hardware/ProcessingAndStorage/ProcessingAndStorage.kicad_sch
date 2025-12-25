@@ -6,6 +6,48 @@
 	(paper "A4")
 	(lib_symbols)
 	(sheet
+		(at 53.34 87.63)
+		(size 12.7 3.81)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "097c6198-7414-46b7-a29c-2ab22bad5270")
+		(property "Sheetname" "SerialProgrammer"
+			(at 53.34 86.9184 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "SerialProgrammer.kicad_sch"
+			(at 53.34 92.0246 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "ProcessingAndStorage"
+				(path "/2dac91f6-5de1-492e-9a04-36ab71ef854f"
+					(page "6")
+				)
+			)
+		)
+	)
+	(sheet
 		(at 53.34 74.93)
 		(size 12.7 3.81)
 		(exclude_from_sim no)
@@ -90,49 +132,7 @@
 		)
 	)
 	(sheet
-		(at 74.93 107.95)
-		(size 12.7 3.81)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0.1524)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0.0000)
-		)
-		(uuid "c0ade90a-d447-456b-975c-76e822529942")
-		(property "Sheetname" "PowerSupply"
-			(at 74.93 107.2384 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "PowerSupply.kicad_sch"
-			(at 74.93 112.3446 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "ProcessingAndStorage"
-				(path "/2dac91f6-5de1-492e-9a04-36ab71ef854f"
-					(page "5")
-				)
-			)
-		)
-	)
-	(sheet
-		(at 53.34 86.36)
+		(at 53.34 100.33)
 		(size 12.7 3.81)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -148,7 +148,7 @@
 		)
 		(uuid "c9452f86-226d-4605-84ad-9a9774faea3a")
 		(property "Sheetname" "DataStorage"
-			(at 53.34 85.6484 0)
+			(at 53.34 99.6184 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -157,7 +157,7 @@
 			)
 		)
 		(property "Sheetfile" "DataStorage.kicad_sch"
-			(at 53.34 90.7546 0)
+			(at 53.34 104.7246 0)
 			(effects
 				(font
 					(size 1.27 1.27)

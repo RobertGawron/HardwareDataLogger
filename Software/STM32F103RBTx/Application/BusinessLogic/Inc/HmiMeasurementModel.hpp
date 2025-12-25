@@ -1,7 +1,7 @@
 #ifndef HmiMeasurementModel_h
 #define HmiMeasurementModel_h
 
-#include "Device/Interfaces/IMeasurementReader.hpp"
+#include "Device/Interface/IMeasurementReader.hpp"
 
 /**
  * @file HmiMeasurementModel.hpp
@@ -24,7 +24,7 @@ namespace BusinessLogic
     public:
         /**
          * @brief Constructs a HmiMeasurementModel with a reference to a measurement reader.
-         * 
+         *
          * @param reader Reference to the measurement reader that provides access to device data.
          */
         explicit HmiMeasurementModel(Device::IMeasurementReader &reader);
@@ -55,18 +55,18 @@ namespace BusinessLogic
 
         /**
          * @brief Retrieves the latest measurement value from a specified device.
-         * 
+         *
          * @param source The unique identifier of the measurement device to query.
          * @return std::uint32_t The latest measurement value from the specified device.
          * @retval 0 if no measurement is available or if the device is not found.
-         * 
+         *
          */
         [[nodiscard]] std::uint32_t getLatestMeasurement(Device::MeasurementDeviceId source) const;
 
     private:
-        /** 
+        /**
          * @brief Reference to the measurement reader that interfaces with physical devices.
-         * 
+         *
          * This dependency injection allows the model to remain decoupled from specific
          * device implementations, following the Dependency Inversion Principle.
          */
