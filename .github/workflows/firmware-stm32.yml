@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Firmware STM32
 
 on:
   workflow_run:
@@ -10,7 +10,7 @@ on:
       - 'feature/*'
 
 jobs:
-  unit-tests:
+  firmware-stm32:
     name: Build Firmware (STM32)
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
