@@ -1,6 +1,6 @@
 #include "Device/Inc/SdCardMeasurementRecorder.hpp"
 #include "Device/Inc/MeasurementType.hpp"
-#include "Driver/Interfaces/ISdCardDriver.hpp"
+#include "Driver/Interface/ISdCardDriver.hpp"
 
 namespace Device
 {

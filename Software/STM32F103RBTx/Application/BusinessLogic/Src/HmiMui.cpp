@@ -1,11 +1,11 @@
 #include "BusinessLogic/Inc/HmiMui.hpp"
 #include "BusinessLogic/Inc/HmiMuiHandlers.hpp"
 #include "BusinessLogic/Inc/HmiMeasurementModel.hpp"
-#include "Device/Interfaces/IDisplay.hpp"
-#include "Device/Interfaces/IDisplayBrightnessRegulator.hpp"
-#include "Device/Interfaces/IKeyboard.hpp"
+#include "Device/Interface/IDisplay.hpp"
+#include "Device/Interface/IDisplayBrightnessRegulator.hpp"
+#include "Device/Interface/IKeyboard.hpp"
 #include "Device/Inc/KeyboardKeyActionState.hpp"
-#include "Driver/Inc/KeyboardKeyIdentifier.hpp"
+#include "Driver/Interface/KeyboardKeyIdentifier.hpp"
 
 #include "mui.h"
 #include "u8g2.h"
@@ -109,7 +109,7 @@ namespace BusinessLogic
 
     bool HmiMui::start()
     {
-        // #if 0
+#if 0
         display.begin();
 
         mui.begin(display, fds_data, muif_list, sizeof(muif_list) / sizeof(muif_t));
@@ -126,6 +126,8 @@ namespace BusinessLogic
             mui.draw();
         } while (display.nextPage() > 0u);
 
+        return true;
+#endif
         return true;
     }
 
@@ -174,37 +176,37 @@ namespace BusinessLogic
             (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up) == Device::KeyboardKeyActionState::PressEndLong) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Down) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Down) == Device::KeyboardKeyActionState::PressEndLong) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Left) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Left) == Device::KeyboardKeyActionState::PressEndLong) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Right) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Right) == Device::KeyboardKeyActionState::PressEndLong))
         {
 
-         /*   display.clear();
-            do
+        /*   display.clear();
+           do
+           {
+               mui.draw();
+           } while (display.nextPage() > 0u);
+      */ }
+
+        static int i = 0;
+        i++;
+        if (i == 100)
+        {
+            if (mui.isFormActive())
             {
-                mui.draw();
-            } while (display.nextPage() > 0u);
-       */ }
+                i = 0;
 
-         static int i = 0;
-         i++;
-         if (i == 100)
-         {
-             if (mui.isFormActive())
-             {
-                 i = 0;
+                display.clear();
+                do
+                {
+                    //   std::cout << "==============================================> redraw" << std::endl;
+                    mui.draw();
+                } while (display.nextPage() > 0u);
+            }
+        }
 
-                 display.clear();
-                 do
-                 {
-                     //   std::cout << "==============================================> redraw" << std::endl;
-                     mui.draw();
-                 } while (display.nextPage() > 0u);
-             }
-         }
-
-         /*    printf("key state: %d %d %d %d\n",
-                    keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up),
-                    keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Down),
-                    keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Left),
-                    keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Right));
-           */
-         return true;
+        /*    printf("key state: %d %d %d %d\n",
+                   keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up),
+                   keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Down),
+                   keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Left),
+                   keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Right));
+          */
+        return true;
     }
 
 }

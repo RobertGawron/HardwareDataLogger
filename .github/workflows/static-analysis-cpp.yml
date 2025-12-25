@@ -1,0 +1,131 @@
+name: Static Analysis (C++)
+
+on:
+  workflow_run:
+    workflows: ["Build Docker"]
+    types:
+      - completed
+    branches:
+      - main
+      - 'feature/*'
+
+jobs:
+  static-analysis-cpp:
+    name: Analysis (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
+    strategy:
+      fail-fast: false # If one fails, let the others finish
+      matrix:
+        include:
+          - name: Business Logic
+            cmake_flag: -DEXPORT_BL_GROUP=ON
+            artifact_suffix: biz
+          
+          - name: Device
+            cmake_flag: -DEXPORT_DEV_GROUP=ON
+            artifact_suffix: dev
+            
+          - name: Driver
+            cmake_flag: -DEXPORT_DRV_GROUP=ON
+            artifact_suffix: drv
+            
+          - name: Simulation
+            cmake_flag: -DEXPORT_SIM_GROUP=ON
+            artifact_suffix: sim
+            
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Compose
+        uses: docker/setup-compose-action@v1
+
+      - name: Enable Swap Space
+        run: |
+          sudo fallocate -l 4G /swapfile
+          sudo chmod 600 /swapfile
+          sudo mkswap /swapfile
+          sudo swapon /swapfile
+          free -h
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull Docker Image
+        run: |
+          docker pull ghcr.io/robertgawron/hardwaredatalogger:${{ github.event.workflow_run.head_sha }}
+          docker tag ghcr.io/robertgawron/hardwaredatalogger:${{ github.event.workflow_run.head_sha }} hardwaredatalogger:latest
+
+      - name: Run Docker Compose
+        env:
+          DOCKER_IMAGE: ghcr.io/robertgawron/hardwaredatalogger:${{ github.event.workflow_run.head_sha }}
+        run: |
+          docker compose -f docker-compose.yml up -d
+
+      - name: Run Static Analysis
+        run: |
+          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake ${{ matrix.cmake_flag }} -DCMAKE_BUILD_TYPE=Debug .. && make cstatic"
+
+      - name: Upload Static Analysis Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          # Creates unique names: static-analysis-results-cpp-biz, -dev, etc.
+          name: static-analysis-results-cpp-${{ matrix.artifact_suffix }}
+          path: DevOps/BuildArtifacts/StaticAnalysis
+
+      - name: Clean up Docker containers
+        if: always()
+        run: |
+          docker compose -f docker-compose.yml down
+
+
+  static-analysis-firmware:
+    name: Analysis (Firmware)
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Compose
+        uses: docker/setup-compose-action@v1
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull Docker Image
+        run: |
+          docker pull ghcr.io/robertgawron/hardwaredatalogger:${{ github.event.workflow_run.head_sha }}
+          docker tag ghcr.io/robertgawron/hardwaredatalogger:${{ github.event.workflow_run.head_sha }} hardwaredatalogger:latest
+
+      - name: Run Docker Compose
+        env:
+          DOCKER_IMAGE: ghcr.io/robertgawron/hardwaredatalogger:${{ github.event.workflow_run.head_sha }}
+        run: docker compose -f docker-compose.yml up -d
+
+      - name: Run Static Analysis (Firmware)
+        run: |
+          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace/Software/STM32F103RBTx/ && mkdir -p build && cd build && rm -rf * && cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug .. && make cstatic"
+
+      - name: Upload Static Analysis Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-analysis-results-cpp-fw
+          path: DevOps/BuildArtifacts/StaticAnalysis
+
+      - name: Clean up
+        if: always()
+        run: docker compose -f docker-compose.yml down

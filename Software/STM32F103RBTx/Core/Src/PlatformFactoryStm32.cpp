@@ -8,13 +8,13 @@
 
 // stm32f1xx.h:254
 */
-#include "Driver/Inc/AmbientLightSensorDriver.hpp"
-#include "Driver/Inc/St7735DisplayBrightnessDriver.hpp"
-#include "Driver/Inc/St7735DisplayDriver.hpp"
-#include "Driver/Inc/KeyboardFourPushButtonsDriver.hpp"
-#include "Driver/Inc/UartDriver.hpp"
-#include "Driver/Inc/SdCardDriver.hpp"
-#include "Driver/Inc/PulseCounterDriver.hpp"
+#include "Driver/Hardware/Inc/AmbientLightSensorDriver.hpp"
+#include "Driver/Hardware/Inc/St7735DisplayBrightnessDriver.hpp"
+#include "Driver/Hardware/Inc/St7735DisplayDriver.hpp"
+#include "Driver/Hardware/Inc/KeyboardFourPushButtonsDriver.hpp"
+#include "Driver/Hardware/Inc/UartDriver.hpp"
+#include "Driver/Hardware/Inc/SdCardDriver.hpp"
+#include "Driver/Hardware/Inc/PulseCounterDriver.hpp"
 
 // #include "stm32f1xx_hal_conf.h"
 #include "stm32f1xx_hal_def.h"

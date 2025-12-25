@@ -7,8 +7,8 @@
 #ifndef MeasurementCoordinator_h
 #define MeasurementCoordinator_h
 
-#include "BusinessLogic/Interfaces/IMeasurementDataStore.hpp"
-#include "Device/Interfaces/IMeasurementSource.hpp"
+#include "BusinessLogic/Interface/IMeasurementDataStore.hpp"
+#include "Device/Interface/IMeasurementSource.hpp"
 
 #include <cstdint>
 #include <array>
@@ -101,13 +101,7 @@ namespace BusinessLogic
         bool removeObserver(Device::IMeasurementSource &observer);
 
     private:
-        /**
-         * @brief Updates measurements from all registered input devices.
-         *
-         * This function queries all registered measurement sources for new data, processes it,
-         * and ensures the data is ready to be stored.
-         */
-        void updateMeasurements();
+        bool updateMeasurements();
 
         /** @brief Maximum number of observers that can be registered. */
         static const std::uint8_t MaxObservers{5u};
