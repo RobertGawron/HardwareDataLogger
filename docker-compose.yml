@@ -1,6 +1,6 @@
 services:
   dev:
-    image:  logger-dev:latest 
+    image: ${DOCKER_IMAGE:-logger-dev:latest}  # Use env var or fallback to local build
     build:
       context: .
       dockerfile: DevOps/Dockerfile

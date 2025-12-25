@@ -18,6 +18,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up Docker Compose
+        uses: docker/setup-compose-action@v1
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -31,14 +34,16 @@ jobs:
           docker tag ghcr.io/robertgawron/hardwaredatalogger:${{ github.event.workflow_run.head_sha }} hardwaredatalogger:latest
 
       - name: Run Docker Compose
+        env:
+          DOCKER_IMAGE: ghcr.io/robertgawron/hardwaredatalogger:${{ github.event.workflow_run.head_sha }}
         run: |
-          docker-compose -f docker-compose.yml up -d
+          docker compose -f docker-compose.yml up -d
 
       - name: Run Unit Tests
         run: |
-          docker-compose -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make test_biz && make test_dev && make test_drv"
+          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make test_biz && make test_dev && make test_drv"
         
       - name: Clean up Docker containers
         if: always()
         run: |
-          docker-compose -f docker-compose.yml down
+          docker compose -f docker-compose.yml down

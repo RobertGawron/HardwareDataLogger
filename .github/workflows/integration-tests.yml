@@ -18,6 +18,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up Docker Compose
+        uses: docker/setup-compose-action@v1
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -31,12 +34,14 @@ jobs:
           docker tag ghcr.io/robertgawron/hardwaredatalogger:${{ github.event.workflow_run.head_sha }} hardwaredatalogger:latest
 
       - name: Run Docker Compose
+        env:
+          DOCKER_IMAGE: ghcr.io/robertgawron/hardwaredatalogger:${{ github.event.workflow_run.head_sha }}
         run: |
-          docker-compose -f docker-compose.yml up -d
+          docker compose -f docker-compose.yml up -d
 
       - name: Run Integration Tests
         run: |
-          docker-compose -f docker-compose.yml exec -T dev bash -c "pip install -e /workspace/Software/STM32F103RBTx/Application/Driver/Host/Python/ && cd /workspace/build/ && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j24 && cd /workspace/IntegrationTest && pytest test_*.py -s  --html=/workspace/build/BuildArtifacts/IntegrationTest.html"
+          docker compose -f docker-compose.yml exec -T dev bash -c "pip install -e /workspace/Software/STM32F103RBTx/Application/Driver/Host/Python/ && cd /workspace/build/ && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j24 && cd /workspace/IntegrationTest && pytest test_*.py -s  --html=/workspace/build/BuildArtifacts/IntegrationTest.html"
 
       - name: Upload Integration Tests Results
         if: always()
@@ -48,4 +53,4 @@ jobs:
       - name: Clean up Docker containers
         if: always()
         run: |
-          docker-compose -f docker-compose.yml down
+          docker compose -f docker-compose.yml down
