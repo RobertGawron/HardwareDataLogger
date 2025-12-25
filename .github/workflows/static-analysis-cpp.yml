@@ -38,6 +38,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+            ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Set up Docker Compose
         uses: docker/setup-compose-action@v1
@@ -94,6 +96,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+            ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Set up Docker Compose
         uses: docker/setup-compose-action@v1
