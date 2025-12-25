@@ -39,3 +39,4 @@ cd /workspace/build
 cmake ..
 make uml
 ```
+
