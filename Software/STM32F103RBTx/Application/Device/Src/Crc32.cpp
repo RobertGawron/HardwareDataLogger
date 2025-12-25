@@ -38,7 +38,7 @@ namespace Device
                 }
             }
         }
-
+        //
         return ~crc;
     }
 }
