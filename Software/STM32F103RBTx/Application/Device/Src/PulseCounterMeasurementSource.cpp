@@ -41,9 +41,9 @@ namespace Device
 
     MeasurementType PulseCounterMeasurementSource::getMeasurement()
     {
-        MeasurementType measurement;
-        measurement.source = getMyId();
-        measurement.data = pulseCounterDriver.getMeasurement();
+        MeasurementType measurement{
+            .data = pulseCounterDriver.getMeasurement(),
+            .source = getMyId()};
 
         return measurement;
     }

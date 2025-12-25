@@ -1,11 +1,9 @@
 cmake_minimum_required(VERSION 3.28)
 project(HardwareDataLogger)
 
-# Global compiler settings (use sparingly)
-set(CMAKE_CXX_STANDARD 17)
+# Global compiler settings
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-set(COMPILE_FOR_PC TRUE)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -pg")
@@ -54,3 +52,38 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     include(DevOps/Cmake/ClassDiagram.cmake)
     
 endif()
+
+
+add_custom_target(firmware
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/firmware-build
+    COMMAND ${CMAKE_COMMAND} 
+        -S ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx
+        -B ${CMAKE_BINARY_DIR}/firmware-build
+        -DCMAKE_TOOLCHAIN_FILE=${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/cmake/gcc-arm-none-eabi.cmake
+        -DCMAKE_BUILD_TYPE=Release
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR}/firmware-build
+    COMMENT "Building STM32 firmware..."
+    USES_TERMINAL
+)
+
+
+
+add_custom_target(cstatic_stm
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/firmware-build
+    COMMAND ${CMAKE_COMMAND} 
+        -S ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx
+        -B ${CMAKE_BINARY_DIR}/firmware-build
+        -DCMAKE_TOOLCHAIN_FILE=${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/cmake/gcc-arm-none-eabi.cmake
+        -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR}/firmware-build
+    COMMAND ${CMAKE_COMMAND} -E echo "Copying compile_commands.json..."
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_BINARY_DIR}/firmware-build/compile_commands.json
+        ${CMAKE_BINARY_DIR}/compile_commands.json
+    COMMAND ${CMAKE_COMMAND} -E echo "Successfully copied compile_commands.json to ${CMAKE_BINARY_DIR}"
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target cstatic
+    COMMENT "Building firmware and exporting compile commands..."
+    USES_TERMINAL
+    VERBATIM
+)

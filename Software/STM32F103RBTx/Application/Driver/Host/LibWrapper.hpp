@@ -9,9 +9,19 @@
 #include <array>
 
 #include "MyApplication.hpp"
-#include "HmiEventHandlers.hpp"
+#include "EventHandlers.hpp"
+#include "KeyboardKeyIdentifier.hpp"
 
-constexpr std::size_t PULSE_COUNTER_COUNT = 4;
+constexpr std::size_t PULSE_COUNTER_COUNT = 4U;
+
+enum KeyboardKeyIdentifier : std::uint8_t
+{
+    Up = static_cast<std::uint8_t>(Driver::KeyboardKeyIdentifier::Up),
+    Down = static_cast<std::uint8_t>(Driver::KeyboardKeyIdentifier::Down),
+    Left = static_cast<std::uint8_t>(Driver::KeyboardKeyIdentifier::Left),
+    Right = static_cast<std::uint8_t>(Driver::KeyboardKeyIdentifier::Right),
+    LastNotUsed = static_cast<std::uint8_t>(Driver::KeyboardKeyIdentifier::LastNotUsed)
+};
 
 #ifdef __cplusplus
 extern "C"
@@ -60,15 +70,6 @@ extern "C"
      */
     std::uint16_t LibWrapper_GetPixelValue(std::uint8_t x, std::uint8_t y);
 
-    typedef enum KeyboardKeyIdentifier
-    {
-        Up = 0u,         /**< Represents the 'Up' key, assigned with value 0. */
-        Down = 1u,       /**< Represents the 'Down' key, assigned with value 1. */
-        Left = 2u,       /**< Represents the 'Left' key, assigned with value 2. */
-        Right = 3u,      /**< Represents the 'Right' key, assigned with value 3. */
-        LastNotUsed = 4u /**< Represents the last enum value, used to determine the size of the enum. */
-    } KeyboardKeyIdentifier;
-
     void LibWrapper_KeyPressed(KeyboardKeyIdentifier keyId);
 
     void LibWrapper_KeyReleased(KeyboardKeyIdentifier keyId);
@@ -83,7 +84,61 @@ extern "C"
      */
     void LibWrapper_UpdatePulseCounters(const std::array<std::uint16_t, PULSE_COUNTER_COUNT> &pulseCounters);
 
+    /**
+     * @brief Registers a callback for UART transmit operations.
+     *
+     * @param callback Function pointer to the UART TX callback.
+     */
     void LibWrapper_RegisterSerialTxCallback(SerialTxCallback callback);
+
+    /**
+     * @brief Registers a callback for SD card open operations.
+     *
+     * @param callback Function pointer to the SD card open callback.
+     */
+    void LibWrapper_RegisterSdCardOpenCallback(SdCardOpenCallback callback);
+
+    /**
+     * @brief Registers a callback for SD card write operations.
+     *
+     * @param callback Function pointer to the SD card write callback.
+     */
+    void LibWrapper_RegisterSdCardWriteCallback(SdCardWriteCallback callback);
+
+    /**
+     * @brief Registers a callback for SD card close operations.
+     *
+     * @param callback Function pointer to the SD card close callback.
+     */
+    void LibWrapper_RegisterSdCardCloseCallback(SdCardCloseCallback callback);
+
+    /**
+     * @brief Registers a callback for SD card initialize operations.
+     *
+     * @param callback Function pointer to the SD card initialize callback.
+     */
+    void LibWrapper_RegisterSdCardInitializeCallback(SdCardInitializeCallback callback);
+
+    /**
+     * @brief Registers a callback for SD card start operations.
+     *
+     * @param callback Function pointer to the SD card start callback.
+     */
+    void LibWrapper_RegisterSdCardStartCallback(SdCardStartCallback callback);
+
+    /**
+     * @brief Registers a callback for SD card stop operations.
+     *
+     * @param callback Function pointer to the SD card stop callback.
+     */
+    void LibWrapper_RegisterSdCardStopCallback(SdCardStopCallback callback);
+
+    /**
+     * @brief Registers a callback for SD card reset operations.
+     *
+     * @param callback Function pointer to the SD card reset callback.
+     */
+    void LibWrapper_RegisterSdCardResetCallback(SdCardResetCallback callback);
 
 #ifdef __cplusplus
 }

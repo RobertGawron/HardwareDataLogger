@@ -120,10 +120,10 @@ namespace BusinessLogic
         Driver::IPulseCounterDriver &pcC,
         Driver::IPulseCounterDriver &pcD,
         Driver::IUartDriver &_uart)
-        : pulseCounter{{Device::PulseCounterMeasurementSource(Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_1, pcA),
-                        Device::PulseCounterMeasurementSource(Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_2, pcB),
-                        Device::PulseCounterMeasurementSource(Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_3, pcC),
-                        Device::PulseCounterMeasurementSource(Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_4, pcD)}},
+        : pulseCounter{{Device::PulseCounterMeasurementSource(Device::MeasurementDeviceId::PULSE_COUNTER_1, pcA),
+                        Device::PulseCounterMeasurementSource(Device::MeasurementDeviceId::PULSE_COUNTER_2, pcB),
+                        Device::PulseCounterMeasurementSource(Device::MeasurementDeviceId::PULSE_COUNTER_3, pcC),
+                        Device::PulseCounterMeasurementSource(Device::MeasurementDeviceId::PULSE_COUNTER_4, pcD)}},
           uart(_uart),
           uartMeasurementSource(Device::MeasurementDeviceId::DEVICE_UART_1, _uart) {}
 
@@ -153,9 +153,9 @@ namespace BusinessLogic
     // HmiFactory stubs
     HmiFactory::HmiFactory(Device::IMeasurementReader &reader, IPlatformFactory &factory)
         : hmiMeasurementModel(reader),
-          display(factory.createDisplayDriver()),
-          brightnessRegulator(factory.createAmbientLightSensorDriver(), factory.createDisplayBrightnessDriver()),
-          keyboard(factory.createKeyboardDriver()),
+          display(factory.getDisplayDriver()),
+          brightnessRegulator(factory.getAmbientLightSensorDriver(), factory.getDisplayBrightnessDriver()),
+          keyboard(factory.getKeyboardDriver()),
           hmi(hmiMeasurementModel, display, brightnessRegulator, keyboard) {}
 
     bool HmiFactory::initialize() { return true; }
@@ -179,15 +179,15 @@ namespace BusinessLogic
     class MockPlatformFactory : public IPlatformFactory
     {
     public:
-        MOCK_METHOD(Driver::IPulseCounterDriver &, createPulseCounterDriver,
-                    (Driver::PulseCounterIdentifier), (override));
-        MOCK_METHOD(Driver::IUartDriver &, createUartDriver,
-                    (Driver::UartIdentifier), (override));
-        MOCK_METHOD(Driver::ISdCardDriver &, createSdCardDriver, (), (override));
-        MOCK_METHOD(Driver::IAmbientLightSensorDriver &, createAmbientLightSensorDriver, (), (override));
-        MOCK_METHOD(Driver::IDisplayBrightnessDriver &, createDisplayBrightnessDriver, (), (override));
-        MOCK_METHOD(Driver::IDisplayDriver &, createDisplayDriver, (), (override));
-        MOCK_METHOD(Driver::IKeyboardDriver &, createKeyboardDriver, (), (override));
+        MOCK_METHOD(Driver::IPulseCounterDriver &, getPulseCounterDriver,
+                    (Driver::PulseCounterId), (override));
+        MOCK_METHOD(Driver::IUartDriver &, getUartDriver,
+                    (Driver::UartId), (override));
+        MOCK_METHOD(Driver::ISdCardDriver &, getSdCardDriver, (), (override));
+        MOCK_METHOD(Driver::IAmbientLightSensorDriver &, getAmbientLightSensorDriver, (), (override));
+        MOCK_METHOD(Driver::IDisplayBrightnessDriver &, getDisplayBrightnessDriver, (), (override));
+        MOCK_METHOD(Driver::IDisplayDriver &, getDisplayDriver, (), (override));
+        MOCK_METHOD(Driver::IKeyboardDriver &, getKeyboardDriver, (), (override));
     };
 
     class MockPulseCounterDriver : public Driver::IPulseCounterDriver
@@ -208,9 +208,9 @@ namespace BusinessLogic
         MOCK_METHOD(bool, onStart, (), (override));
         MOCK_METHOD(bool, onStop, (), (override));
         MOCK_METHOD(bool, onReset, (), (override));
-        MOCK_METHOD(Driver::UartExchangeStatus, transmit,
+        MOCK_METHOD(Driver::UartStatus, transmit,
                     (std::uint8_t *, std::uint16_t, std::uint32_t), (override));
-        MOCK_METHOD(Driver::UartExchangeStatus, receive,
+        MOCK_METHOD(Driver::UartStatus, receive,
                     (std::uint8_t *, std::uint16_t, std::uint32_t), (override));
     };
 
@@ -297,7 +297,7 @@ namespace BusinessLogic
             mockPulseCounterBncB = std::make_unique<::testing::NiceMock<MockPulseCounterDriver>>();
             mockPulseCounterBncC = std::make_unique<::testing::NiceMock<MockPulseCounterDriver>>();
             mockPulseCounterBncD = std::make_unique<::testing::NiceMock<MockPulseCounterDriver>>();
-            mockUartMeasurementReceiver = std::make_unique<::testing::NiceMock<MockUartDriver>>();
+            mockUartMEASUREMENT_RECEIVER = std::make_unique<::testing::NiceMock<MockUartDriver>>();
             mockUartWiFi = std::make_unique<::testing::NiceMock<MockUartDriver>>();
             mockSdCardDriver = std::make_unique<::testing::NiceMock<MockSdCardDriver>>();
             mockAmbientLightSensor = std::make_unique<::testing::NiceMock<MockAmbientLightSensorDriver>>();
@@ -323,7 +323,7 @@ namespace BusinessLogic
             mockPulseCounterBncB.reset();
             mockPulseCounterBncC.reset();
             mockPulseCounterBncD.reset();
-            mockUartMeasurementReceiver.reset();
+            mockUartMEASUREMENT_RECEIVER.reset();
             mockUartWiFi.reset();
             mockSdCardDriver.reset();
             mockAmbientLightSensor.reset();
@@ -336,27 +336,27 @@ namespace BusinessLogic
         {
             using ::testing::ReturnRef;
 
-            ON_CALL(*mockPlatformFactory, createPulseCounterDriver(Driver::PulseCounterIdentifier::bncA))
+            ON_CALL(*mockPlatformFactory, getPulseCounterDriver(Driver::PulseCounterId::bncA))
                 .WillByDefault(ReturnRef(*mockPulseCounterBncA));
-            ON_CALL(*mockPlatformFactory, createPulseCounterDriver(Driver::PulseCounterIdentifier::bncB))
+            ON_CALL(*mockPlatformFactory, getPulseCounterDriver(Driver::PulseCounterId::bncB))
                 .WillByDefault(ReturnRef(*mockPulseCounterBncB));
-            ON_CALL(*mockPlatformFactory, createPulseCounterDriver(Driver::PulseCounterIdentifier::bncC))
+            ON_CALL(*mockPlatformFactory, getPulseCounterDriver(Driver::PulseCounterId::bncC))
                 .WillByDefault(ReturnRef(*mockPulseCounterBncC));
-            ON_CALL(*mockPlatformFactory, createPulseCounterDriver(Driver::PulseCounterIdentifier::bncD))
+            ON_CALL(*mockPlatformFactory, getPulseCounterDriver(Driver::PulseCounterId::bncD))
                 .WillByDefault(ReturnRef(*mockPulseCounterBncD));
-            ON_CALL(*mockPlatformFactory, createUartDriver(Driver::UartIdentifier::MeasurementReceiver))
-                .WillByDefault(ReturnRef(*mockUartMeasurementReceiver));
-            ON_CALL(*mockPlatformFactory, createUartDriver(Driver::UartIdentifier::DataTransmitterViaWiFi))
+            ON_CALL(*mockPlatformFactory, getUartDriver(Driver::UartId::MEASUREMENT_RECEIVER))
+                .WillByDefault(ReturnRef(*mockUartMEASUREMENT_RECEIVER));
+            ON_CALL(*mockPlatformFactory, getUartDriver(Driver::UartId::TRANSMIT_VIA_WIFI))
                 .WillByDefault(ReturnRef(*mockUartWiFi));
-            ON_CALL(*mockPlatformFactory, createSdCardDriver())
+            ON_CALL(*mockPlatformFactory, getSdCardDriver())
                 .WillByDefault(ReturnRef(*mockSdCardDriver));
-            ON_CALL(*mockPlatformFactory, createAmbientLightSensorDriver())
+            ON_CALL(*mockPlatformFactory, getAmbientLightSensorDriver())
                 .WillByDefault(ReturnRef(*mockAmbientLightSensor));
-            ON_CALL(*mockPlatformFactory, createDisplayBrightnessDriver())
+            ON_CALL(*mockPlatformFactory, getDisplayBrightnessDriver())
                 .WillByDefault(ReturnRef(*mockDisplayBrightness));
-            ON_CALL(*mockPlatformFactory, createDisplayDriver())
+            ON_CALL(*mockPlatformFactory, getDisplayDriver())
                 .WillByDefault(ReturnRef(*mockDisplayDriver));
-            ON_CALL(*mockPlatformFactory, createKeyboardDriver())
+            ON_CALL(*mockPlatformFactory, getKeyboardDriver())
                 .WillByDefault(ReturnRef(*mockKeyboardDriver));
         }
 
@@ -369,7 +369,7 @@ namespace BusinessLogic
         std::unique_ptr<MockPulseCounterDriver> mockPulseCounterBncB;
         std::unique_ptr<MockPulseCounterDriver> mockPulseCounterBncC;
         std::unique_ptr<MockPulseCounterDriver> mockPulseCounterBncD;
-        std::unique_ptr<MockUartDriver> mockUartMeasurementReceiver;
+        std::unique_ptr<MockUartDriver> mockUartMEASUREMENT_RECEIVER;
         std::unique_ptr<MockUartDriver> mockUartWiFi;
         std::unique_ptr<MockSdCardDriver> mockSdCardDriver;
         std::unique_ptr<MockAmbientLightSensorDriver> mockAmbientLightSensor;

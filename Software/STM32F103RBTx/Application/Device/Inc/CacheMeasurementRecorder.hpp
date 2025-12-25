@@ -59,12 +59,6 @@ namespace Device
         bool onReset() override;
 
         /**
-         * @brief Ensure all pending data is processed.
-         * @return true if flush succeeded.
-         */
-        bool flush() override;
-
-        /**
          * @brief Retrieve the last measurement for a given device source.
          * @param source Identifier of the measurement device.
          * @return The last recorded value for that source.

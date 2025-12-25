@@ -2,6 +2,10 @@
 #define ISdCardDriver_H_
 
 #include "Driver/Interface/DriverState.hpp"
+#include "Driver/Interface/SdCardStatus.hpp"
+
+#include <string_view>
+#include <span>
 
 namespace Driver
 {
@@ -16,6 +20,12 @@ namespace Driver
     class ISdCardDriver : public DriverState
     {
     public:
+        enum class FileOpenMode : std::uint8_t
+        {
+            OVERWRITE, // Create new or overwrite existing file
+            APPEND     // Append to existing file, create if doesn't exist
+        };
+
         /**
          * @brief Default constructor for ISdCardDriver.
          */
@@ -39,60 +49,11 @@ namespace Driver
          */
         ISdCardDriver &operator=(const ISdCardDriver &) = delete;
 
-        /**
-         * @brief Mounts the file system on the SD card.
-         *
-         * This function initializes and mounts the file system to prepare for file operations.
-         *
-         * @note This method is currently a placeholder and should ideally return a status.
-         */
-        virtual void mountFileSystem() = 0;
+        virtual SdCardStatus openFile(std::string_view filename, FileOpenMode mode) = 0;
 
-        /**
-         * @brief Unmounts the file system from the SD card.
-         *
-         * This function unmounts the file system, closing any open files and ensuring that
-         * all data is properly written to the SD card.
-         *
-         * @note This method is currently a placeholder and should ideally return a status.
-         */
-        virtual void unmountFileSystem() = 0;
+        virtual SdCardStatus write(std::span<const std::uint8_t> data) = 0;
 
-        /**
-         * @brief Opens a file on the SD card.
-         *
-         * This function prepares a file for reading or writing.
-         *
-         * @note This method is currently a placeholder and should ideally return a status.
-         */
-        virtual void openFile() = 0;
-
-        /**
-         * @brief Closes a file on the SD card.
-         *
-         * This function finalizes file operations and ensures that all data is written.
-         *
-         * @note This method is currently a placeholder and should ideally return a status.
-         */
-        virtual void closeFile() = 0;
-
-        /**
-         * @brief Synchronizes the file system.
-         *
-         * This function ensures that all file operations are committed and no data is lost.
-         *
-         * @note This method is currently a placeholder and should ideally return a status.
-         */
-        virtual void sync() = 0;
-
-        /**
-         * @brief Writes data to a file on the SD card.
-         *
-         * This function writes data to the currently open file on the SD card.
-         *
-         * @note This method is currently a placeholder and should ideally return a status.
-         */
-        virtual void writeToFile() = 0;
+        virtual SdCardStatus closeFile() = 0;
     };
 
 }

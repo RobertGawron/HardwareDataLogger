@@ -24,6 +24,7 @@ namespace Driver
 
     bool BrightnessDriverStub::setBrightness(BrightnessPercentage brightness)
     {
+        (void)brightness;
 
         return true;
     }

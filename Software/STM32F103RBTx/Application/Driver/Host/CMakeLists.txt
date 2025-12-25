@@ -3,11 +3,6 @@ project(SimulatorSTM32F103RBTx LANGUAGES C CXX)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-if(EXPORT_SIM_GROUP)
-    message(STATUS " [JSON EXPORT] Enabling Simulator Group (All targets in this file)")
-    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-endif()
-
 # Base paths
 set(APP_ROOT "${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application")
 set(CORE_ROOT "${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Core")
@@ -35,7 +30,6 @@ list(APPEND DRIVER_SOURCES ${MOCK_ROOT_SOURCES})
 file(GLOB MOCK_DRIVER_SOURCES "${MOCK_ROOT}/Src/*.cpp")
 list(APPEND DRIVER_SOURCES ${MOCK_DRIVER_SOURCES})
 
-
 # Add specific driver sources if they exist
 foreach(src IN ITEMS
     "${APP_ROOT}/Driver/Hardware/Src/DriverState.cpp"
@@ -58,7 +52,7 @@ endif()
 add_library(SimulatorSTM32F103RBTx SHARED
     "${APP_ROOT}/../Core/Src/MyApplication.cpp"
     "${MOCK_ROOT}/LibWrapper.cpp"
-    "${MOCK_ROOT}/HmiEventHandlers.cpp"
+    "${MOCK_ROOT}/EventHandlers.cpp"
 )
 
 target_link_libraries(SimulatorSTM32F103RBTx
@@ -76,3 +70,9 @@ set_target_properties(SimulatorSTM32F103RBTx PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
 )
+
+# Enable compile_commands.json export for SimulatorSTM32F103RBTx
+if(DEFINED EXPORT_SINGLE_JSON AND EXPORT_SINGLE_JSON STREQUAL "SIMULATION_LIB")
+    message(STATUS "Enabling compile_commands.json export for: SimulatorSTM32F103RBTx")
+    set_target_properties(SimulatorSTM32F103RBTx PROPERTIES EXPORT_COMPILE_COMMANDS ON)
+endif()

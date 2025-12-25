@@ -1,54 +1,51 @@
 #include "SdCardDriverStub.hpp"
+#include "EventHandlers.hpp"
+
+#include <iostream>
+#include <cstring>
 
 namespace Driver
 {
 
-    SdCardDriverStub::SdCardDriverStub()
-    {
-    }
-
     bool SdCardDriverStub::onInitialize()
     {
-        return true;
+        return sdCardInitialize();
     }
 
     bool SdCardDriverStub::onStart()
     {
-        return true;
+        return sdCardStart();
     }
 
     bool SdCardDriverStub::onStop()
     {
-        return true;
+        return sdCardStop();
     }
 
     bool SdCardDriverStub::onReset()
     {
-        return true;
+        return sdCardReset();
     }
 
-    void SdCardDriverStub::mountFileSystem()
+    SdCardStatus SdCardDriverStub::openFile(std::string_view filename, FileOpenMode mode)
     {
+        char filenameBuffer[256];
+        std::size_t len = std::min(filename.size(), sizeof(filenameBuffer) - 1);
+        std::memcpy(filenameBuffer, filename.data(), len);
+        filenameBuffer[len] = '\0';
+
+        return sdCardOpen(filenameBuffer, mode);
     }
 
-    void SdCardDriverStub::unmountFileSystem()
+    SdCardStatus SdCardDriverStub::closeFile()
     {
+        return sdCardClose();
     }
 
-    void SdCardDriverStub::openFile()
+    SdCardStatus SdCardDriverStub::write(std::span<const std::uint8_t> data)
     {
-    }
-
-    void SdCardDriverStub::closeFile()
-    {
-    }
-
-    void SdCardDriverStub::sync()
-    {
-    }
-
-    void SdCardDriverStub::writeToFile()
-    {
+        const auto size = static_cast<std::uint16_t>(data.size());
+        return sdCardWrite(data.data(), size);
     }
 
 }

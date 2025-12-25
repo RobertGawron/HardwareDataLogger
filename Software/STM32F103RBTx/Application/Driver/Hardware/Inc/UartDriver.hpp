@@ -9,7 +9,7 @@
 #include "Driver/Interface/IUartDriver.hpp"
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_uart.h"
-
+#include <span>
 namespace Driver
 {
     /**
@@ -41,40 +41,21 @@ namespace Driver
          */
         ~UartDriver() override = default;
 
-        UartDriver(const UartDriver &) = delete;            ///< Deleted copy constructor prevents copying.
+        UartDriver(const UartDriver &) = delete; ///< Deleted copy constructor prevents copying.
+
         UartDriver &operator=(const UartDriver &) = delete; ///< Deleted assignment operator prevents assignment.
 
-        /**
-         * @brief Transmits data over UART.
-         *
-         * Sends a specified amount of data through UART with a timeout period.
-         *
-         * @param data Pointer to the data buffer to be transmitted.
-         * @param size Number of bytes to transmit.
-         * @param timeout Timeout period for the transmission, in milliseconds.
-         * @return Status of the UART exchange operation (`UartExchangeStatus`).
-         */
-        UartExchangeStatus transmit(std::uint8_t *data, std::uint16_t size, std::uint32_t timeout) override;
+        UartStatus transmit(std::span<const std::uint8_t> data, std::uint32_t timeout) override;
 
-        /**
-         * @brief Receives data over UART.
-         *
-         * Receives a specified amount of data through UART with a timeout period.
-         *
-         * @param data Pointer to the buffer where received data will be stored.
-         * @param size Number of bytes to receive.
-         * @param timeout Timeout period for the reception, in milliseconds.
-         * @return Status of the UART exchange operation (`UartExchangeStatus`).
-         */
-        UartExchangeStatus receive(std::uint8_t *data, std::uint16_t size, std::uint32_t timeout) override;
+        UartStatus receive(std::span<std::uint8_t> data, std::uint32_t timeout) override;
 
     protected:
         /**
-         * @brief Converts HAL status codes to UartExchangeStatus.
+         * @brief Converts HAL status codes to UartStatus.
          * @param halStatus The HAL status code to convert.
-         * @return The corresponding UartExchangeStatus value.
+         * @return The corresponding UartStatus value.
          */
-        static UartExchangeStatus getExchangeStatus(HAL_StatusTypeDef halStatus);
+        //   static UartStatus getExchangeStatus(HAL_StatusTypeDef halStatus);
 
         /**
          * @brief Initializes the UART driver.
@@ -122,6 +103,23 @@ namespace Driver
          * This reference is used to interact with the UART peripheral.
          */
         UART_HandleTypeDef &uartHandler;
+
+        [[nodiscard]] constexpr UartStatus getExchangeStatus(HAL_StatusTypeDef halStatus) noexcept
+        {
+            switch (halStatus)
+            {
+            case HAL_OK:
+                return UartStatus::Ok;
+            case HAL_ERROR:
+                return UartStatus::ErrorFromHal;
+            case HAL_BUSY:
+                return UartStatus::Busy;
+            case HAL_TIMEOUT:
+                return UartStatus::Timeout;
+            default:
+                return UartStatus::ErrorUnknown;
+            }
+        }
     };
 
 }

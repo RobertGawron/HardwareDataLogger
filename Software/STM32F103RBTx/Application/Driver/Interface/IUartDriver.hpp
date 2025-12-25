@@ -6,10 +6,10 @@
 #ifndef IUartDriver_h
 #define IUartDriver_h
 
-#include "Driver/Interface/UartExchangeStatus.hpp"
+#include "Driver/Interface/UartStatus.hpp"
 #include "Driver/Interface/DriverState.hpp"
 #include <cstdint>
-
+#include <span>
 namespace Driver
 {
 
@@ -47,29 +47,9 @@ namespace Driver
          */
         IUartDriver &operator=(const IUartDriver &) = delete;
 
-        /**
-         * @brief Transmits data over UART.
-         *
-         * This function sends a specified amount of data through the UART interface.
-         *
-         * @param data A pointer to the data to be transmitted.
-         * @param size The number of bytes to transmit.
-         * @param timeout The maximum time to wait for the transmission to complete, in milliseconds.
-         * @return The status of the transmission operation (`UartExchangeStatus`).
-         */
-        virtual UartExchangeStatus transmit(std::uint8_t *data, std::uint16_t size, std::uint32_t timeout) = 0;
+        virtual UartStatus transmit(std::span<const std::uint8_t> data, std::uint32_t timeout) = 0;
 
-        /**
-         * @brief Receives data over UART.
-         *
-         * This function reads a specified amount of data from the UART interface.
-         *
-         * @param data A pointer to a buffer where the received data will be stored.
-         * @param size The number of bytes to receive.
-         * @param timeout The maximum time to wait for the reception to complete, in milliseconds.
-         * @return The status of the reception operation (`UartExchangeStatus`).
-         */
-        virtual UartExchangeStatus receive(std::uint8_t *data, std::uint16_t size, std::uint32_t timeout) = 0;
+        virtual UartStatus receive(std::span<std::uint8_t> data, std::uint32_t timeout) = 0;
 
         /**
          * @brief Maximum possible delay for transmit/receive operations.

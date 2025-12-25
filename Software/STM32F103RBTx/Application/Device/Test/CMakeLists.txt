@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.28)
 project(BusinessLogicUnitTests)
 
 # 1. Setup Environment
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -39,8 +39,7 @@ function(create_test_exec TARGET_NAME)
     # Using ARGN to allow multiple source files
     add_executable(${TARGET_NAME} ${ARGN})
     
-    if(EXPORT_DEV_GROUP)
-        # This sets the default for ALL targets defined in this file (and below)
+    if(DEFINED EXPORT_SINGLE_JSON AND EXPORT_SINGLE_JSON STREQUAL "${TARGET_NAME}")
         message(STATUS "Enabling compile_commands.json export for: ${TARGET_NAME}")
         set_target_properties(${TARGET_NAME} PROPERTIES EXPORT_COMPILE_COMMANDS ON)
     endif()
@@ -81,26 +80,19 @@ create_test_exec(test_PulseCounterSource
 
 create_test_exec(test_WiFiRecorder 
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/WiFiMeasurementRecorder.cpp 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/WiFiMeasurementSerializer.cpp
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/CobsEncoder.cpp
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/Crc32.cpp
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp 
     test_WiFiMeasurementRecorder.cpp
 )
 
 create_test_exec(test_WiFiSerializer 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/WiFiMeasurementSerializer.cpp
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/Crc32.cpp 
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp 
     test_WiFiMeasurementSerializer.cpp
 )
 
 create_test_exec(test_Crc32 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/Crc32.cpp 
     test_Crc32.cpp
 )
 
 create_test_exec(test_CobsEncoder 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/CobsEncoder.cpp 
     test_CobsEncoder.cpp
 )

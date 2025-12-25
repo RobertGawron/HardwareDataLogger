@@ -1,5 +1,5 @@
 #include "Driver/Hardware/Inc/UartDriver.hpp"
-#include "Driver/Interface/UartExchangeStatus.hpp"
+#include "Driver/Interface/UartStatus.hpp"
 #include "Driver/Interface/DriverState.hpp"
 
 #include "stm32f1xx_hal_uart.h"
@@ -7,95 +7,98 @@
 
 #include <cstdint>
 #include <array>
-#include <algorithm> // For std::find_if
+#include <span>
+#include <cassert>
 
 namespace Driver
 {
     namespace
     {
-        using HalStatusToDriverStatus = struct
+        struct HalStatusToDriverStatus
         {
             HAL_StatusTypeDef halStatus;
-            UartExchangeStatus driverStatus;
+            UartStatus driverStatus;
         };
-        constexpr std::array<HalStatusToDriverStatus, 4> translation = {{{HAL_OK, UartExchangeStatus::Ok},
-                                                                         {HAL_ERROR, UartExchangeStatus::ErrorFromHal},
-                                                                         {HAL_BUSY, UartExchangeStatus::Busy},
-                                                                         {HAL_TIMEOUT, UartExchangeStatus::Timeout}}};
+
+        constexpr std::array<HalStatusToDriverStatus, 4> translation = {{{HAL_OK, UartStatus::Ok},
+                                                                         {HAL_ERROR, UartStatus::ErrorFromHal},
+                                                                         {HAL_BUSY, UartStatus::Busy},
+                                                                         {HAL_TIMEOUT, UartStatus::Timeout}}};
     }
 
     UartDriver::UartDriver(UART_HandleTypeDef &_uartHandler) : uartHandler(_uartHandler)
     {
     }
 
-    bool UartDriver::onInitialize()
+    [[nodiscard]] bool UartDriver::onInitialize()
     {
         return true;
     }
 
-    bool UartDriver::onStart()
-    {
-        const bool status = true;
-
-        return status;
-    }
-
-    bool UartDriver::onStop()
-    {
-        const bool status = true;
-
-        return status;
-    }
-
-    bool UartDriver::onReset()
+    [[nodiscard]] bool UartDriver::onStart()
     {
         return true;
     }
 
-    UartExchangeStatus UartDriver::transmit(std::uint8_t *data, std::uint16_t size, std::uint32_t timeout)
+    [[nodiscard]] bool UartDriver::onStop()
     {
-        UartExchangeStatus status = UartExchangeStatus::DriverInIncorrectMode;
-
-        if (getState() == DriverState::State::Running)
-        {
-            const HAL_StatusTypeDef halStatus = HAL_UART_Transmit(&uartHandler, data, size, timeout);
-            status = getExchangeStatus(halStatus);
-        }
-
-        // if (halStatus == HAL_BUSY || halStatus == HAL_ERROR) {
-        // Reset the UART peripheral to clear BUSY state
-        //     HAL_UART_Abort(&uartHandler);
-        // }
-
-        return status;
+        return true;
     }
 
-    UartExchangeStatus UartDriver::receive(std::uint8_t *data, std::uint16_t size, std::uint32_t timeout)
+    [[nodiscard]] bool UartDriver::onReset()
     {
-        UartExchangeStatus status = UartExchangeStatus::DriverInIncorrectMode;
+        return true;
+    }
+
+    [[nodiscard]] UartStatus UartDriver::transmit(std::span<const std::uint8_t> data, std::uint32_t timeout)
+    {
+        UartStatus status = UartStatus::DriverInIncorrectMode;
 
         if (getState() == DriverState::State::Running)
         {
-            const HAL_StatusTypeDef halStatus = HAL_UART_Receive(&uartHandler, data, size, timeout);
+            if (data.empty())
+            {
+                return UartStatus::ErrorFromHal;
+            }
+
+            // Ensure size fits in uint16_t for HAL function
+            assert(data.size() <= UINT16_MAX && "Data size exceeds UART HAL limit");
+
+            const auto size = static_cast<std::uint16_t>(data.size());
+            const HAL_StatusTypeDef halStatus = HAL_UART_Transmit(
+                &uartHandler,
+                const_cast<std::uint8_t *>(data.data()), // HAL API doesn't take const
+                size,
+                timeout);
             status = getExchangeStatus(halStatus);
         }
 
         return status;
     }
 
-    UartExchangeStatus UartDriver::getExchangeStatus(HAL_StatusTypeDef halStatus)
+    [[nodiscard]] UartStatus UartDriver::receive(std::span<std::uint8_t> data, std::uint32_t timeout)
     {
-        const auto *it = std::find_if(
-            translation.begin(),
-            translation.end(),
-            [halStatus](const HalStatusToDriverStatus &entry)
-            { return entry.halStatus == halStatus; });
+        UartStatus status = UartStatus::DriverInIncorrectMode;
 
-        if (it != translation.end())
+        if (getState() == DriverState::State::Running)
         {
-            return it->driverStatus;
+            if (data.empty())
+            {
+                return UartStatus::ErrorFromHal;
+            }
+
+            // Ensure size fits in uint16_t for HAL function
+            assert(data.size() <= UINT16_MAX && "Data size exceeds UART HAL limit");
+
+            const auto size = static_cast<std::uint16_t>(data.size());
+            const HAL_StatusTypeDef halStatus = HAL_UART_Receive(
+                &uartHandler,
+                data.data(),
+                size,
+                timeout);
+            status = getExchangeStatus(halStatus);
         }
 
-        return UartExchangeStatus::ErrorUnknown;
+        return status;
     }
 }

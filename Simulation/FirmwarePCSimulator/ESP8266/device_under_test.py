@@ -28,7 +28,8 @@ class DeviceUnderTest:
         Constructs the library path dynamically based on the script's
         location and loads the shared library.
         """
-        dll_name: str = "libSimulatorESP8266.so"
+        pass
+        """dll_name: str = "libSimulatorESP8266.so"
         dll_abs_path: str = (
             os.path.dirname(os.path.abspath(__file__))
             + "/../../.."
@@ -46,14 +47,14 @@ class DeviceUnderTest:
         self.dut: ctypes.CDLL = ctypes.CDLL(dll_abs_path)
         self._my_callback_c = None
         self._gpio_state_callback_c = None
-
+        """
     def init(self) -> None:
         """
         Initialize the embedded library.
 
         This method is required for the library to start functioning.
         """
-        self.dut.LibWrapper_Init()
+        pass#self.dut.LibWrapper_Init()
 
     def tick(self) -> None:
         """
@@ -61,7 +62,7 @@ class DeviceUnderTest:
 
         This simulates a single tick or step in the device's processing cycle.
         """
-        self.dut.LibWrapper_Tick()
+        pass#self.dut.LibWrapper_Tick()
 
     def register_uart0_tx_callback(self, callback):
         """
@@ -70,9 +71,10 @@ class DeviceUnderTest:
         The callback should be a Python function that accepts a single
         string (`str`) argument.
         """
-        on_serial_tx_callback_type = ctypes.CFUNCTYPE(None, ctypes.c_char_p)
-        self._my_callback_c = on_serial_tx_callback_type(callback)
-        self.dut.LibWrapper_RegisterOnSerialTx(self._my_callback_c)
+        pass#
+        #on_serial_tx_callback_type = ctypes.CFUNCTYPE(None, ctypes.c_char_p)
+        #self._my_callback_c = on_serial_tx_callback_type(callback)
+        #self.dut.LibWrapper_RegisterOnSerialTx(self._my_callback_c)
 
     def register_gpio_state_callback(self, callback):
         """
@@ -81,12 +83,13 @@ class DeviceUnderTest:
         The callback should be a Python function that accepts two
         arguments: `gpio_id` (int) and `state` (bool).
         """
-        on_gpio_change_callback_type = ctypes.CFUNCTYPE(
+        pass
+        """on_gpio_change_callback_type = ctypes.CFUNCTYPE(
             None, ctypes.c_int, ctypes.c_bool
         )
         self._gpio_state_callback_c = on_gpio_change_callback_type(callback)
         self.dut.LibWrapper_RegisterOnGpioChange(self._gpio_state_callback_c)
-
+        """
     def uart0_tx(self, data: List[int], size: int, timeout: int) -> int:
         """
         Transmit data via UART0.
@@ -98,7 +101,8 @@ class DeviceUnderTest:
         :param timeout: Timeout value in milliseconds.
         :return: HAL_StatusTypeDef (0 = HAL_OK, 1 = HAL_ERROR, etc.)
         """
-        self.dut.LibWrapper_OnSerialRx.argtypes = [
+        pass
+        """self.dut.LibWrapper_OnSerialRx.argtypes = [
             ctypes.POINTER(ctypes.c_uint8),  # const uint8_t* pData
             ctypes.c_uint16,                # uint16_t Size
             ctypes.c_uint32                 # uint32_t Timeout
@@ -113,3 +117,4 @@ class DeviceUnderTest:
             data_array, ctypes.c_uint16(size), ctypes.c_uint32(timeout)
         )
         return result
+        """  

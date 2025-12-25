@@ -47,13 +47,6 @@ namespace Device
         UartMeasurementRecorder &operator=(const UartMeasurementRecorder &) = delete;
 
         /**
-         * @brief Flushes any remaining data to the COM port via UART.
-         *
-         * This method ensures that any remaining buffered data is sent to the COM port via UART.
-         */
-        bool flush() override;
-
-        /**
          * @brief Notifies the recorder to process new data.
          *
          * This method is called to notify the recorder that new measurement data is available

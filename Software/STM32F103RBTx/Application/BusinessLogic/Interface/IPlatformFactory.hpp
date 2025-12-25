@@ -16,9 +16,9 @@
 #include "Driver/Interface/IDisplayDriver.hpp"
 #include "Driver/Interface/IKeyboardDriver.hpp"
 #include "Driver/Interface/ISdCardDriver.hpp"
-#include "Driver/Interface/UartIdentifier.hpp"
+#include "Driver/Interface/UartId.hpp"
 #include "Driver/Interface/IUartDriver.hpp"
-#include "Driver/Interface/PulseCounterIdentifier.hpp"
+#include "Driver/Interface/PulseCounterId.hpp"
 #include "Driver/Interface/IPulseCounterDriver.hpp"
 
 namespace BusinessLogic
@@ -49,69 +49,69 @@ namespace BusinessLogic
         virtual ~IPlatformFactory() = default;
 
         /**
-         * @brief Creates an instance of the ambient light sensor driver.
+         * @brief gets an instance of the ambient light sensor driver.
          *
          * Provides a platform-specific implementation of the ambient light sensor driver.
          *
          * @return A reference to the platform-specific ambient light sensor driver.
          */
-        virtual Driver::IAmbientLightSensorDriver &createAmbientLightSensorDriver() = 0;
+        virtual Driver::IAmbientLightSensorDriver &getAmbientLightSensorDriver() = 0;
 
         /**
-         * @brief Creates an instance of the display brightness driver.
+         * @brief gets an instance of the display brightness driver.
          *
          * Provides a platform-specific implementation of the display brightness driver.
          *
          * @return A reference to the platform-specific display brightness driver.
          */
-        virtual Driver::IDisplayBrightnessDriver &createDisplayBrightnessDriver() = 0;
+        virtual Driver::IDisplayBrightnessDriver &getDisplayBrightnessDriver() = 0;
 
         /**
-         * @brief Creates an instance of the display driver.
+         * @brief gets an instance of the display driver.
          *
          * Provides a platform-specific implementation of the display driver.
          *
          * @return A reference to the platform-specific display driver.
          */
-        virtual Driver::IDisplayDriver &createDisplayDriver() = 0;
+        virtual Driver::IDisplayDriver &getDisplayDriver() = 0;
 
         /**
-         * @brief Creates an instance of the keyboard driver.
+         * @brief gets an instance of the keyboard driver.
          *
          * Provides a platform-specific implementation of the keyboard driver.
          *
          * @return A reference to the platform-specific keyboard driver.
          */
-        virtual Driver::IKeyboardDriver &createKeyboardDriver() = 0;
+        virtual Driver::IKeyboardDriver &getKeyboardDriver() = 0;
 
         /**
-         * @brief Creates an instance of the UART driver.
+         * @brief gets an instance of the UART driver.
          *
          * Provides a platform-specific implementation of the UART driver.
          *
-         * @param id The identifier for the specific UART instance to create.
+         * @param id The identifier for the specific UART instance to get.
          * @return A reference to the platform-specific UART driver.
          */
-        virtual Driver::IUartDriver &createUartDriver(Driver::UartIdentifier id) = 0;
+        virtual Driver::IUartDriver &getUartDriver(Driver::UartId id) = 0;
 
         /**
-         * @brief Creates an instance of the SD card driver.
+         * @brief gets an instance of the SD card driver.
          *
          * Provides a platform-specific implementation of the SD card driver.
          *
          * @return A reference to the platform-specific SD card driver.
          */
-        virtual Driver::ISdCardDriver &createSdCardDriver() = 0;
+        virtual Driver::ISdCardDriver &getSdCardDriver() = 0;
 
         /**
-         * @brief Creates an instance of the pulse counter driver.
+         * @brief gets an instance of the pulse counter driver.
          *
          * Provides a platform-specific implementation of the pulse counter driver.
          *
-         * @param id The identifier for the specific pulse counter instance to create.
+         * @param id The identifier for the specific pulse counter instance to get.
          * @return A reference to the platform-specific pulse counter driver.
          */
-        virtual Driver::IPulseCounterDriver &createPulseCounterDriver(Driver::PulseCounterIdentifier id) = 0;
+        virtual Driver::IPulseCounterDriver &getPulseCounterDriver(Driver::PulseCounterId id) = 0;
     };
 }
 

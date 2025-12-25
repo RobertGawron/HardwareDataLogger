@@ -32,7 +32,7 @@ namespace BusinessLogic
          * @param reader Measurement data reader for model initialization
          * @param platformFactory Platform-specific component factory
          */
-        explicit HmiFactory(Device::IMeasurementReader &reader, IPlatformFactory &platformFactory);
+        xxxxx explicit HmiFactory(Device::IMeasurementReader &reader, IPlatformFactory &platformFactory);
 
         /** @brief Deleted default constructor */
         HmiFactory() = delete;

@@ -9,6 +9,8 @@
 #include "Driver/Interface/IKeyboardDriver.hpp"
 #include "Driver/Interface/KeyboardKeyState.hpp"
 
+#include <array>
+
 namespace Driver
 {
     class KeyboardDriverStub : public IKeyboardDriver
@@ -47,14 +49,12 @@ namespace Driver
         [[nodiscard]] KeyboardKeyState getKeyState(KeyboardKeyIdentifier key) const override;
 
         /**
-         * @brief Number of keys supported by the keyboard.
+         * @brief Sets the state of a specific key.
          *
-         * This constant defines the total number of keys that are supported by the keyboard driver.
-         * It is derived from the last unused key identifier.
+         * @param key The identifier of the button whose state should be set.
+         * @param state The new state to set for the button.
          */
-        static constexpr std::uint8_t AmountOfKeys = static_cast<std::uint8_t>(Driver::KeyboardKeyIdentifier::LastNotUsed);
-
-        KeyboardKeyState keyState[AmountOfKeys] = {KeyboardKeyState::NotPressed};
+        void setKeyState(KeyboardKeyIdentifier key, KeyboardKeyState state);
 
     protected:
         /**
@@ -96,6 +96,17 @@ namespace Driver
          * @return true, as the reset does not involve any action beyond reinitializing the read state.
          */
         bool onReset() override;
+
+    private:
+        /**
+         * @brief Number of keys supported by the keyboard.
+         *
+         * This constant defines the total number of keys that are supported by the keyboard driver.
+         * It is derived from the last unused key identifier.
+         */
+        static constexpr std::uint8_t AmountOfKeys = static_cast<std::uint8_t>(Driver::KeyboardKeyIdentifier::LastNotUsed);
+
+        std::array<KeyboardKeyState, AmountOfKeys> keyState{KeyboardKeyState::NotPressed};
     };
 
 }

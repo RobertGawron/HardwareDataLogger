@@ -7,34 +7,29 @@
 #ifndef MeasurementCoordinator_h
 #define MeasurementCoordinator_h
 
-#include "BusinessLogic/Interface/IMeasurementDataStore.hpp"
 #include "Device/Interface/IMeasurementSource.hpp"
+#include "Device/Interface/IMeasurementRecorder.hpp"
 
 #include <cstdint>
 #include <array>
 #include <functional>
+#include <algorithm>
 
 namespace BusinessLogic
 {
-    /**
-     * @class MeasurementCoordinator
-     * @brief Coordinates the interaction between input devices (measurement sources) and the
-     *        storage mechanism for measurement data.
-     *
-     * The MeasurementCoordinator class is responsible for registering input devices that provide
-     * measurement data, periodically querying them for new data, and then notifying the storage
-     * system to store this data. This class employs an observer pattern to manage multiple input
-     * devices and ensure data is processed and stored efficiently.
-     */
+    template <std::size_t SourceCount, std::size_t RecorderCount>
     class MeasurementCoordinator
     {
     public:
         /**
-         * @brief Constructs a MeasurementCoordinator with a reference to a MeasurementDataStore.
-         *
-         * @param storage Reference to a MeasurementDataStore object that handles the storage of measurement data.
+         * @brief Constructs a MeasurementCoordinator with references to sources and recorders arrays.
          */
-        explicit MeasurementCoordinator(IMeasurementDataStore &storage);
+        MeasurementCoordinator(
+            std::array<std::reference_wrapper<Device::IMeasurementSource>, SourceCount> &sourcesArray,
+            std::array<std::reference_wrapper<Device::IMeasurementRecorder>, RecorderCount> &recordersArray)
+            : sources(sourcesArray), recorders(recordersArray)
+        {
+        }
 
         /**
          * @brief Deleted default constructor to prevent instantiation without a storage reference.
@@ -65,7 +60,56 @@ namespace BusinessLogic
          *
          * @return True if initialization was successful; false otherwise.
          */
-        virtual bool initialize();
+        virtual bool initialize()
+        {
+            // Initialize all sources
+            bool status = std::all_of(sources.begin(), sources.end(),
+                                      [](auto &source)
+                                      { return source.get().initialize(); });
+
+            if (status)
+            {
+                // Initialize all recorders
+                status = std::all_of(recorders.begin(), recorders.end(),
+                                     [](auto &recorder)
+                                     { return recorder.get().initialize(); });
+            }
+
+            return status;
+        }
+
+        virtual bool start()
+        {
+            bool status = true;
+
+            for (auto &source : sources)
+            {
+                status &= source.get().start();
+            }
+
+            for (auto &recorder : recorders)
+            {
+                status &= recorder.get().start();
+            }
+            return status;
+        }
+
+        virtual bool stop()
+        {
+            bool status = true;
+
+            for (auto &source : sources)
+            {
+                status &= source.get().stop();
+            }
+
+            for (auto &recorder : recorders)
+            {
+                status &= recorder.get().stop();
+            }
+
+            return status;
+        }
 
         /**
          * @brief Periodic function that should be called to perform regular updates.
@@ -75,46 +119,31 @@ namespace BusinessLogic
          *
          * @return True if the tick operation was successful, false otherwise.
          */
-        virtual bool tick();
+        virtual bool tick()
+        {
+            bool status = true;
 
-        /**
-         * @brief Registers an input device observer to be periodically queried for measurement data.
-         *
-         * The observer should implement the IMeasurementSource interface, and this method will add it
-         * to the list of measurement sources managed by the MeasurementCoordinator.
-         *
-         * @param observer Reference to an object that implements IMeasurementSource.
-         * @return True if the observer was successfully added; false otherwise.
-         */
-        bool addObserver(Device::IMeasurementSource &observer);
+            // Check each source for available measurements
+            for (auto &source : sources)
+            {
+                if (source.get().isMeasurementAvailable())
+                {
+                    Device::MeasurementType measurement = source.get().getMeasurement();
 
-        /**
-         * @brief Unregisters an input device observer.
-         *
-         * This method removes an observer from the list of registered measurement sources,
-         * stopping it from providing data to the system.
-         *
-         * @param observer Reference to an object that implements IMeasurementSource.
-         * @return True if the observer was successfully removed; false otherwise.
-         * @note Removing the observer does not automatically deinitialize it.
-         */
-        bool removeObserver(Device::IMeasurementSource &observer);
+                    // Notify all recorders
+                    for (auto &recorder : recorders)
+                    {
+                        status &= recorder.get().notify(measurement);
+                    }
+                }
+            }
+
+            return status;
+        }
 
     private:
-        bool updateMeasurements();
-
-        /** @brief Maximum number of observers that can be registered. */
-        static const std::uint8_t MaxObservers{5u};
-
-        /** @brief Array to store references to registered measurement source observers. */
-        std::array<Device::IMeasurementSource *, MaxObservers> observers;
-
-        /**
-         * @brief Reference to the MeasurementDataStore object responsible for storing measurement data.
-         *
-         * This member is responsible for notifying the storage objects when new measurement data is ready.
-         */
-        IMeasurementDataStore &storage;
+        std::array<std::reference_wrapper<Device::IMeasurementSource>, SourceCount> &sources;
+        std::array<std::reference_wrapper<Device::IMeasurementRecorder>, RecorderCount> &recorders;
     };
 }
 

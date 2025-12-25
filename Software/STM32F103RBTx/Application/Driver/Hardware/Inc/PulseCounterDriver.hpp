@@ -38,7 +38,7 @@ namespace Driver
          * @brief Constructs a PulseCounterDriver with a specific device identifier.
          * @param deviceIdentifier Identifier of the pulse counter device.
          */
-        explicit PulseCounterDriver(PulseCounterIdentifier deviceIdentifier);
+        explicit PulseCounterDriver(PulseCounterId deviceIdentifier);
 
         PulseCounterDriver() = delete; ///< Deleted default constructor prevents instantiation without identifier.
 

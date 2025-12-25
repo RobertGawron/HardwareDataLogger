@@ -7,7 +7,9 @@
 #define UartDriverStub_h
 
 #include "Driver/Interface/IUartDriver.hpp"
-#include "Driver/Interface/UartIdentifier.hpp"
+#include "Driver/Interface/UartId.hpp"
+
+#include <span>
 
 namespace Driver
 {
@@ -17,7 +19,7 @@ namespace Driver
     public:
         UartDriverStub() = delete;
 
-        explicit UartDriverStub(const Driver::UartIdentifier id);
+        explicit UartDriverStub(Driver::UartId id);
 
         /**
          * @brief Virtual destructor for UartDriverStub.
@@ -30,29 +32,9 @@ namespace Driver
         UartDriverStub(const UartDriverStub &) = delete;
         UartDriverStub &operator=(const UartDriverStub &) = delete;
 
-        /**
-         * @brief Transmits data over UART.
-         *
-         * Sends a specified amount of data through UART with a timeout period.
-         *
-         * @param data Pointer to the data buffer to be transmitted.
-         * @param size Number of bytes to transmit.
-         * @param timeout Timeout period for the transmission, in milliseconds.
-         * @return Status of the UART exchange operation (`UartExchangeStatus`).
-         */
-        UartExchangeStatus transmit(std::uint8_t *data, std::uint16_t size, std::uint32_t timeout) override;
+        UartStatus transmit(std::span<const std::uint8_t> data, std::uint32_t timeout) override;
 
-        /**
-         * @brief Receives data over UART.
-         *
-         * Receives a specified amount of data through UART with a timeout period.
-         *
-         * @param data Pointer to the buffer where received data will be stored.
-         * @param size Number of bytes to receive.
-         * @param timeout Timeout period for the reception, in milliseconds.
-         * @return Status of the UART exchange operation (`UartExchangeStatus`).
-         */
-        UartExchangeStatus receive(std::uint8_t *data, std::uint16_t size, std::uint32_t timeout) override;
+        UartStatus receive(std::span<std::uint8_t> data, std::uint32_t timeout) override;
 
     protected:
         /**
@@ -94,7 +76,8 @@ namespace Driver
          */
         bool onReset() override;
 
-        Driver::UartIdentifier hwId;
+    private:
+        Driver::UartId uartId;
     };
 
 }

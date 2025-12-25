@@ -2,13 +2,14 @@
 #include "Device/Inc/MeasurementDeviceId.hpp"
 #include "Device/Inc/MeasurementType.hpp"
 #include "Driver/Interface/IUartDriver.hpp"
-#include "Driver/Interface/UartExchangeStatus.hpp"
+#include "Driver/Interface/UartStatus.hpp"
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <memory>
 #include <cstdint>
 #include <cstring>
+#include <span>
 
 // --- Mocks ---
 
@@ -19,14 +20,18 @@ public:
     MOCK_METHOD(bool, onStart, (), (override));
     MOCK_METHOD(bool, onStop, (), (override));
     MOCK_METHOD(bool, onReset, (), (override));
-    MOCK_METHOD(Driver::UartExchangeStatus, transmit, (std::uint8_t *data, std::uint16_t size, std::uint32_t timeout), (override));
-    MOCK_METHOD(Driver::UartExchangeStatus, receive, (std::uint8_t *data, std::uint16_t size, std::uint32_t timeout), (override));
+    MOCK_METHOD(Driver::UartStatus, transmit, (std::span<const std::uint8_t> data, std::uint32_t timeout), (override));
+    MOCK_METHOD(Driver::UartStatus, receive, (std::span<std::uint8_t> data, std::uint32_t timeout), (override));
 };
 
 // --- Test Fixture ---
 
 class WiFiMeasurementRecorderTest : public ::testing::Test
 {
+protected:
+    // Test Constants
+    static constexpr std::uint8_t TEST_MEASUREMENT_VALUE = 0x42U;
+
 private:
     // Fields are now private
     MockUartDriver mockDriver;
@@ -43,6 +48,18 @@ public:
     MockUartDriver &getMockDriver() { return mockDriver; }
     Device::WiFiMeasurementRecorder &getRecorder() { return *recorder; }
 };
+
+// --- Custom Matcher for span ---
+
+MATCHER_P(SpanSizeIs, expectedSize, "")
+{
+    return arg.size() == expectedSize;
+}
+
+MATCHER(SpanNotEmpty, "")
+{
+    return !arg.empty();
+}
 
 // --- Test Cases ---
 
@@ -115,11 +132,11 @@ TEST_F(WiFiMeasurementRecorderTest, OnResetReturnsTrue)
 TEST_F(WiFiMeasurementRecorderTest, NotifySucceedsWhenTransmitOk)
 {
     Device::MeasurementType measurement;
-    measurement.source = Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_1;
-    measurement.data = static_cast<std::uint8_t>(0x42);
+    measurement.source = Device::MeasurementDeviceId::PULSE_COUNTER_1;
+    measurement.data = static_cast<std::uint8_t>(TEST_MEASUREMENT_VALUE);
 
-    EXPECT_CALL(getMockDriver(), transmit(::testing::_, ::testing::_, ::testing::_))
-        .WillOnce(::testing::Return(Driver::UartExchangeStatus::Ok));
+    EXPECT_CALL(getMockDriver(), transmit(SpanNotEmpty(), ::testing::_))
+        .WillOnce(::testing::Return(Driver::UartStatus::Ok));
 
     EXPECT_TRUE(getRecorder().notify(measurement));
 }
@@ -127,11 +144,11 @@ TEST_F(WiFiMeasurementRecorderTest, NotifySucceedsWhenTransmitOk)
 TEST_F(WiFiMeasurementRecorderTest, NotifyFailsWhenTransmitFails)
 {
     Device::MeasurementType measurement;
-    measurement.source = Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_1;
-    measurement.data = static_cast<std::uint8_t>(0x42);
+    measurement.source = Device::MeasurementDeviceId::PULSE_COUNTER_1;
+    measurement.data = static_cast<std::uint8_t>(TEST_MEASUREMENT_VALUE);
 
-    EXPECT_CALL(getMockDriver(), transmit(::testing::_, ::testing::_, ::testing::_))
-        .WillOnce(::testing::Return(Driver::UartExchangeStatus::Timeout));
+    EXPECT_CALL(getMockDriver(), transmit(SpanNotEmpty(), ::testing::_))
+        .WillOnce(::testing::Return(Driver::UartStatus::Timeout));
 
     EXPECT_FALSE(getRecorder().notify(measurement));
 }

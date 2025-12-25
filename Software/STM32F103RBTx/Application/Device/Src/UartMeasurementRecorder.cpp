@@ -13,11 +13,6 @@ namespace Device
     {
     }
 
-    bool UartMeasurementRecorder::flush()
-    {
-        return true;
-    }
-
     bool UartMeasurementRecorder::notify(Device::MeasurementType &measurement)
     {
         (void)measurement; // Explicitly suppresses "unused parameter" warning

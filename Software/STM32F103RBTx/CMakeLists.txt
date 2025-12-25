@@ -5,10 +5,17 @@ if(NOT CMAKE_TOOLCHAIN_FILE)
     set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/cmake/gcc-arm-none-eabi.cmake)
 endif()
 
-# Setup compiler before project()
-set(CMAKE_C_STANDARD 17)
+set(CMAKE_C_STANDARD 11)        # Standard for .c files (HAL, FatFs, u8g2)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
+
+set(CMAKE_CXX_STANDARD 20)      # Standard for .cpp files
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS ON)
+
+# This makes it apply to subdirectories too
+set(CMAKE_CXX_STANDARD 20 CACHE STRING "C++ standard" FORCE)
+
 
 # Define default build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -51,7 +58,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Application/Library/stm32-st7735/st7735.c
     Application/Library/stm32-st7735/st7735_reg.c
     Core/Src/MyApplication.cpp
-    Core/Src/PlatformFactoryStm32.cpp
+    Core/Src/PlatformFactory.cpp
 )
 
 # Include directories

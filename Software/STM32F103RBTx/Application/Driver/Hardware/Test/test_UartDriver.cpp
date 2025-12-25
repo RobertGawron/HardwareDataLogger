@@ -1,13 +1,19 @@
+#include "Driver/Hardware/Inc/UartDriver.hpp"
+#include "Driver/Interface/UartStatus.hpp"
+#include "Driver/Interface/DriverState.hpp"
+
 #include "stm32f1xx_hal_uart.h"
 #include "stm32f1xx_hal_def.h"
-#include "Driver/Hardware/Inc/UartDriver.hpp"
-#include "Driver/Interface/UartExchangeStatus.hpp"
-#include "Driver/Interface/DriverState.hpp"
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+
 #include <cstdint>
 #include <memory>
+#include <array>
+#include <span>
+#include <algorithm>
+#include <ostream>
 
 // Global mock instance pointer for the HAL C-linkage
 MockHAL_UART *mockHAL_UART = nullptr;
@@ -42,97 +48,165 @@ public:
     UART_HandleTypeDef &getHuart() { return huart; }
 };
 
+// --- Matcher Class ---
+class UartDataMatcher
+{
+public:
+    explicit UartDataMatcher(const std::array<std::uint8_t, 3> &expectedData)
+        : expected(expectedData) {}
+
+    // GMOCK REQUIREMENT: This method name is mandated by the library.
+    // It must be "MatchAndExplain" (PascalCase) to compile.
+    bool MatchAndExplain(std::uint8_t *arg, ::testing::MatchResultListener *listener) const
+    {
+        if (arg == nullptr)
+        {
+            // Using 'listener' here prevents the "unused parameter" error
+            *listener << "the received pointer was null";
+            return false;
+        }
+
+        return std::equal(expected.begin(), expected.end(), arg);
+    }
+
+    // GMOCK REQUIREMENT: Must be "DescribeTo" (PascalCase).
+    static void DescribeTo(std::ostream *os)
+    {
+        *os << "is data equal to expected array";
+    }
+
+    // GMOCK REQUIREMENT: Must be "DescribeNegationTo" (PascalCase).
+    static void DescribeNegationTo(std::ostream *os)
+    {
+        *os << "is data NOT equal to expected array";
+    }
+
+private:
+    std::array<std::uint8_t, 3> expected;
+};
+
+// --- Factory Function (Forward Declaration) ---
+namespace
+{
+    ::testing::PolymorphicMatcher<UartDataMatcher> isDataEqualTo(const std::array<std::uint8_t, 3> &data);
+}
+
+// --- Factory Function Implementation ---
+namespace
+{
+    ::testing::PolymorphicMatcher<UartDataMatcher> isDataEqualTo(const std::array<std::uint8_t, 3> &data)
+    {
+        return ::testing::MakePolymorphicMatcher(UartDataMatcher(data));
+    }
+}
+
 // --- Test Cases ---
 
 TEST_F(UartDriverTest, TransmitShouldSucceed)
 {
     // Arrange
-    std::uint8_t data[] = {0x01, 0x02, 0x03};
-    const std::uint16_t size = sizeof(data);
+    std::array<std::uint8_t, 3> data = {0x01, 0x02, 0x03};
     const std::uint32_t timeout = 1000;
 
     getDriver().initialize();
     getDriver().start();
 
-    EXPECT_CALL(getMockHAL(), HAL_UART_Transmit(&getHuart(), data, size, timeout))
-        .WillOnce(::testing::DoAll(
-            ::testing::WithArgs<1, 2>([size, &data](std::uint8_t *sentData, std::uint16_t sentSize)
-                                      {
-                EXPECT_EQ(sentSize, size);
-                for (std::uint16_t i = 0; (i < sentSize) && (i < size); ++i) {
-                    EXPECT_EQ(sentData[i], data[i]);
-                } }),
-            ::testing::Return(HAL_OK)));
+    EXPECT_CALL(getMockHAL(), HAL_UART_Transmit(
+                                  &getHuart(),
+                                  isDataEqualTo(data),
+                                  static_cast<std::uint16_t>(data.size()),
+                                  timeout))
+        .WillOnce(::testing::Return(HAL_OK));
 
     // Act
-    const Driver::UartExchangeStatus status = getDriver().transmit(data, size, timeout);
+    const std::span<const std::uint8_t> txData{data.data(), data.size()};
+    const Driver::UartStatus status = getDriver().transmit(txData, timeout);
 
     // Assert
-    EXPECT_EQ(status, Driver::UartExchangeStatus::Ok);
+    EXPECT_EQ(status, Driver::UartStatus::Ok);
 }
 
 TEST_F(UartDriverTest, TransmitShouldFailOnError)
 {
-    std::uint8_t data[] = {0x01, 0x02, 0x03};
-    const std::uint16_t size = sizeof(data);
+    std::array<std::uint8_t, 3> data = {0x01, 0x02, 0x03};
     const std::uint32_t timeout = 1000;
 
     getDriver().initialize();
     getDriver().start();
 
-    EXPECT_CALL(getMockHAL(), HAL_UART_Transmit(&getHuart(), data, size, timeout))
+    EXPECT_CALL(getMockHAL(), HAL_UART_Transmit(
+                                  &getHuart(),
+                                  ::testing::_,
+                                  static_cast<std::uint16_t>(data.size()),
+                                  timeout))
         .WillOnce(::testing::Return(HAL_ERROR));
 
-    const Driver::UartExchangeStatus status = getDriver().transmit(data, size, timeout);
-    EXPECT_EQ(status, Driver::UartExchangeStatus::ErrorFromHal);
+    const std::span<const std::uint8_t> txData{data.data(), data.size()};
+    const Driver::UartStatus status = getDriver().transmit(txData, timeout);
+    EXPECT_EQ(status, Driver::UartStatus::ErrorFromHal);
 }
 
 TEST_F(UartDriverTest, ReceiveShouldSucceed)
 {
-    std::uint8_t buffer[3];
-    const std::uint16_t size = sizeof(buffer);
+    std::array<std::uint8_t, 3> buffer = {0x00, 0x00, 0x00};
     const std::uint32_t timeout = 1000;
 
     getDriver().initialize();
     getDriver().start();
 
-    EXPECT_CALL(getMockHAL(), HAL_UART_Receive(&getHuart(), buffer, size, timeout))
+    EXPECT_CALL(getMockHAL(), HAL_UART_Receive(
+                                  &getHuart(),
+                                  buffer.data(),
+                                  static_cast<std::uint16_t>(buffer.size()),
+                                  timeout))
         .WillOnce(::testing::Return(HAL_OK));
 
-    const Driver::UartExchangeStatus status = getDriver().receive(buffer, size, timeout);
-    EXPECT_EQ(status, Driver::UartExchangeStatus::Ok);
+    const std::span<std::uint8_t> rxData{buffer.data(), buffer.size()};
+    const Driver::UartStatus status = getDriver().receive(rxData, timeout);
+    EXPECT_EQ(status, Driver::UartStatus::Ok);
 }
 
 TEST_F(UartDriverTest, ReceiveShouldFailOnTimeout)
 {
-    std::uint8_t buffer[3];
-    const std::uint16_t size = sizeof(buffer);
+    std::array<std::uint8_t, 3> buffer = {0x00, 0x00, 0x00};
     const std::uint32_t timeout = 1000;
 
     getDriver().initialize();
     getDriver().start();
 
-    EXPECT_CALL(getMockHAL(), HAL_UART_Receive(&getHuart(), buffer, size, timeout))
+    EXPECT_CALL(getMockHAL(), HAL_UART_Receive(
+                                  &getHuart(),
+                                  buffer.data(),
+                                  static_cast<std::uint16_t>(buffer.size()),
+                                  timeout))
         .WillOnce(::testing::Return(HAL_TIMEOUT));
 
-    const Driver::UartExchangeStatus status = getDriver().receive(buffer, size, timeout);
-    EXPECT_EQ(status, Driver::UartExchangeStatus::Timeout);
+    const std::span<std::uint8_t> rxData{buffer.data(), buffer.size()};
+    const Driver::UartStatus status = getDriver().receive(rxData, timeout);
+    EXPECT_EQ(status, Driver::UartStatus::Timeout);
 }
 
-TEST_F(UartDriverTest, StopShouldSucceed)
+TEST_F(UartDriverTest, TransmitShouldFailWhenNotRunning)
 {
+    std::array<std::uint8_t, 3> data = {0x01, 0x02, 0x03};
+    const std::uint32_t timeout = 1000;
+
+    // Don't start the driver
+    getDriver().initialize();
+
+    const std::span<const std::uint8_t> txData{data.data(), data.size()};
+    const Driver::UartStatus status = getDriver().transmit(txData, timeout);
+    EXPECT_EQ(status, Driver::UartStatus::DriverInIncorrectMode);
+}
+
+TEST_F(UartDriverTest, TransmitShouldFailOnEmptySpan)
+{
+    const std::uint32_t timeout = 1000;
+
     getDriver().initialize();
     getDriver().start();
 
-    EXPECT_TRUE(getDriver().stop());
-    EXPECT_TRUE(getDriver().isInState(Driver::DriverState::State::Stop));
-}
-
-TEST_F(UartDriverTest, ResetShouldSucceed)
-{
-    getDriver().initialize();
-    getDriver().start();
-
-    EXPECT_TRUE(getDriver().reset());
-    EXPECT_TRUE(getDriver().isInState(Driver::DriverState::State::Reset));
+    const std::span<const std::uint8_t> emptySpan{};
+    const Driver::UartStatus status = getDriver().transmit(emptySpan, timeout);
+    EXPECT_EQ(status, Driver::UartStatus::ErrorFromHal);
 }

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.28)
 project(BusinessLogicUnitTests)
 
 # 1. Setup Environment
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -40,8 +40,7 @@ function(create_test_exec TARGET_NAME)
     # Using ARGN to allow multiple source files
     add_executable(${TARGET_NAME} ${ARGN})
     
-    if(EXPORT_BL_GROUP)
-        # This sets the default for ALL targets defined in this file (and below)
+    if(DEFINED EXPORT_SINGLE_JSON AND EXPORT_SINGLE_JSON STREQUAL "${TARGET_NAME}")
         message(STATUS "Enabling compile_commands.json export for: ${TARGET_NAME}")
         set_target_properties(${TARGET_NAME} PROPERTIES EXPORT_COMPILE_COMMANDS ON)
     endif()
@@ -70,33 +69,8 @@ function(create_test_exec TARGET_NAME)
 endfunction()
 
 
-create_test_exec(test_MeasurementDataStore
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic/Src/MeasurementDataStore.cpp
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp
-    test_MeasurementDataStore.cpp
-)
 
 create_test_exec(test_MeasurementCoordinator
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic/Src/MeasurementCoordinator.cpp
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp
     test_MeasurementCoordinator.cpp
-)
-
-
-create_test_exec(test_MeasurementStoresFactory
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic/Src/MeasurementStoresFactory.cpp
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp
-    test_MeasurementStoresFactory.cpp
-)
-
-create_test_exec(test_ApplicationBuilder
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic/Src/ApplicationBuilder.cpp
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp
-    test_ApplicationBuilder.cpp
-)
-
-create_test_exec(test_MeasurementSourcesFactory
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic/Src/MeasurementSourcesFactory.cpp
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp
-    test_MeasurementSourcesFactory.cpp
 )

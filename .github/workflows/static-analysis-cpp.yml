@@ -19,25 +19,77 @@ jobs:
       fail-fast: false # If one fails, let the others finish
       matrix:
         include:
-          - name: Business Logic
-            cmake_flag: -DEXPORT_BL_GROUP=ON
-            artifact_suffix: biz
+          # Business Logic Tests
+          - name: Business Logic - MeasurementCoordinator
+            target: test_MeasurementCoordinator
+            artifact_suffix: biz-coordinator
           
-          - name: Device
-            cmake_flag: -DEXPORT_DEV_GROUP=ON
-            artifact_suffix: dev
+          # Device Tests
+          - name: Device - Keyboard
+            target: test_Keyboard
+            artifact_suffix: dev-keyboard
             
-          - name: Driver
-            cmake_flag: -DEXPORT_DRV_GROUP=ON
-            artifact_suffix: drv
+          - name: Device - PulseCounter
+            target: test_PulseCounterSource
+            artifact_suffix: dev-pulsecounter
             
-          - name: Simulation
-            cmake_flag: -DEXPORT_SIM_GROUP=ON
-            artifact_suffix: sim
+          - name: Device - WiFiRecorder
+            target: test_WiFiRecorder
+            artifact_suffix: dev-wifirecorder
+            
+          - name: Device - WiFiSerializer
+            target: test_WiFiSerializer
+            artifact_suffix: dev-wifiserializer
+            
+          - name: Device - Crc32
+            target: test_Crc32
+            artifact_suffix: dev-crc32
+            
+          - name: Device - CobsEncoder
+            target: test_CobsEncoder
+            artifact_suffix: dev-cobsencoder
+            
+          # Driver Tests
+          - name: Driver - AmbientLightSensor
+            target: test_AmbientLightSensorDriver
+            artifact_suffix: drv-ambient-light
+            
+          - name: Driver - DisplayPixelColor
+            target: test_DisplayPixelColor
+            artifact_suffix: drv-display-pixel
+            
+          - name: Driver - DriverState
+            target: test_DriverState
+            artifact_suffix: drv-state
+            
+          - name: Driver - Keyboard
+            target: test_KeyboardDriver
+            artifact_suffix: drv-keyboard
+            
+          - name: Driver - AmbientLight
+            target: test_AmbientLight
+            artifact_suffix: drv-ambient
+            
+          - name: Driver - Uart
+            target: test_UartDriver
+            artifact_suffix: drv-uart
+            
+          - name: Driver - PulseCounter
+            target: test_PulseCounterDriver
+            artifact_suffix: drv-pulse-counter
+            
+          # Simulation
+          - name: Simulation - Library
+            target: SIMULATION_LIB
+            artifact_suffix: sim-library
             
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.workflow_run.head_repository.full_name }}
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
 
       - name: Set up Docker Compose
         uses: docker/setup-compose-action@v1
@@ -70,13 +122,12 @@ jobs:
 
       - name: Run Static Analysis
         run: |
-          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake ${{ matrix.cmake_flag }} -DCMAKE_BUILD_TYPE=Debug .. && make cstatic"
+          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DEXPORT_SINGLE_JSON=${{ matrix.target }} -DCMAKE_BUILD_TYPE=Debug .. && make cstatic"
 
       - name: Upload Static Analysis Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          # Creates unique names: static-analysis-results-cpp-biz, -dev, etc.
           name: static-analysis-results-cpp-${{ matrix.artifact_suffix }}
           path: DevOps/BuildArtifacts/StaticAnalysis
 
@@ -94,6 +145,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.workflow_run.head_repository.full_name }}
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
 
       - name: Set up Docker Compose
         uses: docker/setup-compose-action@v1
@@ -117,7 +172,7 @@ jobs:
 
       - name: Run Static Analysis (Firmware)
         run: |
-          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace/Software/STM32F103RBTx/ && mkdir -p build && cd build && rm -rf * && cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug .. && make cstatic"
+          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make cstatic_stm"
 
       - name: Upload Static Analysis Results
         if: always()

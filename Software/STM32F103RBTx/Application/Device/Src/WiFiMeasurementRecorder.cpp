@@ -1,18 +1,19 @@
 #include "Device/Inc/WiFiMeasurementRecorder.hpp"
+#include "Device/Inc/WiFiMeasurementSerializer.hpp"
 #include "Device/Inc/MeasurementType.hpp"
 #include "Device/Inc/CobsEncoder.hpp"
 
-#include "Driver/Interface/UartExchangeStatus.hpp"
+#include "Driver/Interface/UartStatus.hpp"
 #include "Driver/Interface/IUartDriver.hpp"
 
 #include <array>
-#include <cstddef> // For std::size_t
+#include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <span>
 
 namespace Device
 {
-
     WiFiMeasurementRecorder::WiFiMeasurementRecorder(Driver::IUartDriver &_driver)
         : driver(_driver)
     {
@@ -20,67 +21,37 @@ namespace Device
 
     bool WiFiMeasurementRecorder::onInitialize()
     {
-        const bool status = driver.initialize();
-        return status;
+        return driver.initialize();
     }
 
     bool WiFiMeasurementRecorder::onStart()
     {
-        const bool status = driver.start();
-        return status;
+        return driver.start();
     }
 
     bool WiFiMeasurementRecorder::onStop()
     {
-        const bool status = driver.stop();
-        return status;
+        return driver.stop();
     }
 
     bool WiFiMeasurementRecorder::onReset()
     {
-        const bool status = driver.reset();
-        return status;
-    }
-
-    bool WiFiMeasurementRecorder::flush()
-    {
-        const bool status = true;
-        return status;
+        return driver.reset();
     }
 
     bool WiFiMeasurementRecorder::notify(Device::MeasurementType &measurement)
     {
         bool status = false;
+        std::size_t msgLength = 0U;
 
-        std::size_t msgLength = 0u;
-
-        status = serializedMessage.generate(
-            measurement,
-            encodedBuffer.data(),
-            encodedBuffer.size(),
-            msgLength);
-
-        if (status)
+        if (Device::WiFiMeasurementSerializer::generate(measurement, encodedBuffer, msgLength))
         {
-            const std::size_t outLength = CobsEncoder::encode(
-                encodedBuffer.data(),
-                msgLength,
-                dataLinkBuffer.data(),
-                dataLinkBuffer.size());
+            const auto result = CobsEncoder::encode(encodedBuffer, msgLength, dataLinkBuffer);
 
-            if (outLength != 0)
+            if (result.has_value())
             {
-                // Transmit the encoded data
-                const Driver::UartExchangeStatus result = driver.transmit(
-                    dataLinkBuffer.data(),
-                    static_cast<std::uint16_t>(outLength),
-                    UartTxTimeout);
-
-                status = (result == Driver::UartExchangeStatus::Ok);
-            }
-            else
-            {
-                status = false;
+                const std::span<const std::uint8_t> txData{dataLinkBuffer.data(), result.value()};
+                status = (driver.transmit(txData, UartTxTimeout) == Driver::UartStatus::Ok);
             }
         }
 

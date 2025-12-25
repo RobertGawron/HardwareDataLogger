@@ -50,13 +50,6 @@ namespace Device
         SdCardMeasurementRecorder &operator=(const SdCardMeasurementRecorder &) = delete;
 
         /**
-         * @brief Flushes any remaining data to the SD card.
-         *
-         * This method ensures that any remaining buffered data is written to the SD card.
-         */
-        bool flush() override;
-
-        /**
          * @brief Notifies the recorder to process new data.
          *
          * This method is called to notify the recorder that new measurement data is available
