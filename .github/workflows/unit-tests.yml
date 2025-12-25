@@ -14,7 +14,6 @@ jobs:
   build:
     name: Build Docker Image
     runs-on: ubuntu-latest
-    timeout-minutes: 360  # Increase to 6 hours (the max for hosted runners)
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -41,4 +40,3 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           provenance: false
-
