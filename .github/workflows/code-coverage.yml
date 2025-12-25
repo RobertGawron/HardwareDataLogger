@@ -1,29 +1,23 @@
 name: Code Coverage
 
 on:
-  push:
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    types:
+      - completed
     branches:
       - main
       - 'feature/*'
-  pull_request:
-    branches:
-      - main
 
 jobs:
   code-coverage:
     name: Run Code Coverage (STM32)
     runs-on: ubuntu-latest
+    # Only run if the CI Pipeline succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      #- name: Set up Docker Buildx
-      #  uses: docker/setup-buildx-action@v3
-
-      #- name: Install Docker Compose
-      #  run: |
-      #    sudo apt-get update
-      #    sudo apt-get install -y docker-compose
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -34,16 +28,16 @@ jobs:
 
       - name: Pull Docker Image
         run: |
-          docker pull ghcr.io/robertgawron/hardwaredatalogger:${{ github.sha }}
-          docker tag ghcr.io/robertgawron/hardwaredatalogger:${{ github.sha }} hardwaredatalogger:latest
+          docker pull ghcr.io/robertgawron/hardwaredatalogger:${{ github.event.workflow_run.head_sha }}
+          docker tag ghcr.io/robertgawron/hardwaredatalogger:${{ github.event.workflow_run.head_sha }} hardwaredatalogger:latest
 
       - name: Run Docker Compose
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.yml up -d
+          docker-compose -f docker-compose.yml up -d
 
       - name: Run Code Coverage
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make test_biz && make test_dev && make test_drv && make cov"
+          docker-compose -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make test_biz && make test_dev && make test_drv && make cov"
 
       - name: Upload Code Coverage Results
         if: always()
@@ -53,5 +47,6 @@ jobs:
           path: DevOps/BuildArtifacts/CodeCoverage
 
       - name: Clean up Docker containers
+        if: always()
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.yml down
+          docker-compose -f docker-compose.yml down
