@@ -38,7 +38,10 @@ namespace Driver
 
     uint32_t AmbientLightSensorDriver::getAmbientLightLevel() const
     {
-        const uint32_t totalSum = std::accumulate(adcBuffer.begin(), adcBuffer.end(), 0UL);
+        const uint32_t totalSum = std::accumulate(adcBuffer.begin(),
+                                                  adcBuffer.end(),
+                                                  static_cast<std::uint32_t>(0u));
+
         const uint32_t average = (totalSum / adcBuffer.size());
 
         return average;
@@ -46,10 +49,11 @@ namespace Driver
 
     bool AmbientLightSensorDriver::startAdcWithDma()
     {
-        // Cast to uint32_t* for HAL compatibility
-        return (HAL_ADC_Start_DMA(&hadc,
-                                  reinterpret_cast<uint32_t *>(adcBuffer.data()),
-                                  adcBuffer.size()) == HAL_OK);
+        const HAL_StatusTypeDef status = HAL_ADC_Start_DMA(&hadc,
+                                                           reinterpret_cast<uint32_t *>(adcBuffer.data()),
+                                                           static_cast<std::uint32_t>(adcBuffer.size()));
+
+        return (status == HAL_OK);
     }
 
     bool AmbientLightSensorDriver::stopAdcWithDma()
