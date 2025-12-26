@@ -1,13 +1,17 @@
-#include "stm32f1xx_hal_uart.h"
-#include "stm32f1xx_hal_def.h"
 #include "Driver/Hardware/Inc/UartDriver.hpp"
 #include "Driver/Interface/UartExchangeStatus.hpp"
 #include "Driver/Interface/DriverState.hpp"
 
+#include "stm32f1xx_hal_uart.h"
+#include "stm32f1xx_hal_def.h"
+
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+
 #include <cstdint>
 #include <memory>
+#include <array>
+#include <algorithm>
 
 // Global mock instance pointer for the HAL C-linkage
 MockHAL_UART *mockHAL_UART = nullptr;
@@ -43,36 +47,36 @@ public:
 };
 
 // --- Test Cases ---
+MATCHER_P(IsDataEqualTo, expected_array, "")
+{
+    // 'arg' is the pointer passed to HAL_UART_Transmit (uint8_t*)
+    if (arg == nullptr)
+    {
+        *result_listener << "the received pointer was null";
+        return false;
+    }
+    // We compare the memory at 'arg' to our expected std::array
+    return std::equal(expected_array.begin(), expected_array.end(), arg);
+}
 
 TEST_F(UartDriverTest, TransmitShouldSucceed)
 {
     // Arrange
-    // 1. Use std::array instead of raw C-array
     std::array<std::uint8_t, 3> data = {0x01, 0x02, 0x03};
     const std::uint32_t timeout = 1000;
 
     getDriver().initialize();
     getDriver().start();
 
-    EXPECT_CALL(getMockHAL(), HAL_UART_Transmit(&getHuart(), ::testing::_, ::testing::_, timeout))
-        .WillOnce(::testing::DoAll(
-            ::testing::WithArgs<1, 2>([&data](std::uint8_t *sentData, std::uint16_t sentSize)
-                                      {
-                // 2. Validate pointer is not null to satisfy static analysis
-                EXPECT_NE(sentData, nullptr);
-                
-                // 3. Check size match
-                EXPECT_EQ(sentSize, data.size());
-
-                // 4. Use std::equal instead of manual loop
-                // This prevents "unsafe buffer access" warnings because the STL handles the iteration logic
-                if (sentData != nullptr && sentSize == data.size()) {
-                    EXPECT_TRUE(std::equal(data.begin(), data.end(), sentData));
-                } }),
-            ::testing::Return(HAL_OK)));
+    // The custom matcher handles the pointer and the comparison
+    EXPECT_CALL(getMockHAL(), HAL_UART_Transmit(
+                                  &getHuart(),
+                                  IsDataEqualTo(data),
+                                  static_cast<std::uint16_t>(data.size()),
+                                  timeout))
+        .WillOnce(::testing::Return(HAL_OK));
 
     // Act
-    // 5. Use .data() to get the raw pointer required by the C interface
     const Driver::UartExchangeStatus status = getDriver().transmit(data.data(), data.size(), timeout);
 
     // Assert
