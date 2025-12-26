@@ -1,4 +1,4 @@
-#include "Driver/Interface/PulseCounterIdentifier.hpp"
+#include "Driver/Interface/PulseCounterId.hpp"
 #include "Driver/Hardware/Inc/PulseCounterDriver.hpp"
 
 #include <gtest/gtest.h>
@@ -7,7 +7,7 @@
 
 namespace
 {
-    constexpr Driver::PulseCounterIdentifier id = Driver::PulseCounterIdentifier::bncA;
+    constexpr Driver::PulseCounterId id = Driver::PulseCounterId::bncA;
 }
 
 // --- Test Fixture ---
@@ -21,7 +21,7 @@ private:
 protected:
     void SetUp() override
     {
-        driver = std::make_unique<Driver::PulseCounterDriver>(static_cast<Driver::PulseCounterIdentifier>(id));
+        driver = std::make_unique<Driver::PulseCounterDriver>(static_cast<Driver::PulseCounterId>(id));
     }
 
 public:

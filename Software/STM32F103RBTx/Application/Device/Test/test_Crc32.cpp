@@ -3,17 +3,18 @@
 #include <gtest/gtest.h>
 #include <cstdint>
 #include <array>
+#include <cstddef>
 
 namespace
 {
-    // Expected CRC results as named constants
-    static constexpr std::uint32_t EXPECTED_EMPTY_CRC = 0x00000000U;
-    static constexpr std::uint32_t EXPECTED_STRING_CRC = 0xCBF43926U;
-    static constexpr std::uint32_t EXPECTED_SINGLE_BYTE_CRC = 0xD202EF8DU;
-    static constexpr std::uint32_t EXPECTED_MULTIPLE_BYTES_CRC = 0x7C9CA35AU;
+    // CRC constants
+    constexpr std::uint32_t EXPECTED_EMPTY_CRC = 0x00000000U;
+    constexpr std::uint32_t EXPECTED_STRING_CRC = 0xCBF43926U;
+    constexpr std::uint32_t EXPECTED_SINGLE_BYTE_CRC = 0xD202EF8DU;
+    constexpr std::uint32_t EXPECTED_MULTIPLE_BYTES_CRC = 0x7C9CA35AU;
 
-    static constexpr std::size_t LENGTH_ZERO = 0U;
-    static constexpr std::size_t LENGTH_ONE = 1U;
+    constexpr std::size_t LENGTH_ZERO = 0U;
+    constexpr std::size_t LENGTH_ONE = 1U;
 }
 
 TEST(Crc32Test, ComputesCrcForEmptyData)

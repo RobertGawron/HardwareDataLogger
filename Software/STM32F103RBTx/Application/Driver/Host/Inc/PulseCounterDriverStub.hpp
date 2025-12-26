@@ -17,9 +17,9 @@ namespace Driver
     public:
         static const std::uint8_t PULSE_COUNTER_AMOUNT = 4u;
 
-        explicit PulseCounterDriverStub(PulseCounterIdentifier id);
+        explicit PulseCounterDriverStub(PulseCounterId id);
 
-        explicit PulseCounterDriverStub();
+        PulseCounterDriverStub() = delete;
 
         ~PulseCounterDriverStub() override = default;
 

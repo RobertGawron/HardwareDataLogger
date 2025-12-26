@@ -18,9 +18,9 @@ namespace BusinessLogic
         Driver::IDisplayBrightnessDriver &createDisplayBrightnessDriver() override;
         Driver::IDisplayDriver &createDisplayDriver() override;
         Driver::IKeyboardDriver &createKeyboardDriver() override;
-        Driver::IUartDriver &createUartDriver(const Driver::UartIdentifier id) override;
+        Driver::IUartDriver &createUartDriver(const Driver::UartId id) override;
         Driver::ISdCardDriver &createSdCardDriver() override;
-        Driver::IPulseCounterDriver &createPulseCounterDriver(Driver::PulseCounterIdentifier id) override;
+        Driver::IPulseCounterDriver &createPulseCounterDriver(Driver::PulseCounterId id) override;
     };
 }
 

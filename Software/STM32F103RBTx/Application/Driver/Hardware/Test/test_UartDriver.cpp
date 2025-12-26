@@ -12,6 +12,7 @@
 #include <memory>
 #include <array>
 #include <algorithm>
+#include <ostream>
 
 // Global mock instance pointer for the HAL C-linkage
 MockHAL_UART *mockHAL_UART = nullptr;
@@ -46,18 +47,59 @@ public:
     UART_HandleTypeDef &getHuart() { return huart; }
 };
 
-// --- Test Cases ---
-MATCHER_P(IsDataEqualTo, expected_array, "")
+// --- Matcher Class ---
+class UartDataMatcher
 {
-    // 'arg' is the pointer passed to HAL_UART_Transmit (uint8_t*)
-    if (arg == nullptr)
+public:
+    explicit UartDataMatcher(const std::array<std::uint8_t, 3> &expectedData)
+        : expected(expectedData) {}
+
+    // GMOCK REQUIREMENT: This method name is mandated by the library.
+    // It must be "MatchAndExplain" (PascalCase) to compile.
+    bool MatchAndExplain(std::uint8_t *arg, ::testing::MatchResultListener *listener) const
     {
-        *result_listener << "the received pointer was null";
-        return false;
+        if (arg == nullptr)
+        {
+            // Using 'listener' here prevents the "unused parameter" error
+            *listener << "the received pointer was null";
+            return false;
+        }
+
+        return std::equal(expected.begin(), expected.end(), arg);
     }
-    // We compare the memory at 'arg' to our expected std::array
-    return std::equal(expected_array.begin(), expected_array.end(), arg);
+
+    // GMOCK REQUIREMENT: Must be "DescribeTo" (PascalCase).
+    static void DescribeTo(std::ostream *os)
+    {
+        *os << "is data equal to expected array";
+    }
+
+    // GMOCK REQUIREMENT: Must be "DescribeNegationTo" (PascalCase).
+    static void DescribeNegationTo(std::ostream *os)
+    {
+        *os << "is data NOT equal to expected array";
+    }
+
+private:
+    std::array<std::uint8_t, 3> expected;
+};
+
+// --- Factory Function (Forward Declaration) ---
+namespace
+{
+    ::testing::PolymorphicMatcher<UartDataMatcher> isDataEqualTo(const std::array<std::uint8_t, 3> &data);
 }
+
+// --- Factory Function Implementation ---
+namespace
+{
+    ::testing::PolymorphicMatcher<UartDataMatcher> isDataEqualTo(const std::array<std::uint8_t, 3> &data)
+    {
+        return ::testing::MakePolymorphicMatcher(UartDataMatcher(data));
+    }
+}
+
+// --- Test Cases ---
 
 TEST_F(UartDriverTest, TransmitShouldSucceed)
 {
@@ -68,10 +110,9 @@ TEST_F(UartDriverTest, TransmitShouldSucceed)
     getDriver().initialize();
     getDriver().start();
 
-    // The custom matcher handles the pointer and the comparison
     EXPECT_CALL(getMockHAL(), HAL_UART_Transmit(
                                   &getHuart(),
-                                  IsDataEqualTo(data),
+                                  isDataEqualTo(data),
                                   static_cast<std::uint16_t>(data.size()),
                                   timeout))
         .WillOnce(::testing::Return(HAL_OK));

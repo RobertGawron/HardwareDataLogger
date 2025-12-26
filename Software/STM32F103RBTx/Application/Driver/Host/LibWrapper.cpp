@@ -1,20 +1,22 @@
 #include "LibWrapper.hpp"
-
-#include "PlatformFactoryStm32.hpp"
+#include "PlatformFactory.hpp"
 #include "MyApplication.hpp"
 
-#include "KeyboardDriverStub.hpp"
 #include "Driver/Interface/KeyboardKeyState.hpp"
-#include "PulseCounterDriverStub.hpp"
+#include "Driver/Interface/KeyboardKeyIdentifier.hpp"
+#include "Driver/Interface/DisplayPixelColor.hpp"
 
+#include "PulseCounterDriverStub.hpp"
+#include "KeyboardDriverStub.hpp"
 #include "St7735DisplayDriverStub.hpp"
-#include "DisplayPixelColor.hpp"
+
+#include "HmiEventHandlers.hpp"
 
 #include <array>
 #include <cstdint>
 
-extern Driver::St7735DisplayDriverStub st7735DisplayDriverStub;
-extern Driver::KeyboardDriverStub keyboardDriverStub;
+// move it to builder
+extern BusinessLogic::PlatformFactory platform;
 
 void LibWrapper_Init()
 {
@@ -24,7 +26,6 @@ void LibWrapper_Init()
 
 void LibWrapper_Tick()
 {
-
     app_tick();
 }
 
@@ -32,38 +33,55 @@ void LibWrapper_Tick()
 
 void LibWrapper_KeyPressed(KeyboardKeyIdentifier keyId)
 {
-    keyboardDriverStub.keyState[keyId] = Driver::KeyboardKeyState::Pressed;
+    // Cast the interface reference to the specific Stub implementation
+    auto &keyboardStub = static_cast<Driver::KeyboardDriverStub &>(platform.getKeyboardDriver());
+
+    keyboardStub.setKeyState(
+        static_cast<Driver::KeyboardKeyIdentifier>(keyId),
+        Driver::KeyboardKeyState::Pressed);
 }
 
 void LibWrapper_KeyReleased(KeyboardKeyIdentifier keyId)
 {
-    keyboardDriverStub.keyState[keyId] = Driver::KeyboardKeyState::NotPressed;
+    auto &keyboardStub = static_cast<Driver::KeyboardDriverStub &>(platform.getKeyboardDriver());
+
+    keyboardStub.setKeyState(
+        static_cast<Driver::KeyboardKeyIdentifier>(keyId),
+        Driver::KeyboardKeyState::NotPressed);
 }
 
 std::uint8_t LibWrapper_GetDisplayWidth()
 {
-    std::uint8_t width = 0u;
+    std::uint8_t width = 0U;
 
-    st7735DisplayDriverStub.getXSize(width);
+    const auto &displayStub = static_cast<Driver::St7735DisplayDriverStub &>(platform.getDisplayDriver());
+    displayStub.getXSize(width);
+
     return width;
 }
 
 std::uint8_t LibWrapper_GetDisplayHeight()
 {
-    std::uint8_t height = 0u;
+    std::uint8_t height = 0U;
 
-    st7735DisplayDriverStub.getYSize(height);
+    const auto &displayStub = static_cast<Driver::St7735DisplayDriverStub &>(platform.getDisplayDriver());
+    displayStub.getYSize(height);
+
     return height;
 }
 
 std::uint16_t LibWrapper_GetPixelValue(std::uint8_t x, std::uint8_t y)
 {
-    return st7735DisplayDriverStub.getPixelValue(x, y);
+    const auto &displayStub = static_cast<Driver::St7735DisplayDriverStub &>(platform.getDisplayDriver());
+
+    const Driver::DisplayPixelColor::PixelColor value = displayStub.getPixelValue(x, y);
+
+    return value;
 }
 
 void LibWrapper_UpdatePulseCounters(const std::array<std::uint16_t, PULSE_COUNTER_COUNT> &pulseCounters)
 {
-    for (std::size_t i = 0; i < PULSE_COUNTER_COUNT; i++)
+    for (std::uint8_t i = 0U; i < PULSE_COUNTER_COUNT; ++i)
     {
         setPulseCounter(i, pulseCounters.at(i));
     }

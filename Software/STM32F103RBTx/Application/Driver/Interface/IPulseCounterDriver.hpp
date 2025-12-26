@@ -7,7 +7,7 @@
 #define IPulseCounterDriver_h
 
 #include "Driver/Interface/DriverState.hpp"
-#include "Driver/Interface/PulseCounterIdentifier.hpp"
+#include "Driver/Interface/PulseCounterId.hpp"
 
 namespace Driver
 {

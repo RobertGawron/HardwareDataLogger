@@ -102,6 +102,8 @@ TEST_F(KeyboardTest, TickHandlesKeyHoldAndReleaseShort)
 TEST_F(KeyboardTest, TickHandlesFailState)
 {
     // Accessing an invalid identifier should return Fail state
-    EXPECT_EQ(getKeyboard().getKeyState(static_cast<Driver::KeyboardKeyIdentifier>(99)),
-              Device::KeyboardKeyActionState::Fail);
+    EXPECT_EQ(
+        getKeyboard().getKeyState(
+            static_cast<Driver::KeyboardKeyIdentifier>(99)), // NOLINT(clang-analyzer-optin.core.EnumCastOutOfRange)
+        Device::KeyboardKeyActionState::Fail);
 }

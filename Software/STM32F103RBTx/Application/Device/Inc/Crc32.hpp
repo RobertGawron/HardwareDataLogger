@@ -38,7 +38,9 @@ namespace Device
             // Use iterators instead of indices or raw pointers.
             // std::next is a safe way to get the 'end' iterator for the sub-range.
             const auto start = data.begin();
-            const auto end = std::next(start, effective_length);
+
+            const auto end = std::next(start,
+                                       static_cast<typename std::array<std::uint8_t, SIZE>::difference_type>(effective_length));
 
             std::for_each(start, end, [&](const std::uint8_t byte)
                           { crc = update_crc(crc, byte); });

@@ -1,4 +1,5 @@
 #include "Device/Inc/WiFiMeasurementRecorder.hpp"
+#include "Device/Inc/WiFiMeasurementSerializer.hpp"
 #include "Device/Inc/MeasurementType.hpp"
 #include "Device/Inc/CobsEncoder.hpp"
 
@@ -6,13 +7,12 @@
 #include "Driver/Interface/IUartDriver.hpp"
 
 #include <array>
-#include <cstddef> // For std::size_t
+#include <cstddef>
 #include <cstdint>
 #include <cstring>
 
 namespace Device
 {
-
     WiFiMeasurementRecorder::WiFiMeasurementRecorder(Driver::IUartDriver &_driver)
         : driver(_driver)
     {
@@ -52,30 +52,31 @@ namespace Device
     {
         bool status = false;
 
-        std::size_t msgLength = 0u;
+        std::size_t msgLength = 0U;
 
-        status = serializedMessage.generate(
+        status = Device::WiFiMeasurementSerializer::generate(
             measurement,
             encodedBuffer,
             msgLength);
 
         if (status)
         {
-            const std::size_t outLength = CobsEncoder::encode(
-                encodedBuffer.data(),
+            const auto result = CobsEncoder::encode(
+                encodedBuffer,
                 msgLength,
-                dataLinkBuffer.data(),
-                dataLinkBuffer.size());
+                dataLinkBuffer);
 
-            if (outLength != 0)
+            if (result.has_value())
             {
+                const std::size_t outLength = result.value();
+
                 // Transmit the encoded data
-                const Driver::UartExchangeStatus result = driver.transmit(
+                const Driver::UartExchangeStatus txResult = driver.transmit(
                     dataLinkBuffer.data(),
                     static_cast<std::uint16_t>(outLength),
                     UartTxTimeout);
 
-                status = (result == Driver::UartExchangeStatus::Ok);
+                status = (txResult == Driver::UartExchangeStatus::Ok);
             }
             else
             {

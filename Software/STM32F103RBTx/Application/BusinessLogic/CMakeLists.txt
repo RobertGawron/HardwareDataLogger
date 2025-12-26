@@ -9,15 +9,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_library(BusinessLogic STATIC)
 
 target_sources(BusinessLogic PRIVATE
-    Src/ApplicationBuilder.cpp
-    Src/HmiFactory.cpp
-    Src/HmiMeasurementModel.cpp
-    Src/HmiMui.cpp
-    Src/HmiMuiHandlers.cpp
-    Src/MeasurementCoordinator.cpp
-    Src/MeasurementDataStore.cpp
-    Src/MeasurementSourcesFactory.cpp
-    Src/MeasurementStoresFactory.cpp
+    Src/ApplicationFacade.cpp
+   # Src/HmiFactory.cpp
+   # Src/HmiMeasurementModel.cpp
+   Src/HmiFacade.cpp
+  #  Src/HmiFacadeHandlers.cpp
+   # Src/MeasurementCoordinator.cpp
+  #  Src/MeasurementSourcesFactory.cpp
+  #  Src/MeasurementStoresFactory.cpp
 )
 
 target_include_directories(BusinessLogic PUBLIC

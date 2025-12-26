@@ -1,6 +1,6 @@
 #include "UartDriverStub.hpp"
 #include "UartExchangeStatus.hpp"
-#include "UartIdentifier.hpp"
+#include "UartId.hpp"
 
 #include "HmiEventHandlers.hpp"
 
@@ -8,7 +8,7 @@
 
 namespace Driver
 {
-    UartDriverStub::UartDriverStub(const Driver::UartIdentifier id)
+    UartDriverStub::UartDriverStub(const Driver::UartId id)
         : hwId(id)
     {
     }
@@ -35,17 +35,9 @@ namespace Driver
 
     UartExchangeStatus UartDriverStub::transmit(std::uint8_t *data, std::uint16_t size, std::uint32_t timeout)
     {
-        // hack but i dont need better for now
-        if (hwId == UartIdentifier::DataTransmitterViaWiFi)
-        {
-            serialTx(data, size, timeout);
+        (void)hwId;
 
-            /*  for (std::size_t i = 0u; i < size; i++)
-              {
-                  printf("UartDriverStub::transmit TX %d \n", (char)data[i]);
-              }
-              printf("\n");*/
-        }
+        serialTx(data, size, timeout);
 
         return UartExchangeStatus::Ok;
     }

@@ -1,9 +1,9 @@
-#ifndef HmiMui_h
-#define HmiMui_h
+#ifndef HmiFacade_h
+#define HmiFacade_h
 
 /**
- * @file HmiMui.hpp
- * @brief Declaration of the HmiMui class implementing IHmi with MUI/U8g2.
+ * @file HmiFacade.hpp
+ * @brief Declaration of the HmiFacade class implementing IHmi with MUI/U8g2.
  */
 
 #include "BusinessLogic/Interface/IPlatformFactory.hpp"
@@ -14,38 +14,38 @@
 namespace BusinessLogic
 {
     /**
-     * @class HmiMui
+     * @class HmiFacade
      * @brief MUI/U8g2-based implementation of the Human-Machine Interface.
      *
      * Provides graphical UI using MUI framework and U8g2 display library.
      * Manages display rendering, brightness control, and user input.
      */
-    class HmiMui : public IHmi
+    class HmiFacade : public IHmi
     {
     public:
         /**
-         * @brief Constructs HmiMui with required components.
+         * @brief Constructs HmiFacade with required components.
          * @param hmiMeasurementModel Measurement model for UI data
          * @param display Display rendering interface
          * @param displayBrightnessRegulator Display brightness controller
          * @param keyboard User input interface
          */
-        HmiMui(HmiMeasurementModel &hmiMeasurementModel,
-               Device::IDisplay &display,
-               Device::IDisplayBrightnessRegulator &displayBrightnessRegulator,
-               Device::IKeyboard &keyboard);
+        HmiFacade( // HmiMeasurementModel &hmiMeasurementModel,
+            Device::IDisplay &display,
+            Device::IDisplayBrightnessRegulator &displayBrightnessRegulator,
+            Device::IKeyboard &keyboard);
 
         /** @brief Deleted default constructor */
-        HmiMui() = delete;
+        HmiFacade() = delete;
 
         /** @brief Default virtual destructor */
-        ~HmiMui() override = default;
+        ~HmiFacade() override = default;
 
         /** @brief Deleted copy constructor */
-        HmiMui(const HmiMui &) = delete;
+        HmiFacade(const HmiFacade &) = delete;
 
         /** @brief Deleted copy assignment operator */
-        HmiMui &operator=(const HmiMui &) = delete;
+        HmiFacade &operator=(const HmiFacade &) = delete;
 
         /**
          * @brief Initializes HMI components.
@@ -66,7 +66,7 @@ namespace BusinessLogic
         bool tick() override;
 
     private:
-        HmiMeasurementModel &hmiMeasurementModel;                        ///< Measurement data provider
+        //  HmiMeasurementModel &hmiMeasurementModel;                        ///< Measurement data provider
         Device::IDisplay &display;                                       ///< Display rendering interface
         Device::IDisplayBrightnessRegulator &displayBrightnessRegulator; ///< Brightness controller
         Device::IKeyboard &keyboard;                                     ///< User input handler
@@ -74,4 +74,4 @@ namespace BusinessLogic
     };
 }
 
-#endif // HmiMui_h
+#endif // HmiFacade_h

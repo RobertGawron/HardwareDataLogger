@@ -27,6 +27,10 @@ public:
 
 class WiFiMeasurementRecorderTest : public ::testing::Test
 {
+protected:
+    // Test Constants
+    static constexpr std::uint8_t TEST_MEASUREMENT_VALUE = 0x42U;
+
 private:
     // Fields are now private
     MockUartDriver mockDriver;
@@ -115,8 +119,8 @@ TEST_F(WiFiMeasurementRecorderTest, OnResetReturnsTrue)
 TEST_F(WiFiMeasurementRecorderTest, NotifySucceedsWhenTransmitOk)
 {
     Device::MeasurementType measurement;
-    measurement.source = Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_1;
-    measurement.data = static_cast<std::uint8_t>(0x42);
+    measurement.source = Device::MeasurementDeviceId::PULSE_COUNTER_1;
+    measurement.data = static_cast<std::uint8_t>(TEST_MEASUREMENT_VALUE);
 
     EXPECT_CALL(getMockDriver(), transmit(::testing::_, ::testing::_, ::testing::_))
         .WillOnce(::testing::Return(Driver::UartExchangeStatus::Ok));
@@ -127,8 +131,8 @@ TEST_F(WiFiMeasurementRecorderTest, NotifySucceedsWhenTransmitOk)
 TEST_F(WiFiMeasurementRecorderTest, NotifyFailsWhenTransmitFails)
 {
     Device::MeasurementType measurement;
-    measurement.source = Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_1;
-    measurement.data = static_cast<std::uint8_t>(0x42);
+    measurement.source = Device::MeasurementDeviceId::PULSE_COUNTER_1;
+    measurement.data = static_cast<std::uint8_t>(TEST_MEASUREMENT_VALUE);
 
     EXPECT_CALL(getMockDriver(), transmit(::testing::_, ::testing::_, ::testing::_))
         .WillOnce(::testing::Return(Driver::UartExchangeStatus::Timeout));

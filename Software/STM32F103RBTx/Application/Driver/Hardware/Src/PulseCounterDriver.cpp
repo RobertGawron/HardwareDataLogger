@@ -1,6 +1,6 @@
 #include "Driver/Interface/IPulseCounterDriver.hpp"
 #include "Driver/Hardware/Inc/PulseCounterDriver.hpp"
-#include "Driver/Interface/PulseCounterIdentifier.hpp"
+#include "Driver/Interface/PulseCounterId.hpp"
 
 #include <cstdint>
 #include <cstddef> // For std::size_t
@@ -31,7 +31,7 @@ extern "C"
 
 namespace Driver
 {
-    PulseCounterDriver::PulseCounterDriver(PulseCounterIdentifier deviceIdentifier)
+    PulseCounterDriver::PulseCounterDriver(PulseCounterId deviceIdentifier)
         : value(pulseCounters[static_cast<std::size_t>(deviceIdentifier)])
     {
     }

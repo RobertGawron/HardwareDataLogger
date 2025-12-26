@@ -3,10 +3,6 @@
 namespace Driver
 {
 
-    SdCardDriverStub::SdCardDriverStub()
-    {
-    }
-
     bool SdCardDriverStub::onInitialize()
     {
         return true;

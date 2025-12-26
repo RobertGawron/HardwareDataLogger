@@ -1,5 +1,5 @@
-#include "BusinessLogic/Inc/HmiMui.hpp"
-#include "BusinessLogic/Inc/HmiMuiHandlers.hpp"
+#include "BusinessLogic/Inc/HmiFacade.hpp"
+// #include "BusinessLogic/Inc/HmiFacadeHandlers.hpp"
 #include "BusinessLogic/Inc/HmiMeasurementModel.hpp"
 #include "Device/Interface/IDisplay.hpp"
 #include "Device/Interface/IDisplayBrightnessRegulator.hpp"
@@ -30,8 +30,9 @@ namespace BusinessLogic
         MUIF_BUTTON("BG", mui_u8g2_btn_goto_wm_fi),    /* assume a callback to go to a given form */
                                                        //  {"DL", mui_dynamic_label_handler},             /* Custom handler for dynamic labels */
                                                        //        MUIF_LABEL(mui_u8g2_draw_text)
-        MUIF_RO("CT", device1_printLastReading),
 
+        //  MUIF_RO("CT", device1_printLastReading),
+        // rgawron fix it
         //  Add more UI elements or callbacks as needed
     };
 
@@ -78,17 +79,17 @@ namespace BusinessLogic
 
 #pragma clang diagnostic pop
 
-    HmiMui::HmiMui(HmiMeasurementModel &_hmiMeasurementModel,
-                   Device::IDisplay &_display,
-                   Device::IDisplayBrightnessRegulator &_displayBrightnessRegulator,
-                   Device::IKeyboard &_keyboard) : hmiMeasurementModel(_hmiMeasurementModel),
-                                                   display(_display),
-                                                   displayBrightnessRegulator(_displayBrightnessRegulator),
-                                                   keyboard(_keyboard)
+    HmiFacade::HmiFacade( // HmiMeasurementModel &_hmiMeasurementModel,
+        Device::IDisplay &_display,
+        Device::IDisplayBrightnessRegulator &_displayBrightnessRegulator,
+        Device::IKeyboard &_keyboard) : // hmiMeasurementModel(_hmiMeasurementModel),
+                                        display(_display),
+                                        displayBrightnessRegulator(_displayBrightnessRegulator),
+                                        keyboard(_keyboard)
     {
     }
 
-    bool HmiMui::initialize()
+    bool HmiFacade::initialize()
     {
         /*
         volatile int x = 0;
@@ -107,7 +108,7 @@ namespace BusinessLogic
         return true;
     }
 
-    bool HmiMui::start()
+    bool HmiFacade::start()
     {
 #if 0
         display.begin();
@@ -131,7 +132,7 @@ namespace BusinessLogic
         return true;
     }
 
-    bool HmiMui::tick()
+    bool HmiFacade::tick()
     {
         keyboard.tick();
         displayBrightnessRegulator.tick();

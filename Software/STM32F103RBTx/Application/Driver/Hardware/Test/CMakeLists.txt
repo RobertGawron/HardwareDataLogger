@@ -39,8 +39,7 @@ function(create_test_exec TARGET_NAME)
     # Using ARGN to allow multiple source files
     add_executable(${TARGET_NAME} ${ARGN})
     
-    if(EXPORT_DRV_GROUP)
-        # This sets the default for ALL targets defined in this file (and below)
+    if(DEFINED EXPORT_SINGLE_JSON AND EXPORT_SINGLE_JSON STREQUAL "${TARGET_NAME}")
         message(STATUS "Enabling compile_commands.json export for: ${TARGET_NAME}")
         set_target_properties(${TARGET_NAME} PROPERTIES EXPORT_COMPILE_COMMANDS ON)
     endif()

@@ -1,10 +1,16 @@
 #include "PulseCounterDriverStub.hpp"
+#include "Driver/Interface/PulseCounterId.hpp"
+#include "Driver/Interface/IPulseCounterDriver.hpp"
 
 #include <cstdint>
 #include <array>
 
-// Declare a std::array to store pulse counts
-static std::array<Driver::PulseCounterDriverStub::CounterSizeType, Driver::PulseCounterDriverStub::PULSE_COUNTER_AMOUNT> pulseCounters = {0};
+namespace
+{
+    std::array<Driver::PulseCounterDriverStub::CounterSizeType,
+               Driver::PulseCounterDriverStub::PULSE_COUNTER_AMOUNT>
+        pulseCounters = {0};
+}
 
 extern "C"
 {
@@ -26,8 +32,9 @@ extern "C"
 
 namespace Driver
 {
-    PulseCounterDriverStub::PulseCounterDriverStub()
+    PulseCounterDriverStub::PulseCounterDriverStub(PulseCounterId id)
     {
+        (void)id; // temporary
     }
 
     bool PulseCounterDriverStub::onInitialize()

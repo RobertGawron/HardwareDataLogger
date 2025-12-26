@@ -27,7 +27,7 @@ namespace Driver
         /**
          * @brief Default constructor for SdCardDriverStub.
          */
-        explicit SdCardDriverStub();
+        SdCardDriverStub() = default;
 
         /**
          * @brief Virtual destructor for SdCardDriverStub.

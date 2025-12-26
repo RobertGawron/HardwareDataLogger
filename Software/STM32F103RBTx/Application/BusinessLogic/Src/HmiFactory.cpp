@@ -9,11 +9,11 @@ namespace BusinessLogic
 {
     HmiFactory::HmiFactory(Device::IMeasurementReader &reader,
                            IPlatformFactory &platformFactory) : hmiMeasurementModel(reader),
-                                                                display(platformFactory.createDisplayDriver()),
+                                                                display(platformFactory.getDisplayDriver()),
                                                                 brightnessRegulator(
-                                                                    platformFactory.createAmbientLightSensorDriver(),
-                                                                    platformFactory.createDisplayBrightnessDriver()),
-                                                                keyboard(platformFactory.createKeyboardDriver()),
+                                                                    platformFactory.getAmbientLightSensorDriver(),
+                                                                    platformFactory.getDisplayBrightnessDriver()),
+                                                                keyboard(platformFactory.getKeyboardDriver()),
                                                                 hmi(hmiMeasurementModel,
                                                                     display,
                                                                     brightnessRegulator,

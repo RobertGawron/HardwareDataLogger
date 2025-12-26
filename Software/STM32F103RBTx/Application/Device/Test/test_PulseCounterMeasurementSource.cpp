@@ -1,7 +1,6 @@
 #include "Device/Inc/PulseCounterMeasurementSource.hpp"
 #include "Device/Inc/MeasurementDeviceId.hpp"
 #include "Driver/Interface/IPulseCounterDriver.hpp"
-#include "Driver/Interface/PulseCounterIdentifier.hpp"
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -32,7 +31,7 @@ private:
 protected:
     void SetUp() override
     {
-        const Device::MeasurementDeviceId id = Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_1;
+        const Device::MeasurementDeviceId id = Device::MeasurementDeviceId::PULSE_COUNTER_1;
         measurementSource = std::make_unique<Device::PulseCounterMeasurementSource>(id, mockDriver);
     }
 

@@ -1,5 +1,7 @@
 #include "AmbientLightSensorDriverStub.hpp"
 
+#include <cstdint>
+
 namespace Driver
 {
 
@@ -25,7 +27,8 @@ namespace Driver
 
     std::uint32_t AmbientLightSensorDriverStub::getAmbientLightLevel() const
     {
-        std::uint32_t adcResult = 10;
+        // arbitrary value
+        const std::uint32_t adcResult = 10;
 
         return adcResult;
     }

@@ -10,6 +10,9 @@
 #include "st7735.h"
 #include "Driver/Interface/IDisplayDriver.hpp"
 #include "Driver/Interface/DisplayPixelColor.hpp"
+
+#include <array>
+
 namespace Driver
 {
 
@@ -121,13 +124,14 @@ namespace Driver
          */
         bool onReset() override;
 
+    private:
         // No mater if the dispaly is configured as horisontal or vertical, ST7735_HEIGHT is the longer dimention so it will always fit
         static const std::uint8_t MAX_WIDTH = ST7735_HEIGHT;
         static const std::uint8_t MAX_HEIGHT = ST7735_HEIGHT;
 
         IDisplayDriver::Orientation orientation = IDisplayDriver::Orientation::Vertical;
 
-        DisplayPixelColor::PixelColor content[MAX_WIDTH][MAX_HEIGHT] = {{0u}};
+        std::array<std::array<DisplayPixelColor::PixelColor, MAX_HEIGHT>, MAX_WIDTH> content{};
     };
 
 }

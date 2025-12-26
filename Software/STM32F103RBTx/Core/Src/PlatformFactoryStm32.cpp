@@ -58,7 +58,7 @@ namespace BusinessLogic
         return driver;
     }
 
-    Driver::IUartDriver &PlatformFactoryStm32::createUartDriver(const Driver::UartIdentifier id)
+    Driver::IUartDriver &PlatformFactoryStm32::createUartDriver(const Driver::UartId id)
     {
         // hack
         static Driver::UartDriver driver1(huart1);
@@ -67,13 +67,13 @@ namespace BusinessLogic
 
         switch (id)
         {
-        case Driver::UartIdentifier::MeasurementReceiver:
+        case Driver::UartId::MEASUREMENT_RECEIVER:
             return driver3;
             break;
-        case Driver::UartIdentifier::DataTransmitterViaUSB:
+        case Driver::UartId::TRANSMIT_VIA_USB:
             return driver2;
             break;
-        case Driver::UartIdentifier::DataTransmitterViaWiFi:
+        case Driver::UartId::TRANSMIT_VIA_WIFI:
             return driver1;
             break;
         }
@@ -87,7 +87,7 @@ namespace BusinessLogic
         return driver;
     }
 
-    Driver::IPulseCounterDriver &PlatformFactoryStm32::createPulseCounterDriver(const Driver::PulseCounterIdentifier id)
+    Driver::IPulseCounterDriver &PlatformFactoryStm32::createPulseCounterDriver(const Driver::PulseCounterId id)
     {
         // TODO
         static Driver::PulseCounterDriver driver(id);

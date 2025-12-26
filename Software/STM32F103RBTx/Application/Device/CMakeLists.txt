@@ -10,8 +10,6 @@ add_library(Device STATIC)
 
 target_sources(Device PRIVATE
     Src/CacheMeasurementRecorder.cpp
-    Src/CobsEncoder.cpp
-    Src/Crc32.cpp
     Src/DisplayBrightnessRegulator.cpp
     Src/Display.cpp
     Src/Keyboard.cpp
@@ -20,7 +18,6 @@ target_sources(Device PRIVATE
     Src/UartMeasurementRecorder.cpp
     Src/UartMeasurementSource.cpp
     Src/WiFiMeasurementRecorder.cpp
-    Src/WiFiMeasurementSerializer.cpp
 )
 
 target_include_directories(Device PUBLIC
