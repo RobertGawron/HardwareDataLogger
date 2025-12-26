@@ -1,69 +1,134 @@
-#ifndef WIFI_MEASUREMENT_SERIALIZER_HPP
-#define WIFI_MEASUREMENT_SERIALIZER_HPP
+#ifndef WiFiMeasurementSerializer_hpp
+#define WiFiMeasurementSerializer_hpp
 
 #include "Device/Inc/MeasurementType.hpp"
-#include <cstdint>
-#include <cstddef>
+#include "Device/Inc/Crc32.hpp"
+
+#include <cstring>
 #include <variant>
-#include <type_traits>
+#include <cstdint>
+#include <array>
 
 namespace Device
 {
+    namespace CRC_CONSTANTS
+    {
+        static constexpr std::uint8_t BITS_24 = 24U;
+        static constexpr std::uint8_t BITS_16 = 16U;
+        static constexpr std::uint8_t BITS_8 = 8U;
+        static constexpr std::uint8_t BYTE_MASK = 0xFFU;
+    }
+
     class WiFiMeasurementSerializer
     {
     public:
-        bool generate(
+        static constexpr std::size_t HEADER_LENGTH = 0U;
+        static constexpr std::size_t CRC_FIELD_SIZE = 4U;
+        static constexpr std::size_t LENGTH_FIELD_SIZE = 2U;
+
+        template <std::size_t BUFFER_SIZE>
+        static bool generate(
             const MeasurementType &measurement,
-            std::uint8_t *data,
-            std::size_t bufferSize,
-            std::size_t &totalMsgLength);
-
-        static constexpr std::size_t LengthFieldSize = 2u;
-        static constexpr std::size_t CrcFieldSize = 4u;
-        static constexpr std::size_t HeaderLength = LengthFieldSize;
-
-    private:
-        template <typename T>
-        [[nodiscard]] constexpr std::size_t measurementSize(T value) const
+            std::array<std::uint8_t, BUFFER_SIZE> &data,
+            std::size_t &totalMsgLength)
         {
-            static_assert(std::is_integral_v<T>, "Only integral types are supported");
-            return sizeof(std::uint8_t) + sizeof(T); // 1 byte for source + measurement data
-        }
+            bool result = true;
+            totalMsgLength = 0;
 
-        template <typename T>
-        bool appendMeasurement(
-            std::uint8_t *data,
-            std::size_t bufferSize,
-            std::size_t &currentIndex,
-            T value)
-        {
-            static_assert(std::is_integral_v<T>, "appendMeasurement only supports integral types");
-            constexpr std::size_t typeSize = sizeof(T);
-            bool result = true; // Assume success
-
-            // Ensure there is enough space in the buffer before accessing it
-            if ((currentIndex + typeSize) <= bufferSize)
-            {
-                // Append the measurement value to the data buffer, byte by byte
-                for (std::size_t i = 0; i < typeSize; ++i)
+            std::size_t neededSize = std::visit(
+                [&](auto &&value) -> std::size_t
                 {
-                    // Check after incrementing currentIndex to avoid overflow
-                    if (currentIndex >= bufferSize)
-                    {
-                        result = false; // Not enough space, set result to false
-                        break;
-                    }
-                    data[currentIndex++] = static_cast<std::uint8_t>((value >> (i * 8)) & 0xFF);
-                }
+                    return measurementSize(value); // Now visible to compiler
+                },
+                measurement.data);
+
+            if (neededSize + HEADER_LENGTH + CRC_FIELD_SIZE > BUFFER_SIZE)
+            {
+                result = false;
             }
             else
             {
-                result = false; // Not enough space, set result to false
-            }
+                totalMsgLength = LENGTH_FIELD_SIZE;
 
+                if (totalMsgLength < BUFFER_SIZE)
+                {
+                    data[totalMsgLength++] = static_cast<std::uint8_t>(measurement.source);
+                }
+                else
+                {
+                    result = false;
+                }
+
+                std::size_t writtenData = 0;
+                if (result)
+                {
+                    std::visit(
+                        [&](auto &&value)
+                        {
+                            // Now visible to compiler
+                            result = appendMeasurement(&data[totalMsgLength], (BUFFER_SIZE - totalMsgLength), writtenData, value);
+                        },
+                        measurement.data);
+                }
+
+                if (result)
+                {
+                    totalMsgLength += writtenData;
+
+                    if (totalMsgLength + CRC_FIELD_SIZE <= BUFFER_SIZE)
+                    {
+                        const std::uint32_t crcCalc = Crc32::compute(data, totalMsgLength);
+
+                        data[totalMsgLength++] = static_cast<std::uint8_t>((crcCalc >> CRC_CONSTANTS::BITS_24) & CRC_CONSTANTS::BYTE_MASK);
+                        data[totalMsgLength++] = static_cast<std::uint8_t>((crcCalc >> CRC_CONSTANTS::BITS_16) & CRC_CONSTANTS::BYTE_MASK);
+                        data[totalMsgLength++] = static_cast<std::uint8_t>((crcCalc >> CRC_CONSTANTS::BITS_8) & CRC_CONSTANTS::BYTE_MASK);
+                        data[totalMsgLength++] = static_cast<std::uint8_t>(crcCalc & CRC_CONSTANTS::BYTE_MASK);
+                    }
+                    else
+                    {
+                        result = false;
+                    }
+
+                    if (totalMsgLength + LENGTH_FIELD_SIZE <= BUFFER_SIZE)
+                    {
+                        data[0] = static_cast<std::uint8_t>((totalMsgLength >> CRC_CONSTANTS::BITS_8) & CRC_CONSTANTS::BYTE_MASK);
+                        data[1] = static_cast<std::uint8_t>(totalMsgLength & CRC_CONSTANTS::BYTE_MASK);
+                    }
+                    else
+                    {
+                        result = false;
+                    }
+                }
+            }
+            return result;
+        }
+
+    private:
+        /**
+         * @brief Must be a template in the header to be used by the 'generate' template.
+         */
+        template <typename T>
+        static std::size_t measurementSize(const T &value)
+        {
+            return sizeof(T);
+        }
+
+        /**
+         * @brief Must be a template in the header to be used by the 'generate' template.
+         */
+        template <typename T>
+        static bool appendMeasurement(std::uint8_t *ptr, std::size_t size, std::size_t &written, const T &value)
+        {
+            bool result = false;
+            if (size >= sizeof(T))
+            {
+                std::memcpy(ptr, &value, sizeof(T));
+                written = sizeof(T);
+                result = true;
+            }
             return result;
         }
     };
 }
 
-#endif // WIFI_MEASUREMENT_SERIALIZER_HPP
+#endif // WiFiMeasurementSerializer_hpp

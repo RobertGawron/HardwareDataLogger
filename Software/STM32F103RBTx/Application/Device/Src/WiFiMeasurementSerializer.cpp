@@ -1,4 +1,4 @@
-#include "Device/Inc/WiFiMeasurementSerializer.hpp"
+/*#include "Device/Inc/WiFiMeasurementSerializer.hpp"
 #include "Device/Inc/MeasurementType.hpp"
 #include "Device/Inc/Crc32.hpp"
 
@@ -101,3 +101,4 @@ namespace Device
         return result;
     }
 }
+*/

@@ -56,8 +56,7 @@ namespace Device
 
         status = serializedMessage.generate(
             measurement,
-            encodedBuffer.data(),
-            encodedBuffer.size(),
+            encodedBuffer,
             msgLength);
 
         if (status)
