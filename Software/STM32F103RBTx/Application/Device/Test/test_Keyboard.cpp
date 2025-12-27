@@ -104,12 +104,13 @@ TEST_F(KeyboardTest, TickHandlesFailState)
     // Accessing an invalid identifier should return Fail state
     // #pragma clang diagnostic push
     // #pragma clang diagnostic ignored "optin.core.EnumCastOutOfRange"
-
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    Driver::KeyboardKeyIdentifier key = static_cast<Driver::KeyboardKeyIdentifier>(99);
     // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
     EXPECT_EQ(
         getKeyboard().getKeyState(
-            static_cast<Driver::KeyboardKeyIdentifier>(99)), /* // NOLINT(clang-analyzer-optin.core.EnumCastOutOfRange) */
-        Device::KeyboardKeyActionState::Fail);               /* // NOLINT(clang-analyzer-optin.core.EnumCastOutOfRange) */
+            key),                              /* // NOLINT(clang-analyzer-optin.core.EnumCastOutOfRange) */
+        Device::KeyboardKeyActionState::Fail); /* // NOLINT(clang-analyzer-optin.core.EnumCastOutOfRange) */
 
     // #pragma clang diagnostic pop
 }
