@@ -51,7 +51,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Application/Library/stm32-st7735/st7735.c
     Application/Library/stm32-st7735/st7735_reg.c
     Core/Src/MyApplication.cpp
-    Core/Src/PlatformFactoryStm32.cpp
+    Core/Src/PlatformFactory.cpp
 )
 
 # Include directories
