@@ -63,21 +63,19 @@ namespace BusinessLogic
         virtual bool initialize()
         {
             // Initialize all sources
-            bool sourcesInitialized = std::all_of(sources.begin(), sources.end(),
-                                                  [](auto &source)
-                                                  { return source.get().initialize(); });
+            bool status = std::all_of(sources.begin(), sources.end(),
+                                      [](auto &source)
+                                      { return source.get().initialize(); });
 
-            if (!sourcesInitialized)
+            if (status)
             {
-                return false;
+                // Initialize all recorders
+                status = std::all_of(recorders.begin(), recorders.end(),
+                                     [](auto &recorder)
+                                     { return recorder.get().initialize(); });
             }
 
-            // Initialize all recorders
-            bool recordersInitialized = std::all_of(recorders.begin(), recorders.end(),
-                                                    [](auto &recorder)
-                                                    { return recorder.get().initialize(); });
-
-            return recordersInitialized;
+            return status;
         }
 
         virtual bool start()
