@@ -8,33 +8,21 @@
 
 #include "BusinessLogic/Interface/IApplicationFacade.hpp"
 #include "BusinessLogic/Interface/IPlatformFactory.hpp"
+#include "BusinessLogic/Inc/HmiFacade.hpp"
+#include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
 
 #include "Device/Inc/PulseCounterMeasurementSource.hpp"
 #include "Device/Inc/UartMeasurementSource.hpp"
-
 #include "Device/Inc/MeasurementDeviceId.hpp"
-#include "Driver/Interface/PulseCounterId.hpp"
-
-// #include "Driver/Interface/IUartDriver.hpp"
-// #include "Driver/Interface/IPulseCounterDriver.hpp"
-
 #include "Device/Inc/WiFiMeasurementRecorder.hpp"
 #include "Device/Inc/SdCardMeasurementRecorder.hpp"
-
 #include "Device/Inc/Display.hpp"
 #include "Device/Inc/Keyboard.hpp"
 #include "Device/Inc/DisplayBrightnessRegulator.hpp"
-#include "BusinessLogic/Inc/HmiFacade.hpp"
 
-#include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
-/*
+#include "Driver/Interface/PulseCounterId.hpp"
 
-#include "BusinessLogic/Inc/MeasurementDataStore.hpp"
-#include "BusinessLogic/Inc/MeasurementSourcesFactory.hpp"
-#include "BusinessLogic/Inc/MeasurementStoresFactory.hpp"
-#include "BusinessLogic/Inc/HmiFactory.hpp"
-*/
-#include <functional> // For std::reference_wrapper
+#include <functional> // for std::reference_wrapper
 
 namespace Device
 {

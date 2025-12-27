@@ -6,8 +6,12 @@
  * @brief Declaration of the HmiFacade class implementing IHmi with MUI/U8g2.
  */
 
-#include "BusinessLogic/Interface/IPlatformFactory.hpp"
-#include "BusinessLogic/Interface/IHmi.hpp"
+// #include "BusinessLogic/Interface/IPlatformFactory.hpp"
+
+#include "Device/Interface/IDisplay.hpp"
+#include "Device/Interface/IDisplayBrightnessRegulator.hpp"
+#include "Device/Interface/IKeyboard.hpp"
+
 #include "U8g2lib.h"
 #include "MUIU8g2.h"
 
@@ -20,7 +24,7 @@ namespace BusinessLogic
      * Provides graphical UI using MUI framework and U8g2 display library.
      * Manages display rendering, brightness control, and user input.
      */
-    class HmiFacade : public IHmi
+    class HmiFacade
     {
     public:
         /**
@@ -39,7 +43,7 @@ namespace BusinessLogic
         HmiFacade() = delete;
 
         /** @brief Default virtual destructor */
-        ~HmiFacade() override = default;
+        ~HmiFacade() = default;
 
         /** @brief Deleted copy constructor */
         HmiFacade(const HmiFacade &) = delete;
@@ -51,19 +55,19 @@ namespace BusinessLogic
          * @brief Initializes HMI components.
          * @return true if successful, false otherwise
          */
-        bool initialize() override;
+        bool initialize();
 
         /**
          * @brief Starts HMI operation.
          * @return true if successful, false otherwise
          */
-        bool start() override;
+        bool start();
 
         /**
          * @brief Processes periodic updates.
          * @return true if successful, false otherwise
          */
-        bool tick() override;
+        bool tick();
 
     private:
         //  HmiMeasurementModel &hmiMeasurementModel;                        ///< Measurement data provider

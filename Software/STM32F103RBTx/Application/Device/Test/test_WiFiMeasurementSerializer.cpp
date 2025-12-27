@@ -40,7 +40,7 @@ protected:
     static constexpr std::size_t BUFFER_SIZE = 128U;
 
     // Constructor to initialize members
-    WiFiMeasurementSerializerTest() : buffer{}, msgLength(0U) {}
+    WiFiMeasurementSerializerTest() {}
 
     void SetUp() override
     {
