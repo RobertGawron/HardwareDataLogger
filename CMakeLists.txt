@@ -65,3 +65,20 @@ add_custom_target(firmware
     COMMENT "Building STM32 firmware..."
     USES_TERMINAL
 )
+
+
+
+add_custom_target(static_stm
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/firmware-build
+    COMMAND ${CMAKE_COMMAND} 
+        -S ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx
+        -B ${CMAKE_BINARY_DIR}/firmware-build
+        -DCMAKE_TOOLCHAIN_FILE=${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/cmake/gcc-arm-none-eabi.cmake
+        -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+    COMMAND ${CMAKE_COMMAND} -E copy 
+        ${CMAKE_BINARY_DIR}/firmware-build/compile_commands.json
+        ${CMAKE_SOURCE_DIR}/compile_commands.json
+    COMMENT "Exporting firmware compile commands..."
+    USES_TERMINAL
+)
