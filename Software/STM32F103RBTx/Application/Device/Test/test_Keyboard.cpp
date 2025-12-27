@@ -109,7 +109,7 @@ TEST_F(KeyboardTest, TickHandlesFailState)
     EXPECT_EQ(
         getKeyboard().getKeyState(
             static_cast<Driver::KeyboardKeyIdentifier>(99)), // NOLINT(clang-analyzer-optin.core.EnumCastOutOfRange)
-        Device::KeyboardKeyActionState::Fail);
+        Device::KeyboardKeyActionState::Fail);               // NOLINT(clang-analyzer-optin.core.EnumCastOutOfRange)
 
     // #pragma clang diagnostic pop
 }
