@@ -168,7 +168,7 @@ jobs:
 
       - name: Run Static Analysis (Firmware)
         run: |
-          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace/Software/STM32F103RBTx/ && mkdir -p build && cd build && rm -rf * && cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug .. && make cstatic"
+          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make cstatic_stm"
 
       - name: Upload Static Analysis Results
         if: always()

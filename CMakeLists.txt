@@ -68,7 +68,7 @@ add_custom_target(firmware
 
 
 
-add_custom_target(static_stm
+add_custom_target(cstatic_stm
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/firmware-build
     COMMAND ${CMAKE_COMMAND} 
         -S ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx
@@ -76,9 +76,14 @@ add_custom_target(static_stm
         -DCMAKE_TOOLCHAIN_FILE=${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/cmake/gcc-arm-none-eabi.cmake
         -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-    COMMAND ${CMAKE_COMMAND} -E copy 
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR}/firmware-build
+    COMMAND ${CMAKE_COMMAND} -E echo "Copying compile_commands.json..."
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
         ${CMAKE_BINARY_DIR}/firmware-build/compile_commands.json
-        ${CMAKE_SOURCE_DIR}/compile_commands.json
-    COMMENT "Exporting firmware compile commands..."
+        ${CMAKE_BINARY_DIR}/compile_commands.json
+    COMMAND ${CMAKE_COMMAND} -E echo "Successfully copied compile_commands.json to ${CMAKE_BINARY_DIR}"
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target cstatic
+    COMMENT "Building firmware and exporting compile commands..."
     USES_TERMINAL
+    VERBATIM
 )
