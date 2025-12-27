@@ -1,6 +1,6 @@
 #include "MyApplication.hpp"
 #include "PlatformFactory.hpp"
-#include "BusinessLogic/Inc/Applicationfacade.hpp"
+#include "BusinessLogic/Inc/ApplicationFacade.hpp"
 
 BusinessLogic::PlatformFactory platform;
 BusinessLogic::ApplicationFacade facade{platform};

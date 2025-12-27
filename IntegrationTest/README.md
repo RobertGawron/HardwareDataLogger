@@ -54,5 +54,5 @@ echo "/tmp/core.%e.%p" | tee /proc/sys/kernel/core_pattern
 ### Debug Core Dumps
 
 ```
-gdb /workspace/venv/bin/python3 /tmp/core.python3.2430
+gdb /workspace/venv/bin/python3 /tmp/core.pytest.2430
 ```
