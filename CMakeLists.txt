@@ -5,8 +5,6 @@ project(HardwareDataLogger)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(COMPILE_FOR_PC TRUE)
-
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -pg")
     
@@ -54,3 +52,16 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     include(DevOps/Cmake/ClassDiagram.cmake)
     
 endif()
+
+
+add_custom_target(firmware
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/firmware-build
+    COMMAND ${CMAKE_COMMAND} 
+        -S ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx
+        -B ${CMAKE_BINARY_DIR}/firmware-build
+        -DCMAKE_TOOLCHAIN_FILE=${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/cmake/gcc-arm-none-eabi.cmake
+        -DCMAKE_BUILD_TYPE=Release
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR}/firmware-build
+    COMMENT "Building STM32 firmware..."
+    USES_TERMINAL
+)
