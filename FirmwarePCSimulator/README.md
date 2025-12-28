@@ -97,7 +97,7 @@ xhost +local:docker
 ## Build and Start the Simulation
 
 ```
-cd /workspace/build/ && cmake .. && make -j24 && cd /workspace/Simulation/FirmwarePCSimulator/ && /workspace/venv/bin/python3 main.py
+cd /workspace/build/ && cmake .. && make -j24 && cd /workspace/FirmwarePCSimulator/ && /workspace/venv/bin/python3 main.py
  ```
 
 ### Troubleshooting tunneling GUI to host environment
