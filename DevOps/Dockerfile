@@ -79,6 +79,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libnewlib-arm-none-eabi \
     libstdc++-arm-none-eabi-newlib \
     tree \
+    x11-apps \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # ---------------------------------------------------------------------
