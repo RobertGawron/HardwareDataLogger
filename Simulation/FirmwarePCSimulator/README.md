@@ -37,18 +37,64 @@ main_window.py: Main window of the application.
 
 ## Prerequisites
 
-* [Install Docker and log into the container.](./SetupDockerContainer.md)
+* [Install Docker.](./SetupDockerContainer.md)
 
 
-# Building and Running Firmware PC Simulation
+## Setting up the Windows Environment (Host)
 
-When running docker container on Linux machine, allow docker to create windows
+### Summary
+
+This is a GUI application, not a CLI, so extra setup is required on Windows.
+
+Steps:
+  * Install WSL
+  * Install Alpine Linux distro (it's a very small distro).
+  * Configure Alpine within Docker Desktop settings.
+  * Install the VS Code WSL extension.
+  * Launch the container via the WSL terminal to enable display support.
+
+
+### Install WSL
+
+Open PowerShell as Administrator and run the following command:
+
+```
+wsl --install
+wsl --set-default-version 2
+```
+
+### Install Alpine
+
+  * Open the Microsoft Store on Windows.
+  * Search for "Alpine WSL".
+  * Click Get or Install.
+  * Once installed, open the "Alpine" app from your Start menu. It will open a terminal and complete the setup.
+  * Set your username and password when prompted.
+
+### Configure Alpine within Docker Desktop settings.
+
+  * Open Docker Desktop on Windows.
+  * Go to Settings (gear icon) > Resources > WSL Integration.
+  * Toggle the switch for Alpine to ON.
+  * Click Apply & Restart.
+
+### Install the VS Code WSL extension.
+
+  * In VS Code install the WSL extension (by Microsoft).
+  * To connect: Click the blue "Open a Remote Window" icon in the bottom-left corner and select "Connect to WSL using Distro...", then choose Alpine.
+
+### Result
+
+You should be able to launch WSL terminal as one of options in terminal selection in VS Code.
+
+
+## Setting up the Linux Environment (Host)
 
 ```
 xhost +local:docker
 ```
 
-### Build the Firmware (PC Variant)
+## Build the Simulation
 
 ```
 cd /workspace/build/ && cmake .. && make -j24
@@ -80,3 +126,10 @@ If a small window with a clock is visible, it means everything is set up correct
 **Note:** If using Windows, [MobaXterm](https://mobaxterm.mobatek.net/download-home-edition.html) (or another tool capable of displaying X11 windows) is required. The Visual Studio terminal will not work.
 
 
+===========
+
+
+update 
+
+
+instal "Visual Studio Code WSL"

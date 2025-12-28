@@ -13,7 +13,6 @@ import time
 from typing import Tuple
 from enum import Enum
 
-from STM32F103RBTx.device_under_test import DeviceUnderTest as STM32F103RBTx
 from ESP8266.device_under_test import DeviceUnderTest as Esp8266
 
 
