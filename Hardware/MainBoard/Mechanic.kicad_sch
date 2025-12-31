@@ -9,7 +9,7 @@
 			(pin_names
 				(offset 1.016)
 			)
-			(exclude_from_sim yes)
+			(exclude_from_sim no)
 			(in_bom no)
 			(on_board yes)
 			(property "Reference" "H"
@@ -117,7 +117,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "MountingHole:MountingHole_3.5mm"
+		(property "Footprint" "MountingHole:MountingHole_3mm"
 			(at 71.12 68.58 0)
 			(effects
 				(font
@@ -181,7 +181,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "MountingHole:MountingHole_3.5mm"
+		(property "Footprint" "MountingHole:MountingHole_3mm"
 			(at 99.06 68.58 0)
 			(effects
 				(font
@@ -245,7 +245,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "MountingHole:MountingHole_3.5mm"
+		(property "Footprint" "MountingHole:MountingHole_3mm"
 			(at 99.06 83.82 0)
 			(effects
 				(font
@@ -309,7 +309,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "MountingHole:MountingHole_3.5mm"
+		(property "Footprint" "MountingHole:MountingHole_3mm"
 			(at 72.39 83.82 0)
 			(effects
 				(font

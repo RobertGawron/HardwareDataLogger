@@ -11,7 +11,7 @@
  */
 
 #include "BusinessLogic/Inc/HmiMeasurementModel.hpp"
-#include "Device/Interfaces/IDisplay.hpp"
+#include "Device/Interface/IDisplay.hpp"
 #include "MUIU8g2.h"
 #include <cstdint>
 

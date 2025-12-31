@@ -1,6 +1,6 @@
 #include "Device/Inc/UartMeasurementRecorder.hpp"
 #include "Device/Inc/MeasurementType.hpp"
-#include "Driver/Interfaces/IUartDriver.hpp"
+#include "Driver/Interface/IUartDriver.hpp"
 
 #include <cstring>
 // #include <array>
@@ -11,11 +11,6 @@ namespace Device
 
     UartMeasurementRecorder::UartMeasurementRecorder(Driver::IUartDriver &_driver) : driver(_driver)
     {
-    }
-
-    bool UartMeasurementRecorder::flush()
-    {
-        return true;
     }
 
     bool UartMeasurementRecorder::notify(Device::MeasurementType &measurement)

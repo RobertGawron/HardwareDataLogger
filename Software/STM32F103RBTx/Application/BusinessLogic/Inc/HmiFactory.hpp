@@ -1,11 +1,11 @@
 #ifndef HmiFactory_h
 #define HmiFactory_h
 
-#include "BusinessLogic/Interfaces/IPlatformFactory.hpp"
-#include "BusinessLogic/Interfaces/IHmiFactory.hpp"
+#include "BusinessLogic/Interface/IPlatformFactory.hpp"
+#include "BusinessLogic/Interface/IHmiFactory.hpp"
 #include "BusinessLogic/Inc/HmiMui.hpp"
 #include "BusinessLogic/Inc/HmiMeasurementModel.hpp"
-#include "Device/Interfaces/IMeasurementRecorder.hpp"
+#include "Device/Interface/IMeasurementRecorder.hpp"
 #include "Device/Inc/Display.hpp"
 #include "Device/Inc/Keyboard.hpp"
 
@@ -32,17 +32,17 @@ namespace BusinessLogic
          * @param reader Measurement data reader for model initialization
          * @param platformFactory Platform-specific component factory
          */
-        explicit HmiFactory(Device::IMeasurementReader &reader, IPlatformFactory &platformFactory);
+        xxxxx explicit HmiFactory(Device::IMeasurementReader &reader, IPlatformFactory &platformFactory);
 
         /** @brief Deleted default constructor */
         HmiFactory() = delete;
-        
+
         /** @brief Default destructor */
         ~HmiFactory() override = default;
-        
+
         /** @brief Deleted copy constructor */
         HmiFactory(const HmiFactory &) = delete;
-        
+
         /** @brief Deleted copy assignment operator */
         HmiFactory &operator=(const HmiFactory &) = delete;
 

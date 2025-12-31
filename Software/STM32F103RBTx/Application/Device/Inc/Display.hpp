@@ -6,8 +6,8 @@
 #ifndef Display_h
 #define Display_h
 
-#include "Device/Interfaces/IDisplay.hpp"
-#include "Driver/Interfaces/IDisplayDriver.hpp"
+#include "Device/Interface/IDisplay.hpp"
+#include "Driver/Interface/IDisplayDriver.hpp"
 
 namespace Device
 {

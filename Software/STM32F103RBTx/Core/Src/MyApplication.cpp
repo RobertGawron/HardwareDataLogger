@@ -1,21 +1,21 @@
 #include "MyApplication.hpp"
-#include "PlatformFactoryStm32.hpp"
-#include "BusinessLogic/Inc/ApplicationBuilder.hpp"
+#include "PlatformFactory.hpp"
+#include "BusinessLogic/Inc/ApplicationFacade.hpp"
 
-BusinessLogic::PlatformFactoryStm32 platform;
-BusinessLogic::ApplicationBuilder builder{platform};
+BusinessLogic::PlatformFactory platform;
+BusinessLogic::ApplicationFacade facade{platform};
 
 void app_init()
 {
-    builder.initialize();
+    facade.initialize();
 }
 
 void app_start()
 {
-    builder.start();
+    facade.start();
 }
 
 void app_tick()
 {
-    builder.tick();
+    facade.tick();
 }

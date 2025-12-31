@@ -1,53 +1,17 @@
-# Stage 1: Build Stage
-# In this stage, we build include-what-you-use because it is not available as a Linux package. 
-# We also avoid polluting the final image with temporary files.
-FROM ubuntu:24.04 AS build-stage
-
-# Set the working directory
-WORKDIR /workspace
+FROM ubuntu:24.04 AS base
 
 # Avoid prompts from apt
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install essential build tools and IWYU dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    cmake \
-    git \
-    llvm-15-dev \
-    libclang-15-dev \
-    clang-15 \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Clone and build include-what-you-use
-RUN git clone https://github.com/include-what-you-use/include-what-you-use.git /usr/local/src/iwyu && \
-    cd /usr/local/src/iwyu && \
-    git checkout clang_15 && \
-    mkdir build && cd build && \
-    cmake -G "Unix Makefiles" .. && \
-    make -j $(nproc)
-
-# Stage 2: Minimal Runtime Stage
-FROM ubuntu:24.04 AS runtime-stage
-
 # Set the working directory
 WORKDIR /workspace
 
-# Avoid prompts from apt
-ENV DEBIAN_FRONTEND=noninteractive
+# ---------------------------------------------------------------------
+# STAGE 1: System dependencies (changes rarely)
+# ---------------------------------------------------------------------
+FROM base AS system-deps
 
-# Install only the runtime dependencies for IWYU
-#RUN apt-get update && apt-get install -y \
-#    libclang-15-dev \
-#    clang-15 \
-#    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Copy the IWYU binary from the build stage
-COPY --from=build-stage /usr/local/src/iwyu/build/bin/include-what-you-use /usr/local/bin/include-what-you-use
-
-
-# Install all required dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
     git \
@@ -105,16 +69,34 @@ RUN apt-get update && apt-get install -y \
     libfreetype6 \
     lcov \
     dos2unix \
+    pkg-config \
+    libssl-dev \
+    libudev-dev \
+    ca-certificates \
+    cpulimit \
+    gcc-arm-none-eabi \
+    binutils-arm-none-eabi \
+    libnewlib-arm-none-eabi \
+    libstdc++-arm-none-eabi-newlib \
+    tree \
+    x11-apps \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# ---------------------------------------------------------------------
+# STAGE 2: Python environment (changes occasionally)
+# ---------------------------------------------------------------------
+FROM system-deps AS python-env
 
-# Install Python-based tools in one step
-# Create a virtual environment in /workspace/venv
+# Create a virtual environment
 RUN python3 -m venv /workspace/venv
 
-# Activate the virtual environment and install the packages
-RUN /workspace/venv/bin/pip install --upgrade pip && \
-    /workspace/venv/bin/pip install \
+# Set environment variables for Python
+ENV PATH="/workspace/venv/bin:$PATH"
+ENV QT_PLUGIN_PATH="/workspace/venv/lib/python3.12/site-packages/PyQt6/Qt6/plugins"
+
+# Upgrade pip and install Python packages
+RUN /workspace/venv/bin/pip install --no-cache-dir --upgrade pip && \
+    /workspace/venv/bin/pip install --no-cache-dir \
     cpplint \
     gprof2dot \
     coverxygen \
@@ -126,24 +108,57 @@ RUN /workspace/venv/bin/pip install --upgrade pip && \
     prospector \
     vjunit
 
-# Add virtual environment binaries to the PATH
-ENV PATH="/workspace/venv/bin:$PATH"
+# ---------------------------------------------------------------------
+# STAGE 3: Rust toolchain (slowest, changes rarely)
+# ---------------------------------------------------------------------
+FROM python-env AS rust-toolchain
 
-# Set the QT_PLUGIN_PATH environment variable
-ENV QT_PLUGIN_PATH="/workspace/venv/lib/python3.12/site-packages/PyQt6/Qt6/plugins"
+# Install rustup for root user
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- \
+    --default-toolchain stable -y --profile minimal
 
-# workaround for cppcheck html generator that needs older version 
-RUN pip uninstall -y pygments && pip install pygments==2.7.4
+# Set PATH for Rust
+ENV PATH="/root/.cargo/bin:${PATH}"
 
+# Install Rust tools in a single layer
+ARG ARCH
+RUN if [ -z "$ARCH" ]; then ARCH=$(uname -m)-unknown-linux-gnu; fi && \
+    curl -L "https://github.com/esp-rs/espup/releases/latest/download/espup-${ARCH}" -o "/root/.cargo/bin/espup" && \
+    chmod u+x "/root/.cargo/bin/espup" && \
+    curl -L "https://github.com/esp-rs/espflash/releases/latest/download/cargo-espflash-${ARCH}.zip" -o "/tmp/cargo-espflash.zip" && \
+    unzip "/tmp/cargo-espflash.zip" -d "/root/.cargo/bin/" && \
+    curl -L "https://github.com/esp-rs/embuild/releases/latest/download/ldproxy-${ARCH}.zip" -o "/tmp/ldproxy.zip" && \
+    unzip "/tmp/ldproxy.zip" -d "/root/.cargo/bin/" && \
+    rm /tmp/*.zip && \
+    chmod u+x /root/.cargo/bin/cargo-espflash /root/.cargo/bin/ldproxy
 
+# ---------------------------------------------------------------------
+# STAGE 4: ESP32 toolchain (slowest part)
+# ---------------------------------------------------------------------
+FROM rust-toolchain AS esp-toolchain
+
+ARG ESP_BOARD=all
+ARG GITHUB_TOKEN
+
+# Install Xtensa Rust
+RUN if [ -n "${GITHUB_TOKEN}" ]; then export GITHUB_TOKEN=${GITHUB_TOKEN}; fi && \
+    espup install \
+    --targets "${ESP_BOARD}" \
+    --log-level info \
+    --export-file /root/export-esp.sh && \
+    rustup default esp
+
+# Set up bash environment
+RUN echo "source /root/export-esp.sh" >> /root/.bashrc
+
+# ---------------------------------------------------------------------
+# FINAL STAGE: Runtime environment
+# ---------------------------------------------------------------------
+FROM esp-toolchain AS final
+
+# Create build directory
 RUN mkdir -p /workspace/build
+
 WORKDIR /workspace/build
 
-#RUN git clone https://github.com/facebook/infer.git \
-#&& cd infer \
-#&& ./build-infer.sh \
-#&& ln -s $(pwd)/infer/bin/infer /usr/local/bin/infer \
-#&& cd .. && rm -rf infer
-
-# Default command
 CMD ["bash"]

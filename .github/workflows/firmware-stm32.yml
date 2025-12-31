@@ -1,0 +1,62 @@
+name: Firmware STM32
+
+on:
+  workflow_run:
+    workflows: ["Build Docker"]
+    types:
+      - completed
+    branches:
+      - main
+      - 'feature/*'
+
+jobs:
+  firmware-stm32:
+    name: Build Firmware (STM32)
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.workflow_run.head_repository.full_name }}
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+          
+      - name: Set up Docker Compose
+        uses: docker/setup-compose-action@v1
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull Docker Image
+        run: |
+          docker pull ghcr.io/robertgawron/hardwaredatalogger:${{ github.event.workflow_run.head_sha }}
+          docker tag ghcr.io/robertgawron/hardwaredatalogger:${{ github.event.workflow_run.head_sha }} hardwaredatalogger:latest
+
+      - name: Run Docker Compose
+        env:
+          DOCKER_IMAGE: ghcr.io/robertgawron/hardwaredatalogger:${{ github.event.workflow_run.head_sha }}
+        run: |
+          docker compose -f docker-compose.yml up -d
+
+      - name: Build Firmware
+        run: |
+          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j$(nproc) && mv HardwareDataLogger_STM32F103RBTx.* /workspace/build/BuildArtifacts/"
+
+      - name: Upload Firmware Build Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-stm32-results
+          path: |
+            DevOps/BuildArtifacts/HardwareDataLogger_STM32F103RBTx.elf
+            DevOps/BuildArtifacts/HardwareDataLogger_STM32F103RBTx.map
+
+      - name: Clean up Docker containers
+        if: always()
+        run: |
+          docker compose -f docker-compose.yml down

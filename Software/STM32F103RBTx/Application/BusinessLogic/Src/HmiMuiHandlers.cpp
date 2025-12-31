@@ -1,7 +1,7 @@
 #include "BusinessLogic/Inc/HmiMuiHandlers.hpp"
 #include "BusinessLogic/Inc/HmiMeasurementModel.hpp"
 #include "Device/Inc/MeasurementDeviceId.hpp"
-#include "Device/Interfaces/IDisplay.hpp"
+#include "Device/Interface/IDisplay.hpp"
 
 #include <array>
 #include <algorithm> // For std::find_if
@@ -40,28 +40,28 @@ namespace BusinessLogic
     {
         return printLastReading(muiHandler,
                                 muiMessage,
-                                Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_1);
+                                Device::MeasurementDeviceId::PULSE_COUNTER_1);
     }
 
     uint8_t device2_printLastReading(mui_t *muiHandler, uint8_t muiMessage)
     {
         return printLastReading(muiHandler,
                                 muiMessage,
-                                Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_2);
+                                Device::MeasurementDeviceId::PULSE_COUNTER_2);
     }
 
     uint8_t device3_printLastReading(mui_t *muiHandler, uint8_t muiMessage)
     {
         return printLastReading(muiHandler,
                                 muiMessage,
-                                Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_3);
+                                Device::MeasurementDeviceId::PULSE_COUNTER_3);
     }
 
     uint8_t device4_printLastReading(mui_t *muiHandler, uint8_t muiMessage)
     {
         return printLastReading(muiHandler,
                                 muiMessage,
-                                Device::MeasurementDeviceId::DEVICE_PULSE_COUNTER_4);
+                                Device::MeasurementDeviceId::PULSE_COUNTER_4);
     }
 
     uint8_t device5_printLastReading(mui_t *muiHandler, uint8_t muiMessage)
