@@ -80,10 +80,9 @@ namespace Device
     public:
         /**
          * @brief Serializes a measurement into the provided buffer.
-         * Format: [Length (2, BE)][SourceID (1)][Value (N, LE)][CRC (4, BE)]
+         * Format: [Length (2, LE)][SourceID (1)][Value (N, LE)][CRC (4, LE)]
          *
-         * All multi-byte values (except Length and CRC) are serialized in Little Endian.
-         * Length and CRC use Big Endian (network byte order).
+         * All multi-byte values are serialized in Little Endian for STM32/ESP32 compatibility.
          *
          * @tparam BUFFER_SIZE Deduced from the array.
          * @param measurement Input data.
@@ -113,10 +112,10 @@ namespace Device
             {
                 std::size_t cursor = 0U;
 
-                // A. Write Length field (Big Endian) - temporary value, will update after CRC
+                // A. Write Length field (Little Endian)
                 const std::uint16_t tempLength = static_cast<std::uint16_t>(requiredSize);
-                data[cursor++] = static_cast<std::uint8_t>((tempLength >> BITS_8) & BYTE_MASK);
-                data[cursor++] = static_cast<std::uint8_t>(tempLength & BYTE_MASK);
+                data[cursor++] = static_cast<std::uint8_t>(tempLength & BYTE_MASK);             // LSB
+                data[cursor++] = static_cast<std::uint8_t>((tempLength >> BITS_8) & BYTE_MASK); // MSB
 
                 // B. Write Source ID
                 data[cursor++] = static_cast<std::uint8_t>(measurement.source);
@@ -129,11 +128,11 @@ namespace Device
                 // D. Calculate CRC over [Length + Source + Data]
                 const std::uint32_t crcCalc = Crc32::compute(data, cursor);
 
-                // E. Write CRC (Big Endian)
-                data[cursor++] = static_cast<std::uint8_t>((crcCalc >> BITS_24) & BYTE_MASK);
-                data[cursor++] = static_cast<std::uint8_t>((crcCalc >> BITS_16) & BYTE_MASK);
+                // E. Write CRC (Little Endian)
+                data[cursor++] = static_cast<std::uint8_t>(crcCalc & BYTE_MASK); // LSB
                 data[cursor++] = static_cast<std::uint8_t>((crcCalc >> BITS_8) & BYTE_MASK);
-                data[cursor++] = static_cast<std::uint8_t>(crcCalc & BYTE_MASK);
+                data[cursor++] = static_cast<std::uint8_t>((crcCalc >> BITS_16) & BYTE_MASK);
+                data[cursor++] = static_cast<std::uint8_t>((crcCalc >> BITS_24) & BYTE_MASK); // MSB
 
                 totalMsgLength = cursor;
                 isSuccessful = true;

@@ -117,11 +117,17 @@ class STM32F103:
                 f"Expected {pulse_counter_count} pulse counters, got {len(pulse_counters)}"
             )
 
-        pulse_counters_array_type = ctypes.c_uint16 * pulse_counter_count
-        pulse_counters_array = pulse_counters_array_type(*pulse_counters)
-
+        # Create array type for uint32
+        pulse_counters_array_type = ctypes.c_uint32 * pulse_counter_count
+        
+        # Ensure values are properly masked to 32-bit and create array
+        masked_values = [int(val) & 0xFFFFFFFF for val in pulse_counters]
+        pulse_counters_array = pulse_counters_array_type(*masked_values)
+        
         self.dut.LibWrapper_UpdatePulseCounters.restype = None
-        self.dut.LibWrapper_UpdatePulseCounters.argtypes = [pulse_counters_array_type]
+        self.dut.LibWrapper_UpdatePulseCounters.argtypes = [
+            ctypes.POINTER(ctypes.c_uint32)  # Change this line - use POINTER
+        ]
         self.dut.LibWrapper_UpdatePulseCounters(pulse_counters_array)
 
     def register_serial_tx_callback(self, callback: Callable[[int, List[int], int, int], int]):

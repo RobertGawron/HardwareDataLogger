@@ -1,0 +1,1 @@
+![HumanMachineInterface.svg](./HumanMachineInterface.svg)

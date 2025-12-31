@@ -37,6 +37,9 @@ namespace Driver
         bool onStop() override;
 
         bool onReset() override;
+
+    private:
+        PulseCounterId id;
     };
 }
 

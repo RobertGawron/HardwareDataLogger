@@ -12,7 +12,7 @@ These tests are not unit tests. The unit tests are located in the directories wh
 
 # Running tests
 
-On first run, install the firmware wrapper package:
+On first run of the Docker image, install the firmware wrapper package:
 
 ```
 pip install -e /workspace/Software/STM32F103RBTx/Application/Driver/Host/Python/ 
@@ -21,11 +21,10 @@ pip install -e /workspace/Software/STM32F103RBTx/Application/Driver/Host/Python/
 Then use this one-liner:
 
 ```
-cd /workspace/build/ && \
-    cmake -DCMAKE_BUILD_TYPE=Debug .. && \
-    make -j24 && \
+cmake -G Ninja -B /workspace/build -DCMAKE_BUILD_TYPE=Debug /workspace && \
+    ninja -C /workspace/build && \
     cd /workspace/IntegrationTest && \
-    pytest test_*.py -s  --html=/workspace/build/BuildArtifacts/IntegrationTest.html
+    pytest test_*.py -s --html=/workspace/build/BuildArtifacts/IntegrationTest.html
 ```
 # Troubleshooting
 

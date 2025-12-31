@@ -17,7 +17,7 @@ namespace BusinessLogic
           pulseCounter3(Device::MeasurementDeviceId::PULSE_COUNTER_3,
                         platformFactory.getPulseCounterDriver(Driver::PulseCounterId::bncC)),
           pulseCounter4(Device::MeasurementDeviceId::PULSE_COUNTER_4,
-                        platformFactory.getPulseCounterDriver(Driver::PulseCounterId::bncC)),
+                        platformFactory.getPulseCounterDriver(Driver::PulseCounterId::bncD)),
           uartReceiver(Device::MeasurementDeviceId::DEVICE_UART_1,
                        platformFactory.getUartDriver(Driver::UartId::MEASUREMENT_RECEIVER)),
           sources{std::ref(pulseCounter1), std::ref(pulseCounter2),

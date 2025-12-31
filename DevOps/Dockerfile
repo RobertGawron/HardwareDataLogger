@@ -78,6 +78,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     binutils-arm-none-eabi \
     libnewlib-arm-none-eabi \
     libstdc++-arm-none-eabi-newlib \
+    ninja-build \
     tree \
     x11-apps \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
