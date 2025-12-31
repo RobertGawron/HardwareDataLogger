@@ -6,9 +6,9 @@
 #ifndef DisplayBrightnessRegulator_H_
 #define DisplayBrightnessRegulator_H_
 
-#include "Device/Interfaces/IDisplayBrightnessRegulator.hpp"
-#include "Driver/Interfaces/IAmbientLightSensorDriver.hpp"
-#include "Driver/Interfaces/IDisplayBrightnessDriver.hpp"
+#include "Device/Interface/IDisplayBrightnessRegulator.hpp"
+#include "Driver/Interface/IAmbientLightSensorDriver.hpp"
+#include "Driver/Interface/IDisplayBrightnessDriver.hpp"
 
 namespace Device
 {
@@ -30,7 +30,7 @@ namespace Device
 
         ~DisplayBrightnessRegulator() override = default; ///< Default virtual destructor.
 
-        DisplayBrightnessRegulator(const DisplayBrightnessRegulator &) = delete; ///< Deleted copy constructor.
+        DisplayBrightnessRegulator(const DisplayBrightnessRegulator &) = delete;            ///< Deleted copy constructor.
         DisplayBrightnessRegulator &operator=(const DisplayBrightnessRegulator &) = delete; ///< Deleted copy assignment.
 
         /**
@@ -60,7 +60,7 @@ namespace Device
     private:
         Driver::IAmbientLightSensorDriver &ambientLightSensorDriver; ///< Ambient light sensor driver.
         Driver::IDisplayBrightnessDriver &displayBrightnessDriver;   ///< Display brightness driver.
-        std::uint8_t level = 0u; ///< Current brightness level (0-100).
+        std::uint8_t level = 0u;                                     ///< Current brightness level (0-100).
     };
 }
 

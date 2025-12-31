@@ -61,12 +61,6 @@ namespace Device
         return status;
     }
 
-    bool CacheMeasurementRecorder::flush()
-    {
-        const bool status = true;
-        return status;
-    }
-
     bool CacheMeasurementRecorder::notify(Device::MeasurementType &measurement)
     {
         const bool status = write(measurement);

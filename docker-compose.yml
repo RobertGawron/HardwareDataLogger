@@ -1,23 +1,33 @@
 services:
   dev:
-    image:  logger-dev:latest 
+    image: ${DOCKER_IMAGE:-logger-dev:latest}
     build:
       context: .
       dockerfile: DevOps/Dockerfile
     privileged: true
     environment:
-      - DISPLAY=${DISPLAY}   # Forward the host's display
-    stdin_open: true  # Keep stdin open for interaction
-    tty: true         # Allocate a TTY for interactive Bash
+      # Use local sockets for the display
+      - DISPLAY=:0
+      - WAYLAND_DISPLAY=wayland-0
+      - XDG_RUNTIME_DIR=/mnt/wslg/runtime-dir
+      - PULSE_SERVER=/mnt/wslg/PulseServer
+      
+      # Qt specific flags for stability in Docker
+      - QT_X11_NO_MITSHM=1
+      - QT_QPA_PLATFORM=xcb
     volumes:
+      # WSLg Core Mounts (Necessary for GUI)
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /mnt/wslg:/mnt/wslg
+      
+      # Project Mounts
       - ./Software:/workspace/Software
-      - ./Simulation:/workspace/Simulation
-      - ./Test:/workspace/Test
+      - ./FirmwarePCSimulator/:/workspace/FirmwarePCSimulator/
+      - ./IntegrationTest:/workspace/IntegrationTest
       - ./DevOps/BuildArtifacts:/workspace/build/BuildArtifacts
       - ./DevOps/Scripts:/workspace/DevOps/Scripts
       - ./DevOps/Cmake:/workspace/DevOps/Cmake
       - ./CMakeLists.txt:/workspace/CMakeLists.txt
-      - /tmp/.X11-unix:/tmp/.X11-unix   # Mount X server socket
     working_dir: /workspace
-    # Do not override the CMD from Dockerfile
-
+    stdin_open: true
+    tty: true

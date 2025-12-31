@@ -73,6 +73,8 @@ void Error_Handler(void);
 #define USART_TX_GPIO_Port GPIOA
 #define USART_RX_Pin GPIO_PIN_3
 #define USART_RX_GPIO_Port GPIOA
+#define LCD_RST_Pin GPIO_PIN_2
+#define LCD_RST_GPIO_Port GPIOB
 #define BNC1_Pin GPIO_PIN_6
 #define BNC1_GPIO_Port GPIOC
 #define BNC2_Pin GPIO_PIN_7
@@ -85,6 +87,10 @@ void Error_Handler(void);
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
+#define LCD_DC_Pin GPIO_PIN_15
+#define LCD_DC_GPIO_Port GPIOA
+#define LCD_CS_Pin GPIO_PIN_2
+#define LCD_CS_GPIO_Port GPIOD
 #define SWO_Pin GPIO_PIN_3
 #define SWO_GPIO_Port GPIOB
 #define SD_CS_Pin GPIO_PIN_4

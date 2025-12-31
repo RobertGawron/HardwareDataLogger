@@ -101,8 +101,8 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-   //  __HAL_RCC_AFIO_CLK_ENABLE();
-__HAL_AFIO_REMAP_SWJ_DISABLE(); 
+  //  __HAL_RCC_AFIO_CLK_ENABLE();
+  __HAL_AFIO_REMAP_SWJ_DISABLE();
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -134,43 +134,24 @@ __HAL_AFIO_REMAP_SWJ_DISABLE();
   MX_USART1_UART_Init();
   MX_USART3_Init();
   MX_ADC2_Init();
- // MX_IWDG_Init();
+  MX_IWDG_Init();
   MX_SPI1_Init();
-
-{
-int x =  SPI1->CR1;
-int y = SPI1->CR2;
-int z =  SPI1->SR;
-}
-
- /* HAL_SPI_StateTypeDef dupa = HAL_SPI_GetState(&hspi1);
-  if (dupa == HAL_SPI_STATE_READY) {
-    // SPI is initialized and enabled
-volatile int isOK;
-  }*/
- // MX_WWDG_Init();
+  MX_WWDG_Init();
   MX_FATFS_Init();
-
-{
-int x =  SPI1->CR1;
-int y = SPI1->CR2;
-int z =  SPI1->SR;
-}
   /* USER CODE BEGIN 2 */
 
-// TODO
+  // TODO
   __HAL_DBGMCU_FREEZE_IWDG();
-__HAL_DBGMCU_FREEZE_WWDG();
+  __HAL_DBGMCU_FREEZE_WWDG();
 
-
- HAL_Delay(2000);
-if (HAL_SPI_GetState(&hspi1) == HAL_SPI_STATE_READY) {
+  HAL_Delay(2000);
+  if (HAL_SPI_GetState(&hspi1) == HAL_SPI_STATE_READY)
+  {
     // SPI is initialized and enabled
-volatile int isOK;
+    volatile int isOK;
   }
   //__HAL_SPI_ENABLE(&hspi1);
-   //   MODIFY_REG(SD_SPI_HANDLE.Instance->CR1, 0, SPI_CR1_SPE);
-
+  //   MODIFY_REG(SD_SPI_HANDLE.Instance->CR1, 0, SPI_CR1_SPE);
 
   app_init();
   app_start();
@@ -787,6 +768,15 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(USB_ENUM_GPIO_Port, USB_ENUM_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(LCD_RST_GPIO_Port, LCD_RST_Pin, GPIO_PIN_SET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(LCD_DC_GPIO_Port, LCD_DC_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(LCD_CS_GPIO_Port, LCD_CS_Pin, GPIO_PIN_SET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : USB_ENUM_Pin */
@@ -802,11 +792,32 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : LCD_RST_Pin */
+  GPIO_InitStruct.Pin = LCD_RST_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(LCD_RST_GPIO_Port, &GPIO_InitStruct);
+
   /*Configure GPIO pins : BNC1_Pin BNC2_Pin BNC3_Pin BNC4_Pin */
   GPIO_InitStruct.Pin = BNC1_Pin|BNC2_Pin|BNC3_Pin|BNC4_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : LCD_DC_Pin */
+  GPIO_InitStruct.Pin = LCD_DC_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(LCD_DC_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : LCD_CS_Pin */
+  GPIO_InitStruct.Pin = LCD_CS_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(LCD_CS_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : SD_CS_Pin */
   GPIO_InitStruct.Pin = SD_CS_Pin;
@@ -837,8 +848,7 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
-
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.
