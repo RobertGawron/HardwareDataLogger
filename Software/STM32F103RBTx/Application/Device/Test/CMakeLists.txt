@@ -72,19 +72,19 @@ create_test_exec(test_Keyboard
     test_Keyboard.cpp
 )
 
-create_test_exec(test_PulseCounterSource 
+create_test_exec(test_PulseCounterMeasurementSource 
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/PulseCounterMeasurementSource.cpp 
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp
     test_PulseCounterMeasurementSource.cpp
 )
 
-create_test_exec(test_WiFiRecorder 
+create_test_exec(test_WiFiMeasurementRecorder 
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/WiFiMeasurementRecorder.cpp 
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp 
     test_WiFiMeasurementRecorder.cpp
 )
 
-create_test_exec(test_WiFiSerializer 
+create_test_exec(test_WiFiMeasurementSerializer 
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp 
     test_WiFiMeasurementSerializer.cpp
 )

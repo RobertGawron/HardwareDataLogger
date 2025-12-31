@@ -91,17 +91,12 @@ Driver::SdCardStatus sdCardOpen(const char *filename, Driver::ISdCardDriver::Fil
 
 Driver::SdCardStatus sdCardWrite(const std::uint8_t *data, std::uint16_t size)
 {
-    std::cerr << "[C++] sdCardWrite called with " << size << " bytes, callback="
-              << (sdCardWriteCallback ? "SET" : "NULL") << "\n";
-
     Driver::SdCardStatus result = Driver::SdCardStatus::INVALID_PARAMETER;
 
     if (sdCardWriteCallback != nullptr)
     {
-        std::cerr << "[C++] Calling Python callback...\n";
         // Convert enum to uint8_t for callback, then convert back
         std::uint8_t status = sdCardWriteCallback(data, size);
-        std::cerr << "[C++] Callback returned: " << static_cast<int>(status) << "\n";
         result = static_cast<Driver::SdCardStatus>(status);
     }
     else

@@ -15,22 +15,23 @@ from stm32f103_simulator import STM32F103  # pylint: disable=import-error
 
 logger = logging.getLogger(__name__)
 
+
 def cobs_encode(data: List[int]) -> List[int]:
     """
     Encode data using Consistent Overhead Byte Stuffing (COBS).
-    
+
     :param data: Raw data to encode
     :return: COBS-encoded data with trailing 0x00 delimiter
     """
     if not data:
         return [0x01, 0x00]  # Empty frame
-    
+
     encoded = []
     code_index = 0
     code = 0x01
-    
+
     encoded.append(0x00)  # Placeholder for first code byte
-    
+
     for byte in data:
         if byte == 0x00:
             # Write code byte and start new block
@@ -42,55 +43,55 @@ def cobs_encode(data: List[int]) -> List[int]:
             # Copy non-zero byte
             encoded.append(byte)
             code += 1
-            
+
             # If we've written 254 bytes, start new block
             if code == 0xFF:
                 encoded[code_index] = code
                 code_index = len(encoded)
                 encoded.append(0x00)  # Placeholder for next code byte
                 code = 0x01
-    
+
     # Write final code byte
     encoded[code_index] = code
-    
+
     # Add trailing delimiter
     encoded.append(0x00)
-    
+
     return encoded
 
 
 def cobs_decode(cobs_data: List[int]) -> List[int]:
     """
     Decode COBS-encoded data.
-    
+
     :param cobs_data: COBS-encoded data with trailing 0x00 delimiter
     :return: Decoded raw data
     """
     if not cobs_data or cobs_data[-1] != 0x00:
         raise ValueError("Invalid COBS frame: missing trailing 0x00 delimiter")
-    
+
     # Remove trailing delimiter
     data = cobs_data[:-1]
     decoded = []
     pos = 0
-    
+
     while pos < len(data):
         code = data[pos]
-        
+
         if code == 0x00:
             break  # Invalid
-        
+
         # Insert zero if this isn't the first code byte
         if pos > 0:
             decoded.append(0x00)
-        
+
         # Copy (code - 1) bytes
         for i in range(1, code):
             if pos + i < len(data):
                 decoded.append(data[pos + i])
-        
+
         pos += code
-    
+
     return decoded
 
 
@@ -394,7 +395,7 @@ class SdCardCapture:
                 )
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def stm32_dut():
     """
     Fixture providing STM32 simulator with attached capture helpers.
@@ -410,7 +411,13 @@ def stm32_dut():
     dut.uart.register_all(dut)
     dut.sd.register_all(dut)
 
-    return dut
+    yield dut
+    
+    # Teardown: Reset pulse counters to zeros after each test
+    try:
+        dut.update_pulse_counters([0, 0, 0, 0])
+    except Exception:
+        pass  # Ignore if reset fails
 
 
 @pytest.hookimpl(hookwrapper=True)

@@ -37,8 +37,7 @@ main_window.py: Main window of the application.
 
 ## Prerequisites
 
-* [Install Docker.](./SetupDockerContainer.md)
-
+* [Install Docker.](../DevOps/README.md)
 
 ## Setting up the Windows Environment (Host)
 
@@ -97,7 +96,7 @@ xhost +local:docker
 ## Build and Start the Simulation
 
 ```
-cd /workspace/build/ && cmake .. && make -j24 && cd /workspace/FirmwarePCSimulator/ && /workspace/venv/bin/python3 main.py
+cd /workspace/build/ && cmake -G Ninja .. && ninja && cd /workspace/FirmwarePCSimulator/ && /workspace/venv/bin/python3 main.py
  ```
 
 ### Troubleshooting tunneling GUI to host environment

@@ -20,16 +20,19 @@ protected:
     static constexpr std::size_t FIELD_SOURCE_SIZE = 1U;
     static constexpr std::size_t FIELD_CRC_SIZE = 4U;
     static constexpr std::size_t PROTOCOL_OVERHEAD = FIELD_LENGTH_SIZE + FIELD_SOURCE_SIZE + FIELD_CRC_SIZE;
+
     // Offset Constants
     static constexpr std::size_t OFFSET_LENGTH = 0U;
     static constexpr std::size_t OFFSET_SOURCE = FIELD_LENGTH_SIZE;
     static constexpr std::size_t OFFSET_DATA = FIELD_LENGTH_SIZE + FIELD_SOURCE_SIZE;
+
     // Bit manipulation constants
     static constexpr std::uint8_t BITS_PER_BYTE = 8U;
     static constexpr std::uint8_t SHIFT_BYTE_1 = 8U;
     static constexpr std::uint8_t SHIFT_BYTE_2 = 16U;
     static constexpr std::uint8_t SHIFT_BYTE_3 = 24U;
     static constexpr std::uint8_t BYTE_MASK = 0xFFU;
+
     // Size constants for type checking
     static constexpr std::size_t SIZE_BYTE = 1U;
     static constexpr std::size_t SIZE_WORD = 2U;
@@ -39,7 +42,6 @@ protected:
     // Buffer Configuration
     static constexpr std::size_t BUFFER_SIZE = 128U;
 
-    // Constructor to initialize members
     WiFiMeasurementSerializerTest() {}
 
     void SetUp() override
@@ -59,21 +61,21 @@ protected:
     [[nodiscard]] static constexpr std::size_t getOffsetSource() { return OFFSET_SOURCE; }
     [[nodiscard]] static constexpr std::size_t getOffsetData() { return OFFSET_DATA; }
 
-    // Helper: Extract length field (Big Endian)
+    // Helper: Extract length field (Little Endian)
     [[nodiscard]] std::uint16_t extractLength() const
     {
         return static_cast<std::uint16_t>(
-            (buffer[OFFSET_LENGTH] << SHIFT_BYTE_1) |
-            buffer[OFFSET_LENGTH + 1U]);
+            buffer[OFFSET_LENGTH] |
+            (buffer[OFFSET_LENGTH + 1U] << SHIFT_BYTE_1));
     }
 
-    // Helper: Extract CRC field (Big Endian)
+    // Helper: Extract CRC field (Little Endian)
     [[nodiscard]] std::uint32_t extractCRC(std::size_t offset) const
     {
-        return (static_cast<std::uint32_t>(buffer[offset]) << SHIFT_BYTE_3) |
-               (static_cast<std::uint32_t>(buffer[offset + 1U]) << SHIFT_BYTE_2) |
-               (static_cast<std::uint32_t>(buffer[offset + 2U]) << SHIFT_BYTE_1) |
-               static_cast<std::uint32_t>(buffer[offset + 3U]);
+        return static_cast<std::uint32_t>(buffer[offset]) |
+               (static_cast<std::uint32_t>(buffer[offset + 1U]) << SHIFT_BYTE_1) |
+               (static_cast<std::uint32_t>(buffer[offset + 2U]) << SHIFT_BYTE_2) |
+               (static_cast<std::uint32_t>(buffer[offset + 3U]) << SHIFT_BYTE_3);
     }
 
     // Helper: Extract Little Endian value
@@ -127,8 +129,14 @@ TEST_F(WiFiMeasurementSerializerTest, SerializesUint8Measurement)
 
     ASSERT_TRUE(status);
     EXPECT_EQ(getMsgLength(), EXPECTED_SIZE);
+
+    // Verify Length field (Little Endian)
     EXPECT_EQ(extractLength(), EXPECTED_SIZE);
+
+    // Verify Source field
     EXPECT_EQ(getBuffer()[getOffsetSource()], static_cast<std::uint8_t>(Device::MeasurementDeviceId::PULSE_COUNTER_1));
+
+    // Verify Data field
     EXPECT_EQ(getBuffer()[getOffsetData()], TEST_VALUE);
 }
 
@@ -150,8 +158,8 @@ TEST_F(WiFiMeasurementSerializerTest, SerializesUint16Measurement)
     EXPECT_EQ(getBuffer()[getOffsetSource()], static_cast<std::uint8_t>(Device::MeasurementDeviceId::PULSE_COUNTER_2));
 
     // Check Little Endian serialization (LSB first)
-    EXPECT_EQ(getBuffer()[getOffsetData()], static_cast<std::uint8_t>(TEST_VALUE & BYTE_MASK));                        // 0x34
-    EXPECT_EQ(getBuffer()[getOffsetData() + 1U], static_cast<std::uint8_t>((TEST_VALUE >> SHIFT_BYTE_1) & BYTE_MASK)); // 0x12
+    EXPECT_EQ(getBuffer()[getOffsetData()], 0x34U);      // LSB
+    EXPECT_EQ(getBuffer()[getOffsetData() + 1U], 0x12U); // MSB
 
     // Verify extracted value
     const std::uint16_t extracted = extractLittleEndian<std::uint16_t>(getOffsetData());
@@ -176,10 +184,10 @@ TEST_F(WiFiMeasurementSerializerTest, SerializesUint32Measurement)
     EXPECT_EQ(getBuffer()[getOffsetSource()], static_cast<std::uint8_t>(Device::MeasurementDeviceId::PULSE_COUNTER_3));
 
     // Check Little Endian serialization (LSB first)
-    EXPECT_EQ(getBuffer()[getOffsetData()], static_cast<std::uint8_t>(TEST_VALUE & BYTE_MASK));                        // 0xDD
-    EXPECT_EQ(getBuffer()[getOffsetData() + 1U], static_cast<std::uint8_t>((TEST_VALUE >> SHIFT_BYTE_1) & BYTE_MASK)); // 0xCC
-    EXPECT_EQ(getBuffer()[getOffsetData() + 2U], static_cast<std::uint8_t>((TEST_VALUE >> SHIFT_BYTE_2) & BYTE_MASK)); // 0xBB
-    EXPECT_EQ(getBuffer()[getOffsetData() + 3U], static_cast<std::uint8_t>((TEST_VALUE >> SHIFT_BYTE_3) & BYTE_MASK)); // 0xAA
+    EXPECT_EQ(getBuffer()[getOffsetData()], 0xDDU);      // Byte 0 (LSB)
+    EXPECT_EQ(getBuffer()[getOffsetData() + 1U], 0xCCU); // Byte 1
+    EXPECT_EQ(getBuffer()[getOffsetData() + 2U], 0xBBU); // Byte 2
+    EXPECT_EQ(getBuffer()[getOffsetData() + 3U], 0xAAU); // Byte 3 (MSB)
 
     // Verify extracted value
     const std::uint32_t extracted = extractLittleEndian<std::uint32_t>(getOffsetData());
@@ -224,7 +232,7 @@ TEST_F(WiFiMeasurementSerializerTest, HandlesZeroBuffer)
     EXPECT_EQ(length, 0U);
 }
 
-// Test 6: CRC Calculation Correctness
+// Test 6: CRC Calculation Correctness (Little Endian)
 TEST_F(WiFiMeasurementSerializerTest, VerifiesCRCCalculation)
 {
     constexpr std::uint16_t TEST_VALUE = 0xABCDU;
@@ -296,4 +304,70 @@ TEST_F(WiFiMeasurementSerializerTest, SerializesMaximumValue)
     // Verify extracted value
     const std::uint32_t extracted = extractLittleEndian<std::uint32_t>(getOffsetData());
     EXPECT_EQ(extracted, TEST_VALUE);
+}
+
+// Test 9: Verify Complete Protocol Format (Little Endian)
+TEST_F(WiFiMeasurementSerializerTest, VerifiesCompleteProtocolFormat)
+{
+    constexpr std::uint32_t TEST_VALUE = 0x12345678U;
+    const std::size_t EXPECTED_SIZE = getProtocolOverhead() + sizeof(std::uint32_t);
+
+    Device::MeasurementType measurement;
+    measurement.data = TEST_VALUE;
+    measurement.source = Device::MeasurementDeviceId::PULSE_COUNTER_4;
+
+    const bool status = Device::WiFiMeasurementSerializer::generate(measurement, getBuffer(), getMsgLength());
+
+    ASSERT_TRUE(status);
+    EXPECT_EQ(getMsgLength(), EXPECTED_SIZE);
+
+    // Verify Length field (Little Endian)
+    EXPECT_EQ(getBuffer()[0], static_cast<std::uint8_t>(EXPECTED_SIZE & 0xFF));        // LSB
+    EXPECT_EQ(getBuffer()[1], static_cast<std::uint8_t>((EXPECTED_SIZE >> 8) & 0xFF)); // MSB
+    EXPECT_EQ(extractLength(), EXPECTED_SIZE);
+
+    // Verify Source field
+    EXPECT_EQ(getBuffer()[2], static_cast<std::uint8_t>(Device::MeasurementDeviceId::PULSE_COUNTER_4));
+
+    // Verify Data field (Little Endian: 78 56 34 12)
+    EXPECT_EQ(getBuffer()[3], 0x78U); // LSB
+    EXPECT_EQ(getBuffer()[4], 0x56U);
+    EXPECT_EQ(getBuffer()[5], 0x34U);
+    EXPECT_EQ(getBuffer()[6], 0x12U); // MSB
+
+    // Verify CRC is present and in Little Endian format
+    const std::size_t crcOffset = getCRCOffset();
+    EXPECT_EQ(crcOffset, 7U); // Length(2) + Source(1) + Data(4) = 7
+
+    // CRC should be stored in Little Endian
+    const std::uint32_t storedCRC = extractCRC(crcOffset);
+    const std::uint32_t calculatedCRC = Device::Crc32::compute(getBuffer(), crcOffset);
+    EXPECT_EQ(storedCRC, calculatedCRC);
+}
+
+// Test 10: Different source IDs
+TEST_F(WiFiMeasurementSerializerTest, HandlesAllSourceIds)
+{
+    const std::vector<Device::MeasurementDeviceId> sourceIds = {
+        Device::MeasurementDeviceId::PULSE_COUNTER_1,
+        Device::MeasurementDeviceId::PULSE_COUNTER_2,
+        Device::MeasurementDeviceId::PULSE_COUNTER_3,
+        Device::MeasurementDeviceId::PULSE_COUNTER_4,
+        Device::MeasurementDeviceId::DEVICE_UART_1,
+    };
+
+    for (const auto sourceId : sourceIds)
+    {
+        Device::MeasurementType measurement;
+        measurement.data = static_cast<std::uint8_t>(0x42);
+        measurement.source = sourceId;
+
+        std::array<std::uint8_t, BUFFER_SIZE> testBuffer{};
+        std::size_t testLength = 0U;
+
+        const bool status = Device::WiFiMeasurementSerializer::generate(measurement, testBuffer, testLength);
+
+        ASSERT_TRUE(status) << "Failed for source ID: " << static_cast<int>(sourceId);
+        EXPECT_EQ(testBuffer[OFFSET_SOURCE], static_cast<std::uint8_t>(sourceId));
+    }
 }
