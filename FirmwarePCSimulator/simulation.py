@@ -10,10 +10,14 @@ and GPIO identifiers.
 
 import threading
 import time
-from typing import Tuple
+import logging
+from typing import Tuple, List
 from enum import Enum
 
-from ESP8266.device_under_test import DeviceUnderTest as Esp8266
+from stm32f103_simulator import STM32F103
+
+
+logger = logging.getLogger(__name__)
 
 
 class SimulationKey(Enum):
@@ -35,7 +39,102 @@ class GPIOID(Enum):
     GPIO3 = 3
 
 
-class Simulation:
+class UartLogger:  # pylint: disable=too-few-public-methods
+
+    """Helper class to log UART transmissions."""
+
+    def __init__(self):
+        """Initialize UART logger."""
+        self.transmissions = []
+
+    def callback(self, uart_id: int, data: list, size: int, timeout: int) -> int:
+        """
+        Capture and log UART TX data.
+
+        :param uart_id: UART port identifier.
+        :param data: List of integers representing the transmitted bytes.
+        :param size: Number of bytes transmitted.
+        :param timeout: Timeout in milliseconds.
+        :return: Always returns 0 (HAL_OK) for success.
+        """
+        hex_string = ' '.join(f'{byte:02X}' for byte in data)
+        logger.info(
+            "UART %d TX: [%s], Size: %d, Timeout: %d",
+            uart_id, hex_string, size, timeout
+        )
+
+        self.transmissions.append({
+            'uart_id': uart_id,
+            'data': data.copy(),
+            'size': size,
+            'timeout': timeout
+        })
+        return 0
+
+
+class SdCardLogger:
+
+    """Helper class to log SD card operations."""
+
+    def __init__(self):
+        """Initialize SD card logger."""
+        self.operations = []
+
+    def initialize_callback(self) -> bool:
+        """Capture SD card initialize."""
+        logger.info("SD Card: Initialize called")
+        self.operations.append({'operation': 'initialize'})
+        return True
+
+    def start_callback(self) -> bool:
+        """Capture SD card start."""
+        logger.info("SD Card: Start called")
+        self.operations.append({'operation': 'start'})
+        return True
+
+    def stop_callback(self) -> bool:
+        """Capture SD card stop."""
+        logger.info("SD Card: Stop called")
+        self.operations.append({'operation': 'stop'})
+        return True
+
+    def reset_callback(self) -> bool:
+        """Capture SD card reset."""
+        logger.info("SD Card: Reset called")
+        self.operations.append({'operation': 'reset'})
+        return True
+
+    def open_callback(self, filename: str, mode: int) -> int:
+        """Capture SD card open file."""
+        logger.info("SD Card: Open file '%s', mode=%d", filename, mode)
+        self.operations.append({
+            'operation': 'open',
+            'filename': filename,
+            'mode': mode
+        })
+        return 0  # SdCardStatus::OK
+
+    def write_callback(self, data: List[int], size: int) -> int:
+        """Capture SD card write."""
+        data_str = ''.join(
+            chr(b) if 32 <= b < 127 else f'\\x{b:02x}' for b in data
+        )
+        logger.info("SD Card: Write %d bytes: '%s'", size, data_str)
+        self.operations.append({
+            'operation': 'write',
+            'data': data.copy(),
+            'size': size
+        })
+        return 0  # SdCardStatus::OK
+
+    def close_callback(self) -> int:
+        """Capture SD card close file."""
+        logger.info("SD Card: Close file")
+        self.operations.append({'operation': 'close'})
+        return 0  # SdCardStatus::OK
+
+
+class Simulation:  # pylint: disable=too-many-instance-attributes
 
     """Simulation class manages the interaction between STM32 and ESP8266 simulations."""
 
@@ -48,11 +147,49 @@ class Simulation:
         self._tick_thread: threading.Thread | None = None
         self._stop_event: threading.Event = threading.Event()
 
-        #self.stm32: STM32F103RBTx = STM32F103RBTx()
-        #self.esp8266: Esp8266 = Esp8266()
+        self.stm32: STM32F103 = STM32F103()
+        # self.esp8266: Esp8266 = Esp8266()
 
-        #self.esp8266_uart0_tx_callback = None
+        # Initialize loggers
+        self.uart_logger = UartLogger()
+        self.sd_logger = SdCardLogger()
+
+        # Register callbacks
+        self._register_callbacks()
+
+        self.stm32.init()
+
+        # Initialize callback attributes
+        self.esp8266_uart0_tx_callback = None
         self.my_gpio_state_callback = None
+
+    def _register_callbacks(self):
+        """Register all callbacks with the STM32 simulator."""
+        # Register UART callback
+        self.stm32.register_serial_tx_callback(self.uart_logger.callback)
+
+        # Register SD card callbacks
+        self.stm32.register_sdcard_initialize_callback(
+            self.sd_logger.initialize_callback
+        )
+        self.stm32.register_sdcard_start_callback(
+            self.sd_logger.start_callback
+        )
+        self.stm32.register_sdcard_stop_callback(
+            self.sd_logger.stop_callback
+        )
+        self.stm32.register_sdcard_reset_callback(
+            self.sd_logger.reset_callback
+        )
+        self.stm32.register_sdcard_open_callback(
+            self.sd_logger.open_callback
+        )
+        self.stm32.register_sdcard_write_callback(
+            self.sd_logger.write_callback
+        )
+        self.stm32.register_sdcard_close_callback(
+            self.sd_logger.close_callback
+        )
 
     def set_esp8266_uart0_tx_callback(self, callback):
         """
@@ -76,13 +213,11 @@ class Simulation:
         thread.
         """
         if self._tick_thread is None or not self._tick_thread.is_alive():
-            self.esp8266.register_uart0_tx_callback(self.esp8266_uart0_tx_callback)
-            self.esp8266.register_gpio_state_callback(self.my_gpio_state_callback)
+            # self.esp8266.register_uart0_tx_callback(self.esp8266_uart0_tx_callback)
+            # self.esp8266.register_gpio_state_callback(self.my_gpio_state_callback)
 
-            #self.stm32.register_serial_tx_callback(self.stm32_uart_tx_callback)
-
-            #self.stm32.init()
-            #self.esp8266.init()
+            self.stm32.init()
+            # self.esp8266.init()
 
             self._stop_event.clear()
             self._tick_thread = threading.Thread(
@@ -103,15 +238,15 @@ class Simulation:
 
     def update_pulse_counters(self, values) -> None:
         """Update the pulse counters in the STM32 simulation."""
-        pass#self.stm32.update_pulse_counters(values)
+        self.stm32.update_pulse_counters(values)
 
     def get_display_width(self) -> int:
         """Get the display width from the STM32 DUT."""
-        return 10#self.stm32.get_display_width()
+        return self.stm32.get_display_width()
 
     def get_display_height(self) -> int:
         """Get the display height from the STM32 DUT."""
-        return 10#self.stm32.get_display_height()
+        return self.stm32.get_display_height()
 
     def get_display_pixel(self, x: int, y: int) -> Tuple[int, int, int]:
         """
@@ -121,7 +256,7 @@ class Simulation:
         :param y: Y-coordinate of the pixel.
         :return: RGB color tuple.
         """
-        pixel_rgb565: int = 5#self.stm32.get_display_pixel(x, y)
+        pixel_rgb565: int = self.stm32.get_display_pixel(x, y)
         return self._convert_rgb565_to_rgb8(pixel_rgb565)
 
     def _run_periodic_tick(self) -> None:
@@ -131,8 +266,8 @@ class Simulation:
         This internal method handles periodic updates to simulate device behavior.
         """
         while not self._stop_event.is_set():
-            #self.stm32.tick()
-            #self.esp8266.tick()
+            self.stm32.tick()
+            # self.esp8266.tick()
             time.sleep(self.tick_interval)
 
     def _convert_rgb565_to_rgb8(self, rgb565: int) -> Tuple[int, int, int]:
@@ -149,25 +284,8 @@ class Simulation:
 
     def key_pressed(self, key: SimulationKey):
         """Notify the STM32 simulation of a key press event."""
-        #self.stm32.key_pressed(key)
-        pass
+        self.stm32.key_pressed(key)
 
     def key_released(self, key: SimulationKey):
         """Notify the STM32 simulation of a key release event."""
-        #self.stm32.key_released(key)
-        pass
-
-    def stm32_uart_tx_callback(self, data: list, size: int, timeout: int) -> int:
-        """
-        Print the data transmitted from STM32F103RBTx UART and send it to ESP8266.
-
-        :param data: List of integers representing the transmitted bytes.
-        :param size: Number of bytes transmitted.
-        :param timeout: Timeout in milliseconds.
-        :return: Always returns 0 (HAL_OK) for success.
-        """
-        data_string = ''.join(map(chr, data))  # Convert byte list to string
-        print(f"UART TX Callback: Transmitting data: '{data_string}', Size: {size}, Timeout: {timeout}")
-
-        #self.esp8266.uart0_tx(data, size, timeout)
-        return 0  # HAL_OK equivalent
+        self.stm32.key_released(key)

@@ -46,7 +46,7 @@ jobs:
 
       - name: Run Code Coverage
         run: |
-          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make test_biz && make test_dev && make test_drv && make cov"
+          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja test_biz && ninja test_dev && ninja test_drv && ninja cov"
 
       - name: Upload Code Coverage Results
         if: always()

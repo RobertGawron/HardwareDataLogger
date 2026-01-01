@@ -82,7 +82,7 @@ extern "C"
      *
      * @param pulseCounters An array of pulse counter values.
      */
-    void LibWrapper_UpdatePulseCounters(const std::array<std::uint16_t, PULSE_COUNTER_COUNT> &pulseCounters);
+    void LibWrapper_UpdatePulseCounters(const std::array<std::uint32_t, PULSE_COUNTER_COUNT> &pulseCounters);
 
     /**
      * @brief Registers a callback for UART transmit operations.

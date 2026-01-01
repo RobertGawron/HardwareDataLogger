@@ -33,8 +33,8 @@ extern "C"
 namespace Driver
 {
     PulseCounterDriverStub::PulseCounterDriverStub(PulseCounterId id)
+        : id(id)
     {
-        (void)id; // temporary
     }
 
     bool PulseCounterDriverStub::onInitialize()
@@ -59,7 +59,8 @@ namespace Driver
 
     IPulseCounterDriver::CounterSizeType PulseCounterDriverStub::getMeasurement()
     {
-        return pulseCounters[0];
+        const std::uint8_t index = static_cast<std::uint8_t>(id);
+        return pulseCounters[index];
     }
 
     void PulseCounterDriverStub::clearMeasurement()

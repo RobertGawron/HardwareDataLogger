@@ -166,7 +166,7 @@ std::uint16_t LibWrapper_GetPixelValue(std::uint8_t x, std::uint8_t y)
     return value;
 }
 
-void LibWrapper_UpdatePulseCounters(const std::array<std::uint16_t, PULSE_COUNTER_COUNT> &pulseCounters)
+void LibWrapper_UpdatePulseCounters(const std::array<std::uint32_t, PULSE_COUNTER_COUNT> &pulseCounters)
 {
     for (std::uint8_t i = 0U; i < PULSE_COUNTER_COUNT; ++i)
     {

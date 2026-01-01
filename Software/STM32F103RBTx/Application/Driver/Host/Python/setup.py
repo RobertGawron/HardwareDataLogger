@@ -1,3 +1,5 @@
+"""Setup configuration for STM32F103 simulator package."""
+
 from setuptools import setup, find_packages
 
 setup(

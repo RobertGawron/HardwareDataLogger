@@ -45,7 +45,7 @@ jobs:
 
       - name: Run Static Analysis
         run: |
-          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make pstatic"
+          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja pstatic"
 
       - name: Upload Static Analysis (Python) Results
         if: always()
