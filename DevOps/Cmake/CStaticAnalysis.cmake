@@ -3,7 +3,6 @@ set(CODECHECKER_SOURCE_DIRS
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/BusinessLogic
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver
-   # ${CMAKE_SOURCE_DIR}/Simulation/FirmwarePCSimulator
 )
 
 # Define the output directories for CodeChecker analysis and reports
