@@ -104,7 +104,7 @@ namespace Device
         return U8G2_STATUS_OK;
     }
 
-    std::uint8_t Display::u8x8DSt7735Impl(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t argInt, void *argPtr)
+    [[nodiscard]] std::uint8_t Display::u8x8DSt7735Impl(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t argInt, void *argPtr)
     {
         switch (msg)
         {
@@ -331,7 +331,7 @@ void u8g2_SetupBuffer_SDL_128x64(u8g2_t *u8g2, const u8g2_cb_t *u8g2_cb)
         displayMap[0].display = this;
     }
 
-    bool Display::initialize()
+    [[nodiscard]] bool Display::initialize() noexcept
     {
 
         // 2025

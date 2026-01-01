@@ -34,6 +34,11 @@ namespace Driver
          */
         DriverState() = default;
 
+        DriverState(const DriverState &) = delete;
+        DriverState &operator=(const DriverState &) = delete;
+        DriverState(DriverState &&) = delete;
+        DriverState &operator=(DriverState &&) = delete;
+
         /**
          * @brief Virtual destructor.
          *

@@ -11,12 +11,12 @@
 class MockPulseCounterDriver : public Driver::IPulseCounterDriver
 {
 public:
-    MOCK_METHOD(Driver::IPulseCounterDriver::CounterSizeType, getMeasurement, (), (override));
-    MOCK_METHOD(void, clearMeasurement, (), (override));
-    MOCK_METHOD(bool, onInitialize, (), (override));
-    MOCK_METHOD(bool, onStart, (), (override));
-    MOCK_METHOD(bool, onStop, (), (override));
-    MOCK_METHOD(bool, onReset, (), (override));
+    MOCK_METHOD(Driver::IPulseCounterDriver::CounterSizeType, getMeasurement, (), (override, noexcept));
+    MOCK_METHOD(void, clearMeasurement, (), (override, noexcept));
+    MOCK_METHOD(bool, onInitialize, (), (override, noexcept));
+    MOCK_METHOD(bool, onStart, (), (override, noexcept));
+    MOCK_METHOD(bool, onStop, (), (override, noexcept));
+    MOCK_METHOD(bool, onReset, (), (override, noexcept));
 };
 
 // --- Test Fixture ---

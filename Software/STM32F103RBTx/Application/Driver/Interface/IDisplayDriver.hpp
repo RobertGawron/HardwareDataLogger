@@ -49,6 +49,13 @@ namespace Driver
 
         using Orientation = OrientationEnum; ///< Alias for OrientationEnum.
 
+        IDisplayDriver() = default;
+
+        IDisplayDriver(const IDisplayDriver &) = delete;
+        IDisplayDriver &operator=(const IDisplayDriver &) = delete;
+        IDisplayDriver(IDisplayDriver &&) = delete;
+        IDisplayDriver &operator=(IDisplayDriver &&) = delete;
+
         /**
          * @brief Virtual destructor for IDisplayDriver.
          *

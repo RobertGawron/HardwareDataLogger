@@ -1,8 +1,8 @@
-#ifndef IMeasurementSource_h
-#define IMeasurementSource_h
+#ifndef IMEASUREMENT_SOURCE_HPP
+#define IMEASUREMENT_SOURCE_HPP
 
 /**
- * @file IMeasurementSource.h
+ * @file IMeasurementSource.hpp
  * @brief Declaration of the IMeasurementSource interface class for receiving measurement data.
  *
  * This file contains the declaration of the IMeasurementSource interface class, which serves
@@ -11,7 +11,6 @@
  */
 
 #include "Device/Inc/MeasurementType.hpp"
-#include "Device/Inc/MeasurementDeviceId.hpp"
 
 namespace Device
 {
@@ -26,50 +25,54 @@ namespace Device
     class IMeasurementSource
     {
     public:
-        IMeasurementSource() = default;
-        /**
-         * @brief Virtual destructor.
-         */
+        constexpr IMeasurementSource() noexcept = default;
         virtual ~IMeasurementSource() = default;
+
+        // Non-copyable and non-movable
+        IMeasurementSource(const IMeasurementSource &) = delete;
+        IMeasurementSource(IMeasurementSource &&) = delete;
+        IMeasurementSource &operator=(const IMeasurementSource &) = delete;
+        IMeasurementSource &operator=(IMeasurementSource &&) = delete;
 
         /**
          * @brief Initializes the measurement source.
          * @return True if initialization succeeded, false otherwise.
          */
-        virtual bool initialize() = 0;
+        [[nodiscard]] virtual bool initialize() noexcept = 0;
 
         /**
          * @brief Starts the measurement collection process.
          * @return True if start succeeded, false otherwise.
          */
-        virtual bool start() = 0;
+        [[nodiscard]] virtual bool start() noexcept = 0;
 
         /**
          * @brief Stops the measurement collection process.
          * @return True if stop succeeded, false otherwise.
          */
-        virtual bool stop() = 0;
+        [[nodiscard]] virtual bool stop() noexcept = 0;
 
         /**
          * @brief Checks if a measurement is available.
          *
-         * This method should be implemented to check if a new measurement is ready to be retrieved. It is called
-         * periodically by client classes. There might be instances where no measurement is ready, depending on
-         * the data collection interval or device state.
+         * This method checks if a new measurement is ready to be retrieved. It is called
+         * periodically by client classes. There might be instances where no measurement is ready,
+         * depending on the data collection interval or device state.
          *
          * @return true if a measurement is available, false otherwise.
          */
-        virtual bool isMeasurementAvailable() = 0;
+        [[nodiscard]] virtual bool isMeasurementAvailable() const noexcept = 0;
 
         /**
          * @brief Retrieves the measured data.
          *
-         * This method should be implemented to obtain the current measurement data from the device.
-         * It is not fully implemented yet.
+         * This method obtains the current measurement data from the device.
+         *
          * @return The current measurement data.
          */
-        [[nodiscard]] virtual MeasurementType getMeasurement() = 0;
+        [[nodiscard]] virtual MeasurementType getMeasurement() noexcept = 0;
     };
-}
 
-#endif
+} // namespace Device
+
+#endif // IMEASUREMENT_SOURCE_HPP

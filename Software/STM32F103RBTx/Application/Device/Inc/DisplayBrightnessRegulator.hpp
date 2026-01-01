@@ -3,12 +3,14 @@
  * @brief Declaration of the DisplayBrightnessRegulator class for managing display brightness.
  */
 
-#ifndef DisplayBrightnessRegulator_H_
-#define DisplayBrightnessRegulator_H_
+#ifndef DISPLAY_BRIGHTNESS_REGULATOR_HPP
+#define DISPLAY_BRIGHTNESS_REGULATOR_HPP
 
 #include "Device/Interface/IDisplayBrightnessRegulator.hpp"
 #include "Driver/Interface/IAmbientLightSensorDriver.hpp"
 #include "Driver/Interface/IDisplayBrightnessDriver.hpp"
+
+#include <cstdint>
 
 namespace Device
 {
@@ -16,52 +18,59 @@ namespace Device
      * @class DisplayBrightnessRegulator
      * @brief Regulates the brightness of an LCD display based on ambient light and user preferences.
      */
-    class DisplayBrightnessRegulator : public IDisplayBrightnessRegulator
+    class DisplayBrightnessRegulator final : public IDisplayBrightnessRegulator
     {
     public:
         /**
          * @brief Constructs a DisplayBrightnessRegulator with specified sensor and display drivers.
-         * @param _ambientLightSensorDriver Reference to the ambient light sensor driver.
-         * @param _displayBrightnessDriver Reference to the display brightness driver.
+         * @param ambientLightSensorDriver Reference to the ambient light sensor driver.
+         * @param displayBrightnessDriver Reference to the display brightness driver.
          */
-        explicit DisplayBrightnessRegulator(
-            Driver::IAmbientLightSensorDriver &_ambientLightSensorDriver,
-            Driver::IDisplayBrightnessDriver &_displayBrightnessDriver);
+        explicit constexpr DisplayBrightnessRegulator(
+            Driver::IAmbientLightSensorDriver &ambientLightSensorDriver,
+            Driver::IDisplayBrightnessDriver &displayBrightnessDriver) noexcept
+            : ambientLightSensorDriver{ambientLightSensorDriver}, displayBrightnessDriver{displayBrightnessDriver}
+        {
+        }
 
-        ~DisplayBrightnessRegulator() override = default; ///< Default virtual destructor.
+        ~DisplayBrightnessRegulator() override = default;
 
-        DisplayBrightnessRegulator(const DisplayBrightnessRegulator &) = delete;            ///< Deleted copy constructor.
-        DisplayBrightnessRegulator &operator=(const DisplayBrightnessRegulator &) = delete; ///< Deleted copy assignment.
+        // Non-copyable and non-movable
+        DisplayBrightnessRegulator(const DisplayBrightnessRegulator &) = delete;
+        DisplayBrightnessRegulator(DisplayBrightnessRegulator &&) = delete;
+        DisplayBrightnessRegulator &operator=(const DisplayBrightnessRegulator &) = delete;
+        DisplayBrightnessRegulator &operator=(DisplayBrightnessRegulator &&) = delete;
 
         /**
          * @brief Initializes the display brightness regulator.
          * @return true if initialization is successful, false otherwise.
          */
-        bool init() override;
+        [[nodiscard]] bool init() noexcept override;
 
         /**
          * @brief Updates the brightness regulator state.
          */
-        void tick() override;
+        void tick() noexcept override;
 
         /**
          * @brief Returns the current brightness level as a percentage.
          * @return Brightness level (0-100).
          */
-        [[nodiscard]] std::uint8_t getBrightnessPercentage() const override;
+        [[nodiscard]] std::uint8_t getBrightnessPercentage() const noexcept override;
 
         /**
          * @brief Sets the display brightness level.
          * @param level Brightness percentage (0-100).
          * @return true if the level is set successfully.
          */
-        bool setBrightnessPercentage(std::uint8_t level) override;
+        [[nodiscard]] bool setBrightnessPercentage(std::uint8_t level) noexcept override;
 
     private:
-        Driver::IAmbientLightSensorDriver &ambientLightSensorDriver; ///< Ambient light sensor driver.
-        Driver::IDisplayBrightnessDriver &displayBrightnessDriver;   ///< Display brightness driver.
-        std::uint8_t level = 0U;                                     ///< Current brightness level (0-100).
+        Driver::IAmbientLightSensorDriver &ambientLightSensorDriver;
+        Driver::IDisplayBrightnessDriver &displayBrightnessDriver;
+        std::uint8_t level{0};
     };
-}
 
-#endif // DisplayBrightnessRegulator_H_
+} // namespace Device
+
+#endif // DISPLAY_BRIGHTNESS_REGULATOR_HPP

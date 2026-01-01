@@ -9,12 +9,12 @@ set(CMAKE_C_STANDARD 11)        # Standard for .c files (HAL, FatFs, u8g2)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
 
-set(CMAKE_CXX_STANDARD 20)      # Standard for .cpp files
+set(CMAKE_CXX_STANDARD 23)      # Standard for .cpp files
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 
 # This makes it apply to subdirectories too
-set(CMAKE_CXX_STANDARD 20 CACHE STRING "C++ standard" FORCE)
+set(CMAKE_CXX_STANDARD 23 CACHE STRING "C++ standard" FORCE)
 
 
 # Define default build type

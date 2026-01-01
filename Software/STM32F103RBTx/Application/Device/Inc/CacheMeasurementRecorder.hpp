@@ -1,5 +1,5 @@
-#ifndef CacheMeasurementRecorder_H_
-#define CacheMeasurementRecorder_H_
+#ifndef CACHE_MEASUREMENT_RECORDER_HPP
+#define CACHE_MEASUREMENT_RECORDER_HPP
 
 #include "Device/Interface/IMeasurementRecorder.hpp"
 #include "Device/Interface/IMeasurementReader.hpp"
@@ -20,50 +20,53 @@ namespace Device
     class CacheMeasurementRecorder : public IMeasurementRecorder, public IMeasurementReader
     {
     public:
-        CacheMeasurementRecorder() = default;           ///< Default constructor.
-        ~CacheMeasurementRecorder() override = default; ///< Default destructor.
+        constexpr CacheMeasurementRecorder() noexcept = default;
+        ~CacheMeasurementRecorder() override = default;
 
-        CacheMeasurementRecorder(const CacheMeasurementRecorder &) = delete;            ///< Deleted copy constructor.
-        CacheMeasurementRecorder &operator=(const CacheMeasurementRecorder &) = delete; ///< Deleted assignment operator.
+        // Non-copyable and non-movable
+        CacheMeasurementRecorder(const CacheMeasurementRecorder &) = delete;
+        CacheMeasurementRecorder(CacheMeasurementRecorder &&) = delete;
+        CacheMeasurementRecorder &operator=(const CacheMeasurementRecorder &) = delete;
+        CacheMeasurementRecorder &operator=(CacheMeasurementRecorder &&) = delete;
 
         /**
          * @brief Record a new measurement.
          * @param measurement The measurement to record.
          * @return true if the measurement was successfully recorded.
          */
-        bool notify(Device::MeasurementType &measurement) override;
+        [[nodiscard]] bool notify(const MeasurementType &measurement) noexcept override;
 
     protected:
         /**
          * @brief Initialize the recorder.
          * @return true if initialization succeeded.
          */
-        bool onInitialize() override;
+        [[nodiscard]] bool onInitialize() noexcept override;
 
         /**
          * @brief Start the recorder.
          * @return true if startup succeeded.
          */
-        bool onStart() override;
+        [[nodiscard]] bool onStart() noexcept override;
 
         /**
          * @brief Stop the recorder.
          * @return true if shutdown succeeded.
          */
-        bool onStop() override;
+        [[nodiscard]] bool onStop() noexcept override;
 
         /**
          * @brief Reset the recorder state.
          * @return true if reset succeeded.
          */
-        bool onReset() override;
+        [[nodiscard]] bool onReset() noexcept override;
 
         /**
          * @brief Retrieve the last measurement for a given device source.
          * @param source Identifier of the measurement device.
          * @return The last recorded value for that source.
          */
-        [[nodiscard]] std::uint32_t getLatestMeasurement(MeasurementDeviceId source) const override;
+        [[nodiscard]] std::uint32_t getLatestMeasurement(MeasurementDeviceId source) const noexcept override;
 
     private:
         /**
@@ -71,14 +74,14 @@ namespace Device
          * @param measurement The measurement to cache.
          * @return true if the write was successful.
          */
-        virtual bool write(Device::MeasurementType &measurement);
+        [[nodiscard]] virtual bool write(const MeasurementType &measurement) noexcept;
 
-        static constexpr std::size_t MeasurementSourceCount =
-            static_cast<std::size_t>(MeasurementDeviceId::LAST_NOT_USED); ///< Number of measurement sources.
+        static constexpr std::size_t MEASUREMENT_SOURCE_COUNT{
+            static_cast<std::size_t>(MeasurementDeviceId::LAST_NOT_USED)};
 
-        std::array<std::uint32_t, MeasurementSourceCount> lastMeasurement = {0u}; ///< Cached values per source.
+        std::array<std::uint32_t, MEASUREMENT_SOURCE_COUNT> lastMeasurement{};
     };
 
 } // namespace Device
 
-#endif // CacheMeasurementRecorder_H_
+#endif // CACHE_MEASUREMENT_RECORDER_HPP

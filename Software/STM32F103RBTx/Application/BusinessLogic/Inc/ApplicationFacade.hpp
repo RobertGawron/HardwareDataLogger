@@ -1,10 +1,10 @@
 /**
- * @file ApplicationBuilder.hpp
- * @brief Defines the ApplicationBuilder class responsible for orchestrating application component initialization.
+ * @file ApplicationFacade.hpp
+ * @brief Defines the ApplicationFacade class responsible for orchestrating application component initialization.
  */
 
-#ifndef ApplicationFacade_h
-#define ApplicationFacade_h
+#ifndef APPLICATION_FACADE_HPP
+#define APPLICATION_FACADE_HPP
 
 #include "BusinessLogic/Interface/IApplicationFacade.hpp"
 #include "BusinessLogic/Interface/IPlatformFactory.hpp"
@@ -20,13 +20,13 @@
 #include "Device/Inc/Keyboard.hpp"
 #include "Device/Inc/DisplayBrightnessRegulator.hpp"
 
-#include "Driver/Interface/PulseCounterId.hpp"
-
-#include <functional> // for std::reference_wrapper
+#include <array>
+#include <cstddef>
+#include <functional>
+#include <utility>
 
 namespace Device
 {
-    // Forward declarations
     class IMeasurementSource;
     class IMeasurementRecorder;
 }
@@ -41,97 +41,51 @@ namespace BusinessLogic
      * - Data stores (data consumers)
      * - Human-Machine Interface (HMI)
      * - Core coordination mechanisms
-     *
      */
-    class ApplicationFacade : public IApplicationFacade
+    class ApplicationFacade final : public IApplicationFacade
     {
     public:
-        explicit ApplicationFacade(IPlatformFactory &factory);
+        explicit ApplicationFacade(IPlatformFactory &factory) noexcept;
 
-        /**
-         * @brief Deleted default constructor.
-         */
-        ApplicationFacade() = delete;
-
-        /**
-         * @brief Default destructor.
-         */
         ~ApplicationFacade() override = default;
 
-        /**
-         * @brief Deleted copy constructor.
-         */
+        // Non-copyable and non-movable
+        ApplicationFacade() = delete;
         ApplicationFacade(const ApplicationFacade &) = delete;
-
-        /**
-         * @brief Deleted copy assignment operator.
-         */
+        ApplicationFacade(ApplicationFacade &&) = delete;
         ApplicationFacade &operator=(const ApplicationFacade &) = delete;
+        ApplicationFacade &operator=(ApplicationFacade &&) = delete;
 
-        /**
-         * @brief Initializes all application components.
-         *
-         * Calls initialize() on all managed factories and components.
-         *
-         * @return true if all components initialized successfully, false otherwise
-         */
-        bool initialize() override;
-
-        /**
-         * @brief Starts all application components.
-         * @return true if all components started successfully, false otherwise
-         */
-        bool start() override;
-
-        /**
-         * @brief Stops all application components.
-         * @return true if all components stopped successfully, false otherwise
-         */
-        bool stop() override;
-
-        /**
-         * @brief Performs periodic update of application components.
-         * @return true if tick was processed successfully, false otherwise
-         */
-        bool tick() override;
+        [[nodiscard]] bool initialize() noexcept override;
+        [[nodiscard]] bool start() noexcept override;
+        [[nodiscard]] bool stop() noexcept override;
+        [[nodiscard]] bool tick() noexcept override;
 
     private:
+        static constexpr std::size_t SOURCES_COUNT{
+            std::to_underlying(Device::MeasurementDeviceId::LAST_NOT_USED)};
+        static constexpr std::size_t RECORDERS_COUNT{2};
+
         Device::PulseCounterMeasurementSource pulseCounter1;
         Device::PulseCounterMeasurementSource pulseCounter2;
         Device::PulseCounterMeasurementSource pulseCounter3;
         Device::PulseCounterMeasurementSource pulseCounter4;
-
         Device::UartMeasurementSource uartReceiver;
 
-        static constexpr std::size_t SourcesAmount{static_cast<std::size_t>(Device::MeasurementDeviceId::LAST_NOT_USED)};
+        std::array<std::reference_wrapper<Device::IMeasurementSource>, SOURCES_COUNT> sources;
 
-        std::array<std::reference_wrapper<Device::IMeasurementSource>, SourcesAmount> sources;
-
-        // recorders
-
-        /** @brief WiFi measurement recorder instance */
         Device::WiFiMeasurementRecorder wifiRecorder;
-
-        /** @brief SD card measurement recorder instance */
         Device::SdCardMeasurementRecorder sdCardRecorder;
+        std::array<std::reference_wrapper<Device::IMeasurementRecorder>, RECORDERS_COUNT> recorders;
 
-        static constexpr std::size_t RecordersAmount = 2U;
-        std::array<std::reference_wrapper<Device::IMeasurementRecorder>, RecordersAmount> recorders;
+        MeasurementCoordinator<SOURCES_COUNT, RECORDERS_COUNT> measurementCoordinator;
 
-        MeasurementCoordinator<SourcesAmount, RecordersAmount> measurementCoordinator;
-        // hmi
-
-        /** @brief Display controller implementation */
         Device::Display display;
-
-        /** @brief Display brightness regulator */
         Device::DisplayBrightnessRegulator brightnessRegulator;
-
-        /** @brief User input handler */
         Device::Keyboard keyboard;
-
         BusinessLogic::HmiFacade hmi;
     };
-}
 
-#endif
+} // namespace BusinessLogic
+
+#endif // APPLICATION_FACADE_HPP

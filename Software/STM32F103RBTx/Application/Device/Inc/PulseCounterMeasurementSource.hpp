@@ -4,8 +4,8 @@
  *        from a pulse counter device.
  */
 
-#ifndef PulseCounterMeasurementSource_H_
-#define PulseCounterMeasurementSource_H_
+#ifndef PULSE_COUNTER_MEASUREMENT_SOURCE_HPP
+#define PULSE_COUNTER_MEASUREMENT_SOURCE_HPP
 
 #include "Device/Interface/IMeasurementSource.hpp"
 #include "Device/Inc/MeasurementDeviceId.hpp"
@@ -19,9 +19,8 @@ namespace Device
      *
      * The PulseCounterMeasurementSource class interfaces with a pulse counter driver to initialize
      * the device, retrieve measurements, and manage the availability of new data.
-     * This class provides methods to initialize, deinitialize, and query the pulse counter device for new data.
      */
-    class PulseCounterMeasurementSource : public IMeasurementSource
+    class PulseCounterMeasurementSource final : public IMeasurementSource
     {
     public:
         /**
@@ -30,60 +29,33 @@ namespace Device
          * @param deviceId The unique identifier for this measurement source.
          * @param pulseCounterDriver Reference to the driver responsible for interfacing with the pulse counter device.
          */
-        explicit PulseCounterMeasurementSource(MeasurementDeviceId deviceId, Driver::IPulseCounterDriver &pulseCounterDriver);
+        explicit constexpr PulseCounterMeasurementSource(
+            MeasurementDeviceId deviceId,
+            Driver::IPulseCounterDriver &pulseCounterDriver) noexcept
+            : deviceId{deviceId}, pulseCounterDriver{pulseCounterDriver}
+        {
+        }
 
-        PulseCounterMeasurementSource() = delete; ///< Deleted default constructor to prevent instantiation without parameters.
-
-        /**
-         * @brief Default destructor for PulseCounterMeasurementSource.
-         */
         ~PulseCounterMeasurementSource() override = default;
 
-        PulseCounterMeasurementSource(const PulseCounterMeasurementSource &) = delete;            ///< Deleted copy constructor to prevent copying.
-        PulseCounterMeasurementSource &operator=(const PulseCounterMeasurementSource &) = delete; ///< Deleted assignment operator to prevent assignment.
+        // Non-copyable and non-movable
+        PulseCounterMeasurementSource() = delete;
+        PulseCounterMeasurementSource(const PulseCounterMeasurementSource &) = delete;
+        PulseCounterMeasurementSource(PulseCounterMeasurementSource &&) = delete;
+        PulseCounterMeasurementSource &operator=(const PulseCounterMeasurementSource &) = delete;
+        PulseCounterMeasurementSource &operator=(PulseCounterMeasurementSource &&) = delete;
 
-        /**
-         * @brief Initializes the pulse counter hardware and driver.
-         * @return True if initialization succeeded, false otherwise.
-         */
-        bool initialize() override;
-
-        /**
-         * @brief Starts the pulse counter measurement process.
-         * @return True if start succeeded, false otherwise.
-         */
-        bool start() override;
-
-        /**
-         * @brief Stops the pulse counter measurement process.
-         * @return True if stop succeeded, false otherwise.
-         */
-        bool stop() override;
-
-        /**
-         * @brief Checks if a new measurement is available from the pulse counter.
-         *
-         * @return True if new measurement data is available, false otherwise.
-         */
-        bool isMeasurementAvailable() override;
-
-        /**
-         * @brief Retrieves the current pulse count from the pulse counter device.
-         *
-         * @return The current measurement data including device ID and pulse count.
-         */
-        MeasurementType getMeasurement() override;
+        [[nodiscard]] bool initialize() noexcept override;
+        [[nodiscard]] bool start() noexcept override;
+        [[nodiscard]] bool stop() noexcept override;
+        [[nodiscard]] bool isMeasurementAvailable() const noexcept override;
+        [[nodiscard]] MeasurementType getMeasurement() noexcept override;
 
     private:
-        /**
-         * @brief Unique identifier for this measurement source
-         */
-        const MeasurementDeviceId deviceId;
-
-        /** @brief Reference to the driver responsible for interacting with the pulse counter device. */
+        MeasurementDeviceId deviceId;
         Driver::IPulseCounterDriver &pulseCounterDriver;
     };
 
-}
+} // namespace Device
 
-#endif // PulseCounterMeasurementSource_H_
+#endif // PULSE_COUNTER_MEASUREMENT_SOURCE_HPP

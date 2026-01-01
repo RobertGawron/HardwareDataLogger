@@ -24,15 +24,17 @@ namespace Driver
     public:
         IAmbientLightSensorDriver() = default; ///< Default constructor.
 
+        IAmbientLightSensorDriver(const IAmbientLightSensorDriver &) = delete;
+        IAmbientLightSensorDriver &operator=(const IAmbientLightSensorDriver &) = delete;
+        IAmbientLightSensorDriver(IAmbientLightSensorDriver &&) = delete;
+        IAmbientLightSensorDriver &operator=(IAmbientLightSensorDriver &&) = delete;
+
         /**
          * @brief Virtual destructor for IAmbientLightSensorDriver.
          *
          * Ensures proper cleanup of derived classes.
          */
-        ~IAmbientLightSensorDriver() override = default;
-
-        IAmbientLightSensorDriver(const IAmbientLightSensorDriver &) = delete;            ///< Deleted copy constructor.
-        IAmbientLightSensorDriver &operator=(const IAmbientLightSensorDriver &) = delete; ///< Deleted assignment operator.
+        virtual ~IAmbientLightSensorDriver() override = default;
 
         /**
          * @brief Retrieves the current ambient light level.

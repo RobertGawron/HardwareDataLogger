@@ -9,42 +9,40 @@
 
 namespace Device
 {
-
-    UartMeasurementSource::UartMeasurementSource(MeasurementDeviceId _deviceId, Driver::IUartDriver &_driver)
-        : deviceId(_deviceId),
-          driver(_driver)
+    UartMeasurementSource::UartMeasurementSource(
+        const MeasurementDeviceId deviceId,
+        Driver::IUartDriver &driver) noexcept
+        : deviceId(deviceId),
+          driver(driver)
     {
     }
 
-    bool UartMeasurementSource::initialize()
+    bool UartMeasurementSource::initialize() noexcept
     {
-        const bool status = driver.initialize();
-        return status;
+        return driver.initialize();
     }
 
-    bool UartMeasurementSource::start()
+    bool UartMeasurementSource::start() noexcept
     {
         return true;
     }
 
-    bool UartMeasurementSource::stop()
+    bool UartMeasurementSource::stop() noexcept
     {
         return true;
     }
 
-    bool UartMeasurementSource::isMeasurementAvailable()
+    bool UartMeasurementSource::isMeasurementAvailable() const noexcept
     {
         return true;
     }
 
-    MeasurementType UartMeasurementSource::getMeasurement()
+    MeasurementType UartMeasurementSource::getMeasurement() noexcept
     {
-        const std::uint16_t dummyData = 5U;
+        constexpr std::uint16_t DUMMY_DATA = 5U;
 
-        const MeasurementType measurement{
-            .data = dummyData,
-            .source = deviceId};
-
-        return measurement;
+        return MeasurementType{
+            .source = deviceId,
+            .data = DUMMY_DATA};
     }
 }

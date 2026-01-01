@@ -4,14 +4,16 @@
  *        to an ESP module via UART, which then sends the data over WiFi.
  */
 
-#ifndef WiFiMeasurementRecorder_H_
-#define WiFiMeasurementRecorder_H_
+#ifndef WIFI_MEASUREMENT_RECORDER_HPP
+#define WIFI_MEASUREMENT_RECORDER_HPP
 
 #include "Device/Interface/IMeasurementRecorder.hpp"
 #include "Device/Inc/WiFiMeasurementSerializer.hpp"
+#include "Device/Inc/CobsEncoder.hpp"
 #include "Driver/Interface/IUartDriver.hpp"
 
 #include <array>
+#include <cstdint>
 
 namespace Device
 {
@@ -23,7 +25,7 @@ namespace Device
      * The ESP module, in turn, sends the data over WiFi. The class handles the transmission of measurement
      * data via UART but does not handle the WiFi network name or password, which are managed by the ESP module.
      */
-    class WiFiMeasurementRecorder : public IMeasurementRecorder
+    class WiFiMeasurementRecorder final : public IMeasurementRecorder
     {
     public:
         /**
@@ -31,84 +33,44 @@ namespace Device
          *
          * @param driver Reference to the UART driver used to communicate with the ESP module.
          */
-        explicit WiFiMeasurementRecorder(Driver::IUartDriver &driver);
+        explicit constexpr WiFiMeasurementRecorder(Driver::IUartDriver &driver) noexcept
+            : driver{driver}
+        {
+        }
 
-        WiFiMeasurementRecorder() = delete; ///< Deleted default constructor to prevent instantiation without a driver.
-
-        /**
-         * @brief Default destructor for WiFiMeasurementRecorder.
-         */
         ~WiFiMeasurementRecorder() override = default;
 
-        WiFiMeasurementRecorder(const WiFiMeasurementRecorder &) = delete;            ///< Deleted copy constructor to prevent copying.
-        WiFiMeasurementRecorder &operator=(const WiFiMeasurementRecorder &) = delete; ///< Deleted assignment operator to prevent assignment.
+        WiFiMeasurementRecorder() = delete;
+        WiFiMeasurementRecorder(const WiFiMeasurementRecorder &) = delete;
+        WiFiMeasurementRecorder &operator=(const WiFiMeasurementRecorder &) = delete;
+        WiFiMeasurementRecorder(WiFiMeasurementRecorder &&) = delete;
+        WiFiMeasurementRecorder &operator=(WiFiMeasurementRecorder &&) = delete;
 
-        /**
-         * @brief Notifies the recorder to process new data.
-         *
-         * This method is called to notify the recorder that new measurement data is available and
-         * should be sent to the ESP module via UART.
-         * @param measurement The measurement data to process.
-         * @return True if notification was successful, false otherwise.
-         */
-        bool notify(Device::MeasurementType &measurement) override;
+        [[nodiscard]] bool notify(const MeasurementType &measurement) noexcept override;
 
     protected:
-        /**
-         * @brief Initializes the WiFiMeasurementRecorder.
-         *
-         * This method is responsible for initializing the recorder, preparing it for operation.
-         * @return True if initialization was successful, false otherwise.
-         */
-        bool onInitialize() override;
-
-        /**
-         * @brief Starts the WiFiMeasurementRecorder.
-         *
-         * This method starts the recorder, enabling it to begin sending measurement data via UART.
-         * @return True if the recorder started successfully, false otherwise.
-         */
-        bool onStart() override;
-
-        /**
-         * @brief Stops the WiFiMeasurementRecorder.
-         *
-         * This method stops the recorder, halting any further transmission of measurement data.
-         * @return True if the recorder stopped successfully, false otherwise.
-         */
-        bool onStop() override;
-
-        /**
-         * @brief Resets the WiFiMeasurementRecorder.
-         *
-         * This method resets the recorder, clearing any internal state or buffers.
-         * @return True if the recorder was reset successfully, false otherwise.
-         */
-        bool onReset() override;
+        [[nodiscard]] bool onInitialize() noexcept override;
+        [[nodiscard]] bool onStart() noexcept override;
+        [[nodiscard]] bool onStop() noexcept override;
+        [[nodiscard]] bool onReset() noexcept override;
 
     private:
-        /** @brief Reference to the UART driver used for communication with the ESP module. */
         Driver::IUartDriver &driver;
 
-        /** @brief Size of the  message buffer. */
-        static constexpr std::size_t SerializedMessageSize = 30U;
+        // Compile-time buffer size calculations
+        static constexpr std::size_t MAX_SERIALIZED_SIZE{
+            WiFiMeasurementSerializer::getMaxSerializedSize()};
 
-        /**
-         * @brief Size of the output buffer after COBS encoding.
-         *
-         * Calculated according to COBS specification: ScpiBufferSize + (ScpiBufferSize / 254) + 2
-         */
-        static constexpr std::size_t OutputBufferSize = (SerializedMessageSize + (SerializedMessageSize / 254) + 2);
+        static constexpr std::size_t MAX_COBS_ENCODED_SIZE{
+            CobsEncoder::getMaxEncodedSize(MAX_SERIALIZED_SIZE)};
 
-        /** @brief Buffer for storing SCPI-formatted messages. */
-        std::array<std::uint8_t, SerializedMessageSize> encodedBuffer = {0};
+        static constexpr std::uint32_t UART_TX_TIMEOUT_MS{1000};
 
-        /** @brief Buffer for storing data after COBS encoding. */
-        std::array<std::uint8_t, OutputBufferSize> dataLinkBuffer = {0};
-
-        const uint32_t UartTxTimeout = 1000;
+        // Buffers with compile-time calculated sizes
+        std::array<std::uint8_t, MAX_SERIALIZED_SIZE> serializedBuffer{};
+        std::array<std::uint8_t, MAX_COBS_ENCODED_SIZE> cobsEncodedBuffer{};
     };
 
-}
+} // namespace Device
 
-#endif // WiFiMeasurementRecorder_H_
+#endif // WIFI_MEASUREMENT_RECORDER_HPP

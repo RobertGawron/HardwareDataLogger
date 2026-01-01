@@ -1,5 +1,5 @@
-#ifndef Keyboard_h
-#define Keyboard_h
+#ifndef KEYBOARD_HPP
+#define KEYBOARD_HPP
 
 /**
  * @file Keyboard.hpp
@@ -14,8 +14,8 @@
 #include "Driver/Interface/IKeyboardDriver.hpp"
 #include "Driver/Interface/KeyIdentifier.hpp"
 
+#include <array>
 #include <cstdint>
-#include <array> // For std::array
 
 namespace Device
 {
@@ -27,7 +27,7 @@ namespace Device
      * and detecting whether keys are pressed in a long or short duration. It interacts with a platform-specific
      * keyboard driver to handle low-level key press events.
      */
-    class Keyboard : public IKeyboard
+    class Keyboard final : public IKeyboard
     {
     public:
         /**
@@ -37,29 +37,18 @@ namespace Device
          *
          * @param keyboardDriver A reference to a platform-specific keyboard driver implementing IKeyboardDriver.
          */
-        explicit Keyboard(Driver::IKeyboardDriver &keyboardDriver);
+        explicit constexpr Keyboard(Driver::IKeyboardDriver &keyboardDriver) noexcept
+            : keyboardDriver{keyboardDriver}
+        {
+        }
 
-        /**
-         * @brief Default destructor.
-         *
-         * Cleans up resources used by the Keyboard instance.
-         */
         ~Keyboard() override = default;
 
-        /**
-         * @brief Deleted copy constructor to prevent copying.
-         *
-         * Prevents the copying of Keyboard instances.
-         */
+        // Non-copyable and non-movable
         Keyboard(const Keyboard &) = delete;
-
-        /**
-         * @brief Deleted copy assignment operator to prevent copying.
-         *
-         * Prevents assignment of Keyboard instances.
-         * @return Keyboard& Reference to this object.
-         */
+        Keyboard(Keyboard &&) = delete;
         Keyboard &operator=(const Keyboard &) = delete;
+        Keyboard &operator=(Keyboard &&) = delete;
 
         /**
          * @brief Initializes the keyboard.
@@ -68,7 +57,7 @@ namespace Device
          *
          * @return true if initialization is successful, false otherwise.
          */
-        bool init() override;
+        [[nodiscard]] bool init() noexcept override;
 
         /**
          * @brief Ticks the keyboard state machine.
@@ -78,7 +67,7 @@ namespace Device
          *
          * @return true if the tick operation was successful, false otherwise.
          */
-        bool tick() override;
+        [[nodiscard]] bool tick() noexcept override;
 
         /**
          * @brief Gets the action state of a specified key.
@@ -88,37 +77,31 @@ namespace Device
          * @param key The ID of the key for which the state is requested.
          * @return The action state of the specified key.
          */
-        [[nodiscard]] KeyActionState getKeyState(Driver::KeyIdentifier key) const override;
+        [[nodiscard]] KeyActionState getKeyState(Driver::KeyIdentifier key) const noexcept override;
 
     private:
-        /** @brief Reference to the platform-specific keyboard driver. */
         Driver::IKeyboardDriver &keyboardDriver;
 
-        /** @brief Number of keys supported by the keyboard. */
-        static constexpr std::uint8_t AmountOfKeys = static_cast<std::uint8_t>(Driver::KeyIdentifier::LastNotUsed);
+        static constexpr std::uint8_t AMOUNT_OF_KEYS{
+            static_cast<std::uint8_t>(Driver::KeyIdentifier::LastNotUsed)};
+
+        static constexpr std::uint8_t LONG_PRESS_THRESHOLD_TICKS{10}; // 10 ticks * 100ms = 1 second
 
         /**
          * @brief Array for tracking the duration (in ticks) each key has been pressed.
          *
          * Each entry counts the number of `tick()` calls while the key is pressed.
          */
-        std::array<std::uint8_t, AmountOfKeys> pressDurationTicks{};
-
-        /** @brief Threshold for determining a long press (in ticks). */
-        static constexpr std::uint8_t LONG_PRESS_THRESHOLD_TICKS = 10; // 10 ticks * 100ms = 1 second
+        std::array<std::uint8_t, AMOUNT_OF_KEYS> pressDurationTicks{};
 
         /**
          * @brief Array storing the action states for all keys.
          *
          * Each key's action state indicates whether it is pressed, held, or not pressed.
          */
-        std::array<KeyActionState, AmountOfKeys> keyActionState{
-            KeyActionState::PressNot,
-            KeyActionState::PressNot,
-            KeyActionState::PressNot,
-            KeyActionState::PressNot};
+        std::array<KeyActionState, AMOUNT_OF_KEYS> keyActionState{};
     };
 
 } // namespace Device
 
-#endif // Keyboard_h
+#endif // KEYBOARD_HPP

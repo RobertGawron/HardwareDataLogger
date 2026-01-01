@@ -20,7 +20,7 @@ namespace Device
      * In the future, it may support communication with the device via SCPI (Standard Commands for Programmable Instruments),
      * enabling more advanced control of the measurement process.
      */
-    class UartMeasurementSource : public IMeasurementSource
+    class UartMeasurementSource final : public IMeasurementSource
     {
     public:
         /**
@@ -29,77 +29,28 @@ namespace Device
          * @param deviceId Unique identifier for the measurement source device
          * @param driver Reference to the UART driver responsible for communication
          */
-        explicit UartMeasurementSource(MeasurementDeviceId deviceId, Driver::IUartDriver &driver);
+        explicit UartMeasurementSource(
+            MeasurementDeviceId deviceId,
+            Driver::IUartDriver &driver) noexcept;
 
-        /**
-         * @brief Deleted default constructor to prevent instantiation without required parameters.
-         */
         UartMeasurementSource() = delete;
-
-        /**
-         * @brief Default destructor for UartMeasurementSource.
-         */
         ~UartMeasurementSource() override = default;
 
-        /**
-         * @brief Deleted copy constructor to prevent copying.
-         */
         UartMeasurementSource(const UartMeasurementSource &) = delete;
-
-        /**
-         * @brief Deleted assignment operator to prevent assignment.
-         *
-         * @return UartMeasurementSource& The assigned object (not implemented)
-         */
         UartMeasurementSource &operator=(const UartMeasurementSource &) = delete;
+        UartMeasurementSource(UartMeasurementSource &&) = delete;
+        UartMeasurementSource &operator=(UartMeasurementSource &&) = delete;
 
-        /**
-         * @brief Initializes the UART measurement source.
-         *
-         * @return true if initialization succeeded, false otherwise
-         */
-        bool initialize() override;
-
-        /**
-         * @brief Starts measurement collection from the UART device.
-         *
-         * @return true if start succeeded, false otherwise
-         */
-        bool start() override;
-
-        /**
-         * @brief Stops measurement collection from the UART device.
-         *
-         * @return true if stop succeeded, false otherwise
-         */
-        bool stop() override;
-
-        /**
-         * @brief Checks if new measurement data is available from the UART device.
-         *
-         * @return true if new measurement data is available, false otherwise
-         */
-        bool isMeasurementAvailable() override;
-
-        /**
-         * @brief Retrieves the current measurement data from the UART device.
-         *
-         * @return MeasurementType The latest measurement data received via UART
-         */
-        MeasurementType getMeasurement() override;
+        [[nodiscard]] bool initialize() noexcept override;
+        [[nodiscard]] bool start() noexcept override;
+        [[nodiscard]] bool stop() noexcept override;
+        [[nodiscard]] bool isMeasurementAvailable() const noexcept override;
+        [[nodiscard]] MeasurementType getMeasurement() noexcept override;
 
     private:
-        /**
-         * @brief Unique identifier for this measurement source
-         */
-        const MeasurementDeviceId deviceId;
-
-        /**
-         * @brief Reference to the UART driver used for communication
-         */
+        MeasurementDeviceId deviceId;
         Driver::IUartDriver &driver;
     };
-
 }
 
 #endif // UartMeasurementSource_H_

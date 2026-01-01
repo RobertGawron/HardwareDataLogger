@@ -34,6 +34,11 @@ namespace Driver
          */
         explicit IPulseCounterDriver() = default;
 
+        IPulseCounterDriver(const IPulseCounterDriver &) = delete;
+        IPulseCounterDriver &operator=(const IPulseCounterDriver &) = delete;
+        IPulseCounterDriver(IPulseCounterDriver &&) = delete;
+        IPulseCounterDriver &operator=(IPulseCounterDriver &&) = delete;
+
         /**
          * @brief Virtual destructor for IPulseCounterDriver.
          *

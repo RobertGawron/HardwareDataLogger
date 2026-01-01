@@ -1,8 +1,9 @@
-#ifndef IMeasurementReader_h
-#define IMeasurementReader_h
+#ifndef IMEASUREMENT_READER_HPP
+#define IMEASUREMENT_READER_HPP
 
-#include "Device/Inc/MeasurementType.hpp"
-#include "Driver/Interface/DriverState.hpp"
+#include "Device/Inc/MeasurementDeviceId.hpp"
+
+#include <cstdint>
 
 namespace Device
 {
@@ -16,15 +17,14 @@ namespace Device
     class IMeasurementReader
     {
     public:
-        /**
-         * @brief Default constructor.
-         */
-        IMeasurementReader() = default;
-
-        /**
-         * @brief Virtual destructor to ensure proper cleanup of derived classes.
-         */
+        constexpr IMeasurementReader() noexcept = default;
         virtual ~IMeasurementReader() = default;
+
+        // Non-copyable and non-movable
+        IMeasurementReader(const IMeasurementReader &) = delete;
+        IMeasurementReader(IMeasurementReader &&) = delete;
+        IMeasurementReader &operator=(const IMeasurementReader &) = delete;
+        IMeasurementReader &operator=(IMeasurementReader &&) = delete;
 
         /**
          * @brief Retrieves the latest measurement value for a specific source.
@@ -35,8 +35,9 @@ namespace Device
          * @param source The identifier of the measurement source device.
          * @return The latest measurement value from the specified source.
          */
-        [[nodiscard]] virtual std::uint32_t getLatestMeasurement(MeasurementDeviceId source) const = 0;
+        [[nodiscard]] virtual std::uint32_t getLatestMeasurement(MeasurementDeviceId source) const noexcept = 0;
     };
-}
 
-#endif
+} // namespace Device
+
+#endif // IMEASUREMENT_READER_HPP

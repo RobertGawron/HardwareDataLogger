@@ -1,71 +1,56 @@
 #include "Device/Inc/DisplayBrightnessRegulator.hpp"
-#include "Driver/Interface/IDisplayBrightnessDriver.hpp"
-#include "Driver/Interface/IAmbientLightSensorDriver.hpp"
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 
 namespace Device
 {
-
-    DisplayBrightnessRegulator::DisplayBrightnessRegulator(
-        Driver::IAmbientLightSensorDriver &_ambientLightSensorDriver,
-        Driver::IDisplayBrightnessDriver &_displayBrightnessDriver) : ambientLightSensorDriver(_ambientLightSensorDriver), displayBrightnessDriver(_displayBrightnessDriver)
+    bool DisplayBrightnessRegulator::init() noexcept
     {
-    }
-
-    bool DisplayBrightnessRegulator::init()
-    {
-        bool status = false;
-
         ambientLightSensorDriver.initialize();
         displayBrightnessDriver.initialize();
 
         ambientLightSensorDriver.start();
         displayBrightnessDriver.start();
 
-        // dummy test
-        const std::uint8_t start = 1;
-        const std::uint8_t stop = 95;
-        const std::uint8_t step = 10;
+        // TODO: Remove dummy brightness test sweep
+        static constexpr std::uint8_t START_BRIGHTNESS{1};
+        static constexpr std::uint8_t STOP_BRIGHTNESS{95};
+        static constexpr std::uint8_t BRIGHTNESS_STEP{10};
 
-        for (std::size_t i = start; i < stop; i += step)
+        for (std::uint8_t i{START_BRIGHTNESS}; i < STOP_BRIGHTNESS; i += BRIGHTNESS_STEP)
         {
-            auto const newValue = static_cast<Driver::IDisplayBrightnessDriver::BrightnessPercentage>(i);
-            displayBrightnessDriver.setBrightness(newValue);
-            status = true; // dummy
+            const auto brightness = static_cast<Driver::IDisplayBrightnessDriver::BrightnessPercentage>(i);
+            displayBrightnessDriver.setBrightness(brightness);
         }
-        // displayBrightnessDriver.setBrightness(55);
-        // displayBrightnessDriver.setBrightness(90);
 
-        return status;
+        return true;
     }
 
-    void DisplayBrightnessRegulator::tick()
+    void DisplayBrightnessRegulator::tick() noexcept
     {
-        volatile const std::uint32_t dummy = ambientLightSensorDriver.getAmbientLightLevel();
-        (void)dummy; // Suppress unused warning by explicitly marking it as used
+        [[maybe_unused]] const auto ambientLevel = ambientLightSensorDriver.getAmbientLightLevel();
+        // TODO: Implement automatic brightness adjustment based on ambient light
     }
 
-    std::uint8_t DisplayBrightnessRegulator::getBrightnessPercentage() const
+    std::uint8_t DisplayBrightnessRegulator::getBrightnessPercentage() const noexcept
     {
         return level;
     }
 
-    bool DisplayBrightnessRegulator::setBrightnessPercentage(std::uint8_t _level)
+    bool DisplayBrightnessRegulator::setBrightnessPercentage(std::uint8_t newLevel) noexcept
     {
-        const std::uint8_t MaxLevel = 100U;
-        bool status = false;
+        static constexpr std::uint8_t MAX_BRIGHTNESS_LEVEL{100};
 
-        if (_level < MaxLevel)
+        if (newLevel >= MAX_BRIGHTNESS_LEVEL) [[unlikely]]
         {
-            level = _level;
-            status = true;
-
-            displayBrightnessDriver.setBrightness(level);
+            return false;
         }
 
-        return status;
+        level = newLevel;
+        displayBrightnessDriver.setBrightness(level);
+
+        return true;
     }
 
-}
+} // namespace Device

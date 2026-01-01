@@ -30,6 +30,11 @@ namespace BusinessLogic
          */
         IHmiFactory() = default;
 
+        IHmiFactory(const IHmiFactory &) = delete;
+        IHmiFactory &operator=(const IHmiFactory &) = delete;
+        IHmiFactory(IHmiFactory &&) = delete;
+        IHmiFactory &operator=(IHmiFactory &&) = delete;
+
         /**
          * @brief Virtual destructor for IHmiFactory.
          *

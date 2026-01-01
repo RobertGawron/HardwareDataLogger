@@ -3,11 +3,13 @@
  * @brief Provides the `Display` class implementation, which serves as an adapter for the `IDisplay` interface.
  */
 
-#ifndef Display_h
-#define Display_h
+#ifndef DISPLAY_HPP
+#define DISPLAY_HPP
 
 #include "Device/Interface/IDisplay.hpp"
 #include "Driver/Interface/IDisplayDriver.hpp"
+
+#include <cstdint>
 
 namespace Device
 {
@@ -19,7 +21,7 @@ namespace Device
      * It manages the initialization and configuration of the display and provides utility functions
      * for working with the underlying display driver.
      */
-    class Display : public IDisplay
+    class Display final : public IDisplay
     {
     public:
         /**
@@ -29,6 +31,20 @@ namespace Device
          */
         explicit Display(Driver::IDisplayDriver &displayDriver);
 
+        /* explicit constexpr Display(Driver::IDisplayDriver &displayDriver) noexcept
+             : displayDriver{displayDriver}
+         {
+         }*/
+
+        ~Display() override = default;
+
+        // Non-copyable and non-movable
+        Display() = delete;
+        Display(const Display &) = delete;
+        Display(Display &&) = delete;
+        Display &operator=(const Display &) = delete;
+        Display &operator=(Display &&) = delete;
+
         /**
          * @brief Initializes the display system.
          *
@@ -36,7 +52,7 @@ namespace Device
          *
          * @return `true` if the initialization is successful; `false` otherwise.
          */
-        bool initialize() override;
+        [[nodiscard]] bool initialize() noexcept override;
 
         /**
          * @brief Callback function for handling low-level display commands.
@@ -50,37 +66,7 @@ namespace Device
          * @param argPtr Pointer argument associated with the message.
          * @return A status code indicating success or failure.
          */
-        std::uint8_t u8x8DSt7735Impl(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t argInt, void *argPtr);
-
-        /**
-         * @brief Deleted default constructor.
-         *
-         * Prevents the creation of a `Display` instance without a display driver.
-         */
-        Display() = delete;
-
-        /**
-         * @brief Default destructor.
-         *
-         * Cleans up the `Display` instance.
-         */
-        ~Display() override = default;
-
-        /**
-         * @brief Deleted copy constructor.
-         *
-         * Prevents copying of the `Display` instance.
-         */
-        Display(const Display &) = delete;
-
-        /**
-         * @brief Deleted assignment operator.
-         *
-         * Prevents assignment of the `Display` instance.
-         *
-         * @return Reference to the `Display` instance.
-         */
-        Display &operator=(const Display &) = delete;
+        [[nodiscard]] std::uint8_t u8x8DSt7735Impl(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t argInt, void *argPtr);
 
     private:
         /**
@@ -94,11 +80,15 @@ namespace Device
          * @param byte_cb Byte callback function for communication with the display.
          * @param gpio_and_delay_cb GPIO and delay callback function for controlling hardware signals.
          */
-        static void u8g2_Setup_st7735(u8g2_t *u8g2Handler, const u8g2_cb_t *rotation, u8x8_msg_cb byte_cb, u8x8_msg_cb gpio_and_delay_cb);
+        static void u8g2_Setup_st7735(
+            u8g2_t *u8g2Handler,
+            const u8g2_cb_t *rotation,
+            u8x8_msg_cb byte_cb,
+            u8x8_msg_cb gpio_and_delay_cb);
 
-        /// Reference to the display driver used for managing display operations.
         Driver::IDisplayDriver &displayDriver;
     };
-}
 
-#endif // Display_h
+} // namespace Device
+
+#endif // DISPLAY_HPP

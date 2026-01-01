@@ -1,90 +1,83 @@
 #include "Device/Inc/SdCardMeasurementRecorder.hpp"
-#include "Device/Inc/MeasurementType.hpp"
-#include "Driver/Interface/ISdCardDriver.hpp"
-#include "Driver/Interface/SdCardStatus.hpp"
 
 #include <array>
+#include <charconv>
 #include <cstddef>
 #include <cstdint>
 #include <span>
-#include <charconv>
+#include <string_view>
 #include <variant>
 
 namespace Device
 {
-    SdCardMeasurementRecorder::SdCardMeasurementRecorder(Driver::ISdCardDriver &_driver)
-        : driver(_driver)
-    {
-    }
-
-    [[nodiscard]] bool SdCardMeasurementRecorder::onInitialize()
+    bool SdCardMeasurementRecorder::onInitialize() noexcept
     {
         return driver.initialize();
     }
 
-    [[nodiscard]] bool SdCardMeasurementRecorder::onStart()
+    bool SdCardMeasurementRecorder::onStart() noexcept
     {
         using FileOpenMode = Driver::ISdCardDriver::FileOpenMode;
 
-        constexpr std::string_view filename = "measurements.txt";
-        constexpr FileOpenMode mode = FileOpenMode::APPEND;
+        static constexpr std::string_view FILENAME{"measurements.txt"};
+        static constexpr FileOpenMode MODE{FileOpenMode::APPEND};
 
         return driver.start() &&
-               (driver.openFile(filename, mode) == Driver::SdCardStatus::OK);
+               (driver.openFile(FILENAME, MODE) == Driver::SdCardStatus::OK);
     }
 
-    [[nodiscard]] bool SdCardMeasurementRecorder::onStop()
+    bool SdCardMeasurementRecorder::onStop() noexcept
     {
         return driver.stop();
     }
 
-    [[nodiscard]] bool SdCardMeasurementRecorder::onReset()
+    bool SdCardMeasurementRecorder::onReset() noexcept
     {
         return driver.reset();
     }
 
-    bool SdCardMeasurementRecorder::notify(Device::MeasurementType &measurement)
+    bool SdCardMeasurementRecorder::notify(const MeasurementType &measurement) noexcept
     {
-        bool status = false;
-
-        // Convert measurement to CSV format: "sourceId,measurement\n"
-        std::array<char, 64> csvBuffer{};
-        std::size_t offset = 0;
+        static constexpr std::size_t BUFFER_SIZE{64};
+        std::array<char, BUFFER_SIZE> csvBuffer{};
+        std::size_t offset{0};
+        bool status{false};
 
         // Convert source ID to string
-        auto sourceResult = std::to_chars(
+        const auto sourceResult = std::to_chars(
             csvBuffer.data() + offset,
             csvBuffer.data() + csvBuffer.size(),
             static_cast<std::uint8_t>(measurement.source));
 
-        if (sourceResult.ec == std::errc{})
+        if (sourceResult.ec == std::errc{}) [[likely]]
         {
             offset = sourceResult.ptr - csvBuffer.data();
 
-            // Add comma separator
-            if (offset < csvBuffer.size())
+            if (offset < csvBuffer.size()) [[likely]]
             {
                 csvBuffer[offset++] = ',';
 
-                // Visit the variant and convert the measurement data to string
-                bool conversionSuccess = std::visit([&](auto value) -> bool
-                                                    {
-                            auto dataResult = std::to_chars(
-                                csvBuffer.data() + offset,
-                                csvBuffer.data() + csvBuffer.size(),
-                                value);
+                // Convert measurement data to string
+                const bool conversionSuccess = std::visit(
+                    [&]<typename T>(const T &value) constexpr noexcept -> bool
+                    {
+                        const auto dataResult = std::to_chars(
+                            csvBuffer.data() + offset,
+                            csvBuffer.data() + csvBuffer.size(),
+                            value);
 
-                            if (dataResult.ec == std::errc{})
-                            {
-                                offset = dataResult.ptr - csvBuffer.data();
-                                return true;
-                            }
-                            return false; }, measurement.data);
+                        if (dataResult.ec == std::errc{})
+                        {
+                            offset = dataResult.ptr - csvBuffer.data();
+                            return true;
+                        }
+                        return false;
+                    },
+                    measurement.data);
 
-                if (conversionSuccess)
+                if (conversionSuccess) [[likely]]
                 {
-                    // Add newline
-                    if (offset < csvBuffer.size())
+                    if (offset < csvBuffer.size()) [[likely]]
                     {
                         csvBuffer[offset++] = '\n';
 
@@ -101,4 +94,5 @@ namespace Device
 
         return status;
     }
-}
+
+} // namespace Device

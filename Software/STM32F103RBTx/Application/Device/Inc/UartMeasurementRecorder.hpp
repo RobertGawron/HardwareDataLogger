@@ -4,8 +4,8 @@
  *        to a COM port via UART over USB.
  */
 
-#ifndef UartMeasurementRecorder_H_
-#define UartMeasurementRecorder_H_
+#ifndef UART_MEASUREMENT_RECORDER_HPP
+#define UART_MEASUREMENT_RECORDER_HPP
 
 #include "Device/Interface/IMeasurementRecorder.hpp"
 #include "Driver/Interface/IUartDriver.hpp"
@@ -20,7 +20,7 @@ namespace Device
      * over a COM port, typically using UART over USB. It provides methods to manage the
      * initialization, transmission, and lifecycle of the data recording process.
      */
-    class UartMeasurementRecorder : public IMeasurementRecorder
+    class UartMeasurementRecorder final : public IMeasurementRecorder
     {
     public:
         /**
@@ -28,23 +28,21 @@ namespace Device
          *
          * @param driver Reference to the UART driver responsible for managing UART communication.
          */
-        explicit UartMeasurementRecorder(Driver::IUartDriver &driver);
+        explicit constexpr UartMeasurementRecorder(Driver::IUartDriver &driver) noexcept
+            : driver{driver}
+        {
+        }
 
         /**
          * @brief Default destructor for UartMeasurementRecorder.
          */
         ~UartMeasurementRecorder() override = default;
 
-        /**
-         * @brief Deleted copy constructor to prevent copying.
-         */
+        // Non-copyable and non-movable
         UartMeasurementRecorder(const UartMeasurementRecorder &) = delete;
-
-        /**
-         * @brief Deleted assignment operator to prevent assignment.
-         * @return UartMeasurementRecorder& The assigned object.
-         */
+        UartMeasurementRecorder(UartMeasurementRecorder &&) = delete;
         UartMeasurementRecorder &operator=(const UartMeasurementRecorder &) = delete;
+        UartMeasurementRecorder &operator=(UartMeasurementRecorder &&) = delete;
 
         /**
          * @brief Notifies the recorder to process new data.
@@ -52,7 +50,7 @@ namespace Device
          * This method is called to notify the recorder that new measurement data is available
          * and should be sent to the COM port via UART.
          */
-        bool notify(Device::MeasurementType &measurement) override;
+        [[nodiscard]] bool notify(const MeasurementType &measurement) noexcept override;
 
     protected:
         /**
@@ -61,7 +59,7 @@ namespace Device
          * This method is responsible for initializing the recorder and preparing it for operation.
          * @return True if initialization was successful, false otherwise.
          */
-        bool onInitialize() override;
+        [[nodiscard]] bool onInitialize() noexcept override;
 
         /**
          * @brief Starts the UartMeasurementRecorder.
@@ -69,7 +67,7 @@ namespace Device
          * This method starts the recorder, enabling it to begin sending measurement data to the COM port via UART.
          * @return True if the recorder started successfully, false otherwise.
          */
-        bool onStart() override;
+        [[nodiscard]] bool onStart() noexcept override;
 
         /**
          * @brief Stops the UartMeasurementRecorder.
@@ -77,7 +75,7 @@ namespace Device
          * This method stops the recorder, halting any further transmission of measurement data.
          * @return True if the recorder stopped successfully, false otherwise.
          */
-        bool onStop() override;
+        [[nodiscard]] bool onStop() noexcept override;
 
         /**
          * @brief Resets the UartMeasurementRecorder.
@@ -85,13 +83,12 @@ namespace Device
          * This method resets the recorder, clearing any internal state or buffers.
          * @return True if the recorder was reset successfully, false otherwise.
          */
-        bool onReset() override;
+        [[nodiscard]] bool onReset() noexcept override;
 
     private:
-        /** @brief Reference to the UART driver used for communication with the COM port. */
         Driver::IUartDriver &driver;
     };
 
-}
+} // namespace Device
 
-#endif // UartMeasurementRecorder_H_
+#endif // UART_MEASUREMENT_RECORDER_HPP

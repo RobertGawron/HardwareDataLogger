@@ -3,8 +3,8 @@
  * @brief Defines the SdCardMeasurementRecorder class responsible for writing measurement data to an SD card.
  */
 
-#ifndef SdCardMeasurementRecorder_H_
-#define SdCardMeasurementRecorder_H_
+#ifndef SD_CARD_MEASUREMENT_RECORDER_HPP
+#define SD_CARD_MEASUREMENT_RECORDER_HPP
 
 #include "Device/Interface/IMeasurementRecorder.hpp"
 #include "Driver/Interface/ISdCardDriver.hpp"
@@ -18,7 +18,7 @@ namespace Device
      * The SdCardMeasurementRecorder class interacts with an SD card driver to store measurement data.
      * It provides methods for writing, flushing, and managing the lifecycle of the recording process.
      */
-    class SdCardMeasurementRecorder : public IMeasurementRecorder
+    class SdCardMeasurementRecorder final : public IMeasurementRecorder
     {
     public:
         /**
@@ -26,28 +26,19 @@ namespace Device
          *
          * @param driver Reference to the SD card driver responsible for managing SD card interactions.
          */
-        explicit SdCardMeasurementRecorder(Driver::ISdCardDriver &driver);
+        explicit constexpr SdCardMeasurementRecorder(Driver::ISdCardDriver &driver) noexcept
+            : driver{driver}
+        {
+        }
 
-        /**
-         * @brief Deleted default constructor to prevent instantiation without a driver.
-         */
-        SdCardMeasurementRecorder() = delete;
-
-        /**
-         * @brief Default destructor for SdCardMeasurementRecorder.
-         */
         ~SdCardMeasurementRecorder() override = default;
 
-        /**
-         * @brief Deleted copy constructor to prevent copying.
-         */
+        // Non-copyable and non-movable
+        SdCardMeasurementRecorder() = delete;
         SdCardMeasurementRecorder(const SdCardMeasurementRecorder &) = delete;
-
-        /**
-         * @brief Deleted assignment operator to prevent assignment.
-         * @return SdCardMeasurementRecorder& The assigned object.
-         */
+        SdCardMeasurementRecorder(SdCardMeasurementRecorder &&) = delete;
         SdCardMeasurementRecorder &operator=(const SdCardMeasurementRecorder &) = delete;
+        SdCardMeasurementRecorder &operator=(SdCardMeasurementRecorder &&) = delete;
 
         /**
          * @brief Notifies the recorder to process new data.
@@ -55,7 +46,7 @@ namespace Device
          * This method is called to notify the recorder that new measurement data is available
          * and should be written to the SD card.
          */
-        bool notify(Device::MeasurementType &measurement) override;
+        [[nodiscard]] bool notify(const MeasurementType &measurement) noexcept override;
 
     protected:
         /**
@@ -64,7 +55,7 @@ namespace Device
          * This method is responsible for initializing the recorder and preparing it for operation.
          * @return True if initialization was successful, false otherwise.
          */
-        bool onInitialize() override;
+        [[nodiscard]] bool onInitialize() noexcept override;
 
         /**
          * @brief Starts the SdCardMeasurementRecorder.
@@ -72,7 +63,7 @@ namespace Device
          * This method starts the recorder, enabling it to begin writing measurement data to the SD card.
          * @return True if the recorder started successfully, false otherwise.
          */
-        bool onStart() override;
+        [[nodiscard]] bool onStart() noexcept override;
 
         /**
          * @brief Stops the SdCardMeasurementRecorder.
@@ -80,7 +71,7 @@ namespace Device
          * This method stops the recorder, halting any further writing of measurement data.
          * @return True if the recorder stopped successfully, false otherwise.
          */
-        bool onStop() override;
+        [[nodiscard]] bool onStop() noexcept override;
 
         /**
          * @brief Resets the SdCardMeasurementRecorder.
@@ -88,11 +79,12 @@ namespace Device
          * This method resets the recorder, clearing any internal state or buffers.
          * @return True if the recorder was reset successfully, false otherwise.
          */
-        bool onReset() override;
+        [[nodiscard]] bool onReset() noexcept override;
 
     private:
-        /** @brief Reference to the SD card driver used for communication with the SD card. */
         Driver::ISdCardDriver &driver;
     };
-}
-#endif // SdCardMeasurementRecorder_H_
+
+} // namespace Device
+
+#endif // SD_CARD_MEASUREMENT_RECORDER_HPP

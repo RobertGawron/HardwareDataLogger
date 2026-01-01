@@ -1,82 +1,27 @@
-#ifndef WiFiMeasurementSerializer_hpp
-#define WiFiMeasurementSerializer_hpp
+#ifndef WIFI_MEASUREMENT_SERIALIZER_HPP
+#define WIFI_MEASUREMENT_SERIALIZER_HPP
 
 #include "Device/Inc/MeasurementType.hpp"
 #include "Device/Inc/Crc32.hpp"
 
-#include <cstring>
-#include <variant>
+#include <algorithm>
 #include <cstdint>
-#include <array>
+#include <cstring>
+#include <expected>
+#include <span>
 #include <type_traits>
+#include <variant>
 
 namespace Device
 {
-    class WiFiMeasurementSerializer
+    enum class SerializationError : std::uint8_t
     {
-    private:
-        // Protocol Layout Constants
-        static constexpr std::size_t FIELD_LEN_SIZE = 2U;
-        static constexpr std::size_t FIELD_SRC_SIZE = 1U;
-        static constexpr std::size_t FIELD_CRC_SIZE = 4U;
+        BufferTooSmall,
+        InvalidMeasurement
+    };
 
-        // Total fixed overhead: Length(2) + Source(1) + CRC(4)
-        static constexpr std::size_t PROTOCOL_OVERHEAD = FIELD_LEN_SIZE + FIELD_SRC_SIZE + FIELD_CRC_SIZE;
-
-        // Bitwise Constants
-        static constexpr std::uint8_t BITS_PER_BYTE = 8U;
-        static constexpr std::uint8_t BITS_24 = 24U;
-        static constexpr std::uint8_t BITS_16 = 16U;
-        static constexpr std::uint8_t BITS_8 = 8U;
-        static constexpr std::uint8_t BYTE_MASK = 0xFFU;
-
-        // Size constants for type checking
-        static constexpr std::size_t SIZE_BYTE = 1U;
-        static constexpr std::size_t SIZE_WORD = 2U;
-        static constexpr std::size_t SIZE_DWORD = 4U;
-        static constexpr std::size_t SIZE_QWORD = 8U;
-
-        /**
-         * @brief Generic Little Endian serializer for any trivial type.
-         * Handles integers, floats, doubles, etc. by reinterpreting as unsigned integer.
-         *
-         * @tparam T The type to serialize (must be trivially copyable)
-         * @tparam N The size of the data array
-         * @param value The value to serialize
-         * @param data Output buffer array reference
-         * @param cursor Current position in buffer (will be advanced)
-         */
-        template <typename T, std::size_t N>
-        static void serializeLittleEndian(const T &value, std::array<std::uint8_t, N> &data, std::size_t &cursor)
-        {
-            static_assert(std::is_trivially_copyable_v<T>, "Type must be trivially copyable");
-
-            if constexpr (sizeof(T) == SIZE_BYTE)
-            {
-                // Single byte - no endianness issue
-                data[cursor++] = static_cast<std::uint8_t>(value);
-            }
-            else
-            {
-                // Multi-byte type - serialize as Little Endian
-                // Reinterpret the value as unsigned integer of same size
-                using UIntType = std::conditional_t<sizeof(T) == SIZE_WORD, std::uint16_t,
-                                                    std::conditional_t<sizeof(T) == SIZE_DWORD, std::uint32_t,
-                                                                       std::conditional_t<sizeof(T) == SIZE_QWORD, std::uint64_t, void>>>;
-
-                static_assert(!std::is_same_v<UIntType, void>, "Unsupported type size");
-
-                UIntType temp;
-                std::memcpy(&temp, &value, sizeof(T));
-
-                // Write bytes in Little Endian order (LSB first)
-                for (std::size_t i = 0U; i < sizeof(T); ++i)
-                {
-                    data[cursor++] = static_cast<std::uint8_t>((temp >> (i * BITS_PER_BYTE)) & BYTE_MASK);
-                }
-            }
-        }
-
+    class WiFiMeasurementSerializer final
+    {
     public:
         /**
          * @brief Serializes a measurement into the provided buffer.
@@ -84,63 +29,135 @@ namespace Device
          *
          * All multi-byte values are serialized in Little Endian for STM32/ESP32 compatibility.
          *
-         * @tparam BUFFER_SIZE Deduced from the array.
          * @param measurement Input data.
-         * @param data Output buffer.
-         * @param totalMsgLength Output variable for the actual written size.
-         * @return true if serialization succeeded, false if buffer was too small.
+         * @param output Output buffer span.
+         * @return Number of bytes written, or error.
          */
-        template <std::size_t BUFFER_SIZE>
-        [[nodiscard]] static bool generate(
+        [[nodiscard]] static constexpr std::expected<std::size_t, SerializationError> serialize(
             const MeasurementType &measurement,
-            std::array<std::uint8_t, BUFFER_SIZE> &data,
-            std::size_t &totalMsgLength)
+            std::span<std::uint8_t> output) noexcept
         {
-            bool isSuccessful = false;
-            totalMsgLength = 0U;
+            const std::size_t valueSize = std::visit([]<typename T>(const T &) constexpr noexcept
+                                                     { return sizeof(T); }, measurement.data);
 
-            // 1. Calculate the size of the variant data
-            const std::size_t valueSize = std::visit([](const auto &val)
-                                                     { return sizeof(val); },
-                                                     measurement.data);
-
-            // 2. Pre-calculate total required size
             const std::size_t requiredSize = PROTOCOL_OVERHEAD + valueSize;
 
-            // 3. Perform Serialization if buffer permits
-            if (requiredSize <= BUFFER_SIZE)
+            if (requiredSize > output.size()) [[unlikely]]
             {
-                std::size_t cursor = 0U;
-
-                // A. Write Length field (Little Endian)
-                const std::uint16_t tempLength = static_cast<std::uint16_t>(requiredSize);
-                data[cursor++] = static_cast<std::uint8_t>(tempLength & BYTE_MASK);             // LSB
-                data[cursor++] = static_cast<std::uint8_t>((tempLength >> BITS_8) & BYTE_MASK); // MSB
-
-                // B. Write Source ID
-                data[cursor++] = static_cast<std::uint8_t>(measurement.source);
-
-                // C. Write Measurement Value (Little Endian)
-                std::visit([&](const auto &val)
-                           { serializeLittleEndian(val, data, cursor); },
-                           measurement.data);
-
-                // D. Calculate CRC over [Length + Source + Data]
-                const std::uint32_t crcCalc = Crc32::compute(data, cursor);
-
-                // E. Write CRC (Little Endian)
-                data[cursor++] = static_cast<std::uint8_t>(crcCalc & BYTE_MASK); // LSB
-                data[cursor++] = static_cast<std::uint8_t>((crcCalc >> BITS_8) & BYTE_MASK);
-                data[cursor++] = static_cast<std::uint8_t>((crcCalc >> BITS_16) & BYTE_MASK);
-                data[cursor++] = static_cast<std::uint8_t>((crcCalc >> BITS_24) & BYTE_MASK); // MSB
-
-                totalMsgLength = cursor;
-                isSuccessful = true;
+                return std::unexpected(SerializationError::BufferTooSmall);
             }
 
-            return isSuccessful;
+            std::size_t cursor{0};
+
+            writeLittleEndian(static_cast<std::uint16_t>(requiredSize), output, cursor);
+            output[cursor++] = static_cast<std::uint8_t>(measurement.source);
+
+            std::visit([&]<typename T>(const T &val) constexpr noexcept
+                       { writeLittleEndian(val, output, cursor); }, measurement.data);
+
+            const std::uint32_t crcCalc = Crc32::compute(output.subspan(0, cursor));
+            writeLittleEndian(crcCalc, output, cursor);
+
+            return cursor;
+        }
+
+        /**
+         * @brief Calculates the exact serialized size for a measurement.
+         */
+        [[nodiscard]] static constexpr std::size_t getSerializedSize(
+            const MeasurementType &measurement) noexcept
+        {
+            const std::size_t valueSize = std::visit([]<typename T>(const T &) constexpr noexcept
+                                                     { return sizeof(T); }, measurement.data);
+
+            return PROTOCOL_OVERHEAD + valueSize;
+        }
+
+        /**
+         * @brief Calculates the maximum possible serialized size at compile-time.
+         */
+        [[nodiscard]] static consteval std::size_t getMaxSerializedSize() noexcept
+        {
+            return PROTOCOL_OVERHEAD + getMaxVariantSize<MeasurementType::DataVariant>();
+        }
+
+        WiFiMeasurementSerializer() = delete;
+        ~WiFiMeasurementSerializer() = delete;
+        WiFiMeasurementSerializer(const WiFiMeasurementSerializer &) = delete;
+        WiFiMeasurementSerializer &operator=(const WiFiMeasurementSerializer &) = delete;
+        WiFiMeasurementSerializer(WiFiMeasurementSerializer &&) = delete;
+        WiFiMeasurementSerializer &operator=(WiFiMeasurementSerializer &&) = delete;
+
+    private:
+        static constexpr std::size_t FIELD_LEN_SIZE{2};
+        static constexpr std::size_t FIELD_SRC_SIZE{1};
+        static constexpr std::size_t FIELD_CRC_SIZE{4};
+        static constexpr std::size_t PROTOCOL_OVERHEAD{FIELD_LEN_SIZE + FIELD_SRC_SIZE + FIELD_CRC_SIZE};
+
+        static constexpr std::uint8_t BITS_PER_BYTE{8};
+        static constexpr std::uint8_t BYTE_MASK{0xFF};
+
+        static constexpr std::size_t SIZE_BYTE{1};
+        static constexpr std::size_t SIZE_WORD{2};
+        static constexpr std::size_t SIZE_DWORD{4};
+        static constexpr std::size_t SIZE_QWORD{8};
+
+        template <typename Variant>
+        [[nodiscard]] static consteval std::size_t getMaxVariantSize() noexcept
+        {
+            return []<std::size_t... Is>(std::index_sequence<Is...>) consteval noexcept
+            {
+                return std::max({sizeof(std::variant_alternative_t<Is, Variant>)...});
+            }(std::make_index_sequence<std::variant_size_v<Variant>>{});
+        }
+
+        template <typename T>
+        static constexpr void writeLittleEndian(
+            const T &value,
+            std::span<std::uint8_t> output,
+            std::size_t &cursor) noexcept
+        {
+            static_assert(std::is_trivially_copyable_v<T>, "Type must be trivially copyable");
+
+            if constexpr (sizeof(T) == SIZE_BYTE)
+            {
+                output[cursor++] = static_cast<std::uint8_t>(value);
+            }
+            else if constexpr (sizeof(T) == SIZE_WORD)
+            {
+                std::uint16_t temp;
+                std::memcpy(&temp, &value, sizeof(T));
+
+                output[cursor++] = static_cast<std::uint8_t>(temp & BYTE_MASK);
+                output[cursor++] = static_cast<std::uint8_t>((temp >> BITS_PER_BYTE) & BYTE_MASK);
+            }
+            else if constexpr (sizeof(T) == SIZE_DWORD)
+            {
+                std::uint32_t temp;
+                std::memcpy(&temp, &value, sizeof(T));
+
+                output[cursor++] = static_cast<std::uint8_t>(temp & BYTE_MASK);
+                output[cursor++] = static_cast<std::uint8_t>((temp >> BITS_PER_BYTE) & BYTE_MASK);
+                output[cursor++] = static_cast<std::uint8_t>((temp >> (2 * BITS_PER_BYTE)) & BYTE_MASK);
+                output[cursor++] = static_cast<std::uint8_t>((temp >> (3 * BITS_PER_BYTE)) & BYTE_MASK);
+            }
+            else if constexpr (sizeof(T) == SIZE_QWORD)
+            {
+                std::uint64_t temp;
+                std::memcpy(&temp, &value, sizeof(T));
+
+                for (std::size_t i{0}; i < sizeof(T); ++i)
+                {
+                    output[cursor++] = static_cast<std::uint8_t>((temp >> (i * BITS_PER_BYTE)) & BYTE_MASK);
+                }
+            }
+            else
+            {
+                static_assert(sizeof(T) == 0, "Unsupported type size for serialization");
+            }
         }
     };
-}
 
-#endif // WiFiMeasurementSerializer_hpp
+} // namespace Device
+
+#endif // WIFI_MEASUREMENT_SERIALIZER_HPP

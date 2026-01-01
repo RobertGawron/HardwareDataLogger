@@ -8,42 +8,30 @@
 namespace Device
 {
 
-    PulseCounterMeasurementSource::PulseCounterMeasurementSource(MeasurementDeviceId _deviceId, Driver::IPulseCounterDriver &_pulseCounterDriver)
-        : deviceId(_deviceId),
-          pulseCounterDriver(_pulseCounterDriver)
+    bool PulseCounterMeasurementSource::initialize() noexcept
     {
+        return pulseCounterDriver.initialize();
     }
 
-    bool PulseCounterMeasurementSource::initialize()
+    bool PulseCounterMeasurementSource::start() noexcept
     {
-        const bool status = pulseCounterDriver.initialize();
-        return status;
+        return pulseCounterDriver.start();
     }
 
-    bool PulseCounterMeasurementSource::start()
+    bool PulseCounterMeasurementSource::stop() noexcept
     {
-        const bool status = pulseCounterDriver.start();
-        return status;
+        return pulseCounterDriver.stop();
     }
 
-    bool PulseCounterMeasurementSource::stop()
-    {
-        const bool status = pulseCounterDriver.stop();
-        return status;
-    }
-
-    bool PulseCounterMeasurementSource::isMeasurementAvailable()
+    bool PulseCounterMeasurementSource::isMeasurementAvailable() const noexcept
     {
         return true;
     }
 
-    MeasurementType PulseCounterMeasurementSource::getMeasurement()
+    MeasurementType PulseCounterMeasurementSource::getMeasurement() noexcept
     {
-        const MeasurementType measurement{
-            .data = pulseCounterDriver.getMeasurement(),
-            .source = deviceId};
-
-        return measurement;
+        return MeasurementType{
+            .source = deviceId,
+            .data = pulseCounterDriver.getMeasurement()};
     }
-
 }

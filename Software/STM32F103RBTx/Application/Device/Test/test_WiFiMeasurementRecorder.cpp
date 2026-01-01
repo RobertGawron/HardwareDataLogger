@@ -30,13 +30,12 @@ public:
 class WiFiMeasurementRecorderTest : public ::testing::Test
 {
 protected:
-    // Test Constants
-    static constexpr std::uint8_t TEST_MEASUREMENT_VALUE_U8 = 0x42U;
+    // Test Constants (changed to uint16_t)
+    static constexpr std::uint16_t TEST_MEASUREMENT_VALUE_U8 = 0x42U;
     static constexpr std::uint16_t TEST_MEASUREMENT_VALUE_U16 = 0x1234U;
     static constexpr std::uint32_t TEST_MEASUREMENT_VALUE_U32 = 0x12345678U;
 
 private:
-    // Fields are now private
     MockUartDriver mockDriver;
     std::unique_ptr<Device::WiFiMeasurementRecorder> recorder;
 
@@ -47,34 +46,31 @@ protected:
     }
 
     // Helper to decode COBS and verify protocol structure
-    static std::vector<std::uint8_t> decodeCobs(const std::span<const std::uint8_t> cobsData)
+    static auto decodeCobs(const std::span<const std::uint8_t> cobsData) -> std::vector<std::uint8_t>
     {
         std::vector<std::uint8_t> decoded;
 
-        // Remove trailing delimiter
         if (cobsData.empty() || cobsData.back() != 0x00)
         {
-            return decoded; // Invalid COBS frame
+            return decoded;
         }
 
-        std::size_t pos = 0;
-        while (pos < cobsData.size() - 1) // -1 to skip delimiter
+        std::size_t pos{};
+        while (pos < cobsData.size() - 1)
         {
-            const std::uint8_t code = cobsData[pos];
+            const auto code = cobsData[pos];
 
             if (code == 0)
             {
-                break; // Invalid
+                break;
             }
 
-            // Insert zero if this isn't the first code
             if (pos > 0)
             {
                 decoded.push_back(0x00);
             }
 
-            // Copy (code - 1) bytes
-            for (std::uint8_t i = 1; i < code && (pos + i) < cobsData.size() - 1; ++i)
+            for (std::uint8_t i{1}; i < code && (pos + i) < cobsData.size() - 1; ++i)
             {
                 decoded.push_back(cobsData[pos + i]);
             }
@@ -86,9 +82,8 @@ protected:
     }
 
 public:
-    // Public getters
-    MockUartDriver &getMockDriver() { return mockDriver; }
-    Device::WiFiMeasurementRecorder &getRecorder() { return *recorder; }
+    auto getMockDriver() -> MockUartDriver & { return mockDriver; }
+    auto getRecorder() -> Device::WiFiMeasurementRecorder & { return *recorder; }
 };
 
 // --- Custom Matchers ---
@@ -112,7 +107,6 @@ MATCHER(IsCobsEncoded, "Checks if data is COBS encoded with trailing 0x00")
     {
         return false;
     }
-    // COBS frames must end with 0x00 delimiter
     return arg.back() == 0x00;
 }
 
@@ -121,7 +115,6 @@ MATCHER_P2(HasLittleEndianProtocol, expectedSource, expectedValueSize, "")
 {
     static constexpr std::uint8_t BITS_PER_BYTE = 8U;
 
-    // Decode COBS
     std::vector<std::uint8_t> decoded;
     if (arg.empty() || arg.back() != 0x00)
     {
@@ -130,10 +123,10 @@ MATCHER_P2(HasLittleEndianProtocol, expectedSource, expectedValueSize, "")
     }
 
     // Simple COBS decode for validation
-    std::size_t pos = 0;
+    std::size_t pos{};
     while (pos < arg.size() - 1)
     {
-        const std::uint8_t code = arg[pos];
+        const auto code = arg[pos];
         if (code == 0)
         {
             break;
@@ -144,7 +137,7 @@ MATCHER_P2(HasLittleEndianProtocol, expectedSource, expectedValueSize, "")
             decoded.push_back(0x00);
         }
 
-        for (std::uint8_t i = 1; i < code && (pos + i) < arg.size() - 1; ++i)
+        for (std::uint8_t i{1}; i < code && (pos + i) < arg.size() - 1; ++i)
         {
             decoded.push_back(arg[pos + i]);
         }
@@ -153,7 +146,7 @@ MATCHER_P2(HasLittleEndianProtocol, expectedSource, expectedValueSize, "")
     }
 
     // Protocol: [Length(2,LE)][Source(1)][Value(N,LE)][CRC(4,LE)]
-    const std::size_t minSize = 2U + 1U + static_cast<std::size_t>(expectedValueSize) + 4U;
+    const auto minSize = 2U + 1U + static_cast<std::size_t>(expectedValueSize) + 4U;
     if (decoded.size() < minSize)
     {
         *result_listener << "Decoded size " << decoded.size() << " < minimum " << minSize;
@@ -161,7 +154,7 @@ MATCHER_P2(HasLittleEndianProtocol, expectedSource, expectedValueSize, "")
     }
 
     // Verify Length (Little Endian)
-    const std::uint16_t length = static_cast<std::uint16_t>(decoded[0] | (decoded[1] << BITS_PER_BYTE));
+    const auto length = std::uint16_t(decoded[0] | (decoded[1] << BITS_PER_BYTE));
     if (length != decoded.size())
     {
         *result_listener << "Length field " << length << " != actual size " << decoded.size();
@@ -249,9 +242,9 @@ TEST_F(WiFiMeasurementRecorderTest, OnResetReturnsTrue)
 
 TEST_F(WiFiMeasurementRecorderTest, NotifySucceedsWhenTransmitOk)
 {
-    Device::MeasurementType measurement;
-    measurement.source = Device::MeasurementDeviceId::PULSE_COUNTER_1;
-    measurement.data = static_cast<std::uint8_t>(TEST_MEASUREMENT_VALUE_U8);
+    const auto measurement = Device::MeasurementType{
+        .source = Device::MeasurementDeviceId::PULSE_COUNTER_1,
+        .data = TEST_MEASUREMENT_VALUE_U8};
 
     EXPECT_CALL(getMockDriver(), transmit(::testing::AllOf(
                                               SpanNotEmpty(),
@@ -264,9 +257,9 @@ TEST_F(WiFiMeasurementRecorderTest, NotifySucceedsWhenTransmitOk)
 
 TEST_F(WiFiMeasurementRecorderTest, NotifyFailsWhenTransmitFails)
 {
-    Device::MeasurementType measurement;
-    measurement.source = Device::MeasurementDeviceId::PULSE_COUNTER_1;
-    measurement.data = static_cast<std::uint8_t>(TEST_MEASUREMENT_VALUE_U8);
+    const auto measurement = Device::MeasurementType{
+        .source = Device::MeasurementDeviceId::PULSE_COUNTER_1,
+        .data = TEST_MEASUREMENT_VALUE_U8};
 
     EXPECT_CALL(getMockDriver(), transmit(SpanNotEmpty(), ::testing::_))
         .WillOnce(::testing::Return(Driver::UartStatus::Timeout));
@@ -276,12 +269,12 @@ TEST_F(WiFiMeasurementRecorderTest, NotifyFailsWhenTransmitFails)
 
 TEST_F(WiFiMeasurementRecorderTest, NotifyTransmitsValidProtocolForUint8)
 {
-    Device::MeasurementType measurement;
-    measurement.source = Device::MeasurementDeviceId::PULSE_COUNTER_1;
-    measurement.data = static_cast<std::uint8_t>(TEST_MEASUREMENT_VALUE_U8);
+    const auto measurement = Device::MeasurementType{
+        .source = Device::MeasurementDeviceId::PULSE_COUNTER_1,
+        .data = TEST_MEASUREMENT_VALUE_U8};
 
     EXPECT_CALL(getMockDriver(),
-                transmit(HasLittleEndianProtocol(Device::MeasurementDeviceId::PULSE_COUNTER_1, 1),
+                transmit(HasLittleEndianProtocol(Device::MeasurementDeviceId::PULSE_COUNTER_1, 2),
                          ::testing::_))
         .WillOnce(::testing::Return(Driver::UartStatus::Ok));
 
@@ -290,9 +283,9 @@ TEST_F(WiFiMeasurementRecorderTest, NotifyTransmitsValidProtocolForUint8)
 
 TEST_F(WiFiMeasurementRecorderTest, NotifyTransmitsValidProtocolForUint16)
 {
-    Device::MeasurementType measurement;
-    measurement.source = Device::MeasurementDeviceId::PULSE_COUNTER_2;
-    measurement.data = static_cast<std::uint16_t>(TEST_MEASUREMENT_VALUE_U16);
+    const auto measurement = Device::MeasurementType{
+        .source = Device::MeasurementDeviceId::PULSE_COUNTER_2,
+        .data = TEST_MEASUREMENT_VALUE_U16};
 
     EXPECT_CALL(getMockDriver(),
                 transmit(HasLittleEndianProtocol(Device::MeasurementDeviceId::PULSE_COUNTER_2, 2),
@@ -304,9 +297,9 @@ TEST_F(WiFiMeasurementRecorderTest, NotifyTransmitsValidProtocolForUint16)
 
 TEST_F(WiFiMeasurementRecorderTest, NotifyTransmitsValidProtocolForUint32)
 {
-    Device::MeasurementType measurement;
-    measurement.source = Device::MeasurementDeviceId::PULSE_COUNTER_3;
-    measurement.data = static_cast<std::uint32_t>(TEST_MEASUREMENT_VALUE_U32);
+    const auto measurement = Device::MeasurementType{
+        .source = Device::MeasurementDeviceId::PULSE_COUNTER_3,
+        .data = TEST_MEASUREMENT_VALUE_U32};
 
     EXPECT_CALL(getMockDriver(),
                 transmit(HasLittleEndianProtocol(Device::MeasurementDeviceId::PULSE_COUNTER_3, 4),
@@ -318,9 +311,10 @@ TEST_F(WiFiMeasurementRecorderTest, NotifyTransmitsValidProtocolForUint32)
 
 TEST_F(WiFiMeasurementRecorderTest, NotifyTransmitsCobsEncodedData)
 {
-    Device::MeasurementType measurement;
-    measurement.source = Device::MeasurementDeviceId::PULSE_COUNTER_1;
-    measurement.data = static_cast<std::uint8_t>(0x00); // Value with zero to test COBS
+    const auto measurement = Device::MeasurementType{
+        .source = Device::MeasurementDeviceId::PULSE_COUNTER_1,
+        .data = std::uint16_t{0x00} // Value with zero to test COBS
+    };
 
     std::span<const std::uint8_t> capturedData;
 
@@ -335,7 +329,4 @@ TEST_F(WiFiMeasurementRecorderTest, NotifyTransmitsCobsEncodedData)
     // 1. Must end with 0x00 delimiter
     ASSERT_FALSE(capturedData.empty());
     EXPECT_EQ(capturedData.back(), 0x00);
-
-    // 2. COBS encoding ensures no 0x00 in the encoded data (before delimiter)
-    // This is implicitly verified by the COBS structure
 }

@@ -30,23 +30,17 @@ namespace Driver
          */
         IKeyboardDriver() = default;
 
+        IKeyboardDriver(const IKeyboardDriver &) = delete;
+        IKeyboardDriver &operator=(const IKeyboardDriver &) = delete;
+        IKeyboardDriver(IKeyboardDriver &&) = delete;
+        IKeyboardDriver &operator=(IKeyboardDriver &&) = delete;
+
         /**
          * @brief Virtual destructor for IKeyboardDriver.
          *
          * Ensures proper cleanup of derived classes.
          */
         ~IKeyboardDriver() override = default;
-
-        /**
-         * @brief Deleted copy constructor to prevent copying.
-         */
-        IKeyboardDriver(const IKeyboardDriver &) = delete;
-
-        /**
-         * @brief Deleted assignment operator to prevent assignment.
-         * @return IKeyboardDriver& The assigned object.
-         */
-        IKeyboardDriver &operator=(const IKeyboardDriver &) = delete;
 
         /**
          * @brief Periodically updates the state of the keyboard.

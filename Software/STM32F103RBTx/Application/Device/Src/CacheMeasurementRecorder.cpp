@@ -1,69 +1,56 @@
 #include "Device/Inc/CacheMeasurementRecorder.hpp"
-#include "Device/Inc/MeasurementType.hpp"
-#include "Device/Inc/MeasurementDeviceId.hpp"
 
-#include <cstdint>
 #include <cstddef>
-#include <variant>     // Provides std::visit
-#include <type_traits> // Provides std::decay_t
-
-// #include <stdio.h>
+#include <cstdint>
+#include <type_traits>
+#include <variant>
 
 namespace Device
 {
-
-    bool CacheMeasurementRecorder::onInitialize()
+    bool CacheMeasurementRecorder::onInitialize() noexcept
     {
-        const bool status = true;
-        return status;
+        return true;
     }
 
-    bool CacheMeasurementRecorder::onStart()
+    bool CacheMeasurementRecorder::onStart() noexcept
     {
-        const bool status = true;
-        return status;
+        return true;
     }
 
-    bool CacheMeasurementRecorder::onStop()
+    bool CacheMeasurementRecorder::onStop() noexcept
     {
-        const bool status = true;
-        return status;
+        return true;
     }
 
-    bool CacheMeasurementRecorder::onReset()
+    bool CacheMeasurementRecorder::onReset() noexcept
     {
-        const bool status = true;
-        return status;
+        return true;
     }
 
-    std::uint32_t CacheMeasurementRecorder::getLatestMeasurement(MeasurementDeviceId source) const
+    std::uint32_t CacheMeasurementRecorder::getLatestMeasurement(MeasurementDeviceId source) const noexcept
     {
         return lastMeasurement[static_cast<std::size_t>(source)];
     }
 
-    bool CacheMeasurementRecorder::write(Device::MeasurementType &measurement)
+    bool CacheMeasurementRecorder::write(const MeasurementType &measurement) noexcept
     {
-
-        //  printf("************* %d src: %d\n", measurement.data, measurement.source);
-        // Safely extract the value from the variant and store it as std::uint32_t
         std::visit(
-            [this, &measurement](auto &&value)
+            [this, &measurement]<typename T>(const T &value) constexpr noexcept
             {
-                using T = std::decay_t<decltype(value)>;
                 if constexpr (std::is_arithmetic_v<T>)
                 {
-                    lastMeasurement[static_cast<std::size_t>(measurement.source)] = static_cast<std::uint32_t>(value);
+                    lastMeasurement[static_cast<std::size_t>(measurement.source)] =
+                        static_cast<std::uint32_t>(value);
                 }
             },
             measurement.data);
 
-        const bool status = true;
-        return status;
+        return true;
     }
 
-    bool CacheMeasurementRecorder::notify(Device::MeasurementType &measurement)
+    bool CacheMeasurementRecorder::notify(const MeasurementType &measurement) noexcept
     {
-        const bool status = write(measurement);
-        return status;
+        return write(measurement);
     }
-}
+
+} // namespace Device

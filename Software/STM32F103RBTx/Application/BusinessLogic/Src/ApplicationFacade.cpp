@@ -1,72 +1,46 @@
-#include "BusinessLogic/Interface/IPlatformFactory.hpp"
 #include "BusinessLogic/Inc/ApplicationFacade.hpp"
-
-#include "Device/Inc/PulseCounterMeasurementSource.hpp"
-#include "Device/Inc/UartMeasurementSource.hpp"
-
-#include "Driver/Interface/IPulseCounterDriver.hpp"
-#include "Driver/Interface/IUartDriver.hpp"
+#include "BusinessLogic/Interface/IPlatformFactory.hpp"
 
 namespace BusinessLogic
 {
-    ApplicationFacade::ApplicationFacade(IPlatformFactory &platformFactory)
-        : pulseCounter1(Device::MeasurementDeviceId::PULSE_COUNTER_1,
-                        platformFactory.getPulseCounterDriver(Driver::PulseCounterId::bncA)),
-          pulseCounter2(Device::MeasurementDeviceId::PULSE_COUNTER_2,
-                        platformFactory.getPulseCounterDriver(Driver::PulseCounterId::bncB)),
-          pulseCounter3(Device::MeasurementDeviceId::PULSE_COUNTER_3,
-                        platformFactory.getPulseCounterDriver(Driver::PulseCounterId::bncC)),
-          pulseCounter4(Device::MeasurementDeviceId::PULSE_COUNTER_4,
-                        platformFactory.getPulseCounterDriver(Driver::PulseCounterId::bncD)),
-          uartReceiver(Device::MeasurementDeviceId::DEVICE_UART_1,
-                       platformFactory.getUartDriver(Driver::UartId::MEASUREMENT_RECEIVER)),
+    ApplicationFacade::ApplicationFacade(IPlatformFactory &platformFactory) noexcept
+        : pulseCounter1{Device::MeasurementDeviceId::PULSE_COUNTER_1,
+                        platformFactory.getPulseCounterDriver(Driver::PulseCounterId::bncA)},
+          pulseCounter2{Device::MeasurementDeviceId::PULSE_COUNTER_2,
+                        platformFactory.getPulseCounterDriver(Driver::PulseCounterId::bncB)},
+          pulseCounter3{Device::MeasurementDeviceId::PULSE_COUNTER_3,
+                        platformFactory.getPulseCounterDriver(Driver::PulseCounterId::bncC)},
+          pulseCounter4{Device::MeasurementDeviceId::PULSE_COUNTER_4,
+                        platformFactory.getPulseCounterDriver(Driver::PulseCounterId::bncD)},
+          uartReceiver{Device::MeasurementDeviceId::DEVICE_UART_1,
+                       platformFactory.getUartDriver(Driver::UartId::MEASUREMENT_RECEIVER)},
           sources{std::ref(pulseCounter1), std::ref(pulseCounter2),
                   std::ref(pulseCounter3), std::ref(pulseCounter4),
                   std::ref(uartReceiver)},
-
-          wifiRecorder(platformFactory.getUartDriver(Driver::UartId::TRANSMIT_VIA_WIFI)),
-          sdCardRecorder(platformFactory.getSdCardDriver()),
-          recorders{wifiRecorder, sdCardRecorder},
-
-          measurementCoordinator(sources, recorders),
-
-          display(platformFactory.getDisplayDriver()),
-          brightnessRegulator(
-              platformFactory.getAmbientLightSensorDriver(),
-              platformFactory.getDisplayBrightnessDriver()),
-          keyboard(platformFactory.getKeyboardDriver()),
-          hmi(display,
-              brightnessRegulator,
-              keyboard)
+          wifiRecorder{platformFactory.getUartDriver(Driver::UartId::TRANSMIT_VIA_WIFI)}, sdCardRecorder{platformFactory.getSdCardDriver()}, recorders{std::ref(wifiRecorder), std::ref(sdCardRecorder)}, measurementCoordinator{sources, recorders}, display{platformFactory.getDisplayDriver()}, brightnessRegulator{platformFactory.getAmbientLightSensorDriver(),
+                                                                                                                                                                                                                                                                                                                       platformFactory.getDisplayBrightnessDriver()},
+          keyboard{platformFactory.getKeyboardDriver()}, hmi{display, brightnessRegulator, keyboard}
     {
     }
 
-    bool ApplicationFacade::initialize()
+    bool ApplicationFacade::initialize() noexcept
     {
-        const bool status = measurementCoordinator.initialize();
-
-        return status;
+        return measurementCoordinator.initialize();
     }
 
-    bool ApplicationFacade::start()
+    bool ApplicationFacade::start() noexcept
     {
-        const bool status = measurementCoordinator.start();
-
-        return status;
+        return measurementCoordinator.start();
     }
 
-    bool ApplicationFacade::stop()
+    bool ApplicationFacade::stop() noexcept
     {
-        const bool status = measurementCoordinator.stop();
-
-        return status;
+        return measurementCoordinator.stop();
     }
 
-    bool ApplicationFacade::tick()
+    bool ApplicationFacade::tick() noexcept
     {
-
-        const bool status = measurementCoordinator.tick();
-
-        return status;
+        return measurementCoordinator.tick();
     }
+
 } // namespace BusinessLogic

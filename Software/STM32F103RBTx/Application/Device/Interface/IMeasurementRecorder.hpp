@@ -1,17 +1,17 @@
-#ifndef MeasurementRecorder_h
-#define MeasurementRecorder_h
-
-#include "Device/Inc/MeasurementType.hpp"
-#include "Driver/Interface/DriverState.hpp"
+#ifndef IMEASUREMENT_RECORDER_HPP
+#define IMEASUREMENT_RECORDER_HPP
 
 /**
- * @file MeasurementRecorder.h
+ * @file IMeasurementRecorder.hpp
  * @brief Declaration of the IMeasurementRecorder interface class for storing measurement data.
  *
  * This file contains the declaration of the IMeasurementRecorder interface class, which serves
  * as a base class for different types of measurement recorders that store data using various mediums
  * or devices such as WiFi, UART, or SD cards.
  */
+
+#include "Device/Inc/MeasurementType.hpp"
+#include "Driver/Interface/DriverState.hpp"
 
 namespace Device
 {
@@ -27,23 +27,26 @@ namespace Device
     class IMeasurementRecorder : public Driver::DriverState
     {
     public:
-        /**
-         * @brief Default constructor.
-         */
-        IMeasurementRecorder() = default;
-
-        /**
-         * @brief Virtual destructor.
-         */
+        constexpr IMeasurementRecorder() noexcept = default;
         ~IMeasurementRecorder() override = default;
+
+        // Non-copyable and non-movable
+        IMeasurementRecorder(const IMeasurementRecorder &) = delete;
+        IMeasurementRecorder(IMeasurementRecorder &&) = delete;
+        IMeasurementRecorder &operator=(const IMeasurementRecorder &) = delete;
+        IMeasurementRecorder &operator=(IMeasurementRecorder &&) = delete;
 
         /**
          * @brief Notifies about new data to be saved.
          *
          * This method should be implemented to handle any necessary actions when new data is ready to be saved.
+         *
+         * @param measurement The measurement data to be recorded.
+         * @return true if the measurement was successfully recorded, false otherwise.
          */
-        virtual bool notify(Device::MeasurementType &measurement) = 0;
+        [[nodiscard]] virtual bool notify(const MeasurementType &measurement) noexcept = 0;
     };
-}
 
-#endif
+} // namespace Device
+
+#endif // IMEASUREMENT_RECORDER_HPP

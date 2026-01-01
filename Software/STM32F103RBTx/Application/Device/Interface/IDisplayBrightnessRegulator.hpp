@@ -1,5 +1,5 @@
-#ifndef IDisplayBrightnessRegulator_h
-#define IDisplayBrightnessRegulator_h
+#ifndef IDISPLAY_BRIGHTNESS_REGULATOR_HPP
+#define IDISPLAY_BRIGHTNESS_REGULATOR_HPP
 
 /**
  * @file IDisplayBrightnessRegulator.hpp
@@ -9,12 +9,10 @@
  * for controlling and regulating the brightness of a display based on ambient light levels and user preferences.
  */
 
-#include "Driver/Interface/IAmbientLightSensorDriver.hpp"
-#include "Driver/Interface/IDisplayBrightnessDriver.hpp"
+#include <cstdint>
 
 namespace Device
 {
-
     /**
      * @class IDisplayBrightnessRegulator
      * @brief Interface for regulating display brightness based on ambient light and user preferences.
@@ -26,23 +24,14 @@ namespace Device
     class IDisplayBrightnessRegulator
     {
     public:
-        /**
-         * @brief Default constructor.
-         *
-         * Initializes an instance of IDisplayBrightnessRegulator. The default constructor does not perform any
-         * specific initialization.
-         */
-        explicit IDisplayBrightnessRegulator() = default;
-
-        /**
-         * @brief Virtual destructor.
-         *
-         * Ensures proper cleanup of derived classes. The destructor is virtual to support polymorphic deletion.
-         */
+        constexpr IDisplayBrightnessRegulator() noexcept = default;
         virtual ~IDisplayBrightnessRegulator() = default;
 
-        IDisplayBrightnessRegulator(const IDisplayBrightnessRegulator &) = delete;            ///< Deleted copy constructor prevents copying.
-        IDisplayBrightnessRegulator &operator=(const IDisplayBrightnessRegulator &) = delete; ///< Deleted assignment operator prevents assignment.
+        // Non-copyable and non-movable
+        IDisplayBrightnessRegulator(const IDisplayBrightnessRegulator &) = delete;
+        IDisplayBrightnessRegulator(IDisplayBrightnessRegulator &&) = delete;
+        IDisplayBrightnessRegulator &operator=(const IDisplayBrightnessRegulator &) = delete;
+        IDisplayBrightnessRegulator &operator=(IDisplayBrightnessRegulator &&) = delete;
 
         /**
          * @brief Initializes the brightness regulator.
@@ -51,7 +40,7 @@ namespace Device
          *
          * @return True if initialization is successful; false otherwise.
          */
-        virtual bool init() = 0;
+        [[nodiscard]] virtual bool init() noexcept = 0;
 
         /**
          * @brief Ticks the brightness regulator state machine.
@@ -60,7 +49,7 @@ namespace Device
          * and user preferences. Implementations should perform light level sampling and brightness adjustment
          * in this method.
          */
-        virtual void tick() = 0;
+        virtual void tick() noexcept = 0;
 
         /**
          * @brief Gets the current brightness level as a percentage.
@@ -69,7 +58,7 @@ namespace Device
          *
          * @return The brightness level as a percentage (0-100).
          */
-        [[nodiscard]] virtual std::uint8_t getBrightnessPercentage() const = 0;
+        [[nodiscard]] virtual std::uint8_t getBrightnessPercentage() const noexcept = 0;
 
         /**
          * @brief Sets the display brightness to a specific percentage.
@@ -79,9 +68,9 @@ namespace Device
          * @param level The desired brightness level (0-100%).
          * @return True if brightness was successfully set, false otherwise.
          */
-        virtual bool setBrightnessPercentage(std::uint8_t level) = 0;
+        [[nodiscard]] virtual bool setBrightnessPercentage(std::uint8_t level) noexcept = 0;
     };
 
 } // namespace Device
 
-#endif // IDisplayBrightnessRegulator_h
+#endif // IDISPLAY_BRIGHTNESS_REGULATOR_HPP

@@ -3,8 +3,8 @@
  * @brief Defines the IDisplay interface for display device interaction.
  */
 
-#ifndef IDisplay_h
-#define IDisplay_h
+#ifndef IDISPLAY_HPP
+#define IDISPLAY_HPP
 
 #include "U8g2lib.h"
 #include "u8g2.h"
@@ -18,15 +18,22 @@ namespace Device
     class IDisplay : public U8G2
     {
     public:
-        IDisplay() = default; ///< Default constructor.
-        virtual ~IDisplay() = default; ///< Virtual destructor.
+        IDisplay() noexcept = default;
+        virtual ~IDisplay() = default;
+
+        // Non-copyable and non-movable
+        IDisplay(const IDisplay &) = delete;
+        IDisplay(IDisplay &&) = delete;
+        IDisplay &operator=(const IDisplay &) = delete;
+        IDisplay &operator=(IDisplay &&) = delete;
 
         /**
          * @brief Initializes the display.
          * @return True if initialization succeeds, false otherwise.
          */
-        virtual bool initialize() = 0;
+        [[nodiscard]] virtual bool initialize() noexcept = 0;
     };
-}
 
-#endif // IDisplay_h
+} // namespace Device
+
+#endif // IDISPLAY_HPP

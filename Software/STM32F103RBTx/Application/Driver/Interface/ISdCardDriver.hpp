@@ -31,23 +31,17 @@ namespace Driver
          */
         ISdCardDriver() = default;
 
+        ISdCardDriver(const ISdCardDriver &) = delete;
+        ISdCardDriver &operator=(const ISdCardDriver &) = delete;
+        ISdCardDriver(ISdCardDriver &&) = delete;
+        ISdCardDriver &operator=(ISdCardDriver &&) = delete;
+
         /**
          * @brief Virtual destructor for ISdCardDriver.
          *
          * Ensures proper cleanup of derived classes.
          */
         ~ISdCardDriver() override = default;
-
-        /**
-         * @brief Deleted copy constructor to prevent copying.
-         */
-        ISdCardDriver(const ISdCardDriver &) = delete;
-
-        /**
-         * @brief Deleted assignment operator to prevent assignment.
-         * @return ISdCardDriver& The assigned object.
-         */
-        ISdCardDriver &operator=(const ISdCardDriver &) = delete;
 
         virtual SdCardStatus openFile(std::string_view filename, FileOpenMode mode) = 0;
 

@@ -5,23 +5,25 @@
 
 namespace BusinessLogic
 {
-    class PlatformFactory : public IPlatformFactory
+    class PlatformFactory final : public IPlatformFactory
     {
     public:
-        explicit PlatformFactory() = default;
+        PlatformFactory() = default;
         ~PlatformFactory() override = default;
 
         PlatformFactory(const PlatformFactory &) = delete;
         PlatformFactory &operator=(const PlatformFactory &) = delete;
+        PlatformFactory(PlatformFactory &&) = delete;
+        PlatformFactory &operator=(PlatformFactory &&) = delete;
 
-        Driver::IAmbientLightSensorDriver &getAmbientLightSensorDriver() override;
-        Driver::IDisplayBrightnessDriver &getDisplayBrightnessDriver() override;
-        Driver::IDisplayDriver &getDisplayDriver() override;
-        Driver::IKeyboardDriver &getKeyboardDriver() override;
-        Driver::IUartDriver &getUartDriver(const Driver::UartId deviceId) override;
-        Driver::ISdCardDriver &getSdCardDriver() override;
-        Driver::IPulseCounterDriver &getPulseCounterDriver(Driver::PulseCounterId deviceId) override;
+        [[nodiscard]] Driver::IAmbientLightSensorDriver &getAmbientLightSensorDriver() override;
+        [[nodiscard]] Driver::IDisplayBrightnessDriver &getDisplayBrightnessDriver() override;
+        [[nodiscard]] Driver::IDisplayDriver &getDisplayDriver() override;
+        [[nodiscard]] Driver::IKeyboardDriver &getKeyboardDriver() override;
+        [[nodiscard]] Driver::IUartDriver &getUartDriver(Driver::UartId deviceId) override;
+        [[nodiscard]] Driver::ISdCardDriver &getSdCardDriver() override;
+        [[nodiscard]] Driver::IPulseCounterDriver &getPulseCounterDriver(Driver::PulseCounterId deviceId) override;
     };
 }
 
-#endif
+#endif // PlatformFactory_h

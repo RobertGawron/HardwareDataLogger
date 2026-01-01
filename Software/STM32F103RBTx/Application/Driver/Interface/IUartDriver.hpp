@@ -29,23 +29,17 @@ namespace Driver
          */
         IUartDriver() = default;
 
+        IUartDriver(const IUartDriver &) = delete;
+        IUartDriver &operator=(const IUartDriver &) = delete;
+        IUartDriver(IUartDriver &&) = delete;
+        IUartDriver &operator=(IUartDriver &&) = delete;
+
         /**
          * @brief Virtual destructor for IUartDriver.
          *
          * Ensures proper cleanup of derived classes.
          */
         ~IUartDriver() override = default;
-
-        /**
-         * @brief Deleted copy constructor to prevent copying.
-         */
-        IUartDriver(const IUartDriver &) = delete;
-
-        /**
-         * @brief Deleted assignment operator to prevent assignment.
-         * @return IUartDriver& The assigned object.
-         */
-        IUartDriver &operator=(const IUartDriver &) = delete;
 
         virtual UartStatus transmit(std::span<const std::uint8_t> data, std::uint32_t timeout) = 0;
 

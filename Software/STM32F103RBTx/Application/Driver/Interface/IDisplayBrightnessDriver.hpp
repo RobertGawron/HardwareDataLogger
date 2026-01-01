@@ -31,33 +31,17 @@ namespace Driver
          */
         IDisplayBrightnessDriver() = default;
 
+        IDisplayBrightnessDriver(const IDisplayBrightnessDriver &) = delete;
+        IDisplayBrightnessDriver &operator=(const IDisplayBrightnessDriver &) = delete;
+        IDisplayBrightnessDriver(IDisplayBrightnessDriver &&) = delete;
+        IDisplayBrightnessDriver &operator=(IDisplayBrightnessDriver &&) = delete;
+
         /**
          * @brief Virtual destructor for IDisplayBrightnessDriver.
          *
          * Ensures proper cleanup of derived classes.
          */
         ~IDisplayBrightnessDriver() override = default;
-
-        /**
-         * @brief Deleted copy constructor.
-         *
-         * This prevents copying of the driver interface to avoid accidental duplication
-         * of the driver instance.
-         *
-         * @param other The other IDisplayBrightnessDriver object to copy from (deleted).
-         */
-        IDisplayBrightnessDriver(const IDisplayBrightnessDriver &) = delete;
-
-        /**
-         * @brief Deleted copy assignment operator.
-         *
-         * This prevents assignment of the driver interface to avoid accidental duplication
-         * of the driver instance.
-         *
-         * @param other The other IDisplayBrightnessDriver object to assign from (deleted).
-         * @return Reference to this object (deleted).
-         */
-        IDisplayBrightnessDriver &operator=(const IDisplayBrightnessDriver &) = delete;
 
         /**
          * @brief Sets the display brightness.

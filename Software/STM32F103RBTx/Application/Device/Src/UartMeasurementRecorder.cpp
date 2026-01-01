@@ -1,23 +1,31 @@
 #include "Device/Inc/UartMeasurementRecorder.hpp"
-#include "Device/Inc/MeasurementType.hpp"
-#include "Driver/Interface/IUartDriver.hpp"
-
-#include <cstring>
-// #include <array>
-//  #include <iostream>
 
 namespace Device
 {
-
-    UartMeasurementRecorder::UartMeasurementRecorder(Driver::IUartDriver &_driver) : driver(_driver)
+    bool UartMeasurementRecorder::notify([[maybe_unused]] const MeasurementType &measurement) noexcept
     {
-    }
-
-    bool UartMeasurementRecorder::notify(Device::MeasurementType &measurement)
-    {
-        (void)measurement; // Explicitly suppresses "unused parameter" warning
-
+        // TODO: Implement UART transmission of measurement data
         return true;
     }
 
-}
+    bool UartMeasurementRecorder::onInitialize() noexcept
+    {
+        return driver.initialize();
+    }
+
+    bool UartMeasurementRecorder::onStart() noexcept
+    {
+        return driver.start();
+    }
+
+    bool UartMeasurementRecorder::onStop() noexcept
+    {
+        return driver.stop();
+    }
+
+    bool UartMeasurementRecorder::onReset() noexcept
+    {
+        return driver.reset();
+    }
+
+} // namespace Device

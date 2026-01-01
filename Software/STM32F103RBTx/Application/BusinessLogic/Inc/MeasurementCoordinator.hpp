@@ -14,126 +14,98 @@
 #include <array>
 #include <functional>
 #include <algorithm>
+#include <span>
 
 namespace BusinessLogic
 {
     template <std::size_t SourceCount, std::size_t RecorderCount>
-    class MeasurementCoordinator
+    class MeasurementCoordinator final
     {
     public:
         /**
          * @brief Constructs a MeasurementCoordinator with references to sources and recorders arrays.
          */
-        MeasurementCoordinator(
+        explicit MeasurementCoordinator(
             std::array<std::reference_wrapper<Device::IMeasurementSource>, SourceCount> &sourcesArray,
-            std::array<std::reference_wrapper<Device::IMeasurementRecorder>, RecorderCount> &recordersArray)
+            std::array<std::reference_wrapper<Device::IMeasurementRecorder>, RecorderCount> &recordersArray) noexcept
             : sources(sourcesArray), recorders(recordersArray)
         {
         }
 
-        /**
-         * @brief Deleted default constructor to prevent instantiation without a storage reference.
-         */
         MeasurementCoordinator() = delete;
+        ~MeasurementCoordinator() = default;
 
-        /**
-         * @brief Default destructor for MeasurementCoordinator.
-         */
-        virtual ~MeasurementCoordinator() = default;
-
-        /**
-         * @brief Deleted copy constructor to prevent copying of MeasurementCoordinator.
-         */
         MeasurementCoordinator(const MeasurementCoordinator &) = delete;
-
-        /**
-         * @brief Deleted assignment operator to prevent assignment of MeasurementCoordinator.
-         *
-         * @return Reference to the MeasurementCoordinator instance.
-         */
         MeasurementCoordinator &operator=(const MeasurementCoordinator &) = delete;
+        MeasurementCoordinator(MeasurementCoordinator &&) = delete;
+        MeasurementCoordinator &operator=(MeasurementCoordinator &&) = delete;
 
         /**
          * @brief Initializes the MeasurementCoordinator and its registered measurement sources.
-         *
-         * This function sets up the coordinator and prepares all registered sources for gathering measurements.
-         *
          * @return True if initialization was successful; false otherwise.
          */
-        virtual bool initialize()
+        [[nodiscard]] bool initialize() noexcept
         {
             // Initialize all sources
-            bool status = std::all_of(sources.begin(), sources.end(),
-                                      [](auto &source)
-                                      { return source.get().initialize(); });
+            const bool sourcesInitialized = std::ranges::all_of(sources,
+                                                                [](auto &source)
+                                                                { return source.get().initialize(); });
 
-            if (status)
+            if (!sourcesInitialized)
             {
-                // Initialize all recorders
-                status = std::all_of(recorders.begin(), recorders.end(),
-                                     [](auto &recorder)
-                                     { return recorder.get().initialize(); });
+                return false;
             }
 
-            return status;
+            // Initialize all recorders
+            return std::ranges::all_of(recorders,
+                                       [](auto &recorder)
+                                       { return recorder.get().initialize(); });
         }
 
-        virtual bool start()
+        [[nodiscard]] bool start() noexcept
         {
-            bool status = true;
+            const bool sourcesStarted = std::ranges::all_of(sources,
+                                                            [](auto &source)
+                                                            { return source.get().start(); });
 
-            for (auto &source : sources)
-            {
-                status &= source.get().start();
-            }
+            const bool recordersStarted = std::ranges::all_of(recorders,
+                                                              [](auto &recorder)
+                                                              { return recorder.get().start(); });
 
-            for (auto &recorder : recorders)
-            {
-                status &= recorder.get().start();
-            }
-            return status;
+            return sourcesStarted && recordersStarted;
         }
 
-        virtual bool stop()
+        [[nodiscard]] bool stop() noexcept
         {
-            bool status = true;
+            const bool sourcesStopped = std::ranges::all_of(sources,
+                                                            [](auto &source)
+                                                            { return source.get().stop(); });
 
-            for (auto &source : sources)
-            {
-                status &= source.get().stop();
-            }
+            const bool recordersStopped = std::ranges::all_of(recorders,
+                                                              [](auto &recorder)
+                                                              { return recorder.get().stop(); });
 
-            for (auto &recorder : recorders)
-            {
-                status &= recorder.get().stop();
-            }
-
-            return status;
+            return sourcesStopped && recordersStopped;
         }
 
         /**
          * @brief Periodic function that should be called to perform regular updates.
-         *
-         * This function handles tasks that need to be performed periodically, such as updating measurements
-         * and notifying observers about the availability of new data.
-         *
          * @return True if the tick operation was successful, false otherwise.
          */
-        virtual bool tick()
+        [[nodiscard]] bool tick() noexcept
         {
             bool status = true;
 
-            // Check each source for available measurements
             for (auto &source : sources)
             {
                 if (source.get().isMeasurementAvailable())
                 {
-                    Device::MeasurementType measurement = source.get().getMeasurement();
+                    const Device::MeasurementType measurement = source.get().getMeasurement();
 
                     // Notify all recorders
                     for (auto &recorder : recorders)
                     {
-                        status &= recorder.get().notify(measurement);
+                        status = status && recorder.get().notify(measurement);
                     }
                 }
             }
