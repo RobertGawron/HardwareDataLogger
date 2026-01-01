@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.31)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -9,23 +9,28 @@ set(CMAKE_EXPERIMENTAL_CXX_MODULE_DYNDEP ON)
 
 add_library(BusinessLogic STATIC)
 
+#add_compile_options(-freflection)
+
 # Module interface files
 target_sources(BusinessLogic PUBLIC FILE_SET CXX_MODULES FILES
+    Modules/TickableConcept.cppm
+    Modules/TickDelegate.cppm
+    Modules/SlotTableScheduler.cppm
+    Modules/TaskId.cppm
+
     Modules/ApplicationComponent.cppm
     Modules/ApplicationFacade.cppm
-    Modules/HmiFacade.cppm
     Modules/MeasurementCoordinator.cppm
 )
 
 target_sources(BusinessLogic PRIVATE
     Src/ApplicationFacade.cpp
-    Src/HmiFacade.cpp
 )
 
 target_link_libraries(BusinessLogic PRIVATE
     Device
     Driver
-    DriverInterface
+   # DriverInterface
     u8g2
 )
 

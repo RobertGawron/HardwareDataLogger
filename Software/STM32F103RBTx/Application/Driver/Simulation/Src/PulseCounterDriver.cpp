@@ -6,9 +6,11 @@ module;
 
 module Driver.PulseCounterDriver;
 
+import Driver.PulseCounterId;
+
 namespace
 {
-    std::array<Driver::PulseCounterMeasurementSize,
+    std::array<Driver::PulseCount,
                Driver::PulseCounterDriver::PULSE_COUNTER_AMOUNT>
         pulseCounters = {0};
 }
@@ -37,13 +39,13 @@ namespace Driver
     {
     }
 
-    PulseCounterMeasurementSize PulseCounterDriver::getMeasurement() noexcept
+    PulseCount PulseCounterDriver::read() noexcept
     {
         const std::uint8_t index = static_cast<std::uint8_t>(deviceId);
         return pulseCounters[index];
     }
 
-    void PulseCounterDriver::clearMeasurement() noexcept
+    void PulseCounterDriver::clear() noexcept
     {
     }
 }

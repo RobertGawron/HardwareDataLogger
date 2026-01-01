@@ -7,7 +7,7 @@ module Driver.BrightnessDriver;
 
 namespace Driver
 {
-    bool BrightnessDriver::setBrightness(std::uint8_t brightness) noexcept
+    auto BrightnessDriver::setBrightness(std::uint8_t brightness) noexcept -> bool
     {
         (void)brightness;
 

@@ -7,49 +7,46 @@ module Device.DisplayBrightness;
 
 namespace Device
 {
+
     auto DisplayBrightness::onInit() noexcept -> bool
     {
-        const bool status = /*lightSensorDriver.init() && */ displayBrightness.init();
+        const bool status = lightSensor.init() &&
+                            displayBrightness.init();
 
         return status;
     }
 
     auto DisplayBrightness::onStart() noexcept -> bool
     {
-        bool status = lightSensorDriver.start() && displayBrightness.start();
-
-        // TODO: Remove dummy brightness test sweep
-        static constexpr std::uint8_t START_BRIGHTNESS{1};
-        static constexpr std::uint8_t STOP_BRIGHTNESS{95};
-        static constexpr std::uint8_t BRIGHTNESS_STEP{10};
-
-        for (std::uint8_t i{START_BRIGHTNESS}; i < STOP_BRIGHTNESS; i += BRIGHTNESS_STEP)
-        {
-            const auto brightness = i;
-            status &= displayBrightness.setBrightness(brightness);
-        }
+        const bool status = lightSensor.start() &&
+                            displayBrightness.start();
 
         return status;
     }
 
-    auto DisplayBrightness::getBrightnessPercentage() const noexcept -> std::uint8_t
+    auto DisplayBrightness::onStop() noexcept -> bool
     {
-        return level;
+        const bool status = lightSensor.stop() &&
+                            displayBrightness.stop();
+
+        return status;
     }
 
-    auto DisplayBrightness::setBrightnessPercentage(std::uint8_t newLevel) noexcept -> bool
+    auto DisplayBrightness::getBrightnessPercentage()
+        const noexcept -> std::uint8_t
     {
-        static constexpr std::uint8_t MAX_BRIGHTNESS_LEVEL{100};
+        return brightness;
+    }
 
-        bool status = (newLevel < MAX_BRIGHTNESS_LEVEL);
+    auto DisplayBrightness::setBrightnessPercentage(
+        std::uint8_t percentage) noexcept -> bool
+    {
+        // check in the driver if brightness level is correct
+        const bool status = displayBrightness.setBrightness(percentage);
+
         if (status)
         {
-            status = displayBrightness.setBrightness(level);
-
-            if (status)
-            {
-                level = newLevel;
-            }
+            brightness = percentage;
         }
 
         return status;

@@ -29,7 +29,6 @@ export namespace Device
         static constexpr State DEFAULT_INITIAL_STATE = State::RESET;
 
         /**
-         * FIX APPLIED:
          * Replaced 'DeviceComponent() = default;' with an empty body '{}'.
          * This prevents GCC from generating conflicting implicit signatures
          * when this module is imported via multiple paths.
@@ -40,7 +39,11 @@ export namespace Device
         DeviceComponent(const DeviceComponent &) = delete;
         DeviceComponent &operator=(const DeviceComponent &) = delete;
 
-        // --- Public Interface (Static Dispatch via Deducing This) ---
+        /// @brief Non-movable to keep ownership/lifetime rules explicit.
+        DeviceComponent(DeviceComponent &&) = delete;
+
+        /// @brief Non-movable to keep ownership/lifetime rules explicit.
+        DeviceComponent &operator=(DeviceComponent &&) = delete;
 
         template <typename Self>
         [[nodiscard]] bool init(this Self &self) noexcept

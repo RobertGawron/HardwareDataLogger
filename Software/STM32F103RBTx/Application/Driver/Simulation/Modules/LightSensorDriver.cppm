@@ -3,6 +3,7 @@ module;
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <span>
 
 export module Driver.LightSensorDriver;
 
@@ -30,18 +31,14 @@ export namespace Driver
         LightSensorDriver &operator=(const LightSensorDriver &) = delete;
         LightSensorDriver &operator=(LightSensorDriver &&) = delete;
 
-        [[nodiscard]] bool onStart() { return true; }
-        [[nodiscard]] bool onStop() { return true; }
+        [[nodiscard]] bool onStart() noexcept { return true; }
+        [[nodiscard]] bool onStop() noexcept { return true; }
 
-        /**
-         * @brief Retrieves the current ambient light level.
-         *
-         * This method returns the current ambient light level measured by the sensor.
-         * The range of the returned value is dependent on the hardware configuration and sensor characteristics.
-         *
-         * @return std::uint32_t The current ambient light level.
-         */
-        [[nodiscard]] std::uint32_t getAmbientLightLevel() const noexcept;
+        [[nodiscard]] auto samples() const noexcept -> std::span<const std::uint16_t>;
+
+    private:
+        static constexpr std::size_t ADC_BUFFER_SIZE = 10U;
+        alignas(4) std::array<std::uint16_t, ADC_BUFFER_SIZE> adcDmaBuffer{};
 
         /**
          * @brief Starts the ADC conversion using DMA for data transfer.

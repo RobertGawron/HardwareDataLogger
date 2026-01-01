@@ -58,7 +58,7 @@ fi
 
 "${PROSPECTOR}" --profile /workspace/DevOps/Scripts/.prospector.yaml \
   --strictness veryhigh --doc-warnings --output-format xunit \
-  /workspace/Software/STM32F103RBTx/Application/Driver/Simulation/Python/ > "${DRIVER_XML}" || EXIT_CODE=1
+  /workspace/Software/STM32F103RBTx/Application/SimulationBindings/Python/ > "${DRIVER_XML}" || EXIT_CODE=1
 
 # vjunit is broken in original version, so patch it in the venv
 find /opt/venv/ -type f -name "vjunit.py" -exec sed -i \

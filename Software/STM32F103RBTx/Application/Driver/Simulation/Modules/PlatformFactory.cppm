@@ -18,7 +18,7 @@ export namespace Driver
      */
     struct PlatformFactory
     {
-        LightSensorDriver &LightSensor;
+        LightSensorDriver &lightSensor;
         BrightnessDriver &displayBrightness;
         DisplayDriver &display;
         KeyboardDriver &keyboard;

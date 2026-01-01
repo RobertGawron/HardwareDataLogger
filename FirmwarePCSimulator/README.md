@@ -97,7 +97,7 @@ xhost +local:docker
 
 ```
 cd /workspace/build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && \
-    ninja -C /workspace/build && cd /workspace/FirmwarePCSimulator/ && /workspace/venv/bin/python3 main.py
+    ninja -C /workspace/build && cp -r /workspace/Software/STM32F103RBTx/Application/SimulationBindings/Python/ /tmp/PythonDriver/ && /opt/venv/bin/pip install -e /tmp/PythonDriver/ && cp /workspace/build/Software/STM32F103RBTx/Application/SimulationBindings/libsimulator_stm32f103.so /usr/local/lib/libsimulator_stm32f103.so && cd /workspace/FirmwarePCSimulator/ && /opt/venv/bin/python3 main.py
 ```
 
 ### Troubleshooting tunneling GUI to host environment

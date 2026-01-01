@@ -3,61 +3,17 @@ name: Static Analysis (Python)
 on:
   workflow_run:
     workflows: ["Build Docker"]
-    types:
-      - completed
-    branches:
-      - main
-      - 'feature/*'
+    types: [completed]
+    branches: [main, "feature/*"]
 
 jobs:
   static-analysis-python:
-    name: Run Static Analysis (python)
-    runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ github.event.workflow_run.head_repository.full_name }}
-          ref: ${{ github.event.workflow_run.head_sha }}
-          fetch-depth: 0
-          
-      - name: Set up Docker Compose
-        uses: docker/setup-compose-action@v1
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Pull Docker Image
-        run: |
-          docker pull ghcr.io/robertgawron/hardwaredatalogger:${{ github.event.workflow_run.head_sha }}
-          docker tag ghcr.io/robertgawron/hardwaredatalogger:${{ github.event.workflow_run.head_sha }} hardwaredatalogger:latest
-
-      - name: Run Docker Compose
-        env:
-          DOCKER_IMAGE: ghcr.io/robertgawron/hardwaredatalogger:${{ github.event.workflow_run.head_sha }}
-        run: |
-          docker compose -f docker-compose.yml up -d
-
-      - name: Run Static Analysis
-        run: |
-          docker compose -f docker-compose.yml exec -T dev bash -lc '
-            cmake -S /workspace --preset pstatic
-            cmake --build --preset pstatic
-          '
-
-      - name: Upload Static Analysis (Python) Results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: static-analysis-results-python
-          path: DevOps/BuildArtifacts/PythonStaticAnalysis
-
-      - name: Clean up Docker containers
-        if: always()
-        run: |
-          docker compose -f docker-compose.yml down
+    uses: robertgawron/hardwaredatalogger/.github/workflows/docker-postbuild-generic.yml@main
+    with:
+      docker_image_repo: robertgawron/hardwaredatalogger
+      artifact_name: static-analysis-results-python
+      artifact_paths: DevOps/Artifacts/PythonStaticAnalysis
+      run_script: |
+        cmake -S /workspace --preset pstatic
+        cmake --build --preset pstatic

@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.31)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -30,11 +30,11 @@ target_sources(Driver
         Modules/SdCardDriver.cppm
         Modules/UartDriver.cppm
         Modules/UartId.cppm
+        Modules/CycleClock.cppm
 )
 
 target_sources(Driver PRIVATE
-   # EventHandlers.cppm
-   # LibWrapper.cppm
+    Src/EventHandlers.cpp
 
     Src/BrightnessDriver.cpp
     Src/DisplayDriver.cpp
@@ -44,4 +44,3 @@ target_sources(Driver PRIVATE
     Src/SdCardDriver.cpp
     Src/UartDriver.cpp
 )
-

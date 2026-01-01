@@ -16,4 +16,4 @@ export import Device.RecorderVariant;
 export import Device.MeasurementSource;
 export import Device.MeasurementType;
 export import Device.MeasurementRecorder;
-export import Device.KeyActionState;
+export import Device.KeyAction;

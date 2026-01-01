@@ -29,9 +29,9 @@ export namespace Device
          * @param displayBrightness Reference to the display brightness driver.
          */
         explicit constexpr DisplayBrightness(
-            Driver::LightSensorDriver &lightSensorDriver,
+            Driver::LightSensorDriver &lightSensor,
             Driver::BrightnessDriver &displayBrightness) noexcept
-            : lightSensorDriver{lightSensorDriver}, displayBrightness{displayBrightness}
+            : lightSensor{lightSensor}, displayBrightness{displayBrightness}
         {
         }
 
@@ -50,7 +50,8 @@ export namespace Device
         [[nodiscard]] auto onInit() noexcept -> bool;
 
         [[nodiscard]] auto onStart() noexcept -> bool;
-        //  [[nodiscard]] bool onStop() noexcept;
+
+        [[nodiscard]] auto onStop() noexcept -> bool;
         /**
          * @brief Returns the current brightness level as a percentage.
          * @return Brightness level (0-100).
@@ -65,9 +66,9 @@ export namespace Device
         [[nodiscard]] auto setBrightnessPercentage(std::uint8_t level) noexcept -> bool;
 
     private:
-        Driver::LightSensorDriver &lightSensorDriver;
+        Driver::LightSensorDriver &lightSensor;
         Driver::BrightnessDriver &displayBrightness;
-        std::uint8_t level{0};
+        std::uint8_t brightness{0};
     };
 
 } // namespace Device

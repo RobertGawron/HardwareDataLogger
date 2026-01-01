@@ -32,6 +32,6 @@ namespace Device
     {
         return MeasurementType{
             .source = deviceId,
-            .data = pulseCounterDriver.getMeasurement()};
+            .data = pulseCounterDriver.read()};
     }
 }

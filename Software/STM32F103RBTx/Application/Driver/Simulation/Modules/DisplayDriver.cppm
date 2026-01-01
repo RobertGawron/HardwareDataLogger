@@ -53,7 +53,7 @@ export namespace Driver
         DisplayDriver &operator=(const DisplayDriver &) = delete;
         DisplayDriver &operator=(DisplayDriver &&) = delete;
 
-        // Display control (must be noexcept for concept)
+        // Display control
         [[nodiscard]] bool displayOn() noexcept;
         [[nodiscard]] bool displayOff() noexcept;
 
@@ -62,7 +62,7 @@ export namespace Driver
         [[nodiscard]] bool getOrientation(Orientation &orientation) const noexcept;
         [[nodiscard]] bool setCursor(std::uint8_t xPosition, std::uint8_t yPosition) noexcept;
 
-        // Drawing operations (must be noexcept for concept)
+        // Drawing operations
         [[nodiscard]] bool drawBitmap(std::uint8_t xPosition, std::uint8_t yPosition,
                                       std::uint8_t &bitmap) noexcept;
         [[nodiscard]] bool fillRGBRectangle(std::uint8_t xPosition,
@@ -70,29 +70,12 @@ export namespace Driver
                                             std::uint8_t &data,
                                             std::uint8_t width,
                                             std::uint8_t height) noexcept;
-        /* [[nodiscard]] bool fillRectangle(std::uint8_t xPosition,
-                                            std::uint8_t yPosition,
-                                            std::uint8_t width,
-                                            std::uint8_t height,
-                                            DisplayPixelColor::PixelColor color) noexcept;
-         [[nodiscard]] bool setPixel(std::uint8_t xPosition,
-                                       std::uint8_t yPosition,
-                                       DisplayPixelColor::PixelColor color) noexcept;
-         [[nodiscard]] bool getPixel(std::uint8_t xPosition,
-                                       std::uint8_t yPosition,
-                                       DisplayPixelColor::PixelColor &color) const noexcept;
- */
 
-        // Size queries (must be noexcept for concept)
+        // Size operations
         [[nodiscard]] bool getXSize(std::uint8_t &size) const noexcept;
         [[nodiscard]] bool getYSize(std::uint8_t &size) const noexcept;
 
-        /*
-        // Helper for Python wrapper
-        [[nodiscard]] DisplayPixelColor::PixelColor getPixelValue(std::uint8_t xPosition,
-                                                                  std::uint8_t yPosition) const noexcept;
-*/
-        // Lifecycle methods (required by DriverComponent)
+        // Lifecycle methods
         [[nodiscard]] bool onInit() noexcept;
         [[nodiscard]] bool onStart() noexcept { return true; }
         [[nodiscard]] bool onStop() noexcept { return true; }

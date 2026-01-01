@@ -1,23 +1,23 @@
-#include "Device/Inc/Keyboard.hpp"
-#include "Device/Inc/KeyActionState.hpp"
-#include "KeyboardDriver.hpp"
-#include "Driver/Interface/KeyState.hpp"
-#include "Driver/Interface/KeyIdentifier.hpp"
-
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <memory>
+
+import Device.Keyboard;
+import Device.KeyAction;
+import Driver.KeyboardDriver;
+import Driver.KeyState;
+import Driver.KeyId;
 
 // --- Mocks ---
 
 class MockKeyboardDriver : public Driver::KeyboardDriver
 {
 public:
-    MOCK_METHOD(bool, onInit, (), (override, noexcept));
-    MOCK_METHOD(bool, onStart, (), (override, noexcept));
-    MOCK_METHOD(bool, onStop, (), (override, noexcept));
-    MOCK_METHOD(bool, tick, (), (override));
-    MOCK_METHOD(Driver::KeyState, getKeyState, (Driver::KeyIdentifier key), (const, override));
+    MOCK_METHOD(bool, onInit, (), (noexcept));
+    MOCK_METHOD(bool, onStart, (), (noexcept));
+    MOCK_METHOD(bool, onStop, (), (noexcept));
+    MOCK_METHOD(bool, tick, (), ());
+    MOCK_METHOD(Driver::KeyState, getKeyState, (Driver::KeyId key), (const, override));
 };
 
 // --- Test Fixture ---
@@ -77,13 +77,13 @@ TEST_F(KeyboardTest, TickTransitionsToPressStart)
         .WillRepeatedly(::testing::Return(Driver::KeyState::NotPressed));
 
     // Specific behavior for Up key
-    EXPECT_CALL(getMockDriver(), getKeyState(Driver::KeyIdentifier::Up))
+    EXPECT_CALL(getMockDriver(), getKeyState(Driver::KeyId::Up))
         .WillOnce(::testing::Return(Driver::KeyState::Pressed));
 
     EXPECT_TRUE(getKeyboard().tick());
 
-    EXPECT_EQ(getKeyboard().getKeyState(Driver::KeyIdentifier::Up),
-              Device::KeyActionState::PRESS_START);
+    EXPECT_EQ(getKeyboard().getKeyState(Driver::KeyId::Up),
+              Device::KeyAction::PRESS_START);
 }
 
 TEST_F(KeyboardTest, TickHandlesCompleteKeyPressSequence)
@@ -106,32 +106,32 @@ TEST_F(KeyboardTest, TickHandlesCompleteKeyPressSequence)
         .WillRepeatedly(::testing::Return(Driver::KeyState::NotPressed));
 
     // Specific behavior for Down key: press, hold, hold, release
-    EXPECT_CALL(getMockDriver(), getKeyState(Driver::KeyIdentifier::Down))
+    EXPECT_CALL(getMockDriver(), getKeyState(Driver::KeyId::Down))
         .WillOnce(::testing::Return(Driver::KeyState::Pressed))     // Tick 1: NotPressed -> PressStart
         .WillOnce(::testing::Return(Driver::KeyState::Pressed))     // Tick 2: PressStart -> PressHold
         .WillOnce(::testing::Return(Driver::KeyState::Pressed))     // Tick 3: PressHold -> PressHold
         .WillOnce(::testing::Return(Driver::KeyState::NotPressed)); // Tick 4: PressHold -> PressEndShort
 
     EXPECT_TRUE(getKeyboard().tick());
-    EXPECT_EQ(getKeyboard().getKeyState(Driver::KeyIdentifier::Down),
-              Device::KeyActionState::PRESS_START);
+    EXPECT_EQ(getKeyboard().getKeyState(Driver::KeyId::Down),
+              Device::KeyAction::PRESS_START);
 
     EXPECT_TRUE(getKeyboard().tick());
-    EXPECT_EQ(getKeyboard().getKeyState(Driver::KeyIdentifier::Down),
-              Device::KeyActionState::PRESS_HOLD);
+    EXPECT_EQ(getKeyboard().getKeyState(Driver::KeyId::Down),
+              Device::KeyAction::PRESS_HOLD);
 
     EXPECT_TRUE(getKeyboard().tick());
-    EXPECT_EQ(getKeyboard().getKeyState(Driver::KeyIdentifier::Down),
-              Device::KeyActionState::PRESS_HOLD);
+    EXPECT_EQ(getKeyboard().getKeyState(Driver::KeyId::Down),
+              Device::KeyAction::PRESS_HOLD);
 
     EXPECT_TRUE(getKeyboard().tick());
-    EXPECT_EQ(getKeyboard().getKeyState(Driver::KeyIdentifier::Down),
-              Device::KeyActionState::PRESS_END_SHORT);
+    EXPECT_EQ(getKeyboard().getKeyState(Driver::KeyId::Down),
+              Device::KeyAction::PRESS_END_SHORT);
 }
 
 TEST_F(KeyboardTest, GetKeyStateReturnsFailForInvalidKey)
 {
-    const Driver::KeyIdentifier key = static_cast<Driver::KeyIdentifier>(99);
+    const Driver::KeyId key = static_cast<Driver::KeyId>(99);
 
-    EXPECT_EQ(getKeyboard().getKeyState(key), Device::KeyActionState::FAIL);
+    EXPECT_EQ(getKeyboard().getKeyState(key), Device::KeyAction::FAIL);
 }

@@ -13,10 +13,10 @@ module;
 export module Device.Keyboard;
 
 import Device.DeviceComponent;
-import Device.KeyActionState;
+import Device.KeyAction;
 
 import Driver.KeyboardDriver;
-import Driver.KeyIdentifier;
+import Driver.KeyId;
 
 export namespace Device
 {
@@ -82,13 +82,13 @@ export namespace Device
          * @param key The ID of the key for which the state is requested.
          * @return The action state of the specified key.
          */
-        [[nodiscard]] auto getKeyState(Driver::KeyIdentifier key) const noexcept -> KeyActionState;
+        [[nodiscard]] auto getKeyState(Driver::KeyId key) const noexcept -> KeyAction;
 
     private:
         Driver::KeyboardDriver &keyboardDriver;
 
-        static constexpr std::uint8_t AMOUNT_OF_KEYS{
-            static_cast<std::uint8_t>(Driver::KeyIdentifier::LastNotUsed)};
+        static constexpr std::uint8_t KEY_COUNT{
+            static_cast<std::uint8_t>(Driver::KeyId::LAST_NOT_USED)};
 
         static constexpr std::uint8_t LONG_PRESS_THRESHOLD_TICKS{10}; // 10 ticks * 100ms = 1 second
 
@@ -97,14 +97,14 @@ export namespace Device
          *
          * Each entry counts the number of `tick()` calls while the key is pressed.
          */
-        std::array<std::uint8_t, AMOUNT_OF_KEYS> pressDurationTicks{};
+        std::array<std::uint8_t, KEY_COUNT> pressDurationTicks{};
 
         /**
          * @brief Array storing the action states for all keys.
          *
          * Each key's action state indicates whether it is pressed, held, or not pressed.
          */
-        std::array<KeyActionState, AMOUNT_OF_KEYS> keyActionState{};
+        std::array<KeyAction, KEY_COUNT> keyAction{};
     };
 
     // Compile-time verification

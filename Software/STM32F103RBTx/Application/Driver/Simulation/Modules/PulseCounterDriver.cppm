@@ -7,7 +7,7 @@ export module Driver.PulseCounterDriver;
 import Driver.DriverComponent;
 import Driver.PulseCounterDriverConcept;
 import Driver.PulseCounterId;
-import Driver.PulseCounterMeasurementSize;
+import Driver.PulseCount;
 
 export extern "C"
 {
@@ -34,8 +34,8 @@ export namespace Driver
         PulseCounterDriver &operator=(PulseCounterDriver &&) = delete;
 
         // Public interface
-        [[nodiscard]] PulseCounterMeasurementSize getMeasurement() noexcept;
-        void clearMeasurement() noexcept;
+        [[nodiscard]] PulseCount read() noexcept;
+        void clear() noexcept;
 
         // Lifecycle methods
         [[nodiscard]] bool onInit() noexcept { return true; }

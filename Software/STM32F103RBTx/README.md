@@ -10,7 +10,7 @@ Note: Some people argue that using STM32CubeMX is a bad idea and that everything
 
 ## Setup
 
-[Setup Manual](../../Documentation/Manuals/SetupFirmwareDevelopment.md)
+[Setup Manual](../../DocumePntation/Manuals/SetupFirmwareDevelopment.md)
 
 Seting up Host machine on windows:
 Go to and download and install latest version for windows

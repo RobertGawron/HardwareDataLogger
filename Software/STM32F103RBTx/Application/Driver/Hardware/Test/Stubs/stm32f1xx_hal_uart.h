@@ -1,7 +1,7 @@
 #ifndef stm32f1xx_hal_uart_mock_h
 #define stm32f1xx_hal_uart_mock_h
 
-#include <gmock/gmock.h>
+// #include <gmock/gmock.h>
 #include <stdint.h>
 
 #include "stm32f1xx_hal_def.h"
@@ -11,6 +11,7 @@ struct UART_HandleTypeDef
     std::uint32_t dummy;
 };
 
+#if 0
 // Mock class for HAL UART functions
 class MockHAL_UART
 {
@@ -35,5 +36,6 @@ inline HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, std::uint8_
 {
     return mockHAL_UART->HAL_UART_Receive(huart, pData, Size, Timeout);
 }
+#endif
 
 #endif // stm32f1xx_hal_uart_mock_h

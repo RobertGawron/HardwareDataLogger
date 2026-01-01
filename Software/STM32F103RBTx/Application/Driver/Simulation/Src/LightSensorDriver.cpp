@@ -1,18 +1,16 @@
-// LightSensorDriver.cpp
 module;
 
 #include <cstdint>
+#include <span>
 
 module Driver.LightSensorDriver;
 
 namespace Driver
 {
-    std::uint32_t LightSensorDriver::getAmbientLightLevel() const noexcept
+    auto LightSensorDriver::samples() const noexcept
+        -> std::span<const std::uint16_t>
     {
-        // arbitrary value
-        const std::uint32_t adcResult = 10U;
-
-        return adcResult;
+        return std::span{adcDmaBuffer};
     }
 
     bool LightSensorDriver::startAdc() noexcept

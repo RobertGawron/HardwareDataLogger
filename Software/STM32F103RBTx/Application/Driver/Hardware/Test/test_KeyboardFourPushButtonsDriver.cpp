@@ -1,5 +1,5 @@
 #include "stm32f1xx_hal_gpio.h"
-#include "Driver/Interface/KeyIdentifier.hpp"
+#include "Driver/Interface/KeyId.hpp"
 #include "Driver/Interface/KeyState.hpp"
 #include "Driver/Hardware/Inc/KeyboardDriver.hpp"
 #include "Driver/Interface/DriverComponent.hpp"
@@ -87,7 +87,7 @@ TEST_F(KeyboardDriverTest, TickUpdatesKeyStatesWhenRunning)
 
     for (std::uint8_t i = 0U; i < Driver::KeyboardDriver::AmountOfKeys; i++)
     {
-        EXPECT_EQ(driver.getKeyState(static_cast<Driver::KeyIdentifier>(i)), Driver::KeyState::NotPressed);
+        EXPECT_EQ(driver.getKeyState(static_cast<Driver::KeyId>(i)), Driver::KeyState::NotPressed);
     }
 }
 
@@ -100,7 +100,7 @@ TEST_F(KeyboardDriverTest, TickDoesNothingWhenNotRunning)
 
     for (std::uint8_t i = 0U; i < Driver::KeyboardDriver::AmountOfKeys; i++)
     {
-        EXPECT_EQ(driver.getKeyState(static_cast<Driver::KeyIdentifier>(i)), Driver::KeyState::DriverNotOperational);
+        EXPECT_EQ(driver.getKeyState(static_cast<Driver::KeyId>(i)), Driver::KeyState::DriverNotOperational);
     }
 }
 
@@ -119,5 +119,5 @@ TEST_F(KeyboardDriverTest, GetKeyStateNothingWhenIncorrectKey)
     EXPECT_TRUE(driver.tick());
 
     const std::uint8_t incorrectKey = Driver::KeyboardDriver::AmountOfKeys;
-    EXPECT_EQ(driver.getKeyState(static_cast<Driver::KeyIdentifier>(incorrectKey)), Driver::KeyState::UnknownKeyAsked);
+    EXPECT_EQ(driver.getKeyState(static_cast<Driver::KeyId>(incorrectKey)), Driver::KeyState::UnknownKeyAsked);
 }

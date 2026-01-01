@@ -14,8 +14,7 @@ import logging
 from typing import Tuple, List
 from enum import Enum
 
-from stm32f103_simulator import STM32F103
-
+from stm32f103_simulator import STM32F103  # pylint: disable=import-error
 
 logger = logging.getLogger(__name__)
 

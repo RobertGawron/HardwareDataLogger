@@ -6558,7 +6558,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1M"
+		(property "Value" "510k"
 			(at 171.958 96.393 0)
 			(effects
 				(font
@@ -6893,7 +6893,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1M"
+		(property "Value" "510k"
 			(at 171.958 123.063 0)
 			(effects
 				(font
@@ -7028,7 +7028,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1M"
+		(property "Value" "510k"
 			(at 171.958 105.283 0)
 			(effects
 				(font
@@ -7097,7 +7097,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1M"
+		(property "Value" "510k"
 			(at 171.958 114.173 0)
 			(effects
 				(font
@@ -7890,7 +7890,7 @@
 		(fields_autoplaced yes)
 		(uuid "ef87ec9c-d256-4e55-81dc-da0052e5fa46")
 		(property "Reference" "C3"
-			(at 193.4211 132.4415 0)
+			(at 194.31 132.0799 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7898,8 +7898,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "330n"
-			(at 193.4211 135.2166 0)
+		(property "Value" "100n"
+			(at 194.31 134.6199 0)
 			(effects
 				(font
 					(size 1.27 1.27)

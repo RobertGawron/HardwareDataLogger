@@ -32,7 +32,7 @@ class STM32F103:  # pylint: disable=too-many-instance-attributes
     def __init__(self) -> None:
         """Initialize the STM32F103 class."""
         dll_abs_path: str = (
-            "/workspace/build/Software/STM32F103RBTx/Application/SimulationBindings/libsimulator_stm32f103.so"
+            "/usr/local/lib/libsimulator_stm32f103.so"
         )
         self.dut: ctypes.CDLL = ctypes.CDLL(dll_abs_path)
         self._serial_tx_callback_c = None

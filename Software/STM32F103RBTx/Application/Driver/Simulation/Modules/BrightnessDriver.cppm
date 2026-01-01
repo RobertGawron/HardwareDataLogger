@@ -36,11 +36,27 @@ export namespace Driver
          * @param brightness Brightness level as a percentage (0-100).
          * @return True if the brightness is set successfully, false otherwise.
          */
-        bool setBrightness(std::uint8_t brightness) noexcept;
+        auto setBrightness(std::uint8_t brightness) noexcept -> bool
+        {
+            (void)brightness;
 
-        [[nodiscard]] bool onInit() { return true; }
-        [[nodiscard]] bool onStart() { return true; }
-        [[nodiscard]] bool onStop() { return true; }
+            return true;
+        }
+
+        [[nodiscard]] auto onInit() noexcept -> bool
+        {
+            return true;
+        }
+
+        [[nodiscard]] auto onStart() noexcept -> bool
+        {
+            return true;
+        }
+
+        [[nodiscard]] auto onStop() noexcept -> bool
+        {
+            return true;
+        }
     };
 
     static_assert(Driver::Concepts::BrightnessDriverConcept<BrightnessDriver>,

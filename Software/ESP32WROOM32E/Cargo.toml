@@ -24,6 +24,7 @@ experimental = ["esp-idf-svc/experimental"]
 
 [dependencies]
 log = "0.4"
+anyhow = "1.0"
 esp-idf-svc = "0.51"
 
 # --- Optional Embassy Integration ---

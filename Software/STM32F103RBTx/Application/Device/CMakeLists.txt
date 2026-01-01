@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.31)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -24,7 +24,7 @@ target_sources(Device PUBLIC FILE_SET CXX_MODULES FILES
     Modules/DisplayBrightness.cppm
     Modules/DisplayPixelColor.cppm
     Modules/Keyboard.cppm
-    Modules/KeyActionState.cppm
+    Modules/KeyAction.cppm
     Modules/MeasurementDeviceId.cppm
     Modules/MeasurementRecorder.cppm
     Modules/MeasurementSource.cppm

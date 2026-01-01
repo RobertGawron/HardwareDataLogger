@@ -6,36 +6,37 @@ module;
 export module Driver.Concepts.DisplayDriver;
 
 import Driver.DriverComponent;
-// import Driver.DisplayPixelColor;
 
 export namespace Driver::Concepts
 {
     /**
-     * @concept DisplayDriver
-     * @brief Defines requirements for display drivers
+     * @concept DisplayDriverConcept
+     * @brief Requirements for a display driver component.
+     *
+     * @details Matches the current Driver::DisplayDriver interface:
+     * - lifecycle hooks: onInit(), onStart()
+     * - basic drawing API: setCursor(), drawBitmap(), fillRGBRectangle()
+     *
+     * All functions must return bool and be noexcept where declared noexcept
+     * in the concrete driver API.
      */
     template <typename T>
     concept DisplayDriverConcept =
         std::derived_from<T, DriverComponent> &&
         requires(T driver,
-                 const T constDriver,
                  std::uint8_t x,
-                 std::uint8_t y /*,
-                  DisplayPixelColor::PixelColor color*/
-        ) {
-            // Display control
-            { driver.displayOn() } noexcept;
-            { driver.displayOff() } noexcept;
+                 std::uint8_t y,
+                 std::uint8_t width,
+                 std::uint8_t height,
+                 std::uint8_t &bitmap,
+                 std::uint8_t &data) {
+            // Lifecycle
+            { driver.onInit() } -> std::same_as<bool>;
+            { driver.onStart() } -> std::same_as<bool>;
 
-            /* // Pixel operations
-             { driver.setPixel(x, y, color) } noexcept;
-             { constDriver.getPixel(x, y, color) } noexcept;
-
-             // Rectangle operations
-             { driver.fillRectangle(x, y, x, y, color) } noexcept;
- */
-            // Size queries
-            { constDriver.getXSize(x) } noexcept;
-            { constDriver.getYSize(y) } noexcept;
+            // Drawing primitives (noexcept in the interface)
+            { driver.setCursor(x, y) } noexcept -> std::same_as<bool>;
+            { driver.drawBitmap(x, y, bitmap) } noexcept -> std::same_as<bool>;
+            { driver.fillRGBRectangle(x, y, data, width, height) } noexcept -> std::same_as<bool>;
         };
-}
+} // namespace Driver::Concepts

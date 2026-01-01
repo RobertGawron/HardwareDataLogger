@@ -5,13 +5,24 @@
   "configurePresets": [
     {
       "name": "docs",
-      "displayName": "Docs (Debug, Ninja, /tmp)",
+      "displayName": "Docs Coverage",
       "generator": "Ninja",
       "binaryDir": "/tmp/cmake-docs",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "Python3_EXECUTABLE": "/opt/venv/bin/python",
         "DOXYGEN_OUTPUT_DIR": "/workspace/DevOps/BuildArtifacts/DocsCoverage"
+      }
+    },
+    {
+      "name": "pstatic",
+      "displayName": "Python Static Analysis",
+      "generator": "Ninja",
+      "binaryDir": "/tmp/cmake-pstatic",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "PYTHON_REPORT_DIR": "/workspace/DevOps/Artifacts/PythonStaticAnalysis",
+        "PYTHON_ANALYZE_DIR": "/tmp/cmake-pstatic/BuildArtifacts/PythonStaticAnalysisWork"
       }
     },
     {
@@ -23,20 +34,25 @@
         "CMAKE_BUILD_TYPE": "Debug"
       }
     },
+
     {
-      "name": "pstatic",
-      "displayName": "Python static analysis (Debug, Ninja, /tmp)",
+      "name": "integration-debug",
+      "displayName": "Integration build (Debug, Ninja, isolated build dir + install prefix)",
       "generator": "Ninja",
-      "binaryDir": "/tmp/cmake-pstatic",
+      "binaryDir": "/tmp/cmake-integration",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "PYTHON_REPORT_DIR": "/workspace/DevOps/BuildArtifacts/PythonStaticAnalysis",
-        "PYTHON_ANALYZE_DIR": "/tmp/cmake-pstatic/BuildArtifacts/PythonStaticAnalysisWork"
+        "CMAKE_INSTALL_PREFIX": "/usr/local"
       }
     }
   ],
 
   "buildPresets": [
+    {
+      "name": "build-debug",
+      "displayName": "Build: main (Debug)",
+      "configurePreset": "build-debug"
+    },
     {
       "name": "docs",
       "displayName": "Build: docs",
@@ -48,6 +64,58 @@
       "displayName": "Build: pstatic",
       "configurePreset": "pstatic",
       "targets": ["pstatic"]
+    },
+
+    {
+      "name": "integration-debug",
+      "displayName": "Build: integration-debug (compile everything needed)",
+      "configurePreset": "integration-debug"
+    },
+
+    {
+      "name": "integration",
+      "displayName": "Build: integration (pytest)",
+      "configurePreset": "build-debug",
+      "targets": ["integration"]
+    },
+    {
+      "name": "install-sim",
+      "displayName": "Build: install SimulationBindings",
+      "configurePreset": "build-debug",
+      "targets": ["install-sim"]
+    },
+
+    {
+      "name": "install-integration",
+      "displayName": "Build: install SimulationBindings (integration-debug)",
+      "configurePreset": "integration-debug",
+      "targets": ["install-sim"]
+    }
+  ],
+
+  "testPresets": [
+    {
+      "name": "unit-tests",
+      "displayName": "Run All Unit Tests",
+      "description": "Runs all GTest unit tests with Sanitizers enabled",
+      "configurePreset": "build-debug",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "unit-tests-device",
+      "displayName": "Run Device Layer Tests Only",
+      "inherits": "unit-tests",
+      "filter": {
+        "include": {
+          "label": "Device"
+        }
+      }
     }
   ]
 }

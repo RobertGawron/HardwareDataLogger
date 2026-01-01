@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.31)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -16,7 +16,9 @@ target_link_libraries(Driver
 )
 
 target_sources(Driver
-    PUBLIC FILE_SET CXX_MODULES FILES
+    PUBLIC FILE_SET CXX_MODULES FILES 
+        Modules/CycleClock.cppm
+        
         Modules/BrightnessDriver.cppm
         Modules/DisplayDriver.cppm
         Modules/Driver.cppm

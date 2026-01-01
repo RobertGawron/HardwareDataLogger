@@ -32,7 +32,7 @@ This project has the following features:
 #### STM32F103RBTx Board
 The STM32F103RBTx serves as the main microcontroller, handling data acquisition, processing, serialization, and user interaction.
 
-* Toolchain: C++23, C, STM32 VS Code Extension, CMake.
+* Toolchain: C++23, CubeMX, CMake.
 * [More info.](./Software/STM32F103RBTx/README.md)
 
 #### ESP32WROOM32E

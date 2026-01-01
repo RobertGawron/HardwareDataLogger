@@ -7,17 +7,17 @@ services:
     privileged: true
     
     environment:
-      - DISPLAY=:0
-      - WAYLAND_DISPLAY=wayland-0
       - XDG_RUNTIME_DIR=/mnt/wslg/runtime-dir
+      - WAYLAND_DISPLAY=wayland-0
+      - QT_QPA_PLATFORM=wayland
       - PULSE_SERVER=/mnt/wslg/PulseServer
-      - QT_X11_NO_MITSHM=1
-      - QT_QPA_PLATFORM=xcb
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix
       - /mnt/wslg:/mnt/wslg
       - ./:/workspace/
       - /dev/bus/usb:/dev/bus/usb
+    devices:
+      - /dev:/dev                   # Give container access to all devices
+      - /lib/modules:/lib/modules   # Give container access to Host Kernel Modules
     working_dir: /workspace
     stdin_open: true
     tty: true
