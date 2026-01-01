@@ -16,8 +16,6 @@ from enum import Enum
 
 from stm32f103_simulator import STM32F103
 
-from ESP8266.device_under_test import DeviceUnderTest as Esp8266
-
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +39,8 @@ class GPIOID(Enum):
     GPIO3 = 3
 
 
-class UartLogger:
+class UartLogger:  # pylint: disable=too-few-public-methods
+
     """Helper class to log UART transmissions."""
 
     def __init__(self):
@@ -74,6 +73,7 @@ class UartLogger:
 
 
 class SdCardLogger:
+
     """Helper class to log SD card operations."""
 
     def __init__(self):
@@ -134,7 +134,7 @@ class SdCardLogger:
         return 0  # SdCardStatus::OK
 
 
-class Simulation:
+class Simulation:  # pylint: disable=too-many-instance-attributes
 
     """Simulation class manages the interaction between STM32 and ESP8266 simulations."""
 
@@ -157,10 +157,10 @@ class Simulation:
         # Register callbacks
         self._register_callbacks()
 
-
         self.stm32.init()
 
-        # self.esp8266_uart0_tx_callback = None
+        # Initialize callback attributes
+        self.esp8266_uart0_tx_callback = None
         self.my_gpio_state_callback = None
 
     def _register_callbacks(self):

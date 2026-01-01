@@ -12,12 +12,6 @@ These tests are not unit tests. The unit tests are located in the directories wh
 
 # Running tests
 
-On first run of the Docker image, install the firmware wrapper package:
-
-```
-pip install -e /workspace/Software/STM32F103RBTx/Application/Driver/Host/Python/ 
-```
-
 Then use this one-liner:
 
 ```
@@ -47,7 +41,7 @@ ulimit -c unlimited
 On WSL (Docker runs in Windows), disable `wsl-capture-crash` for Core Dumps:
 
 ```
-echo "/tmp/core.%e.%p" | tee /proc/sys/kernel/core_pattern
+echo "/tmp/core.%e.%t" | tee /proc/sys/kernel/core_pattern
 ```
 
 ### Debug Core Dumps

@@ -108,7 +108,7 @@ RUN /workspace/venv/bin/pip install --no-cache-dir --upgrade pip && \
     codechecker \
     prospector \
     vjunit
-
+    
 # ---------------------------------------------------------------------
 # STAGE 3: Rust toolchain (slowest, changes rarely)
 # ---------------------------------------------------------------------

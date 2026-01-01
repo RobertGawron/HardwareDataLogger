@@ -24,7 +24,13 @@ namespace Device
 
     [[nodiscard]] bool SdCardMeasurementRecorder::onStart()
     {
-        return driver.start();
+        using FileOpenMode = Driver::ISdCardDriver::FileOpenMode;
+
+        constexpr std::string_view filename = "measurements.txt";
+        constexpr FileOpenMode mode = FileOpenMode::APPEND;
+
+        return driver.start() &&
+               (driver.openFile(filename, mode) == Driver::SdCardStatus::OK);
     }
 
     [[nodiscard]] bool SdCardMeasurementRecorder::onStop()
