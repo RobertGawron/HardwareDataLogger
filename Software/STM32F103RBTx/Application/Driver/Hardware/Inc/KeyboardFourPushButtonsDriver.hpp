@@ -7,9 +7,11 @@
 #define DRIVER_KeyboardFourPushButtonsDriver_H_
 
 #include "Driver/Interface/IKeyboardDriver.hpp"
+
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_gpio.h"
 #include "main.h" // for KEY_UP_*_Port, KEY_*_Pin
+
 #include <cstdint>
 #include <array> // For std::array
 
@@ -59,9 +61,9 @@ namespace Driver
          * This function returns the state (pressed or not pressed) of a given button identified by `key`.
          *
          * @param key The identifier of the button whose state is requested.
-         * @return The current state of the button (`KeyboardKeyState`).
+         * @return The current state of the button (`KeyState`).
          */
-        [[nodiscard]] KeyboardKeyState getKeyState(KeyboardKeyIdentifier key) const override;
+        [[nodiscard]] KeyState getKeyState(KeyIdentifier key) const override;
 
         /**
          * @brief Number of keys supported by the keyboard.
@@ -69,7 +71,7 @@ namespace Driver
          * This constant defines the total number of keys that are supported by the keyboard driver.
          * It is derived from the last unused key identifier.
          */
-        static constexpr std::uint8_t AmountOfKeys = static_cast<std::uint8_t>(Driver::KeyboardKeyIdentifier::LastNotUsed);
+        static constexpr std::uint8_t AmountOfKeys = static_cast<std::uint8_t>(Driver::KeyIdentifier::LastNotUsed);
 
     protected:
         /**
@@ -122,22 +124,22 @@ namespace Driver
          *
          * @param GPIOx The GPIO port where the button is connected.
          * @param GPIO_Pin The GPIO pin number where the button is connected.
-         * @return The state of the button connected to the specified GPIO pin (`KeyboardKeyState`).
+         * @return The state of the button connected to the specified GPIO pin (`KeyState`).
          */
-        [[nodiscard]] static Driver::KeyboardKeyState getKeyStateFromHW(GPIO_TypeDef *GPIOx, std::uint16_t GPIO_Pin);
+        [[nodiscard]] static Driver::KeyState readGpioState(GPIO_TypeDef *GPIOx, std::uint16_t GPIO_Pin);
 
         /**
-         * @brief Structure representing the state of a key.
+         * @brief Structure representing the configuration and state of a key.
          *
          * This structure holds information about the current state of a GPIO pin connected to a button.
          * It contains the state of the GPIO (either pressed or not pressed), as well as the low-level
          * access details to the GPIO peripheral, including the port and pin number.
          */
-        using KeyState = struct
+        struct KeyConfig
         {
-            KeyboardKeyState state;  /**< State of the GPIO connected to the button, either pressed (low) or not pressed (high). */
-            GPIO_TypeDef *GPIO_Port; /**< Pointer to the GPIO port associated with the key. */
-            std::uint16_t GPIO_Pin;  /**< GPIO pin number associated with the key. */
+            Driver::KeyState state;       /**< State of the GPIO connected to the button, either pressed (low) or not pressed (high). */
+            GPIO_TypeDef *GPIO_Port;      /**< Pointer to the GPIO port associated with the key. */
+            const std::uint16_t GPIO_Pin; /**< GPIO pin number associated with the key. */
         };
 
         /**
@@ -147,11 +149,11 @@ namespace Driver
          * Each entry corresponds to a key, including its initial state (not pressed) and the associated
          * GPIO port and pin number.
          */
-        std::array<KeyState, AmountOfKeys> keyState = {{
-            {KeyboardKeyState::NotPressed, KEY_UP_GPIO_Port, KEY_UP_Pin},      /**< Key Up: Not pressed, associated GPIO port and pin. */
-            {KeyboardKeyState::NotPressed, KEY_DOWN_GPIO_Port, KEY_DOWN_Pin},  /**< Key Down: Not pressed, associated GPIO port and pin. */
-            {KeyboardKeyState::NotPressed, KEY_LEFT_GPIO_Port, KEY_LEFT_Pin},  /**< Key Left: Not pressed, associated GPIO port and pin. */
-            {KeyboardKeyState::NotPressed, KEY_RIGHT_GPIO_Port, KEY_RIGHT_Pin} /**< Key Right: Not pressed, associated GPIO port and pin. */
+        std::array<KeyConfig, AmountOfKeys> keyState = {{
+            {Driver::KeyState::NotPressed, KEY_UP_GPIO_Port, KEY_UP_Pin},      /**< Key Up: Not pressed, associated GPIO port and pin. */
+            {Driver::KeyState::NotPressed, KEY_DOWN_GPIO_Port, KEY_DOWN_Pin},  /**< Key Down: Not pressed, associated GPIO port and pin. */
+            {Driver::KeyState::NotPressed, KEY_LEFT_GPIO_Port, KEY_LEFT_Pin},  /**< Key Left: Not pressed, associated GPIO port and pin. */
+            {Driver::KeyState::NotPressed, KEY_RIGHT_GPIO_Port, KEY_RIGHT_Pin} /**< Key Right: Not pressed, associated GPIO port and pin. */
         }};
     };
 

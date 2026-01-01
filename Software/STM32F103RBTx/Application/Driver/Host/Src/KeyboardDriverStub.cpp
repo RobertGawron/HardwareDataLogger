@@ -1,6 +1,6 @@
 #include "KeyboardDriverStub.hpp"
-#include "Driver/Interface/KeyboardKeyIdentifier.hpp"
-#include "Driver/Interface/KeyboardKeyState.hpp"
+#include "Driver/Interface/KeyIdentifier.hpp"
+#include "Driver/Interface/KeyState.hpp"
 
 #include <cstdint>
 
@@ -32,13 +32,13 @@ namespace Driver
         return true;
     }
 
-    KeyboardKeyState KeyboardDriverStub::getKeyState(const KeyboardKeyIdentifier key) const
+    KeyState KeyboardDriverStub::getKeyState(const KeyIdentifier key) const
     {
-        const KeyboardKeyState state = keyState.at(static_cast<std::uint8_t>(key));
+        const KeyState state = keyState.at(static_cast<std::uint8_t>(key));
         return state;
     }
 
-    void KeyboardDriverStub::setKeyState(KeyboardKeyIdentifier key, KeyboardKeyState state)
+    void KeyboardDriverStub::setKeyState(KeyIdentifier key, KeyState state)
     {
         keyState.at(static_cast<std::uint8_t>(key)) = state;
     }

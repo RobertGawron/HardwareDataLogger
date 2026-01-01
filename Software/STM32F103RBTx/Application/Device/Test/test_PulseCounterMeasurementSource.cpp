@@ -31,8 +31,8 @@ private:
 protected:
     void SetUp() override
     {
-        const Device::MeasurementDeviceId id = Device::MeasurementDeviceId::PULSE_COUNTER_1;
-        measurementSource = std::make_unique<Device::PulseCounterMeasurementSource>(id, mockDriver);
+        const Device::MeasurementDeviceId deviceId = Device::MeasurementDeviceId::PULSE_COUNTER_1;
+        measurementSource = std::make_unique<Device::PulseCounterMeasurementSource>(deviceId, mockDriver);
     }
 
 public:

@@ -55,7 +55,7 @@ namespace Driver
          * @param halStatus The HAL status code to convert.
          * @return The corresponding UartStatus value.
          */
-        //   static UartStatus getExchangeStatus(HAL_StatusTypeDef halStatus);
+        //   static UartStatus getUartStatus(HAL_StatusTypeDef halStatus);
 
         /**
          * @brief Initializes the UART driver.
@@ -104,7 +104,7 @@ namespace Driver
          */
         UART_HandleTypeDef &uartHandler;
 
-        [[nodiscard]] constexpr UartStatus getExchangeStatus(HAL_StatusTypeDef halStatus) noexcept
+        [[nodiscard]] static constexpr UartStatus getUartStatus(HAL_StatusTypeDef halStatus) noexcept
         {
             switch (halStatus)
             {

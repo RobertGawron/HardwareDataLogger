@@ -1,9 +1,9 @@
 #ifndef IKeyboard_h
 #define IKeyboard_h
 
-#include "Device/Inc/KeyboardKeyActionState.hpp"
+#include "Device/Inc/KeyActionState.hpp"
 #include "Driver/Interface/IKeyboardDriver.hpp"
-#include "Driver/Interface/KeyboardKeyIdentifier.hpp"
+#include "Driver/Interface/KeyIdentifier.hpp"
 
 #include <cstdint>
 
@@ -75,7 +75,7 @@ namespace Device
          * @param key The identifier of the key whose state is to be retrieved.
          * @return The action state of the specified key.
          */
-        [[nodiscard]] virtual KeyboardKeyActionState getKeyState(Driver::KeyboardKeyIdentifier key) const = 0;
+        [[nodiscard]] virtual KeyActionState getKeyState(Driver::KeyIdentifier key) const = 0;
     };
 
 }

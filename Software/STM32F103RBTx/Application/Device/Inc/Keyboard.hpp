@@ -10,9 +10,9 @@
  */
 
 #include "Device/Interface/IKeyboard.hpp"
-#include "Device/Inc/KeyboardKeyActionState.hpp"
+#include "Device/Inc/KeyActionState.hpp"
 #include "Driver/Interface/IKeyboardDriver.hpp"
-#include "Driver/Interface/KeyboardKeyIdentifier.hpp"
+#include "Driver/Interface/KeyIdentifier.hpp"
 
 #include <cstdint>
 #include <array> // For std::array
@@ -88,14 +88,14 @@ namespace Device
          * @param key The ID of the key for which the state is requested.
          * @return The action state of the specified key.
          */
-        [[nodiscard]] KeyboardKeyActionState getKeyState(Driver::KeyboardKeyIdentifier key) const override;
+        [[nodiscard]] KeyActionState getKeyState(Driver::KeyIdentifier key) const override;
 
     private:
         /** @brief Reference to the platform-specific keyboard driver. */
         Driver::IKeyboardDriver &keyboardDriver;
 
         /** @brief Number of keys supported by the keyboard. */
-        static constexpr std::uint8_t AmountOfKeys = static_cast<std::uint8_t>(Driver::KeyboardKeyIdentifier::LastNotUsed);
+        static constexpr std::uint8_t AmountOfKeys = static_cast<std::uint8_t>(Driver::KeyIdentifier::LastNotUsed);
 
         /**
          * @brief Array for tracking the duration (in ticks) each key has been pressed.
@@ -112,11 +112,11 @@ namespace Device
          *
          * Each key's action state indicates whether it is pressed, held, or not pressed.
          */
-        std::array<KeyboardKeyActionState, AmountOfKeys> keyActionState{
-            KeyboardKeyActionState::PressNot,
-            KeyboardKeyActionState::PressNot,
-            KeyboardKeyActionState::PressNot,
-            KeyboardKeyActionState::PressNot};
+        std::array<KeyActionState, AmountOfKeys> keyActionState{
+            KeyActionState::PressNot,
+            KeyActionState::PressNot,
+            KeyActionState::PressNot,
+            KeyActionState::PressNot};
     };
 
 } // namespace Device

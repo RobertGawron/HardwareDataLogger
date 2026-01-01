@@ -10,8 +10,8 @@
 
 namespace Driver
 {
-    UartDriverStub::UartDriverStub(const Driver::UartId id)
-        : uartId(id)
+    UartDriverStub::UartDriverStub(const Driver::UartId deviceId)
+        : uartId(deviceId)
     {
     }
 

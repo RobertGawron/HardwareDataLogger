@@ -89,10 +89,10 @@ namespace BusinessLogic
          *
          * Provides a platform-specific implementation of the UART driver.
          *
-         * @param id The identifier for the specific UART instance to get.
+         * @param deviceId The identifier for the specific UART instance to get.
          * @return A reference to the platform-specific UART driver.
          */
-        virtual Driver::IUartDriver &getUartDriver(Driver::UartId id) = 0;
+        virtual Driver::IUartDriver &getUartDriver(Driver::UartId deviceId) = 0;
 
         /**
          * @brief gets an instance of the SD card driver.
@@ -108,10 +108,10 @@ namespace BusinessLogic
          *
          * Provides a platform-specific implementation of the pulse counter driver.
          *
-         * @param id The identifier for the specific pulse counter instance to get.
+         * @param deviceId The identifier for the specific pulse counter instance to get.
          * @return A reference to the platform-specific pulse counter driver.
          */
-        virtual Driver::IPulseCounterDriver &getPulseCounterDriver(Driver::PulseCounterId id) = 0;
+        virtual Driver::IPulseCounterDriver &getPulseCounterDriver(Driver::PulseCounterId deviceId) = 0;
     };
 }
 

@@ -26,10 +26,10 @@ namespace Device
         /**
          * @brief Constructs a UartMeasurementSource with a device ID and UART driver reference.
          *
-         * @param id Unique identifier for the measurement source device
+         * @param deviceId Unique identifier for the measurement source device
          * @param driver Reference to the UART driver responsible for communication
          */
-        explicit UartMeasurementSource(MeasurementDeviceId id, Driver::IUartDriver &driver);
+        explicit UartMeasurementSource(MeasurementDeviceId deviceId, Driver::IUartDriver &driver);
 
         /**
          * @brief Deleted default constructor to prevent instantiation without required parameters.
@@ -92,7 +92,7 @@ namespace Device
         /**
          * @brief Unique identifier for this measurement source
          */
-        MeasurementDeviceId deviceId;
+        const MeasurementDeviceId deviceId;
 
         /**
          * @brief Reference to the UART driver used for communication

@@ -58,14 +58,14 @@ namespace BusinessLogic
         return driver;
     }
 
-    Driver::IUartDriver &PlatformFactory::getUartDriver(const Driver::UartId id)
+    Driver::IUartDriver &PlatformFactory::getUartDriver(const Driver::UartId deviceId)
     {
         // hack
         static Driver::UartDriver driver1(huart1);
         static Driver::UartDriver driver2(huart2);
         static Driver::UartDriver driver3(husart3);
 
-        switch (id)
+        switch (deviceId)
         {
         case Driver::UartId::MEASUREMENT_RECEIVER:
             return driver3;
@@ -87,10 +87,11 @@ namespace BusinessLogic
         return driver;
     }
 
-    Driver::IPulseCounterDriver &PlatformFactory::getPulseCounterDriver(const Driver::PulseCounterId id)
+    Driver::IPulseCounterDriver &PlatformFactory::getPulseCounterDriver(
+        const Driver::PulseCounterId deviceId)
     {
         // TODO
-        static Driver::PulseCounterDriver driver(id);
+        static Driver::PulseCounterDriver driver(deviceId);
         return driver;
     }
 }

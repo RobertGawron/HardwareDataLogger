@@ -10,17 +10,17 @@
 
 #include "MyApplication.hpp"
 #include "EventHandlers.hpp"
-#include "KeyboardKeyIdentifier.hpp"
+#include "KeyIdentifier.hpp"
 
 constexpr std::size_t PULSE_COUNTER_COUNT = 4U;
 
-enum KeyboardKeyIdentifier : std::uint8_t
+enum KeyIdentifier : std::uint8_t
 {
-    Up = static_cast<std::uint8_t>(Driver::KeyboardKeyIdentifier::Up),
-    Down = static_cast<std::uint8_t>(Driver::KeyboardKeyIdentifier::Down),
-    Left = static_cast<std::uint8_t>(Driver::KeyboardKeyIdentifier::Left),
-    Right = static_cast<std::uint8_t>(Driver::KeyboardKeyIdentifier::Right),
-    LastNotUsed = static_cast<std::uint8_t>(Driver::KeyboardKeyIdentifier::LastNotUsed)
+    Up = static_cast<std::uint8_t>(Driver::KeyIdentifier::Up),
+    Down = static_cast<std::uint8_t>(Driver::KeyIdentifier::Down),
+    Left = static_cast<std::uint8_t>(Driver::KeyIdentifier::Left),
+    Right = static_cast<std::uint8_t>(Driver::KeyIdentifier::Right),
+    LastNotUsed = static_cast<std::uint8_t>(Driver::KeyIdentifier::LastNotUsed)
 };
 
 #ifdef __cplusplus
@@ -64,15 +64,15 @@ extern "C"
      * This function returns the value of a pixel located at the given coordinates.
      * The value represents the color or intensity of the pixel.
      *
-     * @param x The x-coordinate of the pixel.
-     * @param y The y-coordinate of the pixel.
+     * @param xPosition The x-coordinate of the pixel.
+     * @param yPosition The y-coordinate of the pixel.
      * @return The value of the pixel at the specified location.
      */
-    std::uint16_t LibWrapper_GetPixelValue(std::uint8_t x, std::uint8_t y);
+    std::uint16_t LibWrapper_GetPixelValue(std::uint8_t xPosition, std::uint8_t yPosition);
 
-    void LibWrapper_KeyPressed(KeyboardKeyIdentifier keyId);
+    void LibWrapper_KeyPressed(KeyIdentifier keyId);
 
-    void LibWrapper_KeyReleased(KeyboardKeyIdentifier keyId);
+    void LibWrapper_KeyReleased(KeyIdentifier keyId);
 
     /**
      * @brief Updates the values of the pulse counters.

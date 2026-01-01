@@ -78,12 +78,16 @@ int32_t LCD_IO_WriteReg(uint8_t Reg, uint8_t *pData, uint32_t Length)
 
 int32_t LCD_IO_ST7735_ReadReg(uint8_t dummy1, uint8_t *dummy2)
 {
+    static_cast<void>(dummy1);
+    static_cast<void>(dummy2);
     /* 5. Return Success (0) */
     return 0;
 }
 
 int32_t LCD_IO_ST7735_RecvData(uint8_t *dummy1, uint32_t dummy2)
 {
+    static_cast<void>(dummy1);
+    static_cast<void>(dummy2);
     /* 5. Return Success (0) */
     return 0;
 }
@@ -105,8 +109,9 @@ int32_t LCD_IO_GetTick()
      * HAL_GetTick() returns the time in milliseconds (uint32_t).
      * We cast it to int32_t to match the driver's signature.
      */
-    return (int32_t)HAL_GetTick();
+    return static_cast<int32_t>(HAL_GetTick());
 }
+
 namespace Driver
 {
     bool St7735DisplayDriver::onInitialize()
@@ -159,112 +164,88 @@ namespace Driver
 
     IDisplayDriver::Status St7735DisplayDriver::setOrientation(IDisplayDriver::Orientation orientation)
     {
-        (void)orientation; // Mark parameter as unused
+        static_cast<void>(orientation);
         return IDisplayDriver::Status::Ok;
     }
 
     IDisplayDriver::Status St7735DisplayDriver::getOrientation(IDisplayDriver::Orientation &orientation) const
     {
-        (void)orientation; // Mark parameter as unused
+        static_cast<void>(orientation);
         return IDisplayDriver::Status::Ok;
     }
 
-    IDisplayDriver::Status St7735DisplayDriver::setCursor(std::uint8_t x, std::uint8_t y)
+    IDisplayDriver::Status St7735DisplayDriver::setCursor(std::uint8_t xPosition, std::uint8_t yPosition)
     {
-        (void)x; // Mark parameter as unused
-        (void)y; // Mark parameter as unused
+        static_cast<void>(xPosition);
+        static_cast<void>(yPosition);
         return IDisplayDriver::Status::Ok;
     }
 
-    IDisplayDriver::Status St7735DisplayDriver::drawBitmap(std::uint8_t x, std::uint8_t y, std::uint8_t &bitmap)
+    IDisplayDriver::Status St7735DisplayDriver::drawBitmap(std::uint8_t xPosition, std::uint8_t yPosition, std::uint8_t &bitmap)
     {
-        (void)x;      // Mark parameter as unused
-        (void)y;      // Mark parameter as unused
-        (void)bitmap; // Mark parameter as unused
+        static_cast<void>(xPosition);
+        static_cast<void>(yPosition);
+        static_cast<void>(bitmap);
         return IDisplayDriver::Status::Ok;
     }
 
-    IDisplayDriver::Status St7735DisplayDriver::fillRGBRectangle(std::uint8_t x,
-                                                                 std::uint8_t y,
+    IDisplayDriver::Status St7735DisplayDriver::fillRGBRectangle(std::uint8_t xPosition,
+                                                                 std::uint8_t yPosition,
                                                                  std::uint8_t &data,
                                                                  std::uint8_t width,
                                                                  std::uint8_t height)
     {
-        (void)x;      // Mark parameter as unused
-        (void)y;      // Mark parameter as unused
-        (void)data;   // Mark parameter as unused
-        (void)width;  // Mark parameter as unused
-        (void)height; // Mark parameter as unused
+        static_cast<void>(xPosition);
+        static_cast<void>(yPosition);
+        static_cast<void>(data);
+        static_cast<void>(width);
+        static_cast<void>(height);
         return IDisplayDriver::Status::Ok;
     }
 
-    IDisplayDriver::Status St7735DisplayDriver::drawHorizontalLine(std::uint8_t x,
-                                                                   std::uint8_t y,
-                                                                   std::uint8_t length,
-                                                                   DisplayPixelColor::PixelColor color)
-    {
-        (void)x;      // Mark parameter as unused
-        (void)y;      // Mark parameter as unused
-        (void)length; // Mark parameter as unused
-        (void)color;  // Mark parameter as unused
-        return IDisplayDriver::Status::Ok;
-    }
-
-    IDisplayDriver::Status St7735DisplayDriver::drawVerticalLine(std::uint8_t x,
-                                                                 std::uint8_t y,
-                                                                 std::uint8_t length,
-                                                                 DisplayPixelColor::PixelColor color)
-    {
-        (void)x;      // Mark parameter as unused
-        (void)y;      // Mark parameter as unused
-        (void)length; // Mark parameter as unused
-        (void)color;  // Mark parameter as unused
-        return IDisplayDriver::Status::Ok;
-    }
-
-    IDisplayDriver::Status St7735DisplayDriver::fillRectangle(std::uint8_t x,
-                                                              std::uint8_t y,
+    IDisplayDriver::Status St7735DisplayDriver::fillRectangle(std::uint8_t xPosition,
+                                                              std::uint8_t yPosition,
                                                               std::uint8_t width,
                                                               std::uint8_t height,
                                                               DisplayPixelColor::PixelColor color)
     {
-        (void)x;      // Mark parameter as unused
-        (void)y;      // Mark parameter as unused
-        (void)width;  // Mark parameter as unused
-        (void)height; // Mark parameter as unused
-        (void)color;  // Mark parameter as unused
+        static_cast<void>(xPosition);
+        static_cast<void>(yPosition);
+        static_cast<void>(width);
+        static_cast<void>(height);
+        static_cast<void>(color);
         return IDisplayDriver::Status::Ok;
     }
 
-    IDisplayDriver::Status St7735DisplayDriver::setPixel(std::uint8_t x,
-                                                         std::uint8_t y,
+    IDisplayDriver::Status St7735DisplayDriver::setPixel(std::uint8_t xPosition,
+                                                         std::uint8_t yPosition,
                                                          DisplayPixelColor::PixelColor color)
     {
-        (void)x;     // Mark parameter as unused
-        (void)y;     // Mark parameter as unused
-        (void)color; // Mark parameter as unused
+        static_cast<void>(xPosition);
+        static_cast<void>(yPosition);
+        static_cast<void>(color);
         return IDisplayDriver::Status::Ok;
     }
 
-    IDisplayDriver::Status St7735DisplayDriver::getPixel(std::uint8_t x,
-                                                         std::uint8_t y,
+    IDisplayDriver::Status St7735DisplayDriver::getPixel(std::uint8_t xPosition,
+                                                         std::uint8_t yPosition,
                                                          DisplayPixelColor::PixelColor &color) const
     {
-        (void)x;     // Mark parameter as unused
-        (void)y;     // Mark parameter as unused
-        (void)color; // Mark parameter as unused
+        static_cast<void>(xPosition);
+        static_cast<void>(yPosition);
+        static_cast<void>(color);
         return IDisplayDriver::Status::Ok;
     }
 
     IDisplayDriver::Status St7735DisplayDriver::getXSize(std::uint8_t &size) const
     {
-        (void)size; // Mark parameter as unused
+        static_cast<void>(size);
         return IDisplayDriver::Status::Ok;
     }
 
     IDisplayDriver::Status St7735DisplayDriver::getYSize(std::uint8_t &size) const
     {
-        (void)size; // Mark parameter as unused
+        static_cast<void>(size);
         return IDisplayDriver::Status::Ok;
     }
 }

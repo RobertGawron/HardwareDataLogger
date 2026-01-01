@@ -5,13 +5,11 @@
 #include "Device/Inc/MeasurementDeviceId.hpp"
 #include "Driver/Interface/IPulseCounterDriver.hpp"
 
-// #include <stdio.h>
-
 namespace Device
 {
 
-    PulseCounterMeasurementSource::PulseCounterMeasurementSource(MeasurementDeviceId id, Driver::IPulseCounterDriver &_pulseCounterDriver)
-        : IMeasurementSource(id),
+    PulseCounterMeasurementSource::PulseCounterMeasurementSource(MeasurementDeviceId _deviceId, Driver::IPulseCounterDriver &_pulseCounterDriver)
+        : deviceId(_deviceId),
           pulseCounterDriver(_pulseCounterDriver)
     {
     }
@@ -41,9 +39,9 @@ namespace Device
 
     MeasurementType PulseCounterMeasurementSource::getMeasurement()
     {
-        MeasurementType measurement{
+        const MeasurementType measurement{
             .data = pulseCounterDriver.getMeasurement(),
-            .source = getMyId()};
+            .source = deviceId};
 
         return measurement;
     }

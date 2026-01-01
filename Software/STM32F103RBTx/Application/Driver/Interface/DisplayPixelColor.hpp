@@ -73,20 +73,20 @@ namespace Driver
          * into 5 or 6 bits, the lower bits are truncated, which can result in some
          * loss of color precision.
          */
-        static constexpr PixelColor getColorRGB565(std::uint8_t red, std::uint8_t green, std::uint8_t blue)
+        static constexpr PixelColor getColorRGB565(std::uint8_t red, std::uint8_t green, std::uint8_t blue) noexcept
         {
-            constexpr std::uint8_t BITS_IN_BYTE = 8u;
+            constexpr std::uint8_t BITS_IN_BYTE = 8U;
 
             // Extract the top bits for each color channel and combine them
-            const std::uint16_t r = (red >> (BITS_IN_BYTE - RED_BITS)) & RED_MASK;       // 5 bits for red
-            const std::uint16_t g = (green >> (BITS_IN_BYTE - GREEN_BITS)) & GREEN_MASK; // 6 bits for green
-            const std::uint16_t b = (blue >> (BITS_IN_BYTE - BLUE_BITS)) & BLUE_MASK;    // 5 bits for blue
+            const std::uint16_t redComponent = (red >> (BITS_IN_BYTE - RED_BITS)) & RED_MASK;         // 5 bits for red
+            const std::uint16_t greenComponent = (green >> (BITS_IN_BYTE - GREEN_BITS)) & GREEN_MASK; // 6 bits for green
+            const std::uint16_t blueComponent = (blue >> (BITS_IN_BYTE - BLUE_BITS)) & BLUE_MASK;     // 5 bits for blue
 
             // Combine the bits into a single 16-bit value according to RGB565 format
             return static_cast<PixelColor>(
-                (static_cast<std::uint16_t>(r) << RED_SHIFT) |
-                (static_cast<std::uint16_t>(g) << GREEN_SHIFT) |
-                (static_cast<std::uint16_t>(b) << BLUE_SHIFT));
+                (static_cast<std::uint16_t>(redComponent) << RED_SHIFT) |
+                (static_cast<std::uint16_t>(greenComponent) << GREEN_SHIFT) |
+                (static_cast<std::uint16_t>(blueComponent) << BLUE_SHIFT));
         }
 
         /// Bit position shift for the red component in RGB565 format.

@@ -54,7 +54,7 @@ namespace Device
 
     bool DisplayBrightnessRegulator::setBrightnessPercentage(std::uint8_t _level)
     {
-        const std::uint8_t MaxLevel = 100u;
+        const std::uint8_t MaxLevel = 100U;
         bool status = false;
 
         if (_level < MaxLevel)

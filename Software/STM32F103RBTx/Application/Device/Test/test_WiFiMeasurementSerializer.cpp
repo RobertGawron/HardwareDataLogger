@@ -42,7 +42,10 @@ protected:
     // Buffer Configuration
     static constexpr std::size_t BUFFER_SIZE = 128U;
 
-    WiFiMeasurementSerializerTest() {}
+    // Test data constants
+    static constexpr std::uint8_t TEST_DATA_BYTE = 0x42U;
+
+    WiFiMeasurementSerializerTest() = default;
 
     void SetUp() override
     {
@@ -110,7 +113,7 @@ protected:
 
 private:
     std::array<std::uint8_t, BUFFER_SIZE> buffer{};
-    std::size_t msgLength{0u};
+    std::size_t msgLength{0U};
 };
 
 // --- Test Cases ---
@@ -348,7 +351,7 @@ TEST_F(WiFiMeasurementSerializerTest, VerifiesCompleteProtocolFormat)
 // Test 10: Different source IDs
 TEST_F(WiFiMeasurementSerializerTest, HandlesAllSourceIds)
 {
-    const std::vector<Device::MeasurementDeviceId> sourceIds = {
+    const std::array<Device::MeasurementDeviceId, 5> sourceIds = {
         Device::MeasurementDeviceId::PULSE_COUNTER_1,
         Device::MeasurementDeviceId::PULSE_COUNTER_2,
         Device::MeasurementDeviceId::PULSE_COUNTER_3,
@@ -359,7 +362,7 @@ TEST_F(WiFiMeasurementSerializerTest, HandlesAllSourceIds)
     for (const auto sourceId : sourceIds)
     {
         Device::MeasurementType measurement;
-        measurement.data = static_cast<std::uint8_t>(0x42);
+        measurement.data = static_cast<std::uint8_t>(TEST_DATA_BYTE);
         measurement.source = sourceId;
 
         std::array<std::uint8_t, BUFFER_SIZE> testBuffer{};

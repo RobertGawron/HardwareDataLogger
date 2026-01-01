@@ -27,10 +27,10 @@ namespace Device
         /**
          * @brief Constructs a PulseCounterMeasurementSource with device ID and pulse counter driver.
          *
-         * @param id The unique identifier for this measurement source.
+         * @param deviceId The unique identifier for this measurement source.
          * @param pulseCounterDriver Reference to the driver responsible for interfacing with the pulse counter device.
          */
-        explicit PulseCounterMeasurementSource(MeasurementDeviceId id, Driver::IPulseCounterDriver &pulseCounterDriver);
+        explicit PulseCounterMeasurementSource(MeasurementDeviceId deviceId, Driver::IPulseCounterDriver &pulseCounterDriver);
 
         PulseCounterMeasurementSource() = delete; ///< Deleted default constructor to prevent instantiation without parameters.
 
@@ -75,6 +75,11 @@ namespace Device
         MeasurementType getMeasurement() override;
 
     private:
+        /**
+         * @brief Unique identifier for this measurement source
+         */
+        const MeasurementDeviceId deviceId;
+
         /** @brief Reference to the driver responsible for interacting with the pulse counter device. */
         Driver::IPulseCounterDriver &pulseCounterDriver;
     };

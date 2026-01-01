@@ -1,12 +1,12 @@
 #include "Driver/Hardware/Inc/KeyboardFourPushButtonsDriver.hpp"
-#include "Driver/Interface/KeyboardKeyState.hpp"
+#include "Driver/Interface/KeyState.hpp"
 #include "Driver/Interface/DriverState.hpp"
-#include "Driver/Interface/KeyboardKeyIdentifier.hpp"
+#include "Driver/Interface/KeyIdentifier.hpp"
 
 #include "stm32f1xx_hal_gpio.h"
 
 #include <cstdint>
-#include <algorithm> // for std::find_if
+#include <algorithm>
 
 namespace Driver
 {
@@ -40,10 +40,9 @@ namespace Driver
 
         if (isInState(DriverState::State::Running))
         {
-            // Use range-based for loop for clarity and simplicity
             for (auto &key : keyState)
             {
-                key.state = getKeyStateFromHW(key.GPIO_Port, key.GPIO_Pin);
+                key.state = readGpioState(key.GPIO_Port, key.GPIO_Pin);
             }
 
             status = true;
@@ -52,43 +51,42 @@ namespace Driver
         return status;
     }
 
-    KeyboardKeyState KeyboardFourPushButtonsDriver::getKeyState(KeyboardKeyIdentifier key) const
+    Driver::KeyState KeyboardFourPushButtonsDriver::getKeyState(KeyIdentifier key) const
     {
-        // Initialize the result with a default state
-        KeyboardKeyState result = KeyboardKeyState::UnknownKeyAsked;
+        Driver::KeyState result = Driver::KeyState::UnknownKeyAsked;
 
         if (isInState(DriverState::State::Running))
         {
-            // Use std::find_if to locate the key configuration in the array
-            // The std::find_if function returns an iterator, which is an object (not a raw pointer) in modern STL containers.
-            // codechecker_suppress [readability-qualified-auto]
-            auto it = std::find_if(
+            const auto *const iterator = std::find_if(
                 keyState.begin(),
                 keyState.end(),
-                [this, key](const KeyState &ks)
+                [key, this](const KeyConfig &keyConfig) noexcept
                 {
-                    return static_cast<KeyboardKeyIdentifier>(&ks - keyState.data()) == key;
+                    return static_cast<KeyIdentifier>(&keyConfig - keyState.data()) == key;
                 });
 
-            if (it != keyState.end())
+            if (iterator != keyState.end())
             {
-                result = it->state;
-            }
-            else if (key == KeyboardKeyIdentifier::LastNotUsed)
-            {
-                result = KeyboardKeyState::UnknownKeyAsked;
+                result = iterator->state;
             }
         }
         else
         {
-            result = KeyboardKeyState::DriverNotOperational;
+            result = Driver::KeyState::DriverNotOperational;
         }
 
         return result;
     }
 
-    Driver::KeyboardKeyState KeyboardFourPushButtonsDriver::getKeyStateFromHW(GPIO_TypeDef *GPIOx, std::uint16_t GPIO_Pin)
+    Driver::KeyState KeyboardFourPushButtonsDriver::readGpioState(GPIO_TypeDef *GPIOx, std::uint16_t GPIO_Pin)
     {
-        return (HAL_GPIO_ReadPin(GPIOx, GPIO_Pin) != GPIO_PIN_SET) ? KeyboardKeyState::Pressed : KeyboardKeyState::NotPressed;
+        Driver::KeyState result = Driver::KeyState::NotPressed;
+
+        if (HAL_GPIO_ReadPin(GPIOx, GPIO_Pin) != GPIO_PIN_SET)
+        {
+            result = Driver::KeyState::Pressed;
+        }
+
+        return result;
     }
 }

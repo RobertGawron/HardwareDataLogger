@@ -19,7 +19,7 @@ namespace Driver
     public:
         UartDriverStub() = delete;
 
-        explicit UartDriverStub(Driver::UartId id);
+        explicit UartDriverStub(Driver::UartId deviceId);
 
         /**
          * @brief Virtual destructor for UartDriverStub.

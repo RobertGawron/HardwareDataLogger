@@ -56,7 +56,7 @@ namespace Driver
          *
          * @note For proper cleanup, call onStop() before destruction.
          */
-        ~SdCardDriverStub() = default;
+        ~SdCardDriverStub() override = default;
 
         /**
          * @brief Deleted copy constructor to prevent copying.

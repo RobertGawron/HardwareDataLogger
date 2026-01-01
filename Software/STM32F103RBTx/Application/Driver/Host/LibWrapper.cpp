@@ -1,12 +1,10 @@
 #include "LibWrapper.hpp"
 #include "PlatformFactory.hpp"
-#include "MyApplication.hpp"
 
 #include "BusinessLogic/Inc/ApplicationFacade.hpp"
 
-#include "Driver/Interface/KeyboardKeyState.hpp"
-#include "Driver/Interface/KeyboardKeyIdentifier.hpp"
-#include "Driver/Interface/DisplayPixelColor.hpp"
+#include "Driver/Interface/KeyState.hpp"
+#include "Driver/Interface/KeyIdentifier.hpp"
 
 #include "PulseCounterDriverStub.hpp"
 #include "KeyboardDriverStub.hpp"
@@ -17,30 +15,50 @@
 #include <array>
 #include <cstdint>
 #include <cstdio>
-#include <string>
 #include <optional>
+#include <functional>
 
-static std::optional<BusinessLogic::PlatformFactory> platform;
-static std::optional<BusinessLogic::ApplicationFacade> facade;
+namespace
+{
+    // codechecker_suppress [clang-diagnostic-global-constructors,clang-diagnostic-exit-time-destructors]
+    std::optional<BusinessLogic::PlatformFactory> platform;
+    // codechecker_suppress [clang-diagnostic-global-constructors,clang-diagnostic-exit-time-destructors]
+    std::optional<BusinessLogic::ApplicationFacade> facade;
+}
+
+std::optional<std::reference_wrapper<BusinessLogic::PlatformFactory>> getPlatform();
+std::optional<std::reference_wrapper<BusinessLogic::ApplicationFacade>> getFacade();
 
 std::optional<std::reference_wrapper<BusinessLogic::PlatformFactory>> getPlatform()
 {
+    std::optional<std::reference_wrapper<BusinessLogic::PlatformFactory>> result;
+
     if (!platform.has_value())
     {
-        std::fprintf(stderr, "ERROR: Platform not initialized!\n");
-        return std::nullopt;
+        static_cast<void>(std::fprintf(stderr, "ERROR: Platform not initialized!\n"));
     }
-    return std::ref(platform.value());
+    else
+    {
+        result = std::ref(platform.value());
+    }
+
+    return result;
 }
 
 std::optional<std::reference_wrapper<BusinessLogic::ApplicationFacade>> getFacade()
 {
+    std::optional<std::reference_wrapper<BusinessLogic::ApplicationFacade>> result;
+
     if (!facade.has_value())
     {
-        std::fprintf(stderr, "ERROR: Facade not initialized!\n");
-        return std::nullopt;
+        static_cast<void>(std::fprintf(stderr, "ERROR: Facade not initialized!\n"));
     }
-    return std::ref(facade.value());
+    else
+    {
+        result = std::ref(facade.value());
+    }
+
+    return result;
 }
 
 void LibWrapper_Init()
@@ -62,7 +80,7 @@ void LibWrapper_Init()
     }
     else
     {
-        std::fprintf(stderr, "ERROR: Failed to initialize facade!\n");
+        static_cast<void>(std::fprintf(stderr, "ERROR: Failed to initialize facade!\n"));
     }
 }
 
@@ -74,11 +92,11 @@ void LibWrapper_Tick()
     }
     else
     {
-        std::fprintf(stderr, "ERROR: Facade not initialized in LibWrapper_Tick!\n");
+        static_cast<void>(std::fprintf(stderr, "ERROR: Facade not initialized in LibWrapper_Tick!\n"));
     }
 }
 
-void LibWrapper_KeyPressed(KeyboardKeyIdentifier keyId)
+void LibWrapper_KeyPressed(KeyIdentifier keyId)
 {
     if (platform.has_value())
     {
@@ -86,16 +104,16 @@ void LibWrapper_KeyPressed(KeyboardKeyIdentifier keyId)
             platform.value().getKeyboardDriver());
 
         keyboardStub.setKeyState(
-            static_cast<Driver::KeyboardKeyIdentifier>(keyId),
-            Driver::KeyboardKeyState::Pressed);
+            static_cast<Driver::KeyIdentifier>(keyId),
+            Driver::KeyState::Pressed);
     }
     else
     {
-        std::fprintf(stderr, "ERROR: Platform not initialized in LibWrapper_KeyPressed!\n");
+        static_cast<void>(std::fprintf(stderr, "ERROR: Platform not initialized in LibWrapper_KeyPressed!\n"));
     }
 }
 
-void LibWrapper_KeyReleased(KeyboardKeyIdentifier keyId)
+void LibWrapper_KeyReleased(KeyIdentifier keyId)
 {
     if (platform.has_value())
     {
@@ -103,12 +121,12 @@ void LibWrapper_KeyReleased(KeyboardKeyIdentifier keyId)
             platform.value().getKeyboardDriver());
 
         keyboardStub.setKeyState(
-            static_cast<Driver::KeyboardKeyIdentifier>(keyId),
-            Driver::KeyboardKeyState::NotPressed);
+            static_cast<Driver::KeyIdentifier>(keyId),
+            Driver::KeyState::NotPressed);
     }
     else
     {
-        std::fprintf(stderr, "ERROR: Platform not initialized in LibWrapper_KeyReleased!\n");
+        static_cast<void>(std::fprintf(stderr, "ERROR: Platform not initialized in LibWrapper_KeyReleased!\n"));
     }
 }
 
@@ -121,11 +139,11 @@ std::uint8_t LibWrapper_GetDisplayWidth()
         const auto &displayStub = static_cast<Driver::St7735DisplayDriverStub &>(
             platform.value().getDisplayDriver());
 
-        displayStub.getXSize(width);
+        static_cast<void>(displayStub.getXSize(width));
     }
     else
     {
-        std::fprintf(stderr, "ERROR: Platform not initialized in LibWrapper_GetDisplayWidth!\n");
+        static_cast<void>(std::fprintf(stderr, "ERROR: Platform not initialized in LibWrapper_GetDisplayWidth!\n"));
     }
 
     return width;
@@ -140,17 +158,17 @@ std::uint8_t LibWrapper_GetDisplayHeight()
         const auto &displayStub = static_cast<Driver::St7735DisplayDriverStub &>(
             platform.value().getDisplayDriver());
 
-        displayStub.getYSize(height);
+        static_cast<void>(displayStub.getYSize(height));
     }
     else
     {
-        std::fprintf(stderr, "ERROR: Platform not initialized in LibWrapper_GetDisplayHeight!\n");
+        static_cast<void>(std::fprintf(stderr, "ERROR: Platform not initialized in LibWrapper_GetDisplayHeight!\n"));
     }
 
     return height;
 }
 
-std::uint16_t LibWrapper_GetPixelValue(std::uint8_t x, std::uint8_t y)
+std::uint16_t LibWrapper_GetPixelValue(std::uint8_t xPosition, std::uint8_t yPosition)
 {
     std::uint16_t value = 0U;
 
@@ -159,11 +177,11 @@ std::uint16_t LibWrapper_GetPixelValue(std::uint8_t x, std::uint8_t y)
         const auto &displayStub = static_cast<Driver::St7735DisplayDriverStub &>(
             platform.value().getDisplayDriver());
 
-        value = displayStub.getPixelValue(x, y);
+        value = displayStub.getPixelValue(xPosition, yPosition);
     }
     else
     {
-        std::fprintf(stderr, "ERROR: Platform not initialized in LibWrapper_GetPixelValue!\n");
+        static_cast<void>(std::fprintf(stderr, "ERROR: Platform not initialized in LibWrapper_GetPixelValue!\n"));
     }
 
     return value;

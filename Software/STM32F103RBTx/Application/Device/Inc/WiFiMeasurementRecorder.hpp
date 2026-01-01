@@ -91,7 +91,7 @@ namespace Device
         Driver::IUartDriver &driver;
 
         /** @brief Size of the  message buffer. */
-        static constexpr std::size_t SerializedMessageSize = 30u;
+        static constexpr std::size_t SerializedMessageSize = 30U;
 
         /**
          * @brief Size of the output buffer after COBS encoding.

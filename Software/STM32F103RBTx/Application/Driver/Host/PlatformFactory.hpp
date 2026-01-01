@@ -23,9 +23,9 @@ namespace BusinessLogic
         Driver::IDisplayBrightnessDriver &getDisplayBrightnessDriver() override;
         Driver::IDisplayDriver &getDisplayDriver() override;
         Driver::IKeyboardDriver &getKeyboardDriver() override;
-        Driver::IUartDriver &getUartDriver(Driver::UartId id) override;
+        Driver::IUartDriver &getUartDriver(Driver::UartId deviceId) override;
         Driver::ISdCardDriver &getSdCardDriver() override;
-        Driver::IPulseCounterDriver &getPulseCounterDriver(Driver::PulseCounterId id) override;
+        Driver::IPulseCounterDriver &getPulseCounterDriver(Driver::PulseCounterId deviceId) override;
 
     private:
         static constexpr std::size_t UART_COUNT = 3U;

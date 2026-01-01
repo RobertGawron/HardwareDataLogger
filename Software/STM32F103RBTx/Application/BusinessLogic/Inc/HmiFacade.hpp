@@ -29,15 +29,13 @@ namespace BusinessLogic
     public:
         /**
          * @brief Constructs HmiFacade with required components.
-         * @param hmiMeasurementModel Measurement model for UI data
          * @param display Display rendering interface
          * @param displayBrightnessRegulator Display brightness controller
          * @param keyboard User input interface
          */
-        HmiFacade( // HmiMeasurementModel &hmiMeasurementModel,
-            Device::IDisplay &display,
-            Device::IDisplayBrightnessRegulator &displayBrightnessRegulator,
-            Device::IKeyboard &keyboard);
+        HmiFacade(Device::IDisplay &display,
+                  Device::IDisplayBrightnessRegulator &displayBrightnessRegulator,
+                  Device::IKeyboard &keyboard);
 
         /** @brief Deleted default constructor */
         HmiFacade() = delete;

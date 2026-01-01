@@ -59,103 +59,74 @@ namespace Driver
         return status;
     }
 
-    IDisplayDriver::Status St7735DisplayDriverStub::setCursor(std::uint8_t x, std::uint8_t y)
+    IDisplayDriver::Status St7735DisplayDriverStub::setCursor(std::uint8_t xPosition, std::uint8_t yPosition)
     {
-        (void)x;
-        (void)y;
+        static_cast<void>(xPosition);
+        static_cast<void>(yPosition);
         const IDisplayDriver::Status status = IDisplayDriver::Status::Ok;
         return status;
     }
 
-    IDisplayDriver::Status St7735DisplayDriverStub::drawBitmap(std::uint8_t x,
-                                                               std::uint8_t y,
+    IDisplayDriver::Status St7735DisplayDriverStub::drawBitmap(std::uint8_t xPosition,
+                                                               std::uint8_t yPosition,
                                                                std::uint8_t &bitmap)
     {
-        (void)x;
-        (void)y;
-        (void)bitmap;
+        static_cast<void>(xPosition);
+        static_cast<void>(yPosition);
+        static_cast<void>(bitmap);
         const IDisplayDriver::Status status = IDisplayDriver::Status::Ok;
         return status;
     }
 
-    IDisplayDriver::Status St7735DisplayDriverStub::fillRGBRectangle(std::uint8_t x,
-                                                                     std::uint8_t y,
+    IDisplayDriver::Status St7735DisplayDriverStub::fillRGBRectangle(std::uint8_t xPosition,
+                                                                     std::uint8_t yPosition,
                                                                      std::uint8_t &data,
                                                                      std::uint8_t width,
                                                                      std::uint8_t height)
     {
-        (void)x;
-        (void)y;
-        (void)data;
-        (void)width;
-        (void)height;
+        static_cast<void>(xPosition);
+        static_cast<void>(yPosition);
+        static_cast<void>(data);
+        static_cast<void>(width);
+        static_cast<void>(height);
         const IDisplayDriver::Status status = IDisplayDriver::Status::Ok;
         return status;
     }
 
-    IDisplayDriver::Status St7735DisplayDriverStub::drawHorizontalLine(std::uint8_t x,
-                                                                       std::uint8_t y,
-                                                                       std::uint8_t length,
-                                                                       DisplayPixelColor::PixelColor color)
-    {
-        for (std::uint16_t i = x; i < (x + length); ++i)
-        {
-            if (i < MAX_WIDTH && y < MAX_HEIGHT)
-            {
-                content.at(i).at(y) = color;
-            }
-        }
-        const IDisplayDriver::Status status = IDisplayDriver::Status::Ok;
-        return status;
-    }
-
-    IDisplayDriver::Status St7735DisplayDriverStub::drawVerticalLine(std::uint8_t x,
-                                                                     std::uint8_t y,
-                                                                     std::uint8_t length,
-                                                                     DisplayPixelColor::PixelColor color)
-    {
-        (void)x;
-        (void)y;
-        (void)length;
-        (void)color;
-        const IDisplayDriver::Status status = IDisplayDriver::Status::Ok;
-        return status;
-    }
-
-    IDisplayDriver::Status St7735DisplayDriverStub::fillRectangle(std::uint8_t x,
-                                                                  std::uint8_t y,
+    IDisplayDriver::Status St7735DisplayDriverStub::fillRectangle(std::uint8_t xPosition,
+                                                                  std::uint8_t yPosition,
                                                                   std::uint8_t width,
                                                                   std::uint8_t height,
                                                                   DisplayPixelColor::PixelColor color)
     {
-        (void)x;
-        (void)y;
-        (void)width;
-        (void)height;
-        (void)color;
+        static_cast<void>(xPosition);
+        static_cast<void>(yPosition);
+        static_cast<void>(width);
+        static_cast<void>(height);
+        static_cast<void>(color);
         const IDisplayDriver::Status status = IDisplayDriver::Status::Ok;
         return status;
     }
 
-    IDisplayDriver::Status St7735DisplayDriverStub::setPixel(std::uint8_t x,
-                                                             std::uint8_t y,
+    IDisplayDriver::Status St7735DisplayDriverStub::setPixel(std::uint8_t xPosition,
+                                                             std::uint8_t yPosition,
                                                              DisplayPixelColor::PixelColor color)
     {
-        if (x < MAX_WIDTH && y < MAX_HEIGHT)
+        if (xPosition < MAX_WIDTH && yPosition < MAX_HEIGHT)
         {
-            content.at(x).at(y) = color;
+            content.at(xPosition).at(yPosition) = color;
         }
         const IDisplayDriver::Status status = IDisplayDriver::Status::Ok;
         return status;
     }
 
-    IDisplayDriver::Status St7735DisplayDriverStub::getPixel(std::uint8_t x,
-                                                             std::uint8_t y,
+    IDisplayDriver::Status St7735DisplayDriverStub::getPixel(std::uint8_t xPosition,
+                                                             std::uint8_t yPosition,
                                                              DisplayPixelColor::PixelColor &color) const
     {
-        (void)x;
-        (void)y;
-        (void)color;
+        static_cast<void>(xPosition);
+        static_cast<void>(yPosition);
+        static_cast<void>(color);
         const IDisplayDriver::Status status = IDisplayDriver::Status::Ok;
         return status;
     }
@@ -174,13 +145,13 @@ namespace Driver
         return status;
     }
 
-    DisplayPixelColor::PixelColor St7735DisplayDriverStub::getPixelValue(std::uint8_t x, std::uint8_t y) const
+    DisplayPixelColor::PixelColor St7735DisplayDriverStub::getPixelValue(std::uint8_t xPosition, std::uint8_t yPosition) const
     {
         DisplayPixelColor::PixelColor result = 0U;
 
-        if (x < MAX_WIDTH && y < MAX_HEIGHT)
+        if (xPosition < MAX_WIDTH && yPosition < MAX_HEIGHT)
         {
-            result = content.at(x).at(y);
+            result = content.at(xPosition).at(yPosition);
         }
 
         return result;

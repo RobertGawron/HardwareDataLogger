@@ -10,8 +10,8 @@
 namespace Device
 {
 
-    UartMeasurementSource::UartMeasurementSource(MeasurementDeviceId id, Driver::IUartDriver &_driver)
-        : IMeasurementSource(id),
+    UartMeasurementSource::UartMeasurementSource(MeasurementDeviceId _deviceId, Driver::IUartDriver &_driver)
+        : deviceId(_deviceId),
           driver(_driver)
     {
     }
@@ -39,12 +39,12 @@ namespace Device
 
     MeasurementType UartMeasurementSource::getMeasurement()
     {
-        const std::uint16_t dummyData = 5u;
+        const std::uint16_t dummyData = 5U;
 
-        MeasurementType m;
-        m.source = getMyId();
-        m.data = dummyData;
+        const MeasurementType measurement{
+            .data = dummyData,
+            .source = deviceId};
 
-        return m;
+        return measurement;
     }
 }

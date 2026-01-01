@@ -50,9 +50,9 @@ namespace BusinessLogic
         return keyboard;
     }
 
-    Driver::IUartDriver &PlatformFactory::getUartDriver(const Driver::UartId id)
+    Driver::IUartDriver &PlatformFactory::getUartDriver(const Driver::UartId deviceId)
     {
-        const std::size_t index = static_cast<std::size_t>(id);
+        const std::size_t index = static_cast<std::size_t>(deviceId);
         return uartDrivers.at(index);
     }
 
@@ -61,9 +61,9 @@ namespace BusinessLogic
         return sdCard;
     }
 
-    Driver::IPulseCounterDriver &PlatformFactory::getPulseCounterDriver(const Driver::PulseCounterId id)
+    Driver::IPulseCounterDriver &PlatformFactory::getPulseCounterDriver(const Driver::PulseCounterId deviceId)
     {
-        const std::size_t index = static_cast<std::size_t>(id);
+        const std::size_t index = static_cast<std::size_t>(deviceId);
         return pulseCounterDrivers.at(index);
     }
 }

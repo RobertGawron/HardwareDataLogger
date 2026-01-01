@@ -60,7 +60,7 @@ namespace Device
     private:
         Driver::IAmbientLightSensorDriver &ambientLightSensorDriver; ///< Ambient light sensor driver.
         Driver::IDisplayBrightnessDriver &displayBrightnessDriver;   ///< Display brightness driver.
-        std::uint8_t level = 0u;                                     ///< Current brightness level (0-100).
+        std::uint8_t level = 0U;                                     ///< Current brightness level (0-100).
     };
 }
 

@@ -1,6 +1,5 @@
 #include "Driver/Hardware/Inc/UartDriver.hpp"
 #include "Driver/Interface/UartStatus.hpp"
-#include "Driver/Interface/DriverState.hpp"
 
 #include "stm32f1xx_hal_uart.h"
 #include "stm32f1xx_hal_def.h"
@@ -70,15 +69,15 @@ public:
     }
 
     // GMOCK REQUIREMENT: Must be "DescribeTo" (PascalCase).
-    static void DescribeTo(std::ostream *os)
+    static void DescribeTo(std::ostream *osStream)
     {
-        *os << "is data equal to expected array";
+        *osStream << "is data equal to expected array";
     }
 
     // GMOCK REQUIREMENT: Must be "DescribeNegationTo" (PascalCase).
-    static void DescribeNegationTo(std::ostream *os)
+    static void DescribeNegationTo(std::ostream *osStream)
     {
-        *os << "is data NOT equal to expected array";
+        *osStream << "is data NOT equal to expected array";
     }
 
 private:

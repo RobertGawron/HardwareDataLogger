@@ -115,7 +115,7 @@ namespace BusinessLogic
         /** @brief SD card measurement recorder instance */
         Device::SdCardMeasurementRecorder sdCardRecorder;
 
-        static constexpr std::size_t RecordersAmount = 2u;
+        static constexpr std::size_t RecordersAmount = 2U;
         std::array<std::reference_wrapper<Device::IMeasurementRecorder>, RecordersAmount> recorders;
 
         MeasurementCoordinator<SourcesAmount, RecordersAmount> measurementCoordinator;

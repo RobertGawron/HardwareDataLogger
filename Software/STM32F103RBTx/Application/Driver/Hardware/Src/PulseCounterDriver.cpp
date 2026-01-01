@@ -38,13 +38,13 @@ namespace Driver
 
     bool PulseCounterDriver::onInitialize()
     {
-        pulseCounters.fill(0u);
+        pulseCounters.fill(0U);
         return true;
     }
 
     bool PulseCounterDriver::onStart()
     {
-        pulseCounters.fill(0u);
+        pulseCounters.fill(0U);
         return true;
     }
 
@@ -67,7 +67,7 @@ namespace Driver
 
     void PulseCounterDriver::clearMeasurement()
     {
-        value = 0;
+        value = 0U;
     }
 
 }

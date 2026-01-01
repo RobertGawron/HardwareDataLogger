@@ -31,8 +31,8 @@ namespace Driver
          */
         enum class StatusEnum : std::uint8_t
         {
-            Ok = 0u,  ///< Operation completed successfully.
-            Fail = 1u ///< Operation failed.
+            Ok = 0U,  ///< Operation completed successfully.
+            Fail = 1U ///< Operation failed.
         };
 
         using Status = StatusEnum; ///< Alias for StatusEnum.
@@ -43,8 +43,8 @@ namespace Driver
          */
         enum class OrientationEnum : std::uint8_t
         {
-            Horizontal = 0u, ///< Display is in horizontal orientation.
-            Vertical = 1u    ///< Display is in vertical orientation.
+            Horizontal = 0U, ///< Display is in horizontal orientation.
+            Vertical = 1U    ///< Display is in vertical orientation.
         };
 
         using Orientation = OrientationEnum; ///< Alias for OrientationEnum.
@@ -84,97 +84,71 @@ namespace Driver
 
         /**
          * @brief Sets the cursor position on the display.
-         * @param x The X-coordinate of the cursor (0-based).
-         * @param y The Y-coordinate of the cursor (0-based).
+         * @param xPosition The X-coordinate of the cursor (0-based).
+         * @param yPosition The Y-coordinate of the cursor (0-based).
          * @return Status::Ok if successful, Status::Fail otherwise.
          */
-        virtual Status setCursor(std::uint8_t x, std::uint8_t y) = 0;
+        virtual Status setCursor(std::uint8_t xPosition, std::uint8_t yPosition) = 0;
 
         /**
          * @brief Draws a bitmap at the specified position.
-         * @param x The X-coordinate for the top-left corner of the bitmap.
-         * @param y The Y-coordinate for the top-left corner of the bitmap.
+         * @param xPosition The X-coordinate for the top-left corner of the bitmap.
+         * @param yPosition The Y-coordinate for the top-left corner of the bitmap.
          * @param bitmap Reference to the bitmap data to draw.
          * @return Status::Ok if successful, Status::Fail otherwise.
          */
-        virtual Status drawBitmap(std::uint8_t x, std::uint8_t y, std::uint8_t &bitmap) = 0;
+        virtual Status drawBitmap(std::uint8_t xPosition, std::uint8_t yPosition, std::uint8_t &bitmap) = 0;
 
         /**
          * @brief Fills a rectangle with RGB data.
-         * @param x The X-coordinate of the top-left corner of the rectangle.
-         * @param y The Y-coordinate of the top-left corner of the rectangle.
+         * @param xPosition The X-coordinate of the top-left corner of the rectangle.
+         * @param yPosition The Y-coordinate of the top-left corner of the rectangle.
          * @param data Reference to the RGB data to fill.
          * @param width The width of the rectangle in pixels.
          * @param height The height of the rectangle in pixels.
          * @return Status::Ok if successful, Status::Fail otherwise.
          */
-        virtual Status fillRGBRectangle(std::uint8_t x,
-                                        std::uint8_t y,
+        virtual Status fillRGBRectangle(std::uint8_t xPosition,
+                                        std::uint8_t yPosition,
                                         std::uint8_t &data,
                                         std::uint8_t width,
                                         std::uint8_t height) = 0;
 
         /**
-         * @brief Draws a horizontal line.
-         * @param x The starting X-coordinate of the line.
-         * @param y The Y-coordinate of the line.
-         * @param length The length of the line in pixels.
-         * @param color The color of the line.
-         * @return Status::Ok if successful, Status::Fail otherwise.
-         */
-        virtual Status drawHorizontalLine(std::uint8_t x,
-                                          std::uint8_t y,
-                                          std::uint8_t length,
-                                          DisplayPixelColor::PixelColor color) = 0;
-
-        /**
-         * @brief Draws a vertical line.
-         * @param x The X-coordinate of the line.
-         * @param y The starting Y-coordinate of the line.
-         * @param length The length of the line in pixels.
-         * @param color The color of the line.
-         * @return Status::Ok if successful, Status::Fail otherwise.
-         */
-        virtual Status drawVerticalLine(std::uint8_t x,
-                                        std::uint8_t y,
-                                        std::uint8_t length,
-                                        DisplayPixelColor::PixelColor color) = 0;
-
-        /**
          * @brief Fills a rectangle with a specific color.
-         * @param x The X-coordinate of the top-left corner of the rectangle.
-         * @param y The Y-coordinate of the top-left corner of the rectangle.
+         * @param xPosition The X-coordinate of the top-left corner of the rectangle.
+         * @param yPosition The Y-coordinate of the top-left corner of the rectangle.
          * @param width The width of the rectangle in pixels.
          * @param height The height of the rectangle in pixels.
          * @param color The fill color of the rectangle.
          * @return Status::Ok if successful, Status::Fail otherwise.
          */
-        virtual Status fillRectangle(std::uint8_t x,
-                                     std::uint8_t y,
+        virtual Status fillRectangle(std::uint8_t xPosition,
+                                     std::uint8_t yPosition,
                                      std::uint8_t width,
                                      std::uint8_t height,
                                      DisplayPixelColor::PixelColor color) = 0;
 
         /**
          * @brief Sets the color of a single pixel.
-         * @param x The X-coordinate of the pixel.
-         * @param y The Y-coordinate of the pixel.
+         * @param xPosition The X-coordinate of the pixel.
+         * @param yPosition The Y-coordinate of the pixel.
          * @param color The color to set for the pixel.
          * @return Status::Ok if successful, Status::Fail otherwise.
          */
-        virtual Status setPixel(std::uint8_t x,
-                                std::uint8_t y,
+        virtual Status setPixel(std::uint8_t xPosition,
+                                std::uint8_t yPosition,
                                 DisplayPixelColor::PixelColor color) = 0;
 
         /**
          * @brief Gets the color of a single pixel.
-         * @param x The X-coordinate of the pixel.
-         * @param y The Y-coordinate of the pixel.
+         * @param xPosition The X-coordinate of the pixel.
+         * @param yPosition The Y-coordinate of the pixel.
          * @param[out] color The current color of the pixel.
          * @return Status::Ok if successful, Status::Fail otherwise.
          */
-        virtual Status getPixel(std::uint8_t x,
-                                std::uint8_t y,
+        virtual Status getPixel(std::uint8_t xPosition,
+                                std::uint8_t yPosition,
                                 DisplayPixelColor::PixelColor &color) const = 0;
 
         /**

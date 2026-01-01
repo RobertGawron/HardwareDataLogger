@@ -6,26 +6,11 @@
 #include "stm32f1xx_hal_def.h"
 
 #include <cstdint>
-#include <array>
 #include <span>
 #include <cassert>
 
 namespace Driver
 {
-    namespace
-    {
-        struct HalStatusToDriverStatus
-        {
-            HAL_StatusTypeDef halStatus;
-            UartStatus driverStatus;
-        };
-
-        constexpr std::array<HalStatusToDriverStatus, 4> translation = {{{HAL_OK, UartStatus::Ok},
-                                                                         {HAL_ERROR, UartStatus::ErrorFromHal},
-                                                                         {HAL_BUSY, UartStatus::Busy},
-                                                                         {HAL_TIMEOUT, UartStatus::Timeout}}};
-    }
-
     UartDriver::UartDriver(UART_HandleTypeDef &_uartHandler) : uartHandler(_uartHandler)
     {
     }
@@ -58,19 +43,21 @@ namespace Driver
         {
             if (data.empty())
             {
-                return UartStatus::ErrorFromHal;
+                status = UartStatus::ErrorFromHal;
             }
+            else
+            {
+                // Ensure size fits in uint16_t for HAL function
+                assert(data.size() <= UINT16_MAX && "Data size exceeds UART HAL limit");
 
-            // Ensure size fits in uint16_t for HAL function
-            assert(data.size() <= UINT16_MAX && "Data size exceeds UART HAL limit");
-
-            const auto size = static_cast<std::uint16_t>(data.size());
-            const HAL_StatusTypeDef halStatus = HAL_UART_Transmit(
-                &uartHandler,
-                const_cast<std::uint8_t *>(data.data()), // HAL API doesn't take const
-                size,
-                timeout);
-            status = getExchangeStatus(halStatus);
+                const auto size = static_cast<std::uint16_t>(data.size());
+                const HAL_StatusTypeDef halStatus = HAL_UART_Transmit(
+                    &uartHandler,
+                    const_cast<std::uint8_t *>(data.data()), // HAL API doesn't take const
+                    size,
+                    timeout);
+                status = getUartStatus(halStatus);
+            }
         }
 
         return status;
@@ -84,19 +71,21 @@ namespace Driver
         {
             if (data.empty())
             {
-                return UartStatus::ErrorFromHal;
+                status = UartStatus::ErrorFromHal;
             }
+            else
+            {
+                // Ensure size fits in uint16_t for HAL function
+                assert(data.size() <= UINT16_MAX && "Data size exceeds UART HAL limit");
 
-            // Ensure size fits in uint16_t for HAL function
-            assert(data.size() <= UINT16_MAX && "Data size exceeds UART HAL limit");
-
-            const auto size = static_cast<std::uint16_t>(data.size());
-            const HAL_StatusTypeDef halStatus = HAL_UART_Receive(
-                &uartHandler,
-                data.data(),
-                size,
-                timeout);
-            status = getExchangeStatus(halStatus);
+                const auto size = static_cast<std::uint16_t>(data.size());
+                const HAL_StatusTypeDef halStatus = HAL_UART_Receive(
+                    &uartHandler,
+                    data.data(),
+                    size,
+                    timeout);
+                status = getUartStatus(halStatus);
+            }
         }
 
         return status;

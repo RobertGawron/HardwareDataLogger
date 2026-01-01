@@ -1,6 +1,8 @@
 #include "EventHandlers.hpp"
 
 #include "Driver/Interface/ISdCardDriver.hpp"
+#include "Driver/Interface/UartId.hpp"
+#include "Driver/Interface/SdCardStatus.hpp"
 
 #include <iostream>
 #include <cstdint>
@@ -54,14 +56,14 @@ void registerSdCardResetCallback(SdCardResetCallback callback)
     sdCardResetCallback = callback;
 }
 
-HAL_StatusTypeDef serialTx(Driver::UartId uartId, const std::uint8_t *pData, std::uint16_t size, std::uint32_t timeout)
+HAL_StatusTypeDef serialTx(Driver::UartId uartId, const std::uint8_t *data, std::uint16_t size, std::uint32_t timeout)
 {
     HAL_StatusTypeDef result = HAL_StatusTypeDef::HAL_ERROR;
 
     if (serialTxCallback != nullptr)
     {
         result = static_cast<HAL_StatusTypeDef>(
-            serialTxCallback(static_cast<std::uint8_t>(uartId), pData, size, timeout));
+            serialTxCallback(static_cast<std::uint8_t>(uartId), data, size, timeout));
     }
     else
     {
@@ -77,8 +79,7 @@ Driver::SdCardStatus sdCardOpen(const char *filename, Driver::ISdCardDriver::Fil
 
     if (sdCardOpenCallback != nullptr)
     {
-        // Convert enum to uint8_t for callback, then convert back
-        std::uint8_t status = sdCardOpenCallback(filename, static_cast<std::uint8_t>(mode));
+        const std::uint8_t status = sdCardOpenCallback(filename, static_cast<std::uint8_t>(mode));
         result = static_cast<Driver::SdCardStatus>(status);
     }
     else
@@ -95,8 +96,7 @@ Driver::SdCardStatus sdCardWrite(const std::uint8_t *data, std::uint16_t size)
 
     if (sdCardWriteCallback != nullptr)
     {
-        // Convert enum to uint8_t for callback, then convert back
-        std::uint8_t status = sdCardWriteCallback(data, size);
+        const std::uint8_t status = sdCardWriteCallback(data, size);
         result = static_cast<Driver::SdCardStatus>(status);
     }
     else
@@ -112,8 +112,7 @@ Driver::SdCardStatus sdCardClose()
 
     if (sdCardCloseCallback != nullptr)
     {
-        // Convert enum to uint8_t for callback, then convert back
-        std::uint8_t status = sdCardCloseCallback();
+        const std::uint8_t status = sdCardCloseCallback();
         result = static_cast<Driver::SdCardStatus>(status);
     }
     else

@@ -1,7 +1,7 @@
 #include "Device/Inc/Keyboard.hpp"
-#include "Device/Inc/KeyboardKeyActionState.hpp"
-#include "Driver/Interface/KeyboardKeyState.hpp"
-#include "Driver/Interface/KeyboardKeyIdentifier.hpp"
+#include "Device/Inc/KeyActionState.hpp"
+#include "Driver/Interface/KeyState.hpp"
+#include "Driver/Interface/KeyIdentifier.hpp"
 #include "Driver/Interface/IKeyboardDriver.hpp"
 
 #include <cstdint>
@@ -30,7 +30,7 @@ namespace Device
 
         for (std::size_t i = 0; i < keyActionState.size(); ++i)
         {
-            const auto keyId = static_cast<::Driver::KeyboardKeyIdentifier>(i);
+            const auto keyId = static_cast<::Driver::KeyIdentifier>(i);
             const auto newState = keyboardDriver.getKeyState(keyId);
 
             const auto currentState = keyActionState[i];
@@ -38,52 +38,52 @@ namespace Device
 
             switch (currentState)
             {
-            case KeyboardKeyActionState::PressNot:
-                if (newState == Driver::KeyboardKeyState::Pressed)
+            case KeyActionState::PressNot:
+                if (newState == Driver::KeyState::Pressed)
                 {
                     // Key just got pressed
                     pressDurationTicks[i] = 0; // Reset duration counter
-                    nextState = KeyboardKeyActionState::PressStart;
+                    nextState = KeyActionState::PressStart;
                 }
                 break;
 
-            case KeyboardKeyActionState::PressStart:
-                if (newState == Driver::KeyboardKeyState::Pressed)
+            case KeyActionState::PressStart:
+                if (newState == Driver::KeyState::Pressed)
                 {
                     // Key is held down, increment the duration counter
                     pressDurationTicks[i]++;
                 }
-                else if (newState == Driver::KeyboardKeyState::NotPressed)
+                else if (newState == Driver::KeyState::NotPressed)
                 {
                     // Key released, check how long it was pressed
                     if (pressDurationTicks[i] >= LONG_PRESS_THRESHOLD_TICKS)
                     {
-                        nextState = KeyboardKeyActionState::PressEndLong;
+                        nextState = KeyActionState::PressEndLong;
                     }
                     else
                     {
-                        nextState = KeyboardKeyActionState::PressEndShort;
+                        nextState = KeyActionState::PressEndShort;
                     }
                 }
                 break;
 
-            case KeyboardKeyActionState::PressEndShort:
-            case KeyboardKeyActionState::PressEndLong:
+            case KeyActionState::PressEndShort:
+            case KeyActionState::PressEndLong:
                 // After a short/long press concluded
-                if (newState == Driver::KeyboardKeyState::NotPressed)
+                if (newState == Driver::KeyState::NotPressed)
                 {
                     // Go back to PressNot if still not pressed
-                    nextState = KeyboardKeyActionState::PressNot;
+                    nextState = KeyActionState::PressNot;
                 }
-                else if (newState == Driver::KeyboardKeyState::Pressed)
+                else if (newState == Driver::KeyState::Pressed)
                 {
                     // Key got pressed again
                     pressDurationTicks[i] = 0;
-                    nextState = KeyboardKeyActionState::PressStart;
+                    nextState = KeyActionState::PressStart;
                 }
                 break;
 
-            case KeyboardKeyActionState::Fail:
+            case KeyActionState::Fail:
                 // TODO
                 // default:
                 // If there are other states or error conditions, handle them here
@@ -100,13 +100,13 @@ namespace Device
         return true;
     }
 
-    KeyboardKeyActionState Keyboard::getKeyState(::Driver::KeyboardKeyIdentifier key) const
+    KeyActionState Keyboard::getKeyState(::Driver::KeyIdentifier key) const
     {
         // Use std::find_if for safe lookup
         auto index = static_cast<std::uint8_t>(key);
         if (index >= keyActionState.size())
         {
-            return KeyboardKeyActionState::Fail;
+            return KeyActionState::Fail;
         }
 
         return keyActionState[index];

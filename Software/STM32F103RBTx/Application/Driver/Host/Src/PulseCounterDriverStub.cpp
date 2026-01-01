@@ -32,8 +32,8 @@ extern "C"
 
 namespace Driver
 {
-    PulseCounterDriverStub::PulseCounterDriverStub(PulseCounterId id)
-        : id(id)
+    PulseCounterDriverStub::PulseCounterDriverStub(PulseCounterId _deviceId)
+        : deviceId(_deviceId)
     {
     }
 
@@ -59,7 +59,7 @@ namespace Driver
 
     IPulseCounterDriver::CounterSizeType PulseCounterDriverStub::getMeasurement()
     {
-        const std::uint8_t index = static_cast<std::uint8_t>(id);
+        const std::uint8_t index = static_cast<std::uint8_t>(deviceId);
         return pulseCounters[index];
     }
 

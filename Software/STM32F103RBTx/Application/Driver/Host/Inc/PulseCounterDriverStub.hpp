@@ -15,9 +15,9 @@ namespace Driver
     class PulseCounterDriverStub : public IPulseCounterDriver
     {
     public:
-        static const std::uint8_t PULSE_COUNTER_AMOUNT = 4u;
+        static const std::uint8_t PULSE_COUNTER_AMOUNT = 4U;
 
-        explicit PulseCounterDriverStub(PulseCounterId id);
+        explicit PulseCounterDriverStub(PulseCounterId deviceId);
 
         PulseCounterDriverStub() = delete;
 
@@ -39,7 +39,7 @@ namespace Driver
         bool onReset() override;
 
     private:
-        PulseCounterId id;
+        PulseCounterId deviceId;
     };
 }
 

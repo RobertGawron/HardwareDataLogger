@@ -6,8 +6,8 @@
 #ifndef DRIVER_IKEYBOARDKEYSDRIVER_H_
 #define DRIVER_IKEYBOARDKEYSDRIVER_H_
 
-#include "Driver/Interface/KeyboardKeyState.hpp"
-#include "Driver/Interface/KeyboardKeyIdentifier.hpp"
+#include "Driver/Interface/KeyState.hpp"
+#include "Driver/Interface/KeyIdentifier.hpp"
 #include "Driver/Interface/DriverState.hpp"
 #include <cstdint>
 
@@ -66,9 +66,9 @@ namespace Driver
          * is performed at this level; it is merely the state read from the GPIO connected to the key.
          *
          * @param key The identifier of the key whose state is requested.
-         * @return The current state of the key (`KeyboardKeyState`).
+         * @return The current state of the key (`KeyState`).
          */
-        [[nodiscard]] virtual KeyboardKeyState getKeyState(KeyboardKeyIdentifier key) const = 0;
+        [[nodiscard]] virtual KeyState getKeyState(KeyIdentifier key) const = 0;
     };
 
 }

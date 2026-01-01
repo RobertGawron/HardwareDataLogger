@@ -29,7 +29,7 @@ namespace BusinessLogic
     namespace
     {
         // Define a constant for maximum displays, change if needed
-        constexpr std::size_t MAX_MUI_AMOUNT = 1u;
+        constexpr std::size_t MAX_MUI_AMOUNT = 1U;
         std::array<DisplayMapEntry, MAX_MUI_AMOUNT> muiMap{};
 
         constexpr std::size_t LabelTextBufferSize = 10;

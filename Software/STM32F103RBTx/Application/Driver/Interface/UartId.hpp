@@ -23,17 +23,17 @@ namespace Driver
         /**
          * @brief UART for receiving measurement data.
          */
-        MEASUREMENT_RECEIVER = 0u,
+        MEASUREMENT_RECEIVER = 0U,
 
         /**
          * @brief UART for sending/storing processed data via WiFi module.
          */
-        TRANSMIT_VIA_WIFI = 1u,
+        TRANSMIT_VIA_WIFI = 1U,
 
         /**
          * @brief UART for sending/storing processed data via USB.
          */
-        TRANSMIT_VIA_USB = 2u
+        TRANSMIT_VIA_USB = 2U
     };
 
 }

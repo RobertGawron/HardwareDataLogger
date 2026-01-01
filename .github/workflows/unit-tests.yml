@@ -63,7 +63,7 @@ jobs:
           # 2. ensure build dir exists
           # 3. run cmake (once per container)
           # 4. run the specific make target from the matrix
-          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja ${{ matrix.make_target }}"
+          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace/build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja ${{ matrix.make_target }}"
         
       - name: Clean up Docker containers
         if: always()

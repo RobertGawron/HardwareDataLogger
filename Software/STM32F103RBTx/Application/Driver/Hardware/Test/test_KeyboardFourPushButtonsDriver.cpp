@@ -1,6 +1,6 @@
 #include "stm32f1xx_hal_gpio.h"
-#include "Driver/Interface/KeyboardKeyIdentifier.hpp"
-#include "Driver/Interface/KeyboardKeyState.hpp"
+#include "Driver/Interface/KeyIdentifier.hpp"
+#include "Driver/Interface/KeyState.hpp"
 #include "Driver/Hardware/Inc/KeyboardFourPushButtonsDriver.hpp"
 #include "Driver/Interface/DriverState.hpp"
 
@@ -85,9 +85,9 @@ TEST_F(KeyboardFourPushButtonsDriverTest, TickUpdatesKeyStatesWhenRunning)
 
     EXPECT_TRUE(driver.tick());
 
-    for (std::uint8_t i = 0u; i < Driver::KeyboardFourPushButtonsDriver::AmountOfKeys; i++)
+    for (std::uint8_t i = 0U; i < Driver::KeyboardFourPushButtonsDriver::AmountOfKeys; i++)
     {
-        EXPECT_EQ(driver.getKeyState(static_cast<Driver::KeyboardKeyIdentifier>(i)), Driver::KeyboardKeyState::NotPressed);
+        EXPECT_EQ(driver.getKeyState(static_cast<Driver::KeyIdentifier>(i)), Driver::KeyState::NotPressed);
     }
 }
 
@@ -98,9 +98,9 @@ TEST_F(KeyboardFourPushButtonsDriverTest, TickDoesNothingWhenNotRunning)
     // No expectation since HAL_GPIO_ReadPin should not be called
     EXPECT_FALSE(driver.tick());
 
-    for (std::uint8_t i = 0u; i < Driver::KeyboardFourPushButtonsDriver::AmountOfKeys; i++)
+    for (std::uint8_t i = 0U; i < Driver::KeyboardFourPushButtonsDriver::AmountOfKeys; i++)
     {
-        EXPECT_EQ(driver.getKeyState(static_cast<Driver::KeyboardKeyIdentifier>(i)), Driver::KeyboardKeyState::DriverNotOperational);
+        EXPECT_EQ(driver.getKeyState(static_cast<Driver::KeyIdentifier>(i)), Driver::KeyState::DriverNotOperational);
     }
 }
 
@@ -119,5 +119,5 @@ TEST_F(KeyboardFourPushButtonsDriverTest, GetKeyStateNothingWhenIncorrectKey)
     EXPECT_TRUE(driver.tick());
 
     const std::uint8_t incorrectKey = Driver::KeyboardFourPushButtonsDriver::AmountOfKeys;
-    EXPECT_EQ(driver.getKeyState(static_cast<Driver::KeyboardKeyIdentifier>(incorrectKey)), Driver::KeyboardKeyState::UnknownKeyAsked);
+    EXPECT_EQ(driver.getKeyState(static_cast<Driver::KeyIdentifier>(incorrectKey)), Driver::KeyState::UnknownKeyAsked);
 }

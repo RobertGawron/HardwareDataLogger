@@ -18,8 +18,8 @@
 class MockMeasurementSource : public Device::IMeasurementSource
 {
 public:
-    // Constructor required since base class has deleted default constructor
-    explicit MockMeasurementSource() : Device::IMeasurementSource(Device::MeasurementDeviceId::PULSE_COUNTER_1) {}
+    // Constructor - base class now has default constructor
+    MockMeasurementSource() = default;
 
     MOCK_METHOD(bool, initialize, (), (override));
     MOCK_METHOD(bool, start, (), (override));
@@ -300,7 +300,7 @@ TEST_F(MeasurementCoordinatorTest, Tick_OneMeasurementAvailable_AllRecordersNoti
 {
     // Arrange
     const Device::MeasurementType measurement{
-        std::uint32_t{100},
+        std::uint32_t{100U},
         Device::MeasurementDeviceId::PULSE_COUNTER_1};
 
     EXPECT_CALL(*getMockSource1(), isMeasurementAvailable()).WillOnce(testing::Return(true));
@@ -321,10 +321,10 @@ TEST_F(MeasurementCoordinatorTest, Tick_BothMeasurementsAvailable_AllRecordersNo
 {
     // Arrange
     const Device::MeasurementType measurement1{
-        std::uint32_t{100},
+        std::uint32_t{100U},
         Device::MeasurementDeviceId::PULSE_COUNTER_1};
     const Device::MeasurementType measurement2{
-        std::uint32_t{200},
+        std::uint32_t{200U},
         Device::MeasurementDeviceId::PULSE_COUNTER_2};
 
     EXPECT_CALL(*getMockSource1(), isMeasurementAvailable()).WillOnce(testing::Return(true));
@@ -346,7 +346,7 @@ TEST_F(MeasurementCoordinatorTest, Tick_BothMeasurementsAvailable_AllRecordersNo
 TEST_F(MeasurementCoordinatorTest, MultipleTicks_HandlesMultipleCycles)
 {
     // Arrange
-    constexpr std::uint32_t TEST_MEASUREMENT_VALUE = 100;
+    constexpr std::uint32_t TEST_MEASUREMENT_VALUE = 100U;
     const Device::MeasurementType measurement{
         std::uint32_t{TEST_MEASUREMENT_VALUE},
         Device::MeasurementDeviceId::PULSE_COUNTER_1};
@@ -383,17 +383,17 @@ TEST_F(MeasurementCoordinatorTest, MultipleTicks_HandlesMultipleCycles)
 class MeasurementCoordinatorLargeTest : public ::testing::Test
 {
 protected:
-    static constexpr std::size_t NUM_SOURCES = 5;
-    static constexpr std::size_t NUM_RECORDERS = 3;
+    static constexpr std::size_t NUM_SOURCES = 5U;
+    static constexpr std::size_t NUM_RECORDERS = 3U;
 
     void SetUp() override
     {
-        for (std::size_t i = 0; i < NUM_SOURCES; ++i)
+        for (std::size_t i = 0U; i < NUM_SOURCES; ++i)
         {
             mockSources.push_back(std::make_unique<testing::NiceMock<MockMeasurementSource>>());
         }
 
-        for (std::size_t i = 0; i < NUM_RECORDERS; ++i)
+        for (std::size_t i = 0U; i < NUM_RECORDERS; ++i)
         {
             mockRecorders.push_back(std::make_unique<testing::NiceMock<MockMeasurementRecorder>>());
         }

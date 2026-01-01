@@ -32,7 +32,7 @@ namespace Driver
     {
     public:
         /** @brief Number of available pulse counters. */
-        static const std::uint8_t PULSE_COUNTER_AMOUNT = 4u;
+        static const std::uint8_t PULSE_COUNTER_AMOUNT = 4U;
 
         /**
          * @brief Constructs a PulseCounterDriver with a specific device identifier.

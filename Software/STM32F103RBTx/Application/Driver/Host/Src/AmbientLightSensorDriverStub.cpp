@@ -28,7 +28,7 @@ namespace Driver
     std::uint32_t AmbientLightSensorDriverStub::getAmbientLightLevel() const
     {
         // arbitrary value
-        const std::uint32_t adcResult = 10;
+        const std::uint32_t adcResult = 10U;
 
         return adcResult;
     }

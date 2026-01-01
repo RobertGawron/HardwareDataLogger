@@ -47,31 +47,23 @@ namespace Driver
         Status displayOff() override;
         Status setOrientation(Orientation orientation) override;
         Status getOrientation(Orientation &orientation) const override;
-        Status setCursor(std::uint8_t x, std::uint8_t y) override;
-        Status drawBitmap(std::uint8_t x, std::uint8_t y, std::uint8_t &bitmap) override;
-        Status fillRGBRectangle(std::uint8_t x,
-                                std::uint8_t y,
+        Status setCursor(std::uint8_t xPosition, std::uint8_t yPosition) override;
+        Status drawBitmap(std::uint8_t xPosition, std::uint8_t yPosition, std::uint8_t &bitmap) override;
+        Status fillRGBRectangle(std::uint8_t xPosition,
+                                std::uint8_t yPosition,
                                 std::uint8_t &data,
                                 std::uint8_t width,
                                 std::uint8_t height) override;
-        Status drawHorizontalLine(std::uint8_t x,
-                                  std::uint8_t y,
-                                  std::uint8_t length,
-                                  DisplayPixelColor::PixelColor color) override;
-        Status drawVerticalLine(std::uint8_t x,
-                                std::uint8_t y,
-                                std::uint8_t length,
-                                DisplayPixelColor::PixelColor color) override;
-        Status fillRectangle(std::uint8_t x,
-                             std::uint8_t y,
+        Status fillRectangle(std::uint8_t xPosition,
+                             std::uint8_t yPosition,
                              std::uint8_t width,
                              std::uint8_t height,
                              DisplayPixelColor::PixelColor color) override;
-        Status setPixel(std::uint8_t x,
-                        std::uint8_t y,
+        Status setPixel(std::uint8_t xPosition,
+                        std::uint8_t yPosition,
                         DisplayPixelColor::PixelColor color) override;
-        Status getPixel(std::uint8_t x,
-                        std::uint8_t y,
+        Status getPixel(std::uint8_t xPosition,
+                        std::uint8_t yPosition,
                         DisplayPixelColor::PixelColor &color) const override;
         Status getXSize(std::uint8_t &size) const override;
         Status getYSize(std::uint8_t &size) const override;

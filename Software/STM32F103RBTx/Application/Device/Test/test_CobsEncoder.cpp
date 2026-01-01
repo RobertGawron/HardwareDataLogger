@@ -27,10 +27,12 @@ TEST_F(CobsEncoderTest, EncodeDecodeEmptyData)
     static constexpr std::uint8_t EXPECTED_DELIMITER = 0x00U;
     static constexpr int HEX_WIDTH = 2;
     static constexpr char HEX_FILL = '0';
+
     const std::array<std::uint8_t, EMPTY_INPUT_SIZE> input{};
     auto result = Device::CobsEncoder::encode(input, EMPTY_INPUT_LENGTH, getEncodeBuffer());
     ASSERT_TRUE(result.has_value());
     const std::size_t encodedSize = result.value_or(0U); // Provides default value
+
     // Print the encoded buffer data
     std::cout << "Encoded Data: ";
     for (std::size_t i = 0U; i < encodedSize; ++i)
@@ -39,11 +41,13 @@ TEST_F(CobsEncoderTest, EncodeDecodeEmptyData)
                   << static_cast<int>(getEncodeBuffer()[i]) << " ";
     }
     std::cout << std::dec << '\n';
+
     // Empty data encodes to {0x01, 0x00}
-    const std::uint8_t output[] = {EXPECTED_CODE_BYTE, EXPECTED_DELIMITER};
+    const std::array<std::uint8_t, EXPECTED_OUTPUT_SIZE> output = {EXPECTED_CODE_BYTE, EXPECTED_DELIMITER};
+
     // Check if the encoded message matches the expected output
     EXPECT_EQ(encodedSize, EXPECTED_OUTPUT_SIZE);
-    EXPECT_TRUE(std::equal(std::begin(output), std::end(output), getEncodeBuffer().begin()));
+    EXPECT_TRUE(std::equal(output.begin(), output.end(), getEncodeBuffer().begin()));
 }
 
 TEST_F(CobsEncoderTest, HandlesInsufficientEncodeBuffer)

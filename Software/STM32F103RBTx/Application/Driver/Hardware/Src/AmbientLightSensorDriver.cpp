@@ -40,7 +40,7 @@ namespace Driver
     {
         const uint32_t totalSum = std::accumulate(adcBuffer.begin(),
                                                   adcBuffer.end(),
-                                                  static_cast<std::uint32_t>(0u));
+                                                  static_cast<std::uint32_t>(0U));
 
         const uint32_t average = (totalSum / adcBuffer.size());
 
