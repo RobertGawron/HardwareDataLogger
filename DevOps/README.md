@@ -15,7 +15,7 @@ It takes time to build the image the first time, but once it's done, you should 
 ## Run Unit Tests
 
 ```
-cd /workspace && mkdir -p build && cd build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja test_biz && ninja test_dev && ninja test_drv
+cd /workspace/build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja test_biz && ninja test_dev && ninja test_drv
 ```
 
 ## Run C++ Static Analysis
@@ -27,19 +27,19 @@ cd /workspace/build && cmake -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE
 ## Run Python Static Analysis
 
 ```
-cd /workspace && mkdir -p build && cd build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja pstatic
+cd /workspace/build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja pstatic
 ```
 
 ## Run Code Coverage
 
 ```
-cd /workspace && mkdir -p build && cd build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja test_biz && ninja test_dev && ninja test_drv && ninja cov
+cd /workspace/build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja test_biz && ninja test_dev && ninja test_drv && ninja cov
 ```
 
 ## Run Docs Coverage
 
 ```
-cd /workspace && mkdir -p build && cd build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja docs
+cd /workspace/build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja docs
 ```
 
 ## Run UML Generation

@@ -50,7 +50,6 @@ endif()
 
 # Main simulator library
 add_library(SimulatorSTM32F103RBTx SHARED
-    "${APP_ROOT}/../Core/Src/MyApplication.cpp"
     "${MOCK_ROOT}/LibWrapper.cpp"
     "${MOCK_ROOT}/EventHandlers.cpp"
 )

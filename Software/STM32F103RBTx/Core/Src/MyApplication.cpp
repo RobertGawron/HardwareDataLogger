@@ -2,20 +2,38 @@
 #include "PlatformFactory.hpp"
 #include "BusinessLogic/Inc/ApplicationFacade.hpp"
 
-BusinessLogic::PlatformFactory platform;
-BusinessLogic::ApplicationFacade facade{platform};
+#include <optional>
+
+static std::optional<BusinessLogic::PlatformFactory> platform;
+static std::optional<BusinessLogic::ApplicationFacade> facade;
 
 void app_init()
 {
-    facade.initialize();
+    if (!platform.has_value())
+    {
+        platform.emplace();
+    }
+
+    if (!facade.has_value())
+    {
+        facade.emplace(platform.value());
+    }
+
+    facade.value().initialize();
 }
 
 void app_start()
 {
-    facade.start();
+    if (facade.has_value())
+    {
+        facade.value().start();
+    }
 }
 
 void app_tick()
 {
-    facade.tick();
+    if (facade.has_value())
+    {
+        facade.value().tick();
+    }
 }

@@ -29,16 +29,16 @@ jobs:
             target: test_Keyboard
             artifact_suffix: dev-keyboard
             
-          - name: Device - PulseCounter
-            target: test_PulseCounterSource
+          - name: Device - PulseCounterMeasurementSource
+            target: test_PulseCounterMeasurementSource
             artifact_suffix: dev-pulsecounter
             
-          - name: Device - WiFiRecorder
-            target: test_WiFiRecorder
+          - name: Device - WiFiMeasurementRecorder
+            target: test_WiFiMeasurementRecorder
             artifact_suffix: dev-wifirecorder
             
-          - name: Device - WiFiSerializer
-            target: test_WiFiSerializer
+          - name: Device - WiFiMeasurementSerializer
+            target: test_WiFiMeasurementSerializer
             artifact_suffix: dev-wifiserializer
             
           - name: Device - Crc32
@@ -122,7 +122,7 @@ jobs:
 
       - name: Run Static Analysis
         run: |
-          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -G Ninja -DEXPORT_SINGLE_JSON=${{ matrix.target }} -DCMAKE_BUILD_TYPE=Debug .. && ninja CMakeFiles/cstatic"
+          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace/build && cmake -G Ninja -DEXPORT_SINGLE_JSON=${{ matrix.target }} -DCMAKE_BUILD_TYPE=Debug .. && ninja CMakeFiles/cstatic"
 
       - name: Upload Static Analysis Results
         if: always()
@@ -172,7 +172,7 @@ jobs:
 
       - name: Run Static Analysis (Firmware)
         run: |
-          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make cstatic_stm"
+          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace/build/ && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja cstatic_stm"
 
       - name: Upload Static Analysis Results
         if: always()

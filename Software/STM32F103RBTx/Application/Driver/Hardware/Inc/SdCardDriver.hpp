@@ -38,7 +38,8 @@ namespace Driver
      * @warning Destroying the driver while a file is open will automatically
      *          close the file, but proper shutdown via onStop() is recommended.
      */
-    class SdCardDriver : public ISdCardDriver
+    // destructor calls virtual method
+    class SdCardDriver final : public ISdCardDriver
     {
     public:
         /**
