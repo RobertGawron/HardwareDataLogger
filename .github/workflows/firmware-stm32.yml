@@ -45,7 +45,7 @@ jobs:
 
       - name: Build Firmware
         run: |
-          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -G Ninja .. && ninja firmware && mv firmware-build/HardwareDataLogger_STM32F103RBTx.* /workspace/build/BuildArtifacts/"
+          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace/build && cmake -G Ninja .. && ninja firmware && mv firmware-build/HardwareDataLogger_STM32F103RBTx.* /workspace/build/BuildArtifacts/"
 
       - name: Upload Firmware Build Results
         if: always()
