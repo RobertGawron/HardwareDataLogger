@@ -96,7 +96,7 @@ xhost +local:docker
 ## Build and Start the Simulation
 
 ```
-cmake -G Ninja -B /workspace/build -DCMAKE_BUILD_TYPE=Debug /workspace && \
+cd /workspace/build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && \
     ninja -C /workspace/build && cd /workspace/FirmwarePCSimulator/ && /workspace/venv/bin/python3 main.py
 ```
 

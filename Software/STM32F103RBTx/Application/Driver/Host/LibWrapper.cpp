@@ -18,44 +18,47 @@
 #include <cstdint>
 #include <cstdio>
 #include <string>
+#include <optional>
 
-static BusinessLogic::PlatformFactory *platform = nullptr;
-static BusinessLogic::ApplicationFacade *facade = nullptr;
+static std::optional<BusinessLogic::PlatformFactory> platform;
+static std::optional<BusinessLogic::ApplicationFacade> facade;
 
-BusinessLogic::PlatformFactory *getPlatform()
+std::optional<std::reference_wrapper<BusinessLogic::PlatformFactory>> getPlatform()
 {
-    if (!platform)
+    if (!platform.has_value())
     {
         std::fprintf(stderr, "ERROR: Platform not initialized!\n");
+        return std::nullopt;
     }
-    return platform;
+    return std::ref(platform.value());
 }
 
-BusinessLogic::ApplicationFacade *getFacade()
+std::optional<std::reference_wrapper<BusinessLogic::ApplicationFacade>> getFacade()
 {
-    if (!facade)
+    if (!facade.has_value())
     {
         std::fprintf(stderr, "ERROR: Facade not initialized!\n");
+        return std::nullopt;
     }
-    return facade;
+    return std::ref(facade.value());
 }
 
 void LibWrapper_Init()
 {
-    if (!platform)
+    if (!platform.has_value())
     {
-        platform = new BusinessLogic::PlatformFactory();
+        platform.emplace();
     }
 
-    if (!facade)
+    if (!facade.has_value())
     {
-        facade = new BusinessLogic::ApplicationFacade(*platform);
+        facade.emplace(platform.value());
     }
 
-    if (facade)
+    if (facade.has_value())
     {
-        facade->initialize();
-        facade->start();
+        facade.value().initialize();
+        facade.value().start();
     }
     else
     {
@@ -65,9 +68,9 @@ void LibWrapper_Init()
 
 void LibWrapper_Tick()
 {
-    if (facade)
+    if (facade.has_value())
     {
-        facade->tick();
+        facade.value().tick();
     }
     else
     {
@@ -77,10 +80,10 @@ void LibWrapper_Tick()
 
 void LibWrapper_KeyPressed(KeyboardKeyIdentifier keyId)
 {
-    if (platform)
+    if (platform.has_value())
     {
         auto &keyboardStub = static_cast<Driver::KeyboardDriverStub &>(
-            platform->getKeyboardDriver());
+            platform.value().getKeyboardDriver());
 
         keyboardStub.setKeyState(
             static_cast<Driver::KeyboardKeyIdentifier>(keyId),
@@ -94,10 +97,10 @@ void LibWrapper_KeyPressed(KeyboardKeyIdentifier keyId)
 
 void LibWrapper_KeyReleased(KeyboardKeyIdentifier keyId)
 {
-    if (platform)
+    if (platform.has_value())
     {
         auto &keyboardStub = static_cast<Driver::KeyboardDriverStub &>(
-            platform->getKeyboardDriver());
+            platform.value().getKeyboardDriver());
 
         keyboardStub.setKeyState(
             static_cast<Driver::KeyboardKeyIdentifier>(keyId),
@@ -113,10 +116,10 @@ std::uint8_t LibWrapper_GetDisplayWidth()
 {
     std::uint8_t width = 0U;
 
-    if (platform)
+    if (platform.has_value())
     {
         const auto &displayStub = static_cast<Driver::St7735DisplayDriverStub &>(
-            platform->getDisplayDriver());
+            platform.value().getDisplayDriver());
 
         displayStub.getXSize(width);
     }
@@ -132,10 +135,10 @@ std::uint8_t LibWrapper_GetDisplayHeight()
 {
     std::uint8_t height = 0U;
 
-    if (platform)
+    if (platform.has_value())
     {
         const auto &displayStub = static_cast<Driver::St7735DisplayDriverStub &>(
-            platform->getDisplayDriver());
+            platform.value().getDisplayDriver());
 
         displayStub.getYSize(height);
     }
@@ -151,10 +154,10 @@ std::uint16_t LibWrapper_GetPixelValue(std::uint8_t x, std::uint8_t y)
 {
     std::uint16_t value = 0U;
 
-    if (platform)
+    if (platform.has_value())
     {
         const auto &displayStub = static_cast<Driver::St7735DisplayDriverStub &>(
-            platform->getDisplayDriver());
+            platform.value().getDisplayDriver());
 
         value = displayStub.getPixelValue(x, y);
     }
