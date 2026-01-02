@@ -5,7 +5,7 @@
 #include "Driver/Interface/UartId.hpp"
 
 #include "Driver/Interface/SdCardStatus.hpp"
-#include "Driver/Interface/ISdCardDriver.hpp"
+#include "SdCardDriver.hpp"
 
 #include <functional>
 #include <cstdint>
@@ -53,7 +53,7 @@ void registerSdCardStopCallback(SdCardStopCallback callback);
 void registerSdCardResetCallback(SdCardResetCallback callback);
 
 HAL_StatusTypeDef serialTx(Driver::UartId uartId, const std::uint8_t *data, std::uint16_t size, std::uint32_t timeout);
-Driver::SdCardStatus sdCardOpen(const char *filename, Driver::ISdCardDriver::FileOpenMode mode);
+Driver::SdCardStatus sdCardOpen(const char *filename, Driver::FileOpenMode mode);
 Driver::SdCardStatus sdCardWrite(const std::uint8_t *data, std::uint16_t size);
 Driver::SdCardStatus sdCardClose();
 bool sdCardInitialize();

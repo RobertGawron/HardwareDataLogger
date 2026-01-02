@@ -32,7 +32,7 @@ This project has the following features:
 #### STM32F103RBTx Board
 The STM32F103RBTx serves as the main microcontroller, handling data acquisition, processing, serialization, and user interaction.
 
-* Toolchain: C++20, C, STM32 VS Code Extension, CMake.
+* Toolchain: C++23, C, STM32 VS Code Extension, CMake.
 * [More info.](./Software/STM32F103RBTx/README.md)
 
 #### ESP32WROOM32E
@@ -43,7 +43,7 @@ The ESP32WROOM32E is only used for data transfer via WiFi; in the future, it wil
 
 ## DevOps
 
-It's good to let the machine handle the tedious work of checking code quality, freeing up more time for the useful and interesting parts of software development.
+It's good to let the machine handle the boring work of checking code quality.
 
 * Toolchain: Unit tests (Google Test, Google Mock), code coverage (LCOV), static code analysis (CodeChecker, prospector), Docker (for both local development and CI), GitHub Actions (CI).
 

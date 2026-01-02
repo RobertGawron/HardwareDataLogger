@@ -7,10 +7,11 @@
  */
 
 // #include "BusinessLogic/Interface/IPlatformFactory.hpp"
+#include "BusinessLogic/Inc/ApplicationComponent.hpp"
 
-#include "Device/Interface/IDisplay.hpp"
-#include "Device/Interface/IDisplayBrightnessRegulator.hpp"
-#include "Device/Interface/IKeyboard.hpp"
+#include "Device/Inc/Display.hpp"
+#include "Device/Inc/DisplayBrightness.hpp"
+#include "Device/Inc/Keyboard.hpp"
 
 #include "U8g2lib.h"
 #include "MUIU8g2.h"
@@ -24,7 +25,7 @@ namespace BusinessLogic
      * Provides graphical UI using MUI framework and U8g2 display library.
      * Manages display rendering, brightness control, and user input.
      */
-    class HmiFacade
+    class HmiFacade final : public ApplicationComponent
     {
     public:
         /**
@@ -33,9 +34,9 @@ namespace BusinessLogic
          * @param displayBrightnessRegulator Display brightness controller
          * @param keyboard User input interface
          */
-        HmiFacade(Device::IDisplay &display,
-                  Device::IDisplayBrightnessRegulator &displayBrightnessRegulator,
-                  Device::IKeyboard &keyboard);
+        HmiFacade(Device::Display &display,
+                  Device::DisplayBrightness &displayBrightnessRegulator,
+                  Device::Keyboard &keyboard);
 
         /** @brief Deleted default constructor */
         HmiFacade() = delete;
@@ -49,17 +50,11 @@ namespace BusinessLogic
         /** @brief Deleted copy assignment operator */
         HmiFacade &operator=(const HmiFacade &) = delete;
 
-        /**
-         * @brief Initializes HMI components.
-         * @return true if successful, false otherwise
-         */
-        bool initialize();
-
-        /**
-         * @brief Starts HMI operation.
-         * @return true if successful, false otherwise
-         */
-        bool start();
+        // Lifecycle hooks (called by base class)
+        [[nodiscard]] bool onInit() noexcept;
+        [[nodiscard]] bool onStart() noexcept;
+        [[nodiscard]] bool onTick() noexcept;
+        // [[nodiscard]] bool onStop() noexcept;
 
         /**
          * @brief Processes periodic updates.
@@ -69,10 +64,10 @@ namespace BusinessLogic
 
     private:
         //  HmiMeasurementModel &hmiMeasurementModel;                        ///< Measurement data provider
-        Device::IDisplay &display;                                       ///< Display rendering interface
-        Device::IDisplayBrightnessRegulator &displayBrightnessRegulator; ///< Brightness controller
-        Device::IKeyboard &keyboard;                                     ///< User input handler
-        MUIU8G2 mui;                                                     ///< MUI framework instance
+        Device::Display &display;                              ///< Display rendering interface
+        Device::DisplayBrightness &displayBrightnessRegulator; ///< Brightness controller
+        Device::Keyboard &keyboard;                            ///< User input handler
+        MUIU8G2 mui;                                           ///< MUI framework instance
     };
 }
 

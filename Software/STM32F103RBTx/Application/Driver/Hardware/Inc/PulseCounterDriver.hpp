@@ -1,104 +1,63 @@
 /**
  * @file PulseCounterDriver.hpp
- * @brief Defines the PulseCounterDriver class for interacting with pulse counter hardware.
+ * @brief Modern C++23 pulse counter driver for embedded systems
  */
 
 #ifndef PulseCounterDriver_h
 #define PulseCounterDriver_h
 
-#include "Driver/Interface/IPulseCounterDriver.hpp"
+#include "Driver/Interface/PulseCounterDriverConcept.hpp"
+#include "Driver/Interface/DriverComponent.hpp"
+#include "Driver/Interface/PulseCounterId.hpp"
+#include "Driver/Interface/PulseCounterMeasurementSize.hpp"
+
+#include <cstdint>
 
 extern "C"
 {
     /**
-     * @brief Increments the pulse counter in interrupt handler.
-     *
-     * This function is called by the hardware interrupt handler when a pulse is detected.
-     * @param counterId Identifier of the pulse counter to increment.
+     * @brief Increments pulse counter from interrupt context
+     * @param counterId Counter identifier to increment
+     * @note Called by hardware interrupt handler - must be fast and noexcept
      */
-    void incrementPulseCounter(std::uint8_t counterId);
+    void incrementPulseCounter(std::uint8_t counterId) noexcept;
 }
 
 namespace Driver
 {
     /**
      * @class PulseCounterDriver
-     * @brief Implements the pulse counter driver interface for managing pulse counting operations.
-     *
-     * The PulseCounterDriver class provides methods to initialize, start, stop, and reset the pulse counter hardware.
-     * It inherits from the IPulseCounterDriver interface and implements the required driver state transitions.
+     * @brief Hardware abstraction for pulse counting with zero-overhead interface
      */
-    class PulseCounterDriver : public IPulseCounterDriver
+    class PulseCounterDriver final : public DriverComponent
     {
     public:
-        /** @brief Number of available pulse counters. */
-        static const std::uint8_t PULSE_COUNTER_AMOUNT = 4U;
+        static constexpr std::uint8_t PULSE_COUNTER_AMOUNT = 4U;
 
-        /**
-         * @brief Constructs a PulseCounterDriver with a specific device identifier.
-         * @param deviceIdentifier Identifier of the pulse counter device.
-         */
-        explicit PulseCounterDriver(PulseCounterId deviceIdentifier);
+        explicit PulseCounterDriver(PulseCounterId deviceIdentifier) noexcept;
 
-        PulseCounterDriver() = delete; ///< Deleted default constructor prevents instantiation without identifier.
+        ~PulseCounterDriver() = default;
 
-        /**
-         * @brief Default destructor for PulseCounterDriver.
-         *
-         * Ensures proper cleanup of the driver.
-         */
-        ~PulseCounterDriver() override = default;
+        PulseCounterDriver() = delete;
+        PulseCounterDriver(const PulseCounterDriver &) = delete;
+        PulseCounterDriver &operator=(const PulseCounterDriver &) = delete;
+        PulseCounterDriver(PulseCounterDriver &&) = delete;
+        PulseCounterDriver &operator=(PulseCounterDriver &&) = delete;
 
-        PulseCounterDriver(const PulseCounterDriver &) = delete;            ///< Deleted copy constructor prevents copying.
-        PulseCounterDriver &operator=(const PulseCounterDriver &) = delete; ///< Deleted assignment operator prevents assignment.
+        [[nodiscard]] auto getMeasurement() noexcept -> PulseCounterMeasurementSize;
+        void clearMeasurement() noexcept;
 
-        /**
-         * @brief Retrieves the current pulse count value.
-         * @return The current pulse count measurement.
-         */
-        IPulseCounterDriver::CounterSizeType getMeasurement() override;
-
-        /**
-         * @brief Resets the pulse counter to zero.
-         */
-        void clearMeasurement() override;
-
-        /**
-         * @brief Initializes the pulse counter driver.
-         *
-         * Prepares the pulse counter hardware for use.
-         * @return True if initialization was successful, false otherwise.
-         */
-        bool onInitialize() override;
-
-        /**
-         * @brief Starts the pulse counter driver.
-         *
-         * Begins counting pulses using the pulse counter hardware.
-         * @return True if the driver started successfully, false otherwise.
-         */
-        bool onStart() override;
-
-        /**
-         * @brief Stops the pulse counter driver.
-         *
-         * Halts pulse counting operations.
-         * @return True if the driver stopped successfully, false otherwise.
-         */
-        bool onStop() override;
-
-        /**
-         * @brief Resets the pulse counter driver.
-         *
-         * Resets the pulse counter hardware, clearing any internal state or counters.
-         * @return True if the driver reset successfully, false otherwise.
-         */
-        bool onReset() override;
+        [[nodiscard]] bool onInit();
+        [[nodiscard]] bool onStart();
+        [[nodiscard]] bool onStop();
 
     private:
-        /** @brief Reference to the current pulse counter value. */
-        CounterSizeType &value;
+        PulseCounterMeasurementSize &value;
     };
-}
+
+    static_assert(Driver::Concepts::PulseCounterDriverConcept<PulseCounterDriver>,
+                  "PulseCounterDriver must satisfy the concept requirements");
+
+} // namespace Driver
 
 #endif // PulseCounterDriver_h

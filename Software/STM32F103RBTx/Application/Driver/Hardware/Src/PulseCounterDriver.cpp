@@ -1,73 +1,71 @@
-#include "Driver/Interface/IPulseCounterDriver.hpp"
+/**
+ * @file PulseCounterDriver.cpp
+ * @brief Implementation of pulse counter driver with C++23 features
+ */
+
 #include "Driver/Hardware/Inc/PulseCounterDriver.hpp"
+#include "PulseCounterDriver.hpp"
 #include "Driver/Interface/PulseCounterId.hpp"
 
-#include <cstdint>
-#include <cstddef> // For std::size_t
 #include <array>
+#include <cstdint>
+#include <cstddef>
 
 namespace
 {
-    using PulseCounterArray = std::array<
-        Driver::PulseCounterDriver::CounterSizeType,
+    // Modern type alias with clearer intent
+    using CounterArray = std::array<
+        Driver::PulseCounterMeasurementSize,
         Driver::PulseCounterDriver::PULSE_COUNTER_AMOUNT>;
 
-    PulseCounterArray pulseCounters = {0};
+    // Zero-initialized at compile time
+    constinit CounterArray pulseCounters{};
 }
 
-// Expose the array pointer for C compatibility
 extern "C"
 {
-
-    // C-compatible function to increment a specific counter
-    void incrementPulseCounter(std::uint8_t counterId)
+    void incrementPulseCounter(std::uint8_t counterId) noexcept
     {
-        if (counterId < Driver::PulseCounterDriver::PULSE_COUNTER_AMOUNT)
+        if (counterId < pulseCounters.size()) [[likely]]
         {
-            pulseCounters[counterId]++;
+            ++pulseCounters[counterId];
         }
     }
 }
 
 namespace Driver
 {
-    PulseCounterDriver::PulseCounterDriver(PulseCounterId deviceIdentifier)
+    PulseCounterDriver::PulseCounterDriver(PulseCounterId deviceIdentifier) noexcept
         : value(pulseCounters[static_cast<std::size_t>(deviceIdentifier)])
     {
     }
 
-    bool PulseCounterDriver::onInitialize()
+    bool PulseCounterDriver::onInit() noexcept
     {
         pulseCounters.fill(0U);
         return true;
     }
 
-    bool PulseCounterDriver::onStart()
+    bool PulseCounterDriver::onStart() noexcept
     {
         pulseCounters.fill(0U);
         return true;
     }
 
-    bool PulseCounterDriver::onStop()
+    bool PulseCounterDriver::onStop() noexcept
     {
         clearMeasurement();
         return true;
     }
 
-    bool PulseCounterDriver::onReset()
+    auto PulseCounterDriver::getMeasurement() noexcept -> PulseCounterMeasurementSize
     {
-        return true;
-    }
-
-    IPulseCounterDriver::CounterSizeType PulseCounterDriver::getMeasurement()
-    {
-
         return value;
     }
 
-    void PulseCounterDriver::clearMeasurement()
+    void PulseCounterDriver::clearMeasurement() noexcept
     {
         value = 0U;
     }
 
-}
+} // namespace Driver

@@ -29,16 +29,16 @@ jobs:
             target: test_Keyboard
             artifact_suffix: dev-keyboard
             
-          - name: Device - PulseCounterMeasurementSource
-            target: test_PulseCounterMeasurementSource
+          - name: Device - PulseCounterSource
+            target: test_PulseCounterSource
             artifact_suffix: dev-pulsecounter
             
-          - name: Device - WiFiMeasurementRecorder
-            target: test_WiFiMeasurementRecorder
+          - name: Device - WiFiRecorder
+            target: test_WiFiRecorder
             artifact_suffix: dev-wifirecorder
             
-          - name: Device - WiFiMeasurementSerializer
-            target: test_WiFiMeasurementSerializer
+          - name: Device - WiFiSerializer
+            target: test_WiFiSerializer
             artifact_suffix: dev-wifiserializer
             
           - name: Device - Crc32
@@ -51,15 +51,15 @@ jobs:
             
           # Driver Tests
           - name: Driver - AmbientLightSensor
-            target: test_AmbientLightSensorDriver
+            target: test_LightSensorDriver
             artifact_suffix: drv-ambient-light
             
           - name: Driver - DisplayPixelColor
             target: test_DisplayPixelColor
             artifact_suffix: drv-display-pixel
             
-          - name: Driver - DriverState
-            target: test_DriverState
+          - name: Driver - DriverComponent
+            target: test_DriverComponent
             artifact_suffix: drv-state
             
           - name: Driver - Keyboard

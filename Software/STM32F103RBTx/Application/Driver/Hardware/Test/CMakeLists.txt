@@ -68,10 +68,9 @@ function(create_test_exec TARGET_NAME)
 endfunction()
 
 
-create_test_exec(test_AmbientLightSensorDriver 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/AmbientLightSensorDriver.cpp
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp 
-    test_AmbientLightSensorDriver.cpp
+create_test_exec(test_LightSensorDriver 
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/LightSensorDriver.cpp
+    test_LightSensorDriver.cpp
 )
 
 create_test_exec(test_DisplayPixelColor 
@@ -79,32 +78,27 @@ create_test_exec(test_DisplayPixelColor
     test_DisplayPixelColor.cpp
 )
 
-create_test_exec(test_DriverState 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp
-    test_DriverState.cpp
+create_test_exec(test_DriverComponent 
+    test_DriverComponent.cpp
 )
 
 create_test_exec(test_KeyboardDriver 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/KeyboardFourPushButtonsDriver.cpp 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp 
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/KeyboardDriver.cpp 
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Test/Stubs/stm32f1xx_hal_gpio.cpp
-    test_KeyboardFourPushButtonsDriver.cpp
+    test_KeyboardDriver.cpp
 )
 
 create_test_exec(test_AmbientLight 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/AmbientLightSensorDriver.cpp 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp 
-    test_AmbientLightSensorDriver.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/LightSensorDriver.cpp 
+    test_LightSensorDriver.cpp
 )
 
 create_test_exec(test_UartDriver 
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/UartDriver.cpp 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp 
     test_UartDriver.cpp
 )
 
 create_test_exec(test_PulseCounterDriver 
     ../Src/PulseCounterDriver.cpp 
-    ../Src/DriverState.cpp 
     test_PulseCounterDriver.cpp
 )

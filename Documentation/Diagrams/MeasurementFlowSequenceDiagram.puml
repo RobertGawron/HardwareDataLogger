@@ -1,22 +1,12 @@
 @startuml
 participant ApplicationFacade
 
-participant MeasurementSourcesFactory
-participant MeasurementStoresFactory
-
 participant MeasurementCoordinator
-participant MeasurementDataStore
 
 == Initialization ==
 
-ApplicationFacade --> MeasurementSourcesFactory: initialize
-ApplicationFacade --> MeasurementStoresFactory: initialize
-
-ApplicationFacade --> MeasurementCoordinator : initialize
-ApplicationFacade --> MeasurementDataStore : initialize
-
-MeasurementSourcesFactory --> MeasurementCoordinator : registerSources
-MeasurementStoresFactory --> MeasurementDataStore : registerStores
+ApplicationFacade --> MeasurementCoordinator : init
+ApplicationFacade --> MeasurementCoordinator : start
 
 == Run ==
 
@@ -24,13 +14,11 @@ loop Each cycle
     ApplicationFacade --> MeasurementCoordinator : tick()
 
     loop Each MeasurementSource
-        MeasurementCoordinator --> MeasurementCoordinator : updateMeasurements()
-        MeasurementCoordinator --> MeasurementDataStore : store()
+        MeasurementCoordinator --> MeasurementCoordinator : getMeasurement()
         
         loop Each MeasurementStore
-            MeasurementDataStore --> MeasurementDataStore : store()
+            MeasurementCoordinator --> MeasurementCoordinator : notify()
         end
     end
 end
-
 @enduml

@@ -107,7 +107,7 @@ TEST_F(UartDriverTest, TransmitShouldSucceed)
     std::array<std::uint8_t, 3> data = {0x01, 0x02, 0x03};
     const std::uint32_t timeout = 1000;
 
-    getDriver().initialize();
+    getDriver().init();
     getDriver().start();
 
     EXPECT_CALL(getMockHAL(), HAL_UART_Transmit(
@@ -130,7 +130,7 @@ TEST_F(UartDriverTest, TransmitShouldFailOnError)
     std::array<std::uint8_t, 3> data = {0x01, 0x02, 0x03};
     const std::uint32_t timeout = 1000;
 
-    getDriver().initialize();
+    getDriver().init();
     getDriver().start();
 
     EXPECT_CALL(getMockHAL(), HAL_UART_Transmit(
@@ -150,7 +150,7 @@ TEST_F(UartDriverTest, ReceiveShouldSucceed)
     std::array<std::uint8_t, 3> buffer = {0x00, 0x00, 0x00};
     const std::uint32_t timeout = 1000;
 
-    getDriver().initialize();
+    getDriver().init();
     getDriver().start();
 
     EXPECT_CALL(getMockHAL(), HAL_UART_Receive(
@@ -170,7 +170,7 @@ TEST_F(UartDriverTest, ReceiveShouldFailOnTimeout)
     std::array<std::uint8_t, 3> buffer = {0x00, 0x00, 0x00};
     const std::uint32_t timeout = 1000;
 
-    getDriver().initialize();
+    getDriver().init();
     getDriver().start();
 
     EXPECT_CALL(getMockHAL(), HAL_UART_Receive(
@@ -191,7 +191,7 @@ TEST_F(UartDriverTest, TransmitShouldFailWhenNotRunning)
     const std::uint32_t timeout = 1000;
 
     // Don't start the driver
-    getDriver().initialize();
+    getDriver().init();
 
     const std::span<const std::uint8_t> txData{data.data(), data.size()};
     const Driver::UartStatus status = getDriver().transmit(txData, timeout);
@@ -202,7 +202,7 @@ TEST_F(UartDriverTest, TransmitShouldFailOnEmptySpan)
 {
     const std::uint32_t timeout = 1000;
 
-    getDriver().initialize();
+    getDriver().init();
     getDriver().start();
 
     const std::span<const std::uint8_t> emptySpan{};

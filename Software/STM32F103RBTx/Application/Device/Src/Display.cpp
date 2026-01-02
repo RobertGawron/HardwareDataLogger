@@ -10,10 +10,10 @@
 
 namespace Device
 {
-    // Not used. Required by the u8g2 library, but this action is handled by the St7735DisplayDriver class.
+    // Not used. Required by the u8g2 library, but this action is handled by the DisplayDriver class.
     std::uint8_t u8x8_byte_dummy_callback(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t arg_int, void *arg_ptr);
 
-    // Not used. Required by the u8g2 library, but this action is handled by the St7735DisplayDriver class.
+    // Not used. Required by the u8g2 library, but this action is handled by the DisplayDriver class.
     std::uint8_t u8x8_gpio_and_delay_dummy_callback(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t arg_int, void *arg_ptr);
 
     static const std::uint8_t U8G2_STATUS_OK = 1U;
@@ -324,14 +324,14 @@ void u8g2_SetupBuffer_SDL_128x64(u8g2_t *u8g2, const u8g2_cb_t *u8g2_cb)
         */
     }
 
-    Display::Display(Driver::IDisplayDriver &_displayDriver) : displayDriver(_displayDriver)
+    Display::Display(Driver::DisplayDriver &_displayDriver) : displayDriver(_displayDriver)
     {
 
         displayMap[0].u8x8 = &u8g2.u8x8;
         displayMap[0].display = this;
     }
 
-    [[nodiscard]] bool Display::initialize() noexcept
+    [[nodiscard]] bool Display::onInit() noexcept
     {
 
         // 2025

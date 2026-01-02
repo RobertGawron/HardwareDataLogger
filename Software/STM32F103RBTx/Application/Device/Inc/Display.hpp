@@ -6,8 +6,11 @@
 #ifndef DISPLAY_HPP
 #define DISPLAY_HPP
 
-#include "Device/Interface/IDisplay.hpp"
-#include "Driver/Interface/IDisplayDriver.hpp"
+#include "Device/Inc/DeviceComponent.hpp"
+#include "DisplayDriver.hpp"
+
+#include "U8g2lib.h"
+#include "u8g2.h"
 
 #include <cstdint>
 
@@ -17,26 +20,26 @@ namespace Device
      * @class Display
      * @brief Adapter class that implements the `IDisplay` interface using a provided display driver.
      *
-     * The `Display` class bridges the `IDisplay` interface and a specific `IDisplayDriver` implementation.
+     * The `Display` class bridges the `IDisplay` interface and a specific `DisplayDriver` implementation.
      * It manages the initialization and configuration of the display and provides utility functions
      * for working with the underlying display driver.
      */
-    class Display final : public IDisplay
+    class Display final : public U8G2, public DeviceComponent
     {
     public:
         /**
          * @brief Constructs a `Display` instance with a reference to a display driver.
          *
-         * @param displayDriver Reference to a `Driver::IDisplayDriver` implementation.
+         * @param displayDriver Reference to a `Driver::DisplayDriver` implementation.
          */
-        explicit Display(Driver::IDisplayDriver &displayDriver);
+        explicit Display(Driver::DisplayDriver &displayDriver);
 
-        /* explicit constexpr Display(Driver::IDisplayDriver &displayDriver) noexcept
+        /* explicit constexpr Display(Driver::DisplayDriver &displayDriver) noexcept
              : displayDriver{displayDriver}
          {
          }*/
 
-        ~Display() override = default;
+        ~Display() = default;
 
         // Non-copyable and non-movable
         Display() = delete;
@@ -52,7 +55,7 @@ namespace Device
          *
          * @return `true` if the initialization is successful; `false` otherwise.
          */
-        [[nodiscard]] bool initialize() noexcept override;
+        [[nodiscard]] bool onInit() noexcept;
 
         /**
          * @brief Callback function for handling low-level display commands.
@@ -86,7 +89,7 @@ namespace Device
             u8x8_msg_cb byte_cb,
             u8x8_msg_cb gpio_and_delay_cb);
 
-        Driver::IDisplayDriver &displayDriver;
+        Driver::DisplayDriver &displayDriver;
     };
 
 } // namespace Device

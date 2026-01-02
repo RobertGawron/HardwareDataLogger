@@ -1,4 +1,4 @@
-#include "Device/Inc/WiFiMeasurementSerializer.hpp"
+#include "Device/Inc/WiFiSerializer.hpp"
 #include "Device/Inc/MeasurementType.hpp"
 #include "Device/Inc/MeasurementDeviceId.hpp"
 #include "Device/Inc/Crc32.hpp"
@@ -13,7 +13,7 @@
 
 // --- Test Fixture ---
 
-class WiFiMeasurementSerializerTest : public ::testing::Test
+class WiFiSerializerTest : public ::testing::Test
 {
 protected:
     // Protocol Constants
@@ -98,7 +98,7 @@ protected:
 // --- Test Cases ---
 
 // Test 1: Serialize uint16_t
-TEST_F(WiFiMeasurementSerializerTest, SerializesUint8Measurement)
+TEST_F(WiFiSerializerTest, SerializesUint8Measurement)
 {
     constexpr std::uint16_t TEST_VALUE = 0xABU;
     constexpr std::size_t EXPECTED_SIZE = PROTOCOL_OVERHEAD + sizeof(std::uint16_t);
@@ -107,7 +107,7 @@ TEST_F(WiFiMeasurementSerializerTest, SerializesUint8Measurement)
         .source = Device::MeasurementDeviceId::PULSE_COUNTER_1,
         .data = TEST_VALUE};
 
-    const auto result = Device::WiFiMeasurementSerializer::serialize(measurement, buffer);
+    const auto result = Device::WiFiSerializer::serialize(measurement, buffer);
 
     ASSERT_TRUE(result.has_value());
     const auto msgLength = result.value();
@@ -119,7 +119,7 @@ TEST_F(WiFiMeasurementSerializerTest, SerializesUint8Measurement)
 }
 
 // Test 2: Serialize uint16_t (Little Endian)
-TEST_F(WiFiMeasurementSerializerTest, SerializesUint16Measurement)
+TEST_F(WiFiSerializerTest, SerializesUint16Measurement)
 {
     constexpr std::uint16_t TEST_VALUE = 0x1234U;
     constexpr std::size_t EXPECTED_SIZE = PROTOCOL_OVERHEAD + sizeof(std::uint16_t);
@@ -128,7 +128,7 @@ TEST_F(WiFiMeasurementSerializerTest, SerializesUint16Measurement)
         .source = Device::MeasurementDeviceId::PULSE_COUNTER_2,
         .data = TEST_VALUE};
 
-    const auto result = Device::WiFiMeasurementSerializer::serialize(measurement, buffer);
+    const auto result = Device::WiFiSerializer::serialize(measurement, buffer);
 
     ASSERT_TRUE(result.has_value());
     const auto msgLength = result.value();
@@ -141,7 +141,7 @@ TEST_F(WiFiMeasurementSerializerTest, SerializesUint16Measurement)
 }
 
 // Test 3: Serialize uint32_t (Little Endian)
-TEST_F(WiFiMeasurementSerializerTest, SerializesUint32Measurement)
+TEST_F(WiFiSerializerTest, SerializesUint32Measurement)
 {
     constexpr std::uint32_t TEST_VALUE = 0xAABBCCDDU;
     constexpr std::size_t EXPECTED_SIZE = PROTOCOL_OVERHEAD + sizeof(std::uint32_t);
@@ -150,7 +150,7 @@ TEST_F(WiFiMeasurementSerializerTest, SerializesUint32Measurement)
         .source = Device::MeasurementDeviceId::PULSE_COUNTER_3,
         .data = TEST_VALUE};
 
-    const auto result = Device::WiFiMeasurementSerializer::serialize(measurement, buffer);
+    const auto result = Device::WiFiSerializer::serialize(measurement, buffer);
 
     ASSERT_TRUE(result.has_value());
     const auto msgLength = result.value();
@@ -165,7 +165,7 @@ TEST_F(WiFiMeasurementSerializerTest, SerializesUint32Measurement)
 }
 
 // Test 4: Buffer too small
-TEST_F(WiFiMeasurementSerializerTest, HandlesBufferTooSmall)
+TEST_F(WiFiSerializerTest, HandlesBufferTooSmall)
 {
     constexpr std::size_t SMALL_BUFFER_SIZE = 3U;
     constexpr std::uint32_t TEST_VALUE = 0x12345678U;
@@ -175,13 +175,13 @@ TEST_F(WiFiMeasurementSerializerTest, HandlesBufferTooSmall)
         .data = TEST_VALUE};
 
     std::array<std::uint8_t, SMALL_BUFFER_SIZE> smallBuffer{};
-    const auto result = Device::WiFiMeasurementSerializer::serialize(measurement, smallBuffer);
+    const auto result = Device::WiFiSerializer::serialize(measurement, smallBuffer);
 
     EXPECT_FALSE(result.has_value());
 }
 
 // Test 5: Zero-sized buffer
-TEST_F(WiFiMeasurementSerializerTest, HandlesZeroBuffer)
+TEST_F(WiFiSerializerTest, HandlesZeroBuffer)
 {
     constexpr std::uint16_t TEST_VALUE = 0x42U;
 
@@ -190,13 +190,13 @@ TEST_F(WiFiMeasurementSerializerTest, HandlesZeroBuffer)
         .data = TEST_VALUE};
 
     std::array<std::uint8_t, 0> zeroBuffer{};
-    const auto result = Device::WiFiMeasurementSerializer::serialize(measurement, zeroBuffer);
+    const auto result = Device::WiFiSerializer::serialize(measurement, zeroBuffer);
 
     EXPECT_FALSE(result.has_value());
 }
 
 // Test 6: CRC Calculation Correctness (Little Endian)
-TEST_F(WiFiMeasurementSerializerTest, VerifiesCRCCalculation)
+TEST_F(WiFiSerializerTest, VerifiesCRCCalculation)
 {
     constexpr std::uint16_t TEST_VALUE = 0xABCDU;
 
@@ -204,7 +204,7 @@ TEST_F(WiFiMeasurementSerializerTest, VerifiesCRCCalculation)
         .source = Device::MeasurementDeviceId::PULSE_COUNTER_2,
         .data = TEST_VALUE};
 
-    const auto result = Device::WiFiMeasurementSerializer::serialize(measurement, buffer);
+    const auto result = Device::WiFiSerializer::serialize(measurement, buffer);
 
     ASSERT_TRUE(result.has_value());
     const auto msgLength = result.value();
@@ -219,7 +219,7 @@ TEST_F(WiFiMeasurementSerializerTest, VerifiesCRCCalculation)
 }
 
 // Test 7: Zero value
-TEST_F(WiFiMeasurementSerializerTest, SerializesZeroValue)
+TEST_F(WiFiSerializerTest, SerializesZeroValue)
 {
     constexpr std::uint32_t TEST_VALUE = 0U;
 
@@ -227,7 +227,7 @@ TEST_F(WiFiMeasurementSerializerTest, SerializesZeroValue)
         .source = Device::MeasurementDeviceId::PULSE_COUNTER_1,
         .data = TEST_VALUE};
 
-    const auto result = Device::WiFiMeasurementSerializer::serialize(measurement, buffer);
+    const auto result = Device::WiFiSerializer::serialize(measurement, buffer);
 
     ASSERT_TRUE(result.has_value());
     EXPECT_EQ(buffer[OFFSET_SOURCE], static_cast<std::uint8_t>(Device::MeasurementDeviceId::PULSE_COUNTER_1));
@@ -241,7 +241,7 @@ TEST_F(WiFiMeasurementSerializerTest, SerializesZeroValue)
 }
 
 // Test 8: Maximum value
-TEST_F(WiFiMeasurementSerializerTest, SerializesMaximumValue)
+TEST_F(WiFiSerializerTest, SerializesMaximumValue)
 {
     constexpr std::uint32_t TEST_VALUE = 0xFFFFFFFFU;
 
@@ -249,7 +249,7 @@ TEST_F(WiFiMeasurementSerializerTest, SerializesMaximumValue)
         .source = Device::MeasurementDeviceId::PULSE_COUNTER_3,
         .data = TEST_VALUE};
 
-    const auto result = Device::WiFiMeasurementSerializer::serialize(measurement, buffer);
+    const auto result = Device::WiFiSerializer::serialize(measurement, buffer);
 
     ASSERT_TRUE(result.has_value());
     EXPECT_EQ(buffer[OFFSET_SOURCE], static_cast<std::uint8_t>(Device::MeasurementDeviceId::PULSE_COUNTER_3));
@@ -263,7 +263,7 @@ TEST_F(WiFiMeasurementSerializerTest, SerializesMaximumValue)
 }
 
 // Test 9: Verify Complete Protocol Format (Little Endian)
-TEST_F(WiFiMeasurementSerializerTest, VerifiesCompleteProtocolFormat)
+TEST_F(WiFiSerializerTest, VerifiesCompleteProtocolFormat)
 {
     constexpr std::uint32_t TEST_VALUE = 0x12345678U;
     constexpr std::size_t EXPECTED_SIZE = PROTOCOL_OVERHEAD + sizeof(std::uint32_t);
@@ -272,7 +272,7 @@ TEST_F(WiFiMeasurementSerializerTest, VerifiesCompleteProtocolFormat)
         .source = Device::MeasurementDeviceId::PULSE_COUNTER_4,
         .data = TEST_VALUE};
 
-    const auto result = Device::WiFiMeasurementSerializer::serialize(measurement, buffer);
+    const auto result = Device::WiFiSerializer::serialize(measurement, buffer);
 
     ASSERT_TRUE(result.has_value());
     const auto msgLength = result.value();
@@ -296,7 +296,7 @@ TEST_F(WiFiMeasurementSerializerTest, VerifiesCompleteProtocolFormat)
 }
 
 // Test 10: Different source IDs
-TEST_F(WiFiMeasurementSerializerTest, HandlesAllSourceIds)
+TEST_F(WiFiSerializerTest, HandlesAllSourceIds)
 {
     constexpr std::array sourceIds{
         Device::MeasurementDeviceId::PULSE_COUNTER_1,
@@ -313,7 +313,7 @@ TEST_F(WiFiMeasurementSerializerTest, HandlesAllSourceIds)
             .data = std::uint16_t{TEST_DATA_BYTE}};
 
         std::array<std::uint8_t, BUFFER_SIZE> testBuffer{};
-        const auto result = Device::WiFiMeasurementSerializer::serialize(measurement, testBuffer);
+        const auto result = Device::WiFiSerializer::serialize(measurement, testBuffer);
 
         ASSERT_TRUE(result.has_value()) << "Failed for source ID: " << static_cast<int>(sourceId);
         EXPECT_EQ(testBuffer[OFFSET_SOURCE], static_cast<std::uint8_t>(sourceId));

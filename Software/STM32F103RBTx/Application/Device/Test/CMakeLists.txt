@@ -68,25 +68,21 @@ endfunction()
 
 create_test_exec(test_Keyboard 
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/Keyboard.cpp 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp
     test_Keyboard.cpp
 )
 
-create_test_exec(test_PulseCounterMeasurementSource 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/PulseCounterMeasurementSource.cpp 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp
-    test_PulseCounterMeasurementSource.cpp
+create_test_exec(test_PulseCounterSource 
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/PulseCounterSource.cpp 
+    test_PulseCounterSource.cpp
 )
 
-create_test_exec(test_WiFiMeasurementRecorder 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/WiFiMeasurementRecorder.cpp 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp 
-    test_WiFiMeasurementRecorder.cpp
+create_test_exec(test_WiFiRecorder 
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/WiFiRecorder.cpp 
+    test_WiFiRecorder.cpp
 )
 
-create_test_exec(test_WiFiMeasurementSerializer 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp 
-    test_WiFiMeasurementSerializer.cpp
+create_test_exec(test_WiFiSerializer 
+    test_WiFiSerializer.cpp
 )
 
 create_test_exec(test_Crc32 

@@ -71,6 +71,5 @@ endfunction()
 
 
 create_test_exec(test_MeasurementCoordinator
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp
     test_MeasurementCoordinator.cpp
 )

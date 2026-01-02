@@ -32,7 +32,6 @@ list(APPEND DRIVER_SOURCES ${MOCK_DRIVER_SOURCES})
 
 # Add specific driver sources if they exist
 foreach(src IN ITEMS
-    "${APP_ROOT}/Driver/Hardware/Src/DriverState.cpp"
     "${APP_ROOT}/Driver/Hardware/Src/DisplayPixelColor.cpp"
 )
     if(EXISTS ${src})
@@ -44,6 +43,11 @@ endforeach()
 if(DRIVER_SOURCES)
     add_library(DriverSimulation SHARED ${DRIVER_SOURCES})
     target_link_libraries(DriverSimulation PRIVATE SimulatorIncludes)
+    # FIX: Export all symbols for dynamic linking
+    set_target_properties(DriverSimulation PROPERTIES
+        CXX_VISIBILITY_PRESET default
+        VISIBILITY_INLINES_HIDDEN OFF
+    )
 else()
     message(WARNING "No driver simulation sources found")
 endif()
@@ -54,20 +58,33 @@ add_library(SimulatorSTM32F103RBTx SHARED
     "${MOCK_ROOT}/EventHandlers.cpp"
 )
 
+# FIX: Ensure proper linking order and dependency resolution
 target_link_libraries(SimulatorSTM32F103RBTx
     PRIVATE SimulatorIncludes
     PUBLIC
-        $<TARGET_NAME_IF_EXISTS:PlatformSimulation>
         BusinessLogic
         Device
-        $<TARGET_NAME_IF_EXISTS:DriverSimulation>
         u8g2
 )
 
+# FIX: Add optional targets with proper checks
+if(TARGET PlatformSimulation)
+    target_link_libraries(SimulatorSTM32F103RBTx PUBLIC PlatformSimulation)
+endif()
+
+if(TARGET DriverSimulation)
+    target_link_libraries(SimulatorSTM32F103RBTx PUBLIC DriverSimulation)
+endif()
+
+# FIX: Export symbols and allow undefined symbols to be resolved at runtime
 set_target_properties(SimulatorSTM32F103RBTx PROPERTIES
     OUTPUT_NAME "simulator_stm32f103"
     VERSION 1.0.0
     SOVERSION 1
+    CXX_VISIBILITY_PRESET default
+    VISIBILITY_INLINES_HIDDEN OFF
+    # Allow undefined symbols if needed (they may come from Python runtime)
+    LINK_FLAGS "-Wl,--no-undefined"
 )
 
 # Enable compile_commands.json export for SimulatorSTM32F103RBTx

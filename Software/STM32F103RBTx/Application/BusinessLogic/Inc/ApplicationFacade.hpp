@@ -3,36 +3,33 @@
  * @brief Defines the ApplicationFacade class responsible for orchestrating application component initialization.
  */
 
-#ifndef APPLICATION_FACADE_HPP
-#define APPLICATION_FACADE_HPP
+#pragma once
 
-#include "BusinessLogic/Interface/IApplicationFacade.hpp"
-#include "BusinessLogic/Interface/IPlatformFactory.hpp"
+#include "BusinessLogic/Inc/ApplicationComponent.hpp"
+#include "PlatformFactory.hpp"
+#include "Device/Inc/RecorderVariant.hpp"
+#include "Device/Inc/SourceVariant.hpp"
 #include "BusinessLogic/Inc/HmiFacade.hpp"
 #include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
 
-#include "Device/Inc/PulseCounterMeasurementSource.hpp"
-#include "Device/Inc/UartMeasurementSource.hpp"
+#include "Device/Inc/PulseCounterSource.hpp"
+#include "Device/Inc/UartSource.hpp"
 #include "Device/Inc/MeasurementDeviceId.hpp"
-#include "Device/Inc/WiFiMeasurementRecorder.hpp"
-#include "Device/Inc/SdCardMeasurementRecorder.hpp"
+#include "Device/Inc/WiFiRecorder.hpp"
+#include "Device/Inc/SdCardRecorder.hpp"
 #include "Device/Inc/Display.hpp"
 #include "Device/Inc/Keyboard.hpp"
-#include "Device/Inc/DisplayBrightnessRegulator.hpp"
+#include "Device/Inc/DisplayBrightness.hpp"
 
 #include <array>
 #include <cstddef>
 #include <functional>
 #include <utility>
-
-namespace Device
-{
-    class IMeasurementSource;
-    class IMeasurementRecorder;
-}
+#include <variant>
 
 namespace BusinessLogic
 {
+
     /**
      * @brief Orchestrates construction and initialization of core application components.
      *
@@ -42,12 +39,12 @@ namespace BusinessLogic
      * - Human-Machine Interface (HMI)
      * - Core coordination mechanisms
      */
-    class ApplicationFacade final : public IApplicationFacade
+    class ApplicationFacade final : public ApplicationComponent
     {
     public:
-        explicit ApplicationFacade(IPlatformFactory &factory) noexcept;
+        explicit ApplicationFacade(Driver::PlatformFactory &factory) noexcept;
 
-        ~ApplicationFacade() override = default;
+        ~ApplicationFacade() = default;
 
         // Non-copyable and non-movable
         ApplicationFacade() = delete;
@@ -56,36 +53,35 @@ namespace BusinessLogic
         ApplicationFacade &operator=(const ApplicationFacade &) = delete;
         ApplicationFacade &operator=(ApplicationFacade &&) = delete;
 
-        [[nodiscard]] bool initialize() noexcept override;
-        [[nodiscard]] bool start() noexcept override;
-        [[nodiscard]] bool stop() noexcept override;
-        [[nodiscard]] bool tick() noexcept override;
+        // Lifecycle hooks (called by base class)
+        [[nodiscard]] bool onInit() noexcept;
+        [[nodiscard]] bool onStart() noexcept;
+        [[nodiscard]] bool onStop() noexcept;
+        [[nodiscard]] bool onTick() noexcept;
 
     private:
         static constexpr std::size_t SOURCES_COUNT{
             std::to_underlying(Device::MeasurementDeviceId::LAST_NOT_USED)};
         static constexpr std::size_t RECORDERS_COUNT{2};
 
-        Device::PulseCounterMeasurementSource pulseCounter1;
-        Device::PulseCounterMeasurementSource pulseCounter2;
-        Device::PulseCounterMeasurementSource pulseCounter3;
-        Device::PulseCounterMeasurementSource pulseCounter4;
-        Device::UartMeasurementSource uartReceiver;
+        Device::PulseCounterSource pulseCounter1;
+        Device::PulseCounterSource pulseCounter2;
+        Device::PulseCounterSource pulseCounter3;
+        Device::PulseCounterSource pulseCounter4;
+        Device::UartSource uartReceiver;
 
-        std::array<std::reference_wrapper<Device::IMeasurementSource>, SOURCES_COUNT> sources;
+        std::array<Device::SourceVariant, SOURCES_COUNT> sources;
 
-        Device::WiFiMeasurementRecorder wifiRecorder;
-        Device::SdCardMeasurementRecorder sdCardRecorder;
-        std::array<std::reference_wrapper<Device::IMeasurementRecorder>, RECORDERS_COUNT> recorders;
+        Device::WiFiRecorder wifiRecorder;
+        Device::SdCardRecorder sdCardRecorder;
+        std::array<Device::RecorderVariant, RECORDERS_COUNT> recorders;
 
         MeasurementCoordinator<SOURCES_COUNT, RECORDERS_COUNT> measurementCoordinator;
 
         Device::Display display;
-        Device::DisplayBrightnessRegulator brightnessRegulator;
+        Device::DisplayBrightness brightnessRegulator;
         Device::Keyboard keyboard;
         BusinessLogic::HmiFacade hmi;
     };
 
 } // namespace BusinessLogic
-
-#endif // APPLICATION_FACADE_HPP

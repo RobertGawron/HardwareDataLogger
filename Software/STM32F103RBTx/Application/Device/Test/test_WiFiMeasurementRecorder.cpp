@@ -1,98 +1,51 @@
-#include "Device/Inc/WiFiMeasurementRecorder.hpp"
+#include "Device/Inc/WiFiRecorder.hpp"
 #include "Device/Inc/MeasurementDeviceId.hpp"
 #include "Device/Inc/MeasurementType.hpp"
-#include "Driver/Interface/IUartDriver.hpp"
+#include "UartDriver.hpp"
 #include "Driver/Interface/UartStatus.hpp"
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <memory>
 #include <cstdint>
-#include <cstring>
 #include <span>
 #include <vector>
 
 // --- Mocks ---
 
-class MockUartDriver : public Driver::IUartDriver
+class MockUartDriver : public Driver::UartDriver
 {
 public:
-    MOCK_METHOD(bool, onInitialize, (), (override));
-    MOCK_METHOD(bool, onStart, (), (override));
-    MOCK_METHOD(bool, onStop, (), (override));
-    MOCK_METHOD(bool, onReset, (), (override));
+    MOCK_METHOD(bool, onInit, (), (override, noexcept));
+    MOCK_METHOD(bool, onStart, (), (override, noexcept));
+    MOCK_METHOD(bool, onStop, (), (override, noexcept));
     MOCK_METHOD(Driver::UartStatus, transmit, (std::span<const std::uint8_t> data, std::uint32_t timeout), (override));
     MOCK_METHOD(Driver::UartStatus, receive, (std::span<std::uint8_t> data, std::uint32_t timeout), (override));
 };
 
 // --- Test Fixture ---
 
-class WiFiMeasurementRecorderTest : public ::testing::Test
+class WiFiRecorderTest : public ::testing::Test
 {
 protected:
-    // Test Constants (changed to uint16_t)
-    static constexpr std::uint16_t TEST_MEASUREMENT_VALUE_U8 = 0x42U;
     static constexpr std::uint16_t TEST_MEASUREMENT_VALUE_U16 = 0x1234U;
     static constexpr std::uint32_t TEST_MEASUREMENT_VALUE_U32 = 0x12345678U;
 
-private:
     MockUartDriver mockDriver;
-    std::unique_ptr<Device::WiFiMeasurementRecorder> recorder;
+    std::unique_ptr<Device::WiFiRecorder> recorder;
 
-protected:
     void SetUp() override
     {
-        recorder = std::make_unique<Device::WiFiMeasurementRecorder>(mockDriver);
+        recorder = std::make_unique<Device::WiFiRecorder>(mockDriver);
     }
 
-    // Helper to decode COBS and verify protocol structure
-    static auto decodeCobs(const std::span<const std::uint8_t> cobsData) -> std::vector<std::uint8_t>
+    void TearDown() override
     {
-        std::vector<std::uint8_t> decoded;
-
-        if (cobsData.empty() || cobsData.back() != 0x00)
-        {
-            return decoded;
-        }
-
-        std::size_t pos{};
-        while (pos < cobsData.size() - 1)
-        {
-            const auto code = cobsData[pos];
-
-            if (code == 0)
-            {
-                break;
-            }
-
-            if (pos > 0)
-            {
-                decoded.push_back(0x00);
-            }
-
-            for (std::uint8_t i{1}; i < code && (pos + i) < cobsData.size() - 1; ++i)
-            {
-                decoded.push_back(cobsData[pos + i]);
-            }
-
-            pos += code;
-        }
-
-        return decoded;
+        recorder.reset();
     }
-
-public:
-    auto getMockDriver() -> MockUartDriver & { return mockDriver; }
-    auto getRecorder() -> Device::WiFiMeasurementRecorder & { return *recorder; }
 };
 
 // --- Custom Matchers ---
-
-MATCHER_P(SpanSizeIs, expectedSize, "")
-{
-    (void)result_listener;
-    return arg.size() == static_cast<std::size_t>(expectedSize);
-}
 
 MATCHER(SpanNotEmpty, "")
 {
@@ -174,159 +127,84 @@ MATCHER_P2(HasLittleEndianProtocol, expectedSource, expectedValueSize, "")
 
 // --- Test Cases ---
 
-TEST_F(WiFiMeasurementRecorderTest, OnInitializeCallsDriverInitialize)
-{
-    EXPECT_CALL(getMockDriver(), onInitialize()).WillOnce(::testing::Return(true));
-    EXPECT_TRUE(getRecorder().initialize());
-}
-
-TEST_F(WiFiMeasurementRecorderTest, OnInitializeFailsIfDriverInitializeFails)
-{
-    EXPECT_CALL(getMockDriver(), onInitialize()).WillOnce(::testing::Return(false));
-    EXPECT_FALSE(getRecorder().initialize());
-}
-
-TEST_F(WiFiMeasurementRecorderTest, OnStartCallsDriverStart)
-{
-    EXPECT_CALL(getMockDriver(), onInitialize()).WillOnce(::testing::Return(true));
-    getRecorder().initialize();
-
-    EXPECT_CALL(getMockDriver(), onStart()).WillOnce(::testing::Return(true));
-    EXPECT_TRUE(getRecorder().start());
-}
-
-TEST_F(WiFiMeasurementRecorderTest, OnStartFailsIfDriverStartFails)
-{
-    EXPECT_CALL(getMockDriver(), onInitialize()).WillOnce(::testing::Return(true));
-    getRecorder().initialize();
-
-    EXPECT_CALL(getMockDriver(), onStart()).WillOnce(::testing::Return(false));
-    EXPECT_FALSE(getRecorder().start());
-}
-
-TEST_F(WiFiMeasurementRecorderTest, OnStopCallsDriverStop)
-{
-    EXPECT_CALL(getMockDriver(), onInitialize()).WillOnce(::testing::Return(true));
-    getRecorder().initialize();
-
-    EXPECT_CALL(getMockDriver(), onStart()).WillOnce(::testing::Return(true));
-    getRecorder().start();
-
-    EXPECT_CALL(getMockDriver(), onStop()).WillOnce(::testing::Return(true));
-    EXPECT_TRUE(getRecorder().stop());
-}
-
-TEST_F(WiFiMeasurementRecorderTest, OnStopFailsIfDriverStopFails)
-{
-    EXPECT_CALL(getMockDriver(), onInitialize()).WillOnce(::testing::Return(true));
-    getRecorder().initialize();
-
-    EXPECT_CALL(getMockDriver(), onStart()).WillOnce(::testing::Return(true));
-    getRecorder().start();
-
-    EXPECT_CALL(getMockDriver(), onStop()).WillOnce(::testing::Return(false));
-    EXPECT_FALSE(getRecorder().stop());
-}
-
-TEST_F(WiFiMeasurementRecorderTest, OnResetReturnsTrue)
-{
-    EXPECT_CALL(getMockDriver(), onInitialize()).WillOnce(::testing::Return(true));
-    getRecorder().initialize();
-
-    EXPECT_CALL(getMockDriver(), onStart()).WillOnce(::testing::Return(true));
-    getRecorder().start();
-
-    EXPECT_CALL(getMockDriver(), onReset()).WillOnce(::testing::Return(true));
-    EXPECT_TRUE(getRecorder().reset());
-}
-
-TEST_F(WiFiMeasurementRecorderTest, NotifySucceedsWhenTransmitOk)
+TEST_F(WiFiRecorderTest, NotifySucceedsWhenTransmitOk)
 {
     const auto measurement = Device::MeasurementType{
         .source = Device::MeasurementDeviceId::PULSE_COUNTER_1,
-        .data = TEST_MEASUREMENT_VALUE_U8};
+        .data = TEST_MEASUREMENT_VALUE_U16};
 
-    EXPECT_CALL(getMockDriver(), transmit(::testing::AllOf(
-                                              SpanNotEmpty(),
-                                              IsCobsEncoded()),
-                                          ::testing::_))
+    EXPECT_CALL(mockDriver, transmit(::testing::AllOf(
+                                         SpanNotEmpty(),
+                                         IsCobsEncoded()),
+                                     ::testing::_))
         .WillOnce(::testing::Return(Driver::UartStatus::Ok));
 
-    EXPECT_TRUE(getRecorder().notify(measurement));
+    EXPECT_TRUE(recorder->notify(measurement));
 }
 
-TEST_F(WiFiMeasurementRecorderTest, NotifyFailsWhenTransmitFails)
+TEST_F(WiFiRecorderTest, NotifyFailsWhenTransmitFails)
 {
     const auto measurement = Device::MeasurementType{
         .source = Device::MeasurementDeviceId::PULSE_COUNTER_1,
-        .data = TEST_MEASUREMENT_VALUE_U8};
+        .data = TEST_MEASUREMENT_VALUE_U16};
 
-    EXPECT_CALL(getMockDriver(), transmit(SpanNotEmpty(), ::testing::_))
+    EXPECT_CALL(mockDriver, transmit(SpanNotEmpty(), ::testing::_))
         .WillOnce(::testing::Return(Driver::UartStatus::Timeout));
 
-    EXPECT_FALSE(getRecorder().notify(measurement));
+    EXPECT_FALSE(recorder->notify(measurement));
 }
 
-TEST_F(WiFiMeasurementRecorderTest, NotifyTransmitsValidProtocolForUint8)
-{
-    const auto measurement = Device::MeasurementType{
-        .source = Device::MeasurementDeviceId::PULSE_COUNTER_1,
-        .data = TEST_MEASUREMENT_VALUE_U8};
-
-    EXPECT_CALL(getMockDriver(),
-                transmit(HasLittleEndianProtocol(Device::MeasurementDeviceId::PULSE_COUNTER_1, 2),
-                         ::testing::_))
-        .WillOnce(::testing::Return(Driver::UartStatus::Ok));
-
-    EXPECT_TRUE(getRecorder().notify(measurement));
-}
-
-TEST_F(WiFiMeasurementRecorderTest, NotifyTransmitsValidProtocolForUint16)
+TEST_F(WiFiRecorderTest, NotifyTransmitsValidProtocolForUint16)
 {
     const auto measurement = Device::MeasurementType{
         .source = Device::MeasurementDeviceId::PULSE_COUNTER_2,
         .data = TEST_MEASUREMENT_VALUE_U16};
 
-    EXPECT_CALL(getMockDriver(),
+    EXPECT_CALL(mockDriver,
                 transmit(HasLittleEndianProtocol(Device::MeasurementDeviceId::PULSE_COUNTER_2, 2),
                          ::testing::_))
         .WillOnce(::testing::Return(Driver::UartStatus::Ok));
 
-    EXPECT_TRUE(getRecorder().notify(measurement));
+    EXPECT_TRUE(recorder->notify(measurement));
 }
 
-TEST_F(WiFiMeasurementRecorderTest, NotifyTransmitsValidProtocolForUint32)
+TEST_F(WiFiRecorderTest, NotifyTransmitsValidProtocolForUint32)
 {
     const auto measurement = Device::MeasurementType{
         .source = Device::MeasurementDeviceId::PULSE_COUNTER_3,
         .data = TEST_MEASUREMENT_VALUE_U32};
 
-    EXPECT_CALL(getMockDriver(),
+    EXPECT_CALL(mockDriver,
                 transmit(HasLittleEndianProtocol(Device::MeasurementDeviceId::PULSE_COUNTER_3, 4),
                          ::testing::_))
         .WillOnce(::testing::Return(Driver::UartStatus::Ok));
 
-    EXPECT_TRUE(getRecorder().notify(measurement));
+    EXPECT_TRUE(recorder->notify(measurement));
 }
 
-TEST_F(WiFiMeasurementRecorderTest, NotifyTransmitsCobsEncodedData)
+TEST_F(WiFiRecorderTest, NotifyTransmitsCobsEncodedDataWithZeroBytes)
 {
     const auto measurement = Device::MeasurementType{
         .source = Device::MeasurementDeviceId::PULSE_COUNTER_1,
-        .data = std::uint16_t{0x00} // Value with zero to test COBS
+        .data = std::uint16_t{0x0000} // Value with zeros to test COBS encoding
     };
 
     std::span<const std::uint8_t> capturedData;
 
-    EXPECT_CALL(getMockDriver(), transmit(::testing::_, ::testing::_))
+    EXPECT_CALL(mockDriver, transmit(::testing::_, ::testing::_))
         .WillOnce(::testing::DoAll(
             ::testing::SaveArg<0>(&capturedData),
             ::testing::Return(Driver::UartStatus::Ok)));
 
-    EXPECT_TRUE(getRecorder().notify(measurement));
+    EXPECT_TRUE(recorder->notify(measurement));
 
-    // Verify COBS properties:
-    // 1. Must end with 0x00 delimiter
+    // Verify COBS properties: must end with 0x00 delimiter
     ASSERT_FALSE(capturedData.empty());
     EXPECT_EQ(capturedData.back(), 0x00);
+
+    // Verify no zero bytes in the encoded data (except delimiter)
+    for (std::size_t i = 0; i < capturedData.size() - 1; ++i)
+    {
+        EXPECT_NE(capturedData[i], 0x00) << "Found zero byte at position " << i;
+    }
 }

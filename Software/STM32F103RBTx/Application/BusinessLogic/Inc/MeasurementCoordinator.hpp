@@ -7,27 +7,33 @@
 #ifndef MeasurementCoordinator_h
 #define MeasurementCoordinator_h
 
-#include "Device/Interface/IMeasurementSource.hpp"
-#include "Device/Interface/IMeasurementRecorder.hpp"
+#include "BusinessLogic/Inc/ApplicationComponent.hpp"
+#include "Device/Inc/RecorderVariant.hpp"
+#include "Device/Inc/SourceVariant.hpp"
+#include "Device/Inc/MeasurementSource.hpp"
+#include "Device/Inc/WiFiRecorder.hpp"
+#include "Device/Inc/SdCardRecorder.hpp"
 
 #include <cstdint>
 #include <array>
 #include <functional>
 #include <algorithm>
 #include <span>
+#include <variant>
 
 namespace BusinessLogic
 {
+
     template <std::size_t SourceCount, std::size_t RecorderCount>
-    class MeasurementCoordinator final
+    class MeasurementCoordinator final : public ApplicationComponent
     {
     public:
         /**
          * @brief Constructs a MeasurementCoordinator with references to sources and recorders arrays.
          */
         explicit MeasurementCoordinator(
-            std::array<std::reference_wrapper<Device::IMeasurementSource>, SourceCount> &sourcesArray,
-            std::array<std::reference_wrapper<Device::IMeasurementRecorder>, RecorderCount> &recordersArray) noexcept
+            std::array<Device::SourceVariant, SourceCount> &sourcesArray,
+            std::array<Device::RecorderVariant, RecorderCount> &recordersArray) noexcept
             : sources(sourcesArray), recorders(recordersArray)
         {
         }
@@ -40,82 +46,105 @@ namespace BusinessLogic
         MeasurementCoordinator(MeasurementCoordinator &&) = delete;
         MeasurementCoordinator &operator=(MeasurementCoordinator &&) = delete;
 
-        /**
-         * @brief Initializes the MeasurementCoordinator and its registered measurement sources.
-         * @return True if initialization was successful; false otherwise.
-         */
-        [[nodiscard]] bool initialize() noexcept
+        [[nodiscard]] bool onInit() noexcept
         {
-            // Initialize all sources
-            const bool sourcesInitialized = std::ranges::all_of(sources,
-                                                                [](auto &source)
-                                                                { return source.get().initialize(); });
+            bool status = std::ranges::all_of(
+                sources,
+                [](auto &sourceVariant)
+                {
+                    return std::visit([](auto &source)
+                                      { return source.get().init(); }, sourceVariant);
+                });
 
-            if (!sourcesInitialized)
+            if (status)
             {
-                return false;
+                status = std::ranges::all_of(
+                    recorders,
+                    [](auto &recorderVariant)
+                    {
+                        return std::visit([](auto &recorder)
+                                          { return recorder.get().init(); }, recorderVariant);
+                    });
             }
 
-            // Initialize all recorders
-            return std::ranges::all_of(recorders,
-                                       [](auto &recorder)
-                                       { return recorder.get().initialize(); });
+            return status;
         }
 
-        [[nodiscard]] bool start() noexcept
+        [[nodiscard]] bool onStart() noexcept
         {
-            const bool sourcesStarted = std::ranges::all_of(sources,
-                                                            [](auto &source)
-                                                            { return source.get().start(); });
+            bool status = std::ranges::all_of(
+                sources,
+                [](auto &sourceVariant)
+                {
+                    return std::visit([](auto &source)
+                                      { return source.get().start(); }, sourceVariant);
+                });
 
-            const bool recordersStarted = std::ranges::all_of(recorders,
-                                                              [](auto &recorder)
-                                                              { return recorder.get().start(); });
+            if (status)
+            {
+                status = std::ranges::all_of(
+                    recorders,
+                    [](auto &recorderVariant)
+                    {
+                        return std::visit([](auto &recorder)
+                                          { return recorder.get().start(); }, recorderVariant);
+                    });
+            }
 
-            return sourcesStarted && recordersStarted;
+            return status;
         }
 
         [[nodiscard]] bool stop() noexcept
         {
-            const bool sourcesStopped = std::ranges::all_of(sources,
-                                                            [](auto &source)
-                                                            { return source.get().stop(); });
+            bool status = std::ranges::all_of(
+                sources,
+                [](auto &sourceVariant)
+                {
+                    return std::visit([](auto &source)
+                                      { return source.get().stop(); }, sourceVariant);
+                });
 
-            const bool recordersStopped = std::ranges::all_of(recorders,
-                                                              [](auto &recorder)
-                                                              { return recorder.get().stop(); });
-
-            return sourcesStopped && recordersStopped;
+            if (status)
+            {
+                status = std::ranges::all_of(
+                    recorders,
+                    [](auto &recorderVariant)
+                    {
+                        return std::visit([](auto &recorder)
+                                          { return recorder.get().stop(); }, recorderVariant);
+                    });
+            }
+            return status;
         }
 
-        /**
-         * @brief Periodic function that should be called to perform regular updates.
-         * @return True if the tick operation was successful, false otherwise.
-         */
-        [[nodiscard]] bool tick() noexcept
+        [[nodiscard]] bool onTick() noexcept
         {
             bool status = true;
 
-            for (auto &source : sources)
+            for (auto &sourceVariant : sources)
             {
+                std::visit([&](auto &source)
+                           {
                 if (source.get().isMeasurementAvailable())
                 {
                     const Device::MeasurementType measurement = source.get().getMeasurement();
 
-                    // Notify all recorders
-                    for (auto &recorder : recorders)
+                    for (auto &recorderVariant : recorders)
                     {
-                        status = status && recorder.get().notify(measurement);
+                        std::visit([&measurement, &status](auto &recorder) {
+                            status = status && recorder.get().notify(measurement);
+            return status;
+                        }, recorderVariant);
                     }
-                }
+                } }, sourceVariant);
             }
 
             return status;
         }
 
     private:
-        std::array<std::reference_wrapper<Device::IMeasurementSource>, SourceCount> &sources;
-        std::array<std::reference_wrapper<Device::IMeasurementRecorder>, RecorderCount> &recorders;
+        std::array<Device::SourceVariant, SourceCount> &sources;
+        std::array<Device::RecorderVariant, RecorderCount> &recorders;
     };
 }
 

@@ -1,6 +1,6 @@
 #include "EventHandlers.hpp"
 
-#include "Driver/Interface/ISdCardDriver.hpp"
+#include "SdCardDriver.hpp"
 #include "Driver/Interface/UartId.hpp"
 #include "Driver/Interface/SdCardStatus.hpp"
 
@@ -73,7 +73,7 @@ HAL_StatusTypeDef serialTx(Driver::UartId uartId, const std::uint8_t *data, std:
     return result;
 }
 
-Driver::SdCardStatus sdCardOpen(const char *filename, Driver::ISdCardDriver::FileOpenMode mode)
+Driver::SdCardStatus sdCardOpen(const char *filename, Driver::FileOpenMode mode)
 {
     Driver::SdCardStatus result = Driver::SdCardStatus::INVALID_PARAMETER;
 

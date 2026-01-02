@@ -9,9 +9,9 @@
  * debouncing key presses and detecting long and short key press actions.
  */
 
-#include "Device/Interface/IKeyboard.hpp"
+#include "Device/Inc/DeviceComponent.hpp"
 #include "Device/Inc/KeyActionState.hpp"
-#include "Driver/Interface/IKeyboardDriver.hpp"
+#include "KeyboardDriver.hpp"
 #include "Driver/Interface/KeyIdentifier.hpp"
 
 #include <array>
@@ -27,7 +27,7 @@ namespace Device
      * and detecting whether keys are pressed in a long or short duration. It interacts with a platform-specific
      * keyboard driver to handle low-level key press events.
      */
-    class Keyboard final : public IKeyboard
+    class Keyboard final : public DeviceComponent
     {
     public:
         /**
@@ -37,12 +37,12 @@ namespace Device
          *
          * @param keyboardDriver A reference to a platform-specific keyboard driver implementing IKeyboardDriver.
          */
-        explicit constexpr Keyboard(Driver::IKeyboardDriver &keyboardDriver) noexcept
+        explicit constexpr Keyboard(Driver::KeyboardDriver &keyboardDriver) noexcept
             : keyboardDriver{keyboardDriver}
         {
         }
 
-        ~Keyboard() override = default;
+        ~Keyboard() = default;
 
         // Non-copyable and non-movable
         Keyboard(const Keyboard &) = delete;
@@ -57,7 +57,11 @@ namespace Device
          *
          * @return true if initialization is successful, false otherwise.
          */
-        [[nodiscard]] bool init() noexcept override;
+        [[nodiscard]] bool onInit() noexcept;
+
+        [[nodiscard]] bool onStart() noexcept;
+
+        [[nodiscard]] bool onStop() noexcept;
 
         /**
          * @brief Ticks the keyboard state machine.
@@ -67,7 +71,7 @@ namespace Device
          *
          * @return true if the tick operation was successful, false otherwise.
          */
-        [[nodiscard]] bool tick() noexcept override;
+        [[nodiscard]] bool onTick() noexcept;
 
         /**
          * @brief Gets the action state of a specified key.
@@ -77,10 +81,10 @@ namespace Device
          * @param key The ID of the key for which the state is requested.
          * @return The action state of the specified key.
          */
-        [[nodiscard]] KeyActionState getKeyState(Driver::KeyIdentifier key) const noexcept override;
+        [[nodiscard]] KeyActionState getKeyState(Driver::KeyIdentifier key) const noexcept;
 
     private:
-        Driver::IKeyboardDriver &keyboardDriver;
+        Driver::KeyboardDriver &keyboardDriver;
 
         static constexpr std::uint8_t AMOUNT_OF_KEYS{
             static_cast<std::uint8_t>(Driver::KeyIdentifier::LastNotUsed)};
@@ -101,6 +105,10 @@ namespace Device
          */
         std::array<KeyActionState, AMOUNT_OF_KEYS> keyActionState{};
     };
+
+    // Compile-time verification
+    static_assert(DeviceLifecycle<Keyboard>,
+                  "Keyboard must satisfy DeviceLifecycle concept");
 
 } // namespace Device
 
