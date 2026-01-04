@@ -1,36 +1,39 @@
-#include "Device/Inc/WiFiRecorder.hpp"
-#include "Device/Inc/WiFiSerializer.hpp"
-#include "Device/Inc/MeasurementType.hpp"
-#include "Device/Inc/CobsEncoder.hpp"
-
-#include "Driver/Interface/UartStatus.hpp"
-#include "UartDriver.hpp"
+module;
 
 #include <span>
+
+module Device.WiFiRecorder;
+import Device.MeasurementType;
+import Device.WiFiSerializer;
+import Device.CobsEncoder;
+
+import Driver.DriverComponent;
+import Driver.UartDriver;
+import Driver.UartStatus;
 
 namespace Device
 {
 
-    bool WiFiRecorder::onInit() noexcept
+    auto WiFiRecorder::onInit() noexcept -> bool
     {
         // return driver.init();
 
         return true;
     }
 
-    bool WiFiRecorder::onStart() noexcept
+    auto WiFiRecorder::onStart() noexcept -> bool
     {
         //   return driver.start();
         return true;
     }
 
-    bool WiFiRecorder::onStop() noexcept
+    auto WiFiRecorder::onStop() noexcept -> bool
     {
         // return driver.stop();
         return true;
     }
 
-    bool WiFiRecorder::notify(const Device::MeasurementType &measurement) noexcept
+    auto WiFiRecorder::notify(const Device::MeasurementType &measurement) noexcept -> bool
     {
         bool success = false;
 

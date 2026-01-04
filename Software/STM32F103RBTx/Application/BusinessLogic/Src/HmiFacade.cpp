@@ -1,29 +1,26 @@
-#include "BusinessLogic/Inc/HmiFacade.hpp"
-#include "Device/Inc/Display.hpp"
-#include "Device/Inc/DisplayBrightness.hpp"
-#include "Device/Inc/Keyboard.hpp"
-#include "Device/Inc/KeyActionState.hpp"
-#include "Driver/Interface/KeyIdentifier.hpp"
+module;
 
 #include "mui.h"
 #include "u8g2.h"
 #include "mui_u8g2.h"
 
-// #include <iostream>
+module BusinessLogic.HmiFacade;
 
+import Device;
+import Driver;
 namespace BusinessLogic
 {
 
-// Can't fix, MUI related implementation.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
-#pragma clang diagnostic ignored "-Wold-style-cast"
+    // Can't fix, MUI related implementation.
+    // #pragma clang diagnostic push
+    // #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
+    // #pragma clang diagnostic ignored "-Wold-style-cast"
 
     // Define fonts/styles and UI elements
     muif_t muif_list[] = {
         MUIF_U8G2_FONT_STYLE(0, u8g2_font_helvR08_tr), /* style 0: small regular font */
         MUIF_U8G2_FONT_STYLE(1, u8g2_font_helvB10_tr), /* style 1: larger bold font for headings */
-        MUIF_U8G2_LABEL(),                             /* allow MUI_LABEL command */
+        MUIF_LABEL(),                                  /* allow MUI_LABEL command */
         MUIF_BUTTON("BN", mui_u8g2_btn_exit_wm_fi),    /* simple exit button definition */
         MUIF_BUTTON("BG", mui_u8g2_btn_goto_wm_fi),    /* assume a callback to go to a given form */
                                                        //  {"DL", mui_dynamic_label_handler},             /* Custom handler for dynamic labels */
@@ -75,7 +72,7 @@ namespace BusinessLogic
 
         ; // end of fds_data array
 
-#pragma clang diagnostic pop
+    // #pragma clang diagnostic pop
 
     HmiFacade::HmiFacade( // HmiMeasurementModel &_hmiMeasurementModel,
         Device::Display &_display,
@@ -87,7 +84,7 @@ namespace BusinessLogic
     {
     }
 
-    bool HmiFacade::onInit() noexcept
+    auto HmiFacade::onInit() noexcept -> bool
     {
         const bool status = keyboard.init() && displayBrightnessRegulator.init() && display.init();
 
@@ -95,7 +92,7 @@ namespace BusinessLogic
         // return true;
     }
 
-    bool HmiFacade::onStart() noexcept
+    auto HmiFacade::onStart() noexcept -> bool
     {
         const bool status = keyboard.start() && displayBrightnessRegulator.start() && display.init();
 
@@ -122,7 +119,7 @@ namespace BusinessLogic
         return true;
     }
 
-    bool HmiFacade::onTick() noexcept
+    auto HmiFacade::onTick() noexcept -> bool
     {
         bool status = keyboard.tick();
         // displayBrightnessRegulator.tick();

@@ -1,24 +1,19 @@
-/**
- * @file PulseCounterDriver.cpp
- * @brief Implementation of pulse counter driver with C++23 features
- */
-
-#include "Driver/Hardware/Inc/PulseCounterDriver.hpp"
-#include "PulseCounterDriver.hpp"
-#include "Driver/Interface/PulseCounterId.hpp"
+module;
 
 #include <array>
 #include <cstdint>
 #include <cstddef>
 
+module Driver.PulseCounterDriver;
+
+import Driver.PulseCounterId;
+
 namespace
 {
-    // Modern type alias with clearer intent
     using CounterArray = std::array<
         Driver::PulseCounterMeasurementSize,
         Driver::PulseCounterDriver::PULSE_COUNTER_AMOUNT>;
 
-    // Zero-initialized at compile time
     constinit CounterArray pulseCounters{};
 }
 

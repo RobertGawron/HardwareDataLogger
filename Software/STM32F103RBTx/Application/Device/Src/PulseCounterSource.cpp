@@ -1,33 +1,34 @@
-#include "Device/Inc/PulseCounterSource.hpp"
+module Device.PulseCounterSource;
 
-#include "Device/Inc/MeasurementType.hpp"
-#include "Device/Inc/MeasurementDeviceId.hpp"
-#include "PulseCounterDriver.hpp"
+import Device.MeasurementType;
+import Device.MeasurementDeviceId;
+
+import Driver.PulseCounterDriver;
 
 namespace Device
 {
 
-    bool PulseCounterSource::onInit() noexcept
+    auto PulseCounterSource::onInit() noexcept -> bool
     {
         return pulseCounterDriver.init();
     }
 
-    bool PulseCounterSource::onStart() noexcept
+    auto PulseCounterSource::onStart() noexcept -> bool
     {
         return pulseCounterDriver.start();
     }
 
-    bool PulseCounterSource::onStop() noexcept
+    auto PulseCounterSource::onStop() noexcept -> bool
     {
         return pulseCounterDriver.stop();
     }
 
-    bool PulseCounterSource::isMeasurementAvailable() const noexcept
+    auto PulseCounterSource::isMeasurementAvailable() const noexcept -> bool
     {
         return true;
     }
 
-    MeasurementType PulseCounterSource::getMeasurement() noexcept
+    auto PulseCounterSource::getMeasurement() noexcept -> MeasurementType
     {
         return MeasurementType{
             .source = deviceId,

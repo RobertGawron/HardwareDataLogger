@@ -1,5 +1,16 @@
-#include "BusinessLogic/Inc/ApplicationFacade.hpp"
-#include "PlatformFactory.hpp"
+module;
+
+#include <functional>
+
+module BusinessLogic.ApplicationFacade;
+
+import BusinessLogic.ApplicationComponent;
+import BusinessLogic.MeasurementCoordinator;
+import BusinessLogic.HmiFacade;
+
+import Device;
+
+import Driver.PlatformFactory;
 
 namespace BusinessLogic
 {
@@ -17,28 +28,28 @@ namespace BusinessLogic
           recorders{std::ref(wifiRecorder), std::ref(sdCardRecorder)},
           measurementCoordinator{sources, recorders},
           display{drivers.display},
-          brightnessRegulator{drivers.LightSensor, drivers.displayBrightness},
+          brightness{drivers.LightSensor, drivers.displayBrightness},
           keyboard{drivers.keyboard},
-          hmi{display, brightnessRegulator, keyboard}
+          hmi{display, brightness, keyboard}
     {
     }
 
-    bool ApplicationFacade::onInit() noexcept
+    auto ApplicationFacade::onInit() noexcept -> bool
     {
         return measurementCoordinator.init();
     }
 
-    bool ApplicationFacade::onStart() noexcept
+    auto ApplicationFacade::onStart() noexcept -> bool
     {
         return measurementCoordinator.start();
     }
 
-    bool ApplicationFacade::onStop() noexcept
+    auto ApplicationFacade::onStop() noexcept -> bool
     {
         return measurementCoordinator.stop();
     }
 
-    bool ApplicationFacade::onTick() noexcept
+    auto ApplicationFacade::onTick() noexcept -> bool
     {
         return measurementCoordinator.tick();
     }

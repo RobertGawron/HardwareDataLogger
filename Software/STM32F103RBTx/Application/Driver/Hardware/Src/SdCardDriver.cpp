@@ -1,18 +1,18 @@
-/**
- * @file SdCardDriver.cpp
- * @brief Implementation of SD card driver with FatFs
- */
+module;
 
-#include "Driver/Hardware/Inc/SdCardDriver.hpp"
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_gpio.h"
 
+#include "ff.h"
+
 #include <span>
 #include <string_view>
+#include <cstdint>
+
+module Driver.SdCardDriver;
 
 namespace Driver
 {
-    // Compile-time safety check
     static_assert(sizeof(std::uint16_t) <= sizeof(UINT),
                   "std::uint16_t must not exceed UINT size for f_write()");
 

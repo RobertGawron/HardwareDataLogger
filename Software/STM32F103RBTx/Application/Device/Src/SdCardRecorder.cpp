@@ -1,4 +1,4 @@
-#include "Device/Inc/SdCardRecorder.hpp"
+module;
 
 #include <array>
 #include <charconv>
@@ -8,14 +8,19 @@
 #include <string_view>
 #include <variant>
 
+module Device.SdCardRecorder;
+
+import Driver.FileOpenMode;
+import Driver.SdCardStatus;
+
 namespace Device
 {
-    bool SdCardRecorder::onInit() noexcept
+    auto SdCardRecorder::onInit() noexcept -> bool
     {
         return driver.init();
     }
 
-    bool SdCardRecorder::onStart() noexcept
+    auto SdCardRecorder::onStart() noexcept -> bool
     {
         using FileOpenMode = Driver::FileOpenMode;
         static constexpr std::string_view FILENAME{"measurements.txt"};
@@ -27,12 +32,12 @@ namespace Device
         return status;
     }
 
-    bool SdCardRecorder::onStop() noexcept
+    auto SdCardRecorder::onStop() noexcept -> bool
     {
         return driver.stop();
     }
 
-    bool SdCardRecorder::notify(const MeasurementType &measurement) noexcept
+    auto SdCardRecorder::notify(const MeasurementType &measurement) noexcept -> bool
     {
         static constexpr std::size_t BUFFER_SIZE{64};
         std::array<char, BUFFER_SIZE> csvBuffer{};

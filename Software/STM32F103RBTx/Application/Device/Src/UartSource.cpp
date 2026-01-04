@@ -1,11 +1,14 @@
-#include "Device/Inc/UartSource.hpp"
-
-#include "Device/Inc/MeasurementSource.hpp"
-#include "Device/Inc/MeasurementType.hpp"
-#include "Device/Inc/MeasurementDeviceId.hpp"
-#include "UartDriver.hpp"
+module;
 
 #include <cstdint>
+
+module Device.UartSource;
+
+import Device.MeasurementSource;
+import Device.MeasurementType;
+import Device.MeasurementDeviceId;
+
+import Driver.UartDriver;
 
 namespace Device
 {
@@ -17,31 +20,31 @@ namespace Device
     {
     }
 
-    bool UartSource::onInit() noexcept
+    auto UartSource::onInit() noexcept -> bool
     {
         // return driver.init();
 
         return true;
     }
 
-    bool UartSource::onStart() noexcept
+    auto UartSource::onStart() noexcept -> bool
     {
         // return driver.start();
         return true;
     }
 
-    bool UartSource::onStop() noexcept
+    auto UartSource::onStop() noexcept -> bool
     {
         //  return driver.stop();
         return true;
     }
 
-    bool UartSource::isMeasurementAvailable() const noexcept
+    auto UartSource::isMeasurementAvailable() const noexcept -> bool
     {
         return true;
     }
 
-    MeasurementType UartSource::getMeasurement() noexcept
+    auto UartSource::getMeasurement() noexcept -> MeasurementType
     {
         constexpr std::uint16_t DUMMY_DATA = 5U;
 

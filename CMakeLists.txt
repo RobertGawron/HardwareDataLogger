@@ -15,10 +15,10 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
     add_subdirectory(Software/STM32F103RBTx/Application/Library/u8g2/)
-    add_subdirectory(Software/STM32F103RBTx/Application/BusinessLogic/)
+    add_subdirectory(Software/STM32F103RBTx/Application/Driver/)
+    #add_subdirectory(Software/STM32F103RBTx/Application/Driver/Host)
     add_subdirectory(Software/STM32F103RBTx/Application/Device/)
-    add_subdirectory(Software/STM32F103RBTx/Application/Driver/Host)
-    
+    add_subdirectory(Software/STM32F103RBTx/Application/BusinessLogic/)
 
     
 endif()

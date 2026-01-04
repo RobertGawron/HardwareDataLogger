@@ -1,13 +1,15 @@
-/**
- * @file KeyboardDriver.cpp
- * @brief Implementation of modern GPIO keyboard driver
- */
-
-#include "Driver/Hardware/Inc/KeyboardDriver.hpp"
-#include "Driver/Interface/KeyState.hpp"
-#include "Driver/Interface/DriverComponent.hpp"
+module;
+#include "stm32f1xx_hal.h"
+#include "stm32f1xx_hal_gpio.h"
+#include "main.h"
 
 #include <cstddef>
+#include <cstdint>
+
+module Driver.KeyboardDriver;
+
+import Driver.DriverComponent;
+import Driver.KeyState;
 
 namespace Driver
 {

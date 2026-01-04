@@ -1,13 +1,13 @@
-/**
- * @file LightSensorDriver.cpp
- * @brief Implementation of ADC+DMA ambient light sensor
- */
+module;
 
-#include "Driver/Hardware/Inc/LightSensorDriver.hpp"
+#include "stm32f1xx_hal.h"
+#include "stm32f1xx_hal_dma.h"
 #include "stm32f1xx_hal_adc.h"
 
 #include <numeric>
 #include <cstdint>
+
+module Driver.LightSensorDriver;
 
 namespace Driver
 {

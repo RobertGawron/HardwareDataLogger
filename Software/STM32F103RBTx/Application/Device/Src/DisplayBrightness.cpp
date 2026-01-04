@@ -1,18 +1,20 @@
-#include "Device/Inc/DisplayBrightness.hpp"
+module;
 
 #include <cstddef>
 #include <cstdint>
 
+module Device.DisplayBrightness;
+
 namespace Device
 {
-    bool DisplayBrightness::onInit() noexcept
+    auto DisplayBrightness::onInit() noexcept -> bool
     {
         const bool status = /*lightSensorDriver.init() && */ displayBrightness.init();
 
         return status;
     }
 
-    bool DisplayBrightness::onStart() noexcept
+    auto DisplayBrightness::onStart() noexcept -> bool
     {
         bool status = lightSensorDriver.start() && displayBrightness.start();
 
@@ -30,12 +32,12 @@ namespace Device
         return status;
     }
 
-    std::uint8_t DisplayBrightness::getBrightnessPercentage() const noexcept
+    auto DisplayBrightness::getBrightnessPercentage() const noexcept -> std::uint8_t
     {
         return level;
     }
 
-    bool DisplayBrightness::setBrightnessPercentage(std::uint8_t newLevel) noexcept
+    auto DisplayBrightness::setBrightnessPercentage(std::uint8_t newLevel) noexcept -> bool
     {
         static constexpr std::uint8_t MAX_BRIGHTNESS_LEVEL{100};
 

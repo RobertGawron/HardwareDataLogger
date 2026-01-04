@@ -1,25 +1,25 @@
-#include "Device/Inc/UartRecorder.hpp"
+module Device.UartRecorder;
 
 namespace Device
 {
-    bool UartRecorder::notify([[maybe_unused]] const MeasurementType &measurement) noexcept
+    auto UartRecorder::notify([[maybe_unused]] const MeasurementType &measurement) noexcept -> bool
     {
         return true;
     }
 
-    bool UartRecorder::onInit() noexcept
+    auto UartRecorder::onInit() noexcept -> bool
     {
         //  return driver.init();
         return true;
     }
 
-    bool UartRecorder::onStart() noexcept
+    auto UartRecorder::onStart() noexcept -> bool
     {
         // return driver.start();
         return true;
     }
 
-    bool UartRecorder::onStop() noexcept
+    auto UartRecorder::onStop() noexcept -> bool
     {
         // return driver.stop();
         return true;

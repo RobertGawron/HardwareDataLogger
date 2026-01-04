@@ -1,10 +1,12 @@
-/**
- * @file BrightnessDriver.cpp
- * @brief Implementation of PWM brightness control
- */
+module;
 
-#include "Driver/Hardware/Inc/BrightnessDriver.hpp"
+#include "stm32f1xx_hal.h"
+#include "stm32f1xx_hal_dma.h"
 #include "stm32f1xx_hal_tim.h"
+
+#include <cstdint>
+
+module Driver.BrightnessDriver;
 
 namespace Driver
 {

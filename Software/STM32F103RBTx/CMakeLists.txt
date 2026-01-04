@@ -16,6 +16,9 @@ set(CMAKE_CXX_EXTENSIONS ON)
 # This makes it apply to subdirectories too
 set(CMAKE_CXX_STANDARD 23 CACHE STRING "C++ standard" FORCE)
 
+# Enable experimental C++ module support
+set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API "aa1f7df0-828a-4fcd-9afc-2dc80491aca7")
+set(CMAKE_EXPERIMENTAL_CXX_MODULE_DYNDEP ON)
 
 # Define default build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -48,35 +51,62 @@ add_subdirectory(cmake/stm32cubemx)
 
 # Add Application subdirectory
 add_subdirectory(Application/Library/u8g2/)
-add_subdirectory(Application/BusinessLogic/)
+add_subdirectory(Application/Driver/)
+#add_subdirectory(Application/Driver/Hardware/)
 add_subdirectory(Application/Device/)
-add_subdirectory(Application/Driver/Hardware/)
+add_subdirectory(Application/BusinessLogic/)
 
 
 # Target sources
 target_sources(${PROJECT_NAME} PRIVATE
+    # Regular C/C++ sources
     Application/Library/stm32-st7735/st7735.c
     Application/Library/stm32-st7735/st7735_reg.c
+#Core/Src/MyApplication.cpp
+    )
+
+# C++20 Module (separate target_sources call)
+target_sources(${PROJECT_NAME} PRIVATE
+    FILE_SET CXX_MODULES FILES
     Core/Src/MyApplication.cpp
-    #Core/Src/PlatformFactory.cpp
 )
 
 # Include directories
 target_include_directories(${PROJECT_NAME} PRIVATE
     Core/Inc
-    Application/
+    #Application/BusinessLogic/Inc/
     Drivers/STM32F1xx_HAL_Driver/Inc
+    #Drivers/STM32F1xx_HAL_Driver/Inc/Legacy 
     Drivers/CMSIS/Device/ST/STM32F1xx/Include
     Drivers/CMSIS/Include
 )
 
-# Link libraries - BusinessLogic, Device, Driver are now built in Application subdirectory
+    target_compile_options(${PROJECT_NAME} PRIVATE
+        -Os                          # Optimize for size
+        -flto                        # Link-time optimization
+        -ffunction-sections          # Place each function in its own section
+        -fdata-sections             # Place each data in its own section
+    )
+    
+    target_link_options(${PROJECT_NAME} PRIVATE
+        -Wl,--gc-sections           # Remove unused sections
+        -flto                       # Link-time optimization
+        -s                          # Strip symbols
+    )
+
+ #   target_link_libraries(Driver PUBLIC DriverInterface)
+
+
 target_link_libraries(${PROJECT_NAME}
     stm32cubemx
-    BusinessLogic
-    Device
-    Driver
     u8g2
+    DriverInterface
+    Driver
+    Device
+    BusinessLogic
+    
+    
+    
 )
 
 # Apply debug options

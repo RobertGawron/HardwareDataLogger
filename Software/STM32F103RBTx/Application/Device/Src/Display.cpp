@@ -1,12 +1,16 @@
-#include "Device/Inc/Display.hpp"
-#include "Driver/Interface/DisplayPixelColor.hpp"
-
-#include "u8g2.h"
-#include "u8x8.h"
+module;
 
 #include <array>
 #include <cstdint>
 #include <cstdlib>
+
+#include "u8g2.h"
+#include "u8x8.h"
+
+module Device.Display;
+
+// import Driver.DisplayPixelColor;
+// import Device.DisplayPixelColor;
 
 namespace Device
 {
@@ -104,7 +108,7 @@ namespace Device
         return U8G2_STATUS_OK;
     }
 
-    [[nodiscard]] std::uint8_t Display::u8x8DSt7735Impl(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t argInt, void *argPtr)
+    std::uint8_t Display::u8x8DSt7735Impl(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t argInt, void *argPtr)
     {
         switch (msg)
         {
@@ -145,17 +149,17 @@ namespace Device
                     const std::uint8_t col_data = tile.tile_ptr[col]; // This is a vertical column
                     for (std::uint8_t bit = 0; bit < TILE_PIXEL_HEIGHT; bit++)
                     {
-                        Driver::DisplayPixelColor::PixelColor color = Driver::DisplayPixelColor::getColor(0x00, 0x00, 0x00);
+                        Device::DisplayPixelColor::PixelColor color = Device::DisplayPixelColor::getColor(0x00, 0x00, 0x00);
                         const std::uint8_t x = tile_x_start + col;
                         const std::uint8_t y = tile_y_start + bit;
 
                         if ((col_data & (1 << bit)) != 0)
                         {
                             // Now (col, bit) corresponds to (x, y) pixel offsets within the tile:
-                            color = Driver::DisplayPixelColor::getColor(DEFAULT_COLOR_RED, DEFAULT_COLOR_GREEN, DEFAULT_COLOR_BLUE);
+                            color = Device::DisplayPixelColor::getColor(DEFAULT_COLOR_RED, DEFAULT_COLOR_GREEN, DEFAULT_COLOR_BLUE);
                         }
 
-                        displayDriver.setPixel(x, y, color);
+                        // displayDriver.setPixel(x, y, color);
                     }
                 }
             }
@@ -213,14 +217,14 @@ namespace Device
                     for (std::uint8_t bit = 0; bit < TILE_PIXEL_HEIGHT; bit++)
                     {
                         //
-                        Driver::DisplayPixelColor::PixelColor color = Driver::DisplayPixelColor::getColor(0x00, 0x00, 0x00);
+                        Device::DisplayPixelColor::PixelColor color = Device::DisplayPixelColor::getColor(0x00, 0x00, 0x00);
                         const std::uint8_t x = tile_x_start + col;
                         const std::uint8_t y = tile_y_start + bit;
 
                         if ((col_data & (1 << bit)) != 0)
                         {
                             // Now (col, bit) corresponds to (x, y) pixel offsets within the tile:
-                            color = Driver::DisplayPixelColor::getColor(DEFAULT_COLOR_RED, DEFAULT_COLOR_GREEN, DEFAULT_COLOR_BLUE);
+                            color = Device::DisplayPixelColor::getColor(DEFAULT_COLOR_RED, DEFAULT_COLOR_GREEN, DEFAULT_COLOR_BLUE);
 
                             printf("tile_x_start *********** GOT IT ************ \n");
                         }
@@ -326,14 +330,12 @@ void u8g2_SetupBuffer_SDL_128x64(u8g2_t *u8g2, const u8g2_cb_t *u8g2_cb)
 
     Display::Display(Driver::DisplayDriver &_displayDriver) : displayDriver(_displayDriver)
     {
-
         displayMap[0].u8x8 = &u8g2.u8x8;
         displayMap[0].display = this;
     }
 
-    [[nodiscard]] bool Display::onInit() noexcept
+    bool Display::onInit() noexcept
     {
-
         // 2025
 #if 0       
         const u8g2_cb_t *rotation = U8G2_R0;
@@ -341,4 +343,5 @@ void u8g2_SetupBuffer_SDL_128x64(u8g2_t *u8g2, const u8g2_cb_t *u8g2_cb)
 #endif
         return true;
     }
-}
+
+} // namespace Device

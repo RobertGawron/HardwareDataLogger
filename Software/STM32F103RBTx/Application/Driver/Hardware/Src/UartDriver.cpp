@@ -1,17 +1,18 @@
-/**
- * @file UartDriver.cpp
- * @brief Implementation of UART communication driver
- */
+module;
 
-#include "Driver/Hardware/Inc/UartDriver.hpp"
-#include "Driver/Interface/UartStatus.hpp"
-#include "Driver/Interface/DriverComponent.hpp"
-
-#include "stm32f1xx_hal_uart.h"
+#include "stm32f1xx_hal.h"
+#include "stm32f1xx_hal_dma.h"
+#include "stm32f1xx_hal_usart.h"
 
 #include <span>
 #include <cstdint>
 #include <cassert>
+#include <cstdint>
+
+module Driver.UartDriver;
+
+import Driver.DriverComponent;
+import Driver.UartStatus;
 
 namespace Driver
 {
@@ -33,7 +34,7 @@ namespace Driver
                 assert(data.size() <= UINT16_MAX && "Data size exceeds UART HAL limit");
 
                 const auto size = static_cast<std::uint16_t>(data.size());
-                const auto halStatus = HAL_UART_Transmit(
+                const auto halStatus = HAL_USART_Transmit(
                     &uartHandler,
                     const_cast<std::uint8_t *>(data.data()), // HAL API doesn't accept const
                     size,
@@ -63,7 +64,7 @@ namespace Driver
                 assert(data.size() <= UINT16_MAX && "Data size exceeds UART HAL limit");
 
                 const auto size = static_cast<std::uint16_t>(data.size());
-                const auto halStatus = HAL_UART_Receive(
+                const auto halStatus = HAL_USART_Receive(
                     &uartHandler,
                     data.data(),
                     size,

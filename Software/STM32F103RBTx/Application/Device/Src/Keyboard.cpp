@@ -1,34 +1,38 @@
-#include "Device/Inc/Keyboard.hpp"
-#include "Device/Inc/KeyActionState.hpp"
-#include "Driver/Interface/KeyState.hpp"
-#include "Driver/Interface/KeyIdentifier.hpp"
+module;
 
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
 
+module Device.Keyboard;
+
+import Device.KeyActionState;
+
+import Driver.KeyState;
+import Driver.KeyIdentifier;
+
 namespace Device
 {
-    bool Keyboard::onInit() noexcept
+    auto Keyboard::onInit() noexcept -> bool
     {
         //  return keyboardDriver.init();
 
         return true;
     }
 
-    bool Keyboard::onStart() noexcept
+    auto Keyboard::onStart() noexcept -> bool
     {
         //   return keyboardDriver.start();
         return true;
     }
 
-    bool Keyboard::onStop() noexcept
+    auto Keyboard::onStop() noexcept -> bool
     {
         //    return keyboardDriver.stop();
         return true;
     }
 
-    bool Keyboard::onTick() noexcept
+    auto Keyboard::onTick() noexcept -> bool
     {
         bool status = keyboardDriver.tick();
 
@@ -104,7 +108,7 @@ namespace Device
         return status;
     }
 
-    KeyActionState Keyboard::getKeyState(Driver::KeyIdentifier key) const noexcept
+    auto Keyboard::getKeyState(Driver::KeyIdentifier key) const noexcept -> KeyActionState
     {
         const auto index = static_cast<std::size_t>(key);
 

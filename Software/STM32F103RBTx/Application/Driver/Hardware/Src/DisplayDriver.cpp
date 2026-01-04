@@ -1,11 +1,4 @@
-/**
- * @file DisplayDriver.cpp
- * @brief Implementation of ST7735 LCD display driver
- */
-
-#include "Driver/Hardware/Inc/DisplayDriver.hpp"
-#include "Driver/Interface/DisplayPixelColor.hpp"
-#include "DisplayDriver.hpp"
+module;
 
 #include "st7735.h"
 #include "stm32f1xx_hal.h"
@@ -14,6 +7,10 @@
 #include "stm32f1xx_hal_gpio.h"
 
 #include <cstdint>
+
+module Driver.DisplayDriver;
+
+// import Driver.DisplayPixelColor;
 
 // Hardware globals - required by ST7735 library
 ST7735_IO_t hwDisplayIoDef{};
@@ -115,78 +112,78 @@ namespace Driver
         return true;
     }
 
-    DisplayDriver::Status DisplayDriver::displayOn() noexcept
+    bool DisplayDriver::displayOn() noexcept
     {
-        return Status::Ok;
+        return true;
     }
 
-    DisplayDriver::Status DisplayDriver::displayOff() noexcept
+    bool DisplayDriver::displayOff() noexcept
     {
-        return Status::Ok;
+        return true;
     }
 
-    DisplayDriver::Status DisplayDriver::setOrientation(Orientation /*orientation*/) noexcept
+    bool DisplayDriver::setOrientation(Orientation /*orientation*/) noexcept
     {
-        return Status::Ok;
+        return true;
     }
 
-    DisplayDriver::Status DisplayDriver::getOrientation(Orientation & /*orientation*/) const noexcept
+    bool DisplayDriver::getOrientation(Orientation & /*orientation*/) const noexcept
     {
-        return Status::Ok;
+        return true;
     }
 
-    DisplayDriver::Status DisplayDriver::setCursor(std::uint8_t /*xPosition*/, std::uint8_t /*yPosition*/) noexcept
+    bool DisplayDriver::setCursor(std::uint8_t /*xPosition*/, std::uint8_t /*yPosition*/) noexcept
     {
-        return Status::Ok;
+        return true;
     }
 
-    DisplayDriver::Status DisplayDriver::drawBitmap(std::uint8_t /*xPosition*/,
-                                                    std::uint8_t /*yPosition*/,
-                                                    std::uint8_t & /*bitmap*/) noexcept
+    bool DisplayDriver::drawBitmap(std::uint8_t /*xPosition*/,
+                                   std::uint8_t /*yPosition*/,
+                                   std::uint8_t & /*bitmap*/) noexcept
     {
-        return Status::Ok;
+        return true;
     }
 
-    DisplayDriver::Status DisplayDriver::fillRGBRectangle(std::uint8_t /*xPosition*/,
-                                                          std::uint8_t /*yPosition*/,
-                                                          std::uint8_t & /*data*/,
-                                                          std::uint8_t /*width*/,
-                                                          std::uint8_t /*height*/) noexcept
+    bool DisplayDriver::fillRGBRectangle(std::uint8_t /*xPosition*/,
+                                         std::uint8_t /*yPosition*/,
+                                         std::uint8_t & /*data*/,
+                                         std::uint8_t /*width*/,
+                                         std::uint8_t /*height*/) noexcept
     {
-        return Status::Ok;
+        return true;
     }
-
-    DisplayDriver::Status DisplayDriver::fillRectangle(std::uint8_t /*xPosition*/,
+#if 0
+    bool DisplayDriver::fillRectangle(std::uint8_t /*xPosition*/,
                                                        std::uint8_t /*yPosition*/,
                                                        std::uint8_t /*width*/,
                                                        std::uint8_t /*height*/,
                                                        DisplayPixelColor::PixelColor /*color*/) noexcept
     {
-        return Status::Ok;
+        return true;
     }
 
-    DisplayDriver::Status DisplayDriver::setPixel(std::uint8_t /*xPosition*/,
+    bool DisplayDriver::setPixel(std::uint8_t /*xPosition*/,
                                                   std::uint8_t /*yPosition*/,
                                                   DisplayPixelColor::PixelColor /*color*/) noexcept
     {
-        return Status::Ok;
+        return true;
     }
 
-    DisplayDriver::Status DisplayDriver::getPixel(std::uint8_t /*xPosition*/,
+    bool DisplayDriver::getPixel(std::uint8_t /*xPosition*/,
                                                   std::uint8_t /*yPosition*/,
                                                   DisplayPixelColor::PixelColor & /*color*/) const noexcept
     {
-        return Status::Ok;
+        return true;
+    }
+#endif
+    bool DisplayDriver::getXSize(std::uint8_t & /*size*/) const noexcept
+    {
+        return true;
     }
 
-    DisplayDriver::Status DisplayDriver::getXSize(std::uint8_t & /*size*/) const noexcept
+    bool DisplayDriver::getYSize(std::uint8_t & /*size*/) const noexcept
     {
-        return Status::Ok;
-    }
-
-    DisplayDriver::Status DisplayDriver::getYSize(std::uint8_t & /*size*/) const noexcept
-    {
-        return Status::Ok;
+        return true;
     }
 
 } // namespace Driver

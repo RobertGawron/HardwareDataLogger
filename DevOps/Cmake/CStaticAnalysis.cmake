@@ -31,7 +31,6 @@ add_custom_command(
         --enable-all
         --disable clang-diagnostic-pre-c++20-compat-pedantic
         --disable checker:clang-diagnostic-c++98-compat
-        --disable modernize-use-trailing-return-type
         --disable modernize-use-auto
         --disable altera-unroll-loops
         --disable cppcheck-missingIncludeSystem
