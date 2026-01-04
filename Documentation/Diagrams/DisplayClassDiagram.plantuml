@@ -1,7 +1,7 @@
 @startuml
 abstract U8G2
 class Display
-class St7735DisplayDriver
+class DisplayDriver
 class "stm32-st7735"
 class "CubeMX HAL"
 class MUIU8G2
@@ -10,11 +10,11 @@ class Hardware
 
 U8G2 <|-- Display
 
-Display *-- St7735DisplayDriver
+Display *-- DisplayDriver
 
-St7735DisplayDriver ..> "CubeMX HAL" : uses
+DisplayDriver ..> "CubeMX HAL" : uses
 
-"stm32-st7735" .up.> St7735DisplayDriver : uses
+"stm32-st7735" .up.> DisplayDriver : uses
 
 "CubeMX HAL" --> Hardware : communicates via SPI
 

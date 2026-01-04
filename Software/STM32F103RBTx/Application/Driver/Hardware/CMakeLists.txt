@@ -5,14 +5,13 @@ project(Driver LANGUAGES C CXX)
 add_library(Driver STATIC)
 
 target_sources(Driver PRIVATE
-    Src/AmbientLightSensorDriver.cpp
+    Src/LightSensorDriver.cpp
     Src/DisplayPixelColor.cpp
-    Src/DriverState.cpp
-    Src/KeyboardFourPushButtonsDriver.cpp
+    Src/KeyboardDriver.cpp
     Src/PulseCounterDriver.cpp
     Src/SdCardDriver.cpp
-    Src/St7735DisplayBrightnessDriver.cpp
-    Src/St7735DisplayDriver.cpp
+    Src/BrightnessDriver.cpp
+    Src/DisplayDriver.cpp
     Src/UartDriver.cpp
     # From outside of Cube MX
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../FATFS/Target/user_diskio_spi.c

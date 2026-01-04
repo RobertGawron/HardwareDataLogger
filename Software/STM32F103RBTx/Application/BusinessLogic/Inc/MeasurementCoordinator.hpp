@@ -7,143 +7,144 @@
 #ifndef MeasurementCoordinator_h
 #define MeasurementCoordinator_h
 
-#include "Device/Interface/IMeasurementSource.hpp"
-#include "Device/Interface/IMeasurementRecorder.hpp"
+#include "BusinessLogic/Inc/ApplicationComponent.hpp"
+#include "Device/Inc/RecorderVariant.hpp"
+#include "Device/Inc/SourceVariant.hpp"
+#include "Device/Inc/MeasurementSource.hpp"
+#include "Device/Inc/WiFiRecorder.hpp"
+#include "Device/Inc/SdCardRecorder.hpp"
 
 #include <cstdint>
 #include <array>
 #include <functional>
 #include <algorithm>
+#include <span>
+#include <variant>
 
 namespace BusinessLogic
 {
+
     template <std::size_t SourceCount, std::size_t RecorderCount>
-    class MeasurementCoordinator
+    class MeasurementCoordinator final : public ApplicationComponent
     {
     public:
         /**
          * @brief Constructs a MeasurementCoordinator with references to sources and recorders arrays.
          */
-        MeasurementCoordinator(
-            std::array<std::reference_wrapper<Device::IMeasurementSource>, SourceCount> &sourcesArray,
-            std::array<std::reference_wrapper<Device::IMeasurementRecorder>, RecorderCount> &recordersArray)
+        explicit MeasurementCoordinator(
+            std::array<Device::SourceVariant, SourceCount> &sourcesArray,
+            std::array<Device::RecorderVariant, RecorderCount> &recordersArray) noexcept
             : sources(sourcesArray), recorders(recordersArray)
         {
         }
 
-        /**
-         * @brief Deleted default constructor to prevent instantiation without a storage reference.
-         */
         MeasurementCoordinator() = delete;
+        ~MeasurementCoordinator() = default;
 
-        /**
-         * @brief Default destructor for MeasurementCoordinator.
-         */
-        virtual ~MeasurementCoordinator() = default;
-
-        /**
-         * @brief Deleted copy constructor to prevent copying of MeasurementCoordinator.
-         */
         MeasurementCoordinator(const MeasurementCoordinator &) = delete;
-
-        /**
-         * @brief Deleted assignment operator to prevent assignment of MeasurementCoordinator.
-         *
-         * @return Reference to the MeasurementCoordinator instance.
-         */
         MeasurementCoordinator &operator=(const MeasurementCoordinator &) = delete;
+        MeasurementCoordinator(MeasurementCoordinator &&) = delete;
+        MeasurementCoordinator &operator=(MeasurementCoordinator &&) = delete;
 
-        /**
-         * @brief Initializes the MeasurementCoordinator and its registered measurement sources.
-         *
-         * This function sets up the coordinator and prepares all registered sources for gathering measurements.
-         *
-         * @return True if initialization was successful; false otherwise.
-         */
-        virtual bool initialize()
+        [[nodiscard]] bool onInit() noexcept
         {
-            // Initialize all sources
-            bool status = std::all_of(sources.begin(), sources.end(),
-                                      [](auto &source)
-                                      { return source.get().initialize(); });
+            bool status = std::ranges::all_of(
+                sources,
+                [](auto &sourceVariant)
+                {
+                    return std::visit([](auto &source)
+                                      { return source.get().init(); }, sourceVariant);
+                });
 
             if (status)
             {
-                // Initialize all recorders
-                status = std::all_of(recorders.begin(), recorders.end(),
-                                     [](auto &recorder)
-                                     { return recorder.get().initialize(); });
+                status = std::ranges::all_of(
+                    recorders,
+                    [](auto &recorderVariant)
+                    {
+                        return std::visit([](auto &recorder)
+                                          { return recorder.get().init(); }, recorderVariant);
+                    });
             }
 
             return status;
         }
 
-        virtual bool start()
+        [[nodiscard]] bool onStart() noexcept
         {
-            bool status = true;
+            bool status = std::ranges::all_of(
+                sources,
+                [](auto &sourceVariant)
+                {
+                    return std::visit([](auto &source)
+                                      { return source.get().start(); }, sourceVariant);
+                });
 
-            for (auto &source : sources)
+            if (status)
             {
-                status &= source.get().start();
-            }
-
-            for (auto &recorder : recorders)
-            {
-                status &= recorder.get().start();
-            }
-            return status;
-        }
-
-        virtual bool stop()
-        {
-            bool status = true;
-
-            for (auto &source : sources)
-            {
-                status &= source.get().stop();
-            }
-
-            for (auto &recorder : recorders)
-            {
-                status &= recorder.get().stop();
+                status = std::ranges::all_of(
+                    recorders,
+                    [](auto &recorderVariant)
+                    {
+                        return std::visit([](auto &recorder)
+                                          { return recorder.get().start(); }, recorderVariant);
+                    });
             }
 
             return status;
         }
 
-        /**
-         * @brief Periodic function that should be called to perform regular updates.
-         *
-         * This function handles tasks that need to be performed periodically, such as updating measurements
-         * and notifying observers about the availability of new data.
-         *
-         * @return True if the tick operation was successful, false otherwise.
-         */
-        virtual bool tick()
+        [[nodiscard]] bool stop() noexcept
+        {
+            bool status = std::ranges::all_of(
+                sources,
+                [](auto &sourceVariant)
+                {
+                    return std::visit([](auto &source)
+                                      { return source.get().stop(); }, sourceVariant);
+                });
+
+            if (status)
+            {
+                status = std::ranges::all_of(
+                    recorders,
+                    [](auto &recorderVariant)
+                    {
+                        return std::visit([](auto &recorder)
+                                          { return recorder.get().stop(); }, recorderVariant);
+                    });
+            }
+            return status;
+        }
+
+        [[nodiscard]] bool onTick() noexcept
         {
             bool status = true;
 
-            // Check each source for available measurements
-            for (auto &source : sources)
+            for (auto &sourceVariant : sources)
             {
+                std::visit([&](auto &source)
+                           {
                 if (source.get().isMeasurementAvailable())
                 {
-                    Device::MeasurementType measurement = source.get().getMeasurement();
+                    const Device::MeasurementType measurement = source.get().getMeasurement();
 
-                    // Notify all recorders
-                    for (auto &recorder : recorders)
+                    for (auto &recorderVariant : recorders)
                     {
-                        status &= recorder.get().notify(measurement);
+                        std::visit([&measurement, &status](auto &recorder) {
+                            status = status && recorder.get().notify(measurement);
+            return status;
+                        }, recorderVariant);
                     }
-                }
+                } }, sourceVariant);
             }
 
             return status;
         }
 
     private:
-        std::array<std::reference_wrapper<Device::IMeasurementSource>, SourceCount> &sources;
-        std::array<std::reference_wrapper<Device::IMeasurementRecorder>, RecorderCount> &recorders;
+        std::array<Device::SourceVariant, SourceCount> &sources;
+        std::array<Device::RecorderVariant, RecorderCount> &recorders;
     };
 }
 

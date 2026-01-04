@@ -1,11 +1,9 @@
 #include "BusinessLogic/Inc/HmiFacade.hpp"
-// #include "BusinessLogic/Inc/HmiFacadeHandlers.hpp"
-#include "BusinessLogic/Inc/HmiMeasurementModel.hpp"
-#include "Device/Interface/IDisplay.hpp"
-#include "Device/Interface/IDisplayBrightnessRegulator.hpp"
-#include "Device/Interface/IKeyboard.hpp"
-#include "Device/Inc/KeyboardKeyActionState.hpp"
-#include "Driver/Interface/KeyboardKeyIdentifier.hpp"
+#include "Device/Inc/Display.hpp"
+#include "Device/Inc/DisplayBrightness.hpp"
+#include "Device/Inc/Keyboard.hpp"
+#include "Device/Inc/KeyActionState.hpp"
+#include "Driver/Interface/KeyIdentifier.hpp"
 
 #include "mui.h"
 #include "u8g2.h"
@@ -80,36 +78,27 @@ namespace BusinessLogic
 #pragma clang diagnostic pop
 
     HmiFacade::HmiFacade( // HmiMeasurementModel &_hmiMeasurementModel,
-        Device::IDisplay &_display,
-        Device::IDisplayBrightnessRegulator &_displayBrightnessRegulator,
-        Device::IKeyboard &_keyboard) : // hmiMeasurementModel(_hmiMeasurementModel),
-                                        display(_display),
-                                        displayBrightnessRegulator(_displayBrightnessRegulator),
-                                        keyboard(_keyboard)
+        Device::Display &_display,
+        Device::DisplayBrightness &_displayBrightnessRegulator,
+        Device::Keyboard &_keyboard) : // hmiMeasurementModel(_hmiMeasurementModel),
+                                       display(_display),
+                                       displayBrightnessRegulator(_displayBrightnessRegulator),
+                                       keyboard(_keyboard)
     {
     }
 
-    bool HmiFacade::initialize()
+    bool HmiFacade::onInit() noexcept
     {
-        /*
-        volatile int x = 0;
-        // display.initialize();
+        const bool status = keyboard.init() && displayBrightnessRegulator.init() && display.init();
 
-        // for tests
-        auto color = Driver::DisplayPixelColor::getColor(0x2f, 0xff, 0xff);
-        // display.drawHorizontalLine(1, 1, 20, color);
-        printf("hello drawHorizontalLine\n");
-        */
-        keyboard.init();
-        displayBrightnessRegulator.init();
-
-        display.initialize();
-
-        return true;
+        return status;
+        // return true;
     }
 
-    bool HmiFacade::start()
+    bool HmiFacade::onStart() noexcept
     {
+        const bool status = keyboard.start() && displayBrightnessRegulator.start() && display.init();
+
 #if 0
         display.begin();
 
@@ -129,16 +118,17 @@ namespace BusinessLogic
 
         return true;
 #endif
+        // return status;
         return true;
     }
 
-    bool HmiFacade::tick()
+    bool HmiFacade::onTick() noexcept
     {
-        keyboard.tick();
-        displayBrightnessRegulator.tick();
+        bool status = keyboard.tick();
+        // displayBrightnessRegulator.tick();
 
         /*
-        Maping between MUI and hw pins:
+        Mapping between MUI and hw pins:
 
         menu_select_pin = right
         menu_next_pin   = down
@@ -146,22 +136,22 @@ namespace BusinessLogic
         menu_home_pin   = left
         */
         /*
-                if ((keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up) == Device::KeyboardKeyActionState::PressEndLong))
+                if ((keyboard.getKeyState(Driver::KeyIdentifier::Up) == Device::KeyActionState::PRESS_END_SHORT) || (keyboard.getKeyState(Driver::KeyIdentifier::Up) == Device::KeyActionState::PRESS_END_LONG))
                 {
                     mui.prevField();
                 }
 
-                if ((keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Down) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Down) == Device::KeyboardKeyActionState::PressEndLong))
+                if ((keyboard.getKeyState(Driver::KeyIdentifier::Down) == Device::KeyActionState::PRESS_END_SHORT) || (keyboard.getKeyState(Driver::KeyIdentifier::Down) == Device::KeyActionState::PRESS_END_LONG))
                 {
                     mui.nextField();
                 }
 
-                if ((keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Left) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Left) == Device::KeyboardKeyActionState::PressEndLong))
+                if ((keyboard.getKeyState(Driver::KeyIdentifier::Left) == Device::KeyActionState::PRESS_END_SHORT) || (keyboard.getKeyState(Driver::KeyIdentifier::Left) == Device::KeyActionState::PRESS_END_LONG))
                 {
                     mui.leaveForm();
                 }
 
-                if ((keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Right) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Right) == Device::KeyboardKeyActionState::PressEndLong))
+                if ((keyboard.getKeyState(Driver::KeyIdentifier::Right) == Device::KeyActionState::PRESS_END_SHORT) || (keyboard.getKeyState(Driver::KeyIdentifier::Right) == Device::KeyActionState::PRESS_END_LONG))
                 {
                     mui.sendSelect();
                 }
@@ -174,7 +164,14 @@ namespace BusinessLogic
           */
 
         if (
-            (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up) == Device::KeyboardKeyActionState::PressEndLong) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Down) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Down) == Device::KeyboardKeyActionState::PressEndLong) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Left) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Left) == Device::KeyboardKeyActionState::PressEndLong) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Right) == Device::KeyboardKeyActionState::PressEndShort) || (keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Right) == Device::KeyboardKeyActionState::PressEndLong))
+            (keyboard.getKeyState(Driver::KeyIdentifier::Up) == Device::KeyActionState::PRESS_END_SHORT) ||
+            (keyboard.getKeyState(Driver::KeyIdentifier::Up) == Device::KeyActionState::PRESS_END_LONG) ||
+            (keyboard.getKeyState(Driver::KeyIdentifier::Down) == Device::KeyActionState::PRESS_END_SHORT) ||
+            (keyboard.getKeyState(Driver::KeyIdentifier::Down) == Device::KeyActionState::PRESS_END_LONG) ||
+            (keyboard.getKeyState(Driver::KeyIdentifier::Left) == Device::KeyActionState::PRESS_END_SHORT) ||
+            (keyboard.getKeyState(Driver::KeyIdentifier::Left) == Device::KeyActionState::PRESS_END_LONG) ||
+            (keyboard.getKeyState(Driver::KeyIdentifier::Right) == Device::KeyActionState::PRESS_END_SHORT) ||
+            (keyboard.getKeyState(Driver::KeyIdentifier::Right) == Device::KeyActionState::PRESS_END_LONG))
         {
 
         /*   display.clear();
@@ -202,12 +199,12 @@ namespace BusinessLogic
         }
 
         /*    printf("key state: %d %d %d %d\n",
-                   keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Up),
-                   keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Down),
-                   keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Left),
-                   keyboard.getKeyState(Driver::KeyboardKeyIdentifier::Right));
+                   keyboard.getKeyState(Driver::KeyIdentifier::Up),
+                   keyboard.getKeyState(Driver::KeyIdentifier::Down),
+                   keyboard.getKeyState(Driver::KeyIdentifier::Left),
+                   keyboard.getKeyState(Driver::KeyIdentifier::Right));
           */
-        return true;
+        return status;
     }
 
 }

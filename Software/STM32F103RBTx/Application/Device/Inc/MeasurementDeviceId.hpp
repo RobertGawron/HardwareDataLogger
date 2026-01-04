@@ -11,12 +11,12 @@ namespace Device
      */
     enum class MeasurementDeviceId : std::uint8_t
     {
-        PULSE_COUNTER_1 = 0u, ///< First pulse counter device.
-        PULSE_COUNTER_2 = 1u, ///< Second pulse counter device.
-        PULSE_COUNTER_3 = 2u, ///< Third pulse counter device.
-        PULSE_COUNTER_4 = 3u, ///< Fourth pulse counter device.
-        DEVICE_UART_1 = 4u,   ///< UART device.
-        LAST_NOT_USED = 5u    ///< Placeholder for upper bound or unused value.
+        PULSE_COUNTER_1 = 0U, ///< First pulse counter device.
+        PULSE_COUNTER_2 = 1U, ///< Second pulse counter device.
+        PULSE_COUNTER_3 = 2U, ///< Third pulse counter device.
+        PULSE_COUNTER_4 = 3U, ///< Fourth pulse counter device.
+        DEVICE_UART_1 = 4U,   ///< UART device.
+        LAST_NOT_USED = 5U    ///< Placeholder for upper bound or unused value.
     };
 }
 

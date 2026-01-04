@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.28)
 project(BusinessLogicUnitTests)
 
 # 1. Setup Environment
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -68,25 +68,21 @@ endfunction()
 
 create_test_exec(test_Keyboard 
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/Keyboard.cpp 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp
     test_Keyboard.cpp
 )
 
 create_test_exec(test_PulseCounterSource 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/PulseCounterMeasurementSource.cpp 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp
-    test_PulseCounterMeasurementSource.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/PulseCounterSource.cpp 
+    test_PulseCounterSource.cpp
 )
 
 create_test_exec(test_WiFiRecorder 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/WiFiMeasurementRecorder.cpp 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp 
-    test_WiFiMeasurementRecorder.cpp
+    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Device/Src/WiFiRecorder.cpp 
+    test_WiFiRecorder.cpp
 )
 
 create_test_exec(test_WiFiSerializer 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DriverState.cpp 
-    test_WiFiMeasurementSerializer.cpp
+    test_WiFiSerializer.cpp
 )
 
 create_test_exec(test_Crc32 

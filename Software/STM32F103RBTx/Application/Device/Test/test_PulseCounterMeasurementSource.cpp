@@ -1,6 +1,6 @@
-#include "Device/Inc/PulseCounterMeasurementSource.hpp"
+#include "Device/Inc/PulseCounterSource.hpp"
 #include "Device/Inc/MeasurementDeviceId.hpp"
-#include "Driver/Interface/IPulseCounterDriver.hpp"
+#include "PulseCounterDriver.hpp"
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -8,66 +8,56 @@
 
 // --- Mocks ---
 
-class MockPulseCounterDriver : public Driver::IPulseCounterDriver
+class MockPulseCounterDriver : public Driver::PulseCounterDriver
 {
 public:
-    MOCK_METHOD(Driver::IPulseCounterDriver::CounterSizeType, getMeasurement, (), (override));
-    MOCK_METHOD(void, clearMeasurement, (), (override));
-    MOCK_METHOD(bool, onInitialize, (), (override));
-    MOCK_METHOD(bool, onStart, (), (override));
-    MOCK_METHOD(bool, onStop, (), (override));
-    MOCK_METHOD(bool, onReset, (), (override));
+    MOCK_METHOD(Driver::PulseCounterMeasurementSize, getMeasurement, (), (override, noexcept));
+    MOCK_METHOD(void, clearMeasurement, (), (override, noexcept));
+    MOCK_METHOD(bool, onInit, (), (override, noexcept));
+    MOCK_METHOD(bool, onStart, (), (override, noexcept));
+    MOCK_METHOD(bool, onStop, (), (override, noexcept));
 };
 
 // --- Test Fixture ---
 
-class PulseCounterMeasurementSourceTest : public ::testing::Test
+class PulseCounterSourceTest : public ::testing::Test
 {
 private:
-    // All fields are now private
     MockPulseCounterDriver mockDriver;
-    std::unique_ptr<Device::PulseCounterMeasurementSource> measurementSource;
+    std::unique_ptr<Device::PulseCounterSource> measurementSource;
 
 protected:
     void SetUp() override
     {
-        const Device::MeasurementDeviceId id = Device::MeasurementDeviceId::PULSE_COUNTER_1;
-        measurementSource = std::make_unique<Device::PulseCounterMeasurementSource>(id, mockDriver);
+        const Device::MeasurementDeviceId deviceId = Device::MeasurementDeviceId::PULSE_COUNTER_1;
+        measurementSource = std::make_unique<Device::PulseCounterSource>(deviceId, mockDriver);
     }
 
 public:
-    // Public getters to access private members
     MockPulseCounterDriver &getMockDriver() { return mockDriver; }
-    Device::PulseCounterMeasurementSource &getMeasurementSource() { return *measurementSource; }
+    Device::PulseCounterSource &getMeasurementSource() { return *measurementSource; }
 };
 
 // --- Test Cases ---
 
-TEST_F(PulseCounterMeasurementSourceTest, InitializeShouldCallDriverInitialize)
+TEST_F(PulseCounterSourceTest, IsMeasurementAvailableReturnsTrue)
 {
-    // Arrange & Assert
-    EXPECT_CALL(getMockDriver(), onInitialize())
-        .Times(1)
-        .WillOnce(::testing::Return(true));
-
-    // Act
-    EXPECT_TRUE(getMeasurementSource().initialize());
+    EXPECT_TRUE(getMeasurementSource().isMeasurementAvailable());
 }
 
-TEST_F(PulseCounterMeasurementSourceTest, StartShouldCallDriverStart)
+TEST_F(PulseCounterSourceTest, GetMeasurementReturnsCorrectData)
 {
-    // Arrange: Initialization must happen first
-    EXPECT_CALL(getMockDriver(), onInitialize())
-        .Times(1)
-        .WillOnce(::testing::Return(true));
+    // Arrange
+    constexpr Driver::PulseCounterMeasurementSize expectedCount = 42U;
 
-    getMeasurementSource().initialize();
-
-    // Assert: Expect start call
-    EXPECT_CALL(getMockDriver(), onStart())
+    EXPECT_CALL(getMockDriver(), getMeasurement())
         .Times(1)
-        .WillOnce(::testing::Return(true));
+        .WillOnce(::testing::Return(expectedCount));
 
     // Act
-    EXPECT_TRUE(getMeasurementSource().start());
+    const auto measurement = getMeasurementSource().getMeasurement();
+
+    // Assert
+    EXPECT_EQ(measurement.source, Device::MeasurementDeviceId::PULSE_COUNTER_1);
+    EXPECT_EQ(std::get<Driver::PulseCounterMeasurementSize>(measurement.data), expectedCount);
 }

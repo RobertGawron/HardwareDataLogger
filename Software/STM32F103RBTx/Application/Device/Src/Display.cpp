@@ -10,19 +10,19 @@
 
 namespace Device
 {
-    // Not used. Required by the u8g2 library, but this action is handled by the St7735DisplayDriver class.
+    // Not used. Required by the u8g2 library, but this action is handled by the DisplayDriver class.
     std::uint8_t u8x8_byte_dummy_callback(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t arg_int, void *arg_ptr);
 
-    // Not used. Required by the u8g2 library, but this action is handled by the St7735DisplayDriver class.
+    // Not used. Required by the u8g2 library, but this action is handled by the DisplayDriver class.
     std::uint8_t u8x8_gpio_and_delay_dummy_callback(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t arg_int, void *arg_ptr);
 
-    static const std::uint8_t U8G2_STATUS_OK = 1u;
-    static const std::uint8_t U8G2_STATUS_NOT_OK = 0u;
+    static const std::uint8_t U8G2_STATUS_OK = 1U;
+    static const std::uint8_t U8G2_STATUS_NOT_OK = 0U;
 
     namespace
     {
         // Define a constant for maximum displays, change if needed
-        constexpr std::size_t MAX_DISPLAYS = 1u;
+        constexpr std::size_t MAX_DISPLAYS = 1U;
 
         // Struct for mapping display entries
         struct DisplayMapEntry
@@ -33,7 +33,7 @@ namespace Device
 
         // Use std::array for a fixed-size array
         std::array<DisplayMapEntry, MAX_DISPLAYS> displayMap{};
-        std::size_t displayCount = 1u;
+        std::size_t displayCount = 1U;
 
         constexpr std::uint8_t TILE_PIXEL_HEIGHT = 8;
         constexpr std::uint8_t DEFAULT_COLOR_RED = 0x2f;
@@ -44,7 +44,7 @@ namespace Device
         // It must have the same signature as u8x8_d_st7735.
         std::uint8_t trampolineU8x8DSt7735(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t argInt, void *argPtr)
         {
-            for (std::size_t i = 0u; i < displayCount; i++)
+            for (std::size_t i = 0U; i < displayCount; i++)
             {
                 if (displayMap[i].u8x8 == u8x8)
                 {
@@ -104,7 +104,7 @@ namespace Device
         return U8G2_STATUS_OK;
     }
 
-    std::uint8_t Display::u8x8DSt7735Impl(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t argInt, void *argPtr)
+    [[nodiscard]] std::uint8_t Display::u8x8DSt7735Impl(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t argInt, void *argPtr)
     {
         switch (msg)
         {
@@ -324,14 +324,14 @@ void u8g2_SetupBuffer_SDL_128x64(u8g2_t *u8g2, const u8g2_cb_t *u8g2_cb)
         */
     }
 
-    Display::Display(Driver::IDisplayDriver &_displayDriver) : displayDriver(_displayDriver)
+    Display::Display(Driver::DisplayDriver &_displayDriver) : displayDriver(_displayDriver)
     {
 
         displayMap[0].u8x8 = &u8g2.u8x8;
         displayMap[0].display = this;
     }
 
-    bool Display::initialize()
+    [[nodiscard]] bool Display::onInit() noexcept
     {
 
         // 2025

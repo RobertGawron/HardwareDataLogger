@@ -1,38 +1,35 @@
 /**
- * @file ApplicationBuilder.hpp
- * @brief Defines the ApplicationBuilder class responsible for orchestrating application component initialization.
+ * @file ApplicationFacade.hpp
+ * @brief Defines the ApplicationFacade class responsible for orchestrating application component initialization.
  */
 
-#ifndef ApplicationFacade_h
-#define ApplicationFacade_h
+#pragma once
 
-#include "BusinessLogic/Interface/IApplicationFacade.hpp"
-#include "BusinessLogic/Interface/IPlatformFactory.hpp"
+#include "BusinessLogic/Inc/ApplicationComponent.hpp"
+#include "PlatformFactory.hpp"
+#include "Device/Inc/RecorderVariant.hpp"
+#include "Device/Inc/SourceVariant.hpp"
 #include "BusinessLogic/Inc/HmiFacade.hpp"
 #include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
 
-#include "Device/Inc/PulseCounterMeasurementSource.hpp"
-#include "Device/Inc/UartMeasurementSource.hpp"
+#include "Device/Inc/PulseCounterSource.hpp"
+#include "Device/Inc/UartSource.hpp"
 #include "Device/Inc/MeasurementDeviceId.hpp"
-#include "Device/Inc/WiFiMeasurementRecorder.hpp"
-#include "Device/Inc/SdCardMeasurementRecorder.hpp"
+#include "Device/Inc/WiFiRecorder.hpp"
+#include "Device/Inc/SdCardRecorder.hpp"
 #include "Device/Inc/Display.hpp"
 #include "Device/Inc/Keyboard.hpp"
-#include "Device/Inc/DisplayBrightnessRegulator.hpp"
+#include "Device/Inc/DisplayBrightness.hpp"
 
-#include "Driver/Interface/PulseCounterId.hpp"
-
-#include <functional> // for std::reference_wrapper
-
-namespace Device
-{
-    // Forward declarations
-    class IMeasurementSource;
-    class IMeasurementRecorder;
-}
+#include <array>
+#include <cstddef>
+#include <functional>
+#include <utility>
+#include <variant>
 
 namespace BusinessLogic
 {
+
     /**
      * @brief Orchestrates construction and initialization of core application components.
      *
@@ -41,97 +38,50 @@ namespace BusinessLogic
      * - Data stores (data consumers)
      * - Human-Machine Interface (HMI)
      * - Core coordination mechanisms
-     *
      */
-    class ApplicationFacade : public IApplicationFacade
+    class ApplicationFacade final : public ApplicationComponent
     {
     public:
-        explicit ApplicationFacade(IPlatformFactory &factory);
+        explicit ApplicationFacade(Driver::PlatformFactory &factory) noexcept;
 
-        /**
-         * @brief Deleted default constructor.
-         */
+        ~ApplicationFacade() = default;
+
+        // Non-copyable and non-movable
         ApplicationFacade() = delete;
-
-        /**
-         * @brief Default destructor.
-         */
-        ~ApplicationFacade() override = default;
-
-        /**
-         * @brief Deleted copy constructor.
-         */
         ApplicationFacade(const ApplicationFacade &) = delete;
-
-        /**
-         * @brief Deleted copy assignment operator.
-         */
+        ApplicationFacade(ApplicationFacade &&) = delete;
         ApplicationFacade &operator=(const ApplicationFacade &) = delete;
+        ApplicationFacade &operator=(ApplicationFacade &&) = delete;
 
-        /**
-         * @brief Initializes all application components.
-         *
-         * Calls initialize() on all managed factories and components.
-         *
-         * @return true if all components initialized successfully, false otherwise
-         */
-        bool initialize() override;
-
-        /**
-         * @brief Starts all application components.
-         * @return true if all components started successfully, false otherwise
-         */
-        bool start() override;
-
-        /**
-         * @brief Stops all application components.
-         * @return true if all components stopped successfully, false otherwise
-         */
-        bool stop() override;
-
-        /**
-         * @brief Performs periodic update of application components.
-         * @return true if tick was processed successfully, false otherwise
-         */
-        bool tick() override;
+        // Lifecycle hooks (called by base class)
+        [[nodiscard]] bool onInit() noexcept;
+        [[nodiscard]] bool onStart() noexcept;
+        [[nodiscard]] bool onStop() noexcept;
+        [[nodiscard]] bool onTick() noexcept;
 
     private:
-        Device::PulseCounterMeasurementSource pulseCounter1;
-        Device::PulseCounterMeasurementSource pulseCounter2;
-        Device::PulseCounterMeasurementSource pulseCounter3;
-        Device::PulseCounterMeasurementSource pulseCounter4;
+        static constexpr std::size_t SOURCES_COUNT{
+            std::to_underlying(Device::MeasurementDeviceId::LAST_NOT_USED)};
+        static constexpr std::size_t RECORDERS_COUNT{2};
 
-        Device::UartMeasurementSource uartReceiver;
+        Device::PulseCounterSource pulseCounter1;
+        Device::PulseCounterSource pulseCounter2;
+        Device::PulseCounterSource pulseCounter3;
+        Device::PulseCounterSource pulseCounter4;
+        Device::UartSource uartReceiver;
 
-        static constexpr std::size_t SourcesAmount{static_cast<std::size_t>(Device::MeasurementDeviceId::LAST_NOT_USED)};
+        std::array<Device::SourceVariant, SOURCES_COUNT> sources;
 
-        std::array<std::reference_wrapper<Device::IMeasurementSource>, SourcesAmount> sources;
+        Device::WiFiRecorder wifiRecorder;
+        Device::SdCardRecorder sdCardRecorder;
+        std::array<Device::RecorderVariant, RECORDERS_COUNT> recorders;
 
-        // recorders
+        MeasurementCoordinator<SOURCES_COUNT, RECORDERS_COUNT> measurementCoordinator;
 
-        /** @brief WiFi measurement recorder instance */
-        Device::WiFiMeasurementRecorder wifiRecorder;
-
-        /** @brief SD card measurement recorder instance */
-        Device::SdCardMeasurementRecorder sdCardRecorder;
-
-        static constexpr std::size_t RecordersAmount = 2u;
-        std::array<std::reference_wrapper<Device::IMeasurementRecorder>, RecordersAmount> recorders;
-
-        MeasurementCoordinator<SourcesAmount, RecordersAmount> measurementCoordinator;
-        // hmi
-
-        /** @brief Display controller implementation */
         Device::Display display;
-
-        /** @brief Display brightness regulator */
-        Device::DisplayBrightnessRegulator brightnessRegulator;
-
-        /** @brief User input handler */
+        Device::DisplayBrightness brightnessRegulator;
         Device::Keyboard keyboard;
-
         BusinessLogic::HmiFacade hmi;
     };
-}
 
-#endif
+} // namespace BusinessLogic

@@ -6,6 +6,7 @@ along with integration for pytest HTML reports to include visual validation.
 """
 
 import logging
+from enum import Enum, auto
 from typing import Generator, List
 import pytest
 import pytest_html
@@ -14,6 +15,98 @@ from stm32f103_simulator import STM32F103  # pylint: disable=import-error
 
 
 logger = logging.getLogger(__name__)
+
+
+class SdCardOperation(Enum):
+
+    """Enum for SD card operation types."""
+
+    INITIALIZE = auto()
+    START = auto()
+    STOP = auto()
+    RESET = auto()
+    OPEN = auto()
+    WRITE = auto()
+    CLOSE = auto()
+
+
+def cobs_encode(data: List[int]) -> List[int]:
+    """
+    Encode data using Consistent Overhead Byte Stuffing (COBS).
+
+    :param data: Raw data to encode
+    :return: COBS-encoded data with trailing 0x00 delimiter
+    """
+    if not data:
+        return [0x01, 0x00]  # Empty frame
+
+    encoded = []
+    code_index = 0
+    code = 0x01
+
+    encoded.append(0x00)  # Placeholder for first code byte
+
+    for byte in data:
+        if byte == 0x00:
+            # Write code byte and start new block
+            encoded[code_index] = code
+            code_index = len(encoded)
+            encoded.append(0x00)  # Placeholder for next code byte
+            code = 0x01
+        else:
+            # Copy non-zero byte
+            encoded.append(byte)
+            code += 1
+
+            # If we've written 254 bytes, start new block
+            if code == 0xFF:
+                encoded[code_index] = code
+                code_index = len(encoded)
+                encoded.append(0x00)  # Placeholder for next code byte
+                code = 0x01
+
+    # Write final code byte
+    encoded[code_index] = code
+
+    # Add trailing delimiter
+    encoded.append(0x00)
+
+    return encoded
+
+
+def cobs_decode(cobs_data: List[int]) -> List[int]:
+    """
+    Decode COBS-encoded data.
+
+    :param cobs_data: COBS-encoded data with trailing 0x00 delimiter
+    :return: Decoded raw data
+    """
+    if not cobs_data or cobs_data[-1] != 0x00:
+        raise ValueError("Invalid COBS frame: missing trailing 0x00 delimiter")
+
+    # Remove trailing delimiter
+    data = cobs_data[:-1]
+    decoded = []
+    pos = 0
+
+    while pos < len(data):
+        code = data[pos]
+
+        if code == 0x00:
+            break  # Invalid
+
+        # Insert zero if this isn't the first code byte
+        if pos > 0:
+            decoded.append(0x00)
+
+        # Copy (code - 1) bytes
+        for i in range(1, code):
+            if pos + i < len(data):
+                decoded.append(data[pos + i])
+
+        pos += code
+
+    return decoded
 
 
 class UartCapture:
@@ -102,7 +195,7 @@ class UartCapture:
             self.assert_data(expected_data, index=i)
 
         logger.info(
-            "✓ All %d transmissions verified",
+            "All %d transmissions verified",
             len(expected_list)
         )
 
@@ -111,7 +204,7 @@ class UartCapture:
         for i, transmission in enumerate(self.transmissions):
             if transmission['data'] == expected_data:
                 logger.info(
-                    "✓ Found matching transmission at index %d", i
+                    "Found matching transmission at index %d", i
                 )
                 return
 
@@ -162,25 +255,25 @@ class SdCardCapture:
     def initialize_callback(self) -> bool:
         """Capture SD card initialize."""
         logger.info("SD Card: Initialize called")
-        self.operations.append({'operation': 'initialize'})
+        self.operations.append({'operation': SdCardOperation.INITIALIZE})
         return True
 
     def start_callback(self) -> bool:
         """Capture SD card start."""
         logger.info("SD Card: Start called")
-        self.operations.append({'operation': 'start'})
+        self.operations.append({'operation': SdCardOperation.START})
         return True
 
     def stop_callback(self) -> bool:
         """Capture SD card stop."""
         logger.info("SD Card: Stop called")
-        self.operations.append({'operation': 'stop'})
+        self.operations.append({'operation': SdCardOperation.STOP})
         return True
 
     def reset_callback(self) -> bool:
         """Capture SD card reset."""
         logger.info("SD Card: Reset called")
-        self.operations.append({'operation': 'reset'})
+        self.operations.append({'operation': SdCardOperation.RESET})
         return True
 
     def open_callback(self, filename: str, mode: int) -> int:
@@ -189,7 +282,7 @@ class SdCardCapture:
             "SD Card: Open file '%s', mode=%d", filename, mode
         )
         self.operations.append({
-            'operation': 'open',
+            'operation': SdCardOperation.OPEN,
             'filename': filename,
             'mode': mode
         })
@@ -206,7 +299,7 @@ class SdCardCapture:
             "SD Card: Write %d bytes: '%s'", size, data_str
         )
         self.operations.append({
-            'operation': 'write',
+            'operation': SdCardOperation.WRITE,
             'data': data.copy(),
             'size': size
         })
@@ -215,7 +308,7 @@ class SdCardCapture:
     def close_callback(self) -> int:
         """Capture SD card close file."""
         logger.info("SD Card: Close file")
-        self.operations.append({'operation': 'close'})
+        self.operations.append({'operation': SdCardOperation.CLOSE})
         self.file_opened = False
         return 0  # SdCardStatus::OK
 
@@ -255,19 +348,19 @@ class SdCardCapture:
         assert actual == expected, \
             f"Expected {expected} operations, got {actual}"
 
-    def assert_operation_type(self, expected_type: str, index: int = 0):
+    def assert_operation_type(self, expected_type: SdCardOperation, index: int = 0):
         """Assert the operation type at given index."""
         operation = self.get_operation(index)
         actual = operation['operation']
 
         assert actual == expected_type, \
             f"Operation {index} type mismatch! " \
-            f"Expected: {expected_type}, Actual: {actual}"
+            f"Expected: {expected_type.name}, Actual: {actual.name}"
 
     def assert_write_data(self, expected_data: str, index: int = 0):
         """Assert that specific data was written (as string)."""
         operation = self.get_operation(index)
-        assert operation['operation'] == 'write', \
+        assert operation['operation'] == SdCardOperation.WRITE, \
             f"Operation {index} is not a write operation"
 
         actual_str = ''.join(chr(b) for b in operation['data'])
@@ -281,7 +374,7 @@ class SdCardCapture:
         """Get all write operations as strings."""
         writes = []
         for op in self.operations:
-            if op['operation'] == 'write':
+            if op['operation'] == SdCardOperation.WRITE:
                 data_str = ''.join(chr(b) for b in op['data'])
                 writes.append(data_str)
         return writes
@@ -296,7 +389,7 @@ class SdCardCapture:
             "Captured %d SD card operations:", len(self.operations)
         )
         for i, op in enumerate(self.operations):
-            if op['operation'] == 'write':
+            if op['operation'] == SdCardOperation.WRITE:
                 data_str = ''.join(
                     chr(b) if 32 <= b < 127 else f'\\x{b:02x}'
                     for b in op['data']
@@ -305,18 +398,18 @@ class SdCardCapture:
                     "  [%d] WRITE: '%s' (%d bytes)",
                     i, data_str, op['size']
                 )
-            elif op['operation'] == 'open':
+            elif op['operation'] == SdCardOperation.OPEN:
                 logger.info(
                     "  [%d] OPEN: '%s', mode=%d",
                     i, op['filename'], op['mode']
                 )
             else:
                 logger.info(
-                    "  [%d] %s", i, op['operation'].upper()
+                    "  [%d] %s", i, op['operation'].name
                 )
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def stm32_dut():
     """
     Fixture providing STM32 simulator with attached capture helpers.
@@ -332,7 +425,14 @@ def stm32_dut():
     dut.uart.register_all(dut)
     dut.sd.register_all(dut)
 
-    return dut
+    yield dut
+
+    # Teardown: Reset pulse counters to zeros after each test
+    try:
+        dut.update_pulse_counters([0, 0, 0, 0])
+    except (AttributeError, RuntimeError):
+        # Ignore if method doesn't exist or simulator is in invalid state
+        pass
 
 
 @pytest.hookimpl(hookwrapper=True)

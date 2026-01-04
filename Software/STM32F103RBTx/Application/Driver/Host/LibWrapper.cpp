@@ -1,172 +1,135 @@
 #include "LibWrapper.hpp"
 #include "PlatformFactory.hpp"
-#include "MyApplication.hpp"
 
 #include "BusinessLogic/Inc/ApplicationFacade.hpp"
 
-#include "Driver/Interface/KeyboardKeyState.hpp"
-#include "Driver/Interface/KeyboardKeyIdentifier.hpp"
-#include "Driver/Interface/DisplayPixelColor.hpp"
+#include "Driver/Interface/KeyState.hpp"
+#include "Driver/Interface/KeyIdentifier.hpp"
 
-#include "PulseCounterDriverStub.hpp"
-#include "KeyboardDriverStub.hpp"
-#include "St7735DisplayDriverStub.hpp"
+#include "PulseCounterDriver.hpp"
+#include "KeyboardDriver.hpp"
+#include "DisplayDriver.hpp"
 
 #include "EventHandlers.hpp"
+
+#include "Driver/Host/Inc/LightSensorDriver.hpp"
+#include "Driver/Host/Inc/BrightnessDriver.hpp"
+#include "Driver/Host/Inc/DisplayDriver.hpp"
+#include "Driver/Host/Inc/KeyboardDriver.hpp"
+#include "Driver/Host/Inc/UartDriver.hpp"
+#include "Driver/Host/Inc/SdCardDriver.hpp"
+#include "Driver/Host/Inc/PulseCounterDriver.hpp"
 
 #include <array>
 #include <cstdint>
 #include <cstdio>
-#include <string>
+#include <optional>
+#include <functional>
+#include <array>
+#include <cstdint>
+#include <cstdio>
+#include <optional>
+#include <functional>
+static Driver::LightSensorDriver LightSensor;
+static Driver::BrightnessDriver displayBrightness;
+static Driver::DisplayDriver display;
+static Driver::KeyboardDriver keyboard;
 
-static BusinessLogic::PlatformFactory *platform = nullptr;
-static BusinessLogic::ApplicationFacade *facade = nullptr;
+// UART drivers
+static Driver::UartDriver wifiUart{Driver::UartId::TRANSMIT_VIA_WIFI};
+static Driver::UartDriver usbUart{Driver::UartId::TRANSMIT_VIA_USB};
+static Driver::UartDriver measurementUart{Driver::UartId::MEASUREMENT_RECEIVER};
 
-BusinessLogic::PlatformFactory *getPlatform()
-{
-    if (!platform)
-    {
-        std::fprintf(stderr, "ERROR: Platform not initialized!\n");
-    }
-    return platform;
-}
+// Storage driver
+static Driver::SdCardDriver sdCard;
 
-BusinessLogic::ApplicationFacade *getFacade()
-{
-    if (!facade)
-    {
-        std::fprintf(stderr, "ERROR: Facade not initialized!\n");
-    }
-    return facade;
-}
+// Pulse counters
+static Driver::PulseCounterDriver counter1{Driver::PulseCounterId::bncA};
+static Driver::PulseCounterDriver counter2{Driver::PulseCounterId::bncB};
+static Driver::PulseCounterDriver counter3{Driver::PulseCounterId::bncC};
+static Driver::PulseCounterDriver counter4{Driver::PulseCounterId::bncD};
+
+// Platform drivers bundle
+static Driver::PlatformFactory platform = {
+    .LightSensor = LightSensor,
+    .displayBrightness = displayBrightness,
+    .display = display,
+    .keyboard = keyboard,
+    .wifiUart = wifiUart,
+    .usbUart = usbUart,
+    .measurementUart = measurementUart,
+    .sdCard = sdCard,
+    .counter1 = counter1,
+    .counter2 = counter2,
+    .counter3 = counter3,
+    .counter4 = counter4};
+
+BusinessLogic::ApplicationFacade facade{platform};
 
 void LibWrapper_Init()
 {
-    if (!platform)
+    if (!facade.init())
     {
-        platform = new BusinessLogic::PlatformFactory();
+        static_cast<void>(std::fprintf(stderr, "ERROR: facade.init() failed!\n"));
     }
 
-    if (!facade)
+    if (!facade.start())
     {
-        facade = new BusinessLogic::ApplicationFacade(*platform);
-    }
-
-    if (facade)
-    {
-        facade->initialize();
-        facade->start();
-    }
-    else
-    {
-        std::fprintf(stderr, "ERROR: Failed to initialize facade!\n");
+        static_cast<void>(std::fprintf(stderr, "ERROR: facade.start() failed!\n"));
     }
 }
 
 void LibWrapper_Tick()
 {
-    if (facade)
+    if (!facade.tick())
     {
-        facade->tick();
-    }
-    else
-    {
-        std::fprintf(stderr, "ERROR: Facade not initialized in LibWrapper_Tick!\n");
+        static_cast<void>(std::fprintf(stderr, "ERROR: facade.tick() failed!\n"));
     }
 }
 
-void LibWrapper_KeyPressed(KeyboardKeyIdentifier keyId)
+void LibWrapper_KeyPressed(KeyIdentifier keyId)
 {
-    if (platform)
-    {
-        auto &keyboardStub = static_cast<Driver::KeyboardDriverStub &>(
-            platform->getKeyboardDriver());
-
-        keyboardStub.setKeyState(
-            static_cast<Driver::KeyboardKeyIdentifier>(keyId),
-            Driver::KeyboardKeyState::Pressed);
-    }
-    else
-    {
-        std::fprintf(stderr, "ERROR: Platform not initialized in LibWrapper_KeyPressed!\n");
-    }
+    /*
+    auto &keyboard = static_cast<Driver::KeyboardDriver &>(platformDrivers.keyboard);
+    keyboard.setKeyState(
+        static_cast<Driver::KeyIdentifier>(keyId),
+        Driver::KeyState::Pressed);
+*/
 }
 
-void LibWrapper_KeyReleased(KeyboardKeyIdentifier keyId)
+void LibWrapper_KeyReleased(KeyIdentifier keyId)
 {
-    if (platform)
-    {
-        auto &keyboardStub = static_cast<Driver::KeyboardDriverStub &>(
-            platform->getKeyboardDriver());
-
-        keyboardStub.setKeyState(
-            static_cast<Driver::KeyboardKeyIdentifier>(keyId),
-            Driver::KeyboardKeyState::NotPressed);
-    }
-    else
-    {
-        std::fprintf(stderr, "ERROR: Platform not initialized in LibWrapper_KeyReleased!\n");
-    }
+    auto &keyboard = static_cast<Driver::KeyboardDriver &>(platform.keyboard);
+    keyboard.setKeyState(
+        static_cast<Driver::KeyIdentifier>(keyId),
+        Driver::KeyState::NotPressed);
 }
 
 std::uint8_t LibWrapper_GetDisplayWidth()
 {
     std::uint8_t width = 0U;
-
-    if (platform)
-    {
-        const auto &displayStub = static_cast<Driver::St7735DisplayDriverStub &>(
-            platform->getDisplayDriver());
-
-        displayStub.getXSize(width);
-    }
-    else
-    {
-        std::fprintf(stderr, "ERROR: Platform not initialized in LibWrapper_GetDisplayWidth!\n");
-    }
-
+    const auto &display = static_cast<Driver::DisplayDriver &>(platform.display);
+    static_cast<void>(display.getXSize(width));
     return width;
 }
 
 std::uint8_t LibWrapper_GetDisplayHeight()
 {
     std::uint8_t height = 0U;
-
-    if (platform)
-    {
-        const auto &displayStub = static_cast<Driver::St7735DisplayDriverStub &>(
-            platform->getDisplayDriver());
-
-        displayStub.getYSize(height);
-    }
-    else
-    {
-        std::fprintf(stderr, "ERROR: Platform not initialized in LibWrapper_GetDisplayHeight!\n");
-    }
-
+    const auto &display = static_cast<Driver::DisplayDriver &>(platform.display);
+    static_cast<void>(display.getYSize(height));
     return height;
 }
 
-std::uint16_t LibWrapper_GetPixelValue(std::uint8_t x, std::uint8_t y)
+std::uint16_t LibWrapper_GetPixelValue(std::uint8_t xPosition, std::uint8_t yPosition)
 {
     std::uint16_t value = 0U;
-
-    if (platform)
-    {
-        const auto &displayStub = static_cast<Driver::St7735DisplayDriverStub &>(
-            platform->getDisplayDriver());
-
-        value = displayStub.getPixelValue(x, y);
-    }
-    else
-    {
-        std::fprintf(stderr, "ERROR: Platform not initialized in LibWrapper_GetPixelValue!\n");
-    }
-
+    const auto &display = static_cast<Driver::DisplayDriver &>(platform.display);
+    value = display.getPixelValue(xPosition, yPosition);
     return value;
 }
 
-void LibWrapper_UpdatePulseCounters(const std::array<std::uint16_t, PULSE_COUNTER_COUNT> &pulseCounters)
+void LibWrapper_UpdatePulseCounters(const std::array<std::uint32_t, PULSE_COUNTER_COUNT> &pulseCounters)
 {
     for (std::uint8_t i = 0U; i < PULSE_COUNTER_COUNT; ++i)
     {
