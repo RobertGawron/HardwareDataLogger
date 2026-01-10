@@ -1,12 +1,19 @@
-#include "SdCardDriver.hpp"
+// SdCardDriver.cpp
+module;
+
 #include "EventHandlers.hpp"
 
 #include <iostream>
 #include <cstring>
+#include <string_view>
+#include <span>
+#include <cstdint>
+#include <algorithm>
+
+module Driver.SdCardDriver;
 
 namespace Driver
 {
-
     bool SdCardDriver::onInit() noexcept
     {
         return sdCardInitialize();
@@ -47,5 +54,4 @@ namespace Driver
         const auto size = static_cast<std::uint16_t>(data.size());
         return sdCardWrite(data.data(), size);
     }
-
 }

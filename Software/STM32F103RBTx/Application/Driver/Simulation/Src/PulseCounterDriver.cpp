@@ -1,9 +1,10 @@
-#include "PulseCounterDriver.hpp"
-#include "Driver/Interface/PulseCounterId.hpp"
-#include "PulseCounterDriver.hpp"
+// PulseCounterDriver.cpp
+module;
 
 #include <cstdint>
 #include <array>
+
+module Driver.PulseCounterDriver;
 
 namespace
 {
@@ -14,7 +15,6 @@ namespace
 
 extern "C"
 {
-
     // C-compatible function to increment a specific counter
     void incrementPulseCounter(std::uint8_t counterId)
     {
@@ -46,5 +46,4 @@ namespace Driver
     void PulseCounterDriver::clearMeasurement() noexcept
     {
     }
-
 }

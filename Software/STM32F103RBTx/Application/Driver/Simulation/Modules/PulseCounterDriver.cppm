@@ -1,18 +1,21 @@
-#ifndef PulseCounterDriver_h
-#define PulseCounterDriver_h
+module;
 
-#include "Driver/Interface/PulseCounterDriverConcept.hpp"
-#include "Driver/Interface/DriverComponent.hpp"
-#include "Driver/Interface/PulseCounterId.hpp"
-#include "Driver/Interface/PulseCounterMeasurementSize.hpp"
+#include <cstdint>
 
-extern "C"
+export module Driver.PulseCounterDriver;
+
+import Driver.DriverComponent;
+import Driver.PulseCounterDriverConcept;
+import Driver.PulseCounterId;
+import Driver.PulseCounterMeasurementSize;
+
+export extern "C"
 {
     void incrementPulseCounter(std::uint8_t counterId);
     void setPulseCounter(std::uint8_t counterId, std::uint32_t value);
 }
 
-namespace Driver
+export namespace Driver
 {
     class PulseCounterDriver final : public DriverComponent
     {
@@ -46,5 +49,3 @@ namespace Driver
     static_assert(Driver::Concepts::PulseCounterDriverConcept<PulseCounterDriver>,
                   "PulseCounterDriver must satisfy the concept requirements");
 }
-
-#endif

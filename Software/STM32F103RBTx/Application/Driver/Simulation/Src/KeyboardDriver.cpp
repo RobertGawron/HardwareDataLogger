@@ -1,12 +1,12 @@
-#include "KeyboardDriver.hpp"
-#include "Driver/Interface/KeyIdentifier.hpp"
-#include "Driver/Interface/KeyState.hpp"
+// KeyboardDriver.cpp
+module;
 
 #include <cstdint>
 
+module Driver.KeyboardDriver;
+
 namespace Driver
 {
-
     bool KeyboardDriver::tick() noexcept
     {
         return true;
@@ -22,5 +22,4 @@ namespace Driver
     {
         keyState.at(static_cast<std::uint8_t>(key)) = state;
     }
-
 }

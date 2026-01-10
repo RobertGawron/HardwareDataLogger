@@ -1,12 +1,12 @@
-#include "UartDriver.hpp"
-#include "UartStatus.hpp"
-#include "Driver/Interface/UartStatus.hpp"
-#include "Driver/Interface/UartId.hpp"
+// UartDriver.cpp
+module;
 
 #include "EventHandlers.hpp"
 
 #include <cstdint>
-#include <string>
+#include <span>
+
+module Driver.UartDriver;
 
 namespace Driver
 {

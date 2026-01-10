@@ -1,17 +1,14 @@
-// Driver/Interface/IPlatformDrivers.hpp
-#pragma once
+export module Driver.PlatformFactory;
 
-#include "LightSensorDriver.hpp"
-#include "BrightnessDriver.hpp"
-#include "DisplayDriver.hpp"
-#include "KeyboardDriver.hpp"
-#include "UartDriver.hpp"
-#include "SdCardDriver.hpp"
-#include "PulseCounterDriver.hpp"
+import Driver.LightSensorDriver;
+import Driver.BrightnessDriver;
+import Driver.DisplayDriver;
+import Driver.KeyboardDriver;
+import Driver.UartDriver;
+import Driver.SdCardDriver;
+import Driver.PulseCounterDriver;
 
-// #include "Driver/Interface/Board.hpp"
-
-namespace Driver
+export namespace Driver
 {
     /**
      * @brief Bundle of all platform driver interface references

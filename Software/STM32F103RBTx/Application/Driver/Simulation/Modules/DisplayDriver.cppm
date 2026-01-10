@@ -1,19 +1,15 @@
-/**
- * @file DisplayDriver.hpp
- * @brief Defines the DisplayDriver class for interacting with ST7735 LCD displays.
- */
+module;
 
-#ifndef ST7735DisplayDISPLAY_H_
-#define ST7735DisplayDISPLAY_H_
-
-#include "Driver/Interface/DisplayDriverConcept.hpp"
-#include "Driver/Interface/DriverComponent.hpp"
-#include "Driver/Interface/DisplayPixelColor.hpp"
-
-#include <array>
 #include <cstdint>
+#include <array>
 
-namespace Driver
+export module Driver.DisplayDriver;
+
+import Driver.DriverComponent;
+import Driver.Concepts.DisplayDriver;
+// import Driver.DisplayPixelColor;
+
+export namespace Driver
 {
     /**
      * @class DisplayDriver
@@ -58,42 +54,44 @@ namespace Driver
         DisplayDriver &operator=(DisplayDriver &&) = delete;
 
         // Display control (must be noexcept for concept)
-        [[nodiscard]] Status displayOn() noexcept;
-        [[nodiscard]] Status displayOff() noexcept;
+        [[nodiscard]] bool displayOn() noexcept;
+        [[nodiscard]] bool displayOff() noexcept;
 
         // Configuration
-        [[nodiscard]] Status setOrientation(Orientation orientation) noexcept;
-        [[nodiscard]] Status getOrientation(Orientation &orientation) const noexcept;
-        [[nodiscard]] Status setCursor(std::uint8_t xPosition, std::uint8_t yPosition) noexcept;
+        [[nodiscard]] bool setOrientation(Orientation orientation) noexcept;
+        [[nodiscard]] bool getOrientation(Orientation &orientation) const noexcept;
+        [[nodiscard]] bool setCursor(std::uint8_t xPosition, std::uint8_t yPosition) noexcept;
 
         // Drawing operations (must be noexcept for concept)
-        [[nodiscard]] Status drawBitmap(std::uint8_t xPosition, std::uint8_t yPosition,
-                                        std::uint8_t &bitmap) noexcept;
-        [[nodiscard]] Status fillRGBRectangle(std::uint8_t xPosition,
-                                              std::uint8_t yPosition,
-                                              std::uint8_t &data,
-                                              std::uint8_t width,
-                                              std::uint8_t height) noexcept;
-        [[nodiscard]] Status fillRectangle(std::uint8_t xPosition,
-                                           std::uint8_t yPosition,
-                                           std::uint8_t width,
-                                           std::uint8_t height,
-                                           DisplayPixelColor::PixelColor color) noexcept;
-        [[nodiscard]] Status setPixel(std::uint8_t xPosition,
-                                      std::uint8_t yPosition,
-                                      DisplayPixelColor::PixelColor color) noexcept;
-        [[nodiscard]] Status getPixel(std::uint8_t xPosition,
-                                      std::uint8_t yPosition,
-                                      DisplayPixelColor::PixelColor &color) const noexcept;
+        [[nodiscard]] bool drawBitmap(std::uint8_t xPosition, std::uint8_t yPosition,
+                                      std::uint8_t &bitmap) noexcept;
+        [[nodiscard]] bool fillRGBRectangle(std::uint8_t xPosition,
+                                            std::uint8_t yPosition,
+                                            std::uint8_t &data,
+                                            std::uint8_t width,
+                                            std::uint8_t height) noexcept;
+        /* [[nodiscard]] bool fillRectangle(std::uint8_t xPosition,
+                                            std::uint8_t yPosition,
+                                            std::uint8_t width,
+                                            std::uint8_t height,
+                                            DisplayPixelColor::PixelColor color) noexcept;
+         [[nodiscard]] bool setPixel(std::uint8_t xPosition,
+                                       std::uint8_t yPosition,
+                                       DisplayPixelColor::PixelColor color) noexcept;
+         [[nodiscard]] bool getPixel(std::uint8_t xPosition,
+                                       std::uint8_t yPosition,
+                                       DisplayPixelColor::PixelColor &color) const noexcept;
+ */
 
         // Size queries (must be noexcept for concept)
-        [[nodiscard]] Status getXSize(std::uint8_t &size) const noexcept;
-        [[nodiscard]] Status getYSize(std::uint8_t &size) const noexcept;
+        [[nodiscard]] bool getXSize(std::uint8_t &size) const noexcept;
+        [[nodiscard]] bool getYSize(std::uint8_t &size) const noexcept;
 
+        /*
         // Helper for Python wrapper
         [[nodiscard]] DisplayPixelColor::PixelColor getPixelValue(std::uint8_t xPosition,
                                                                   std::uint8_t yPosition) const noexcept;
-
+*/
         // Lifecycle methods (required by DriverComponent)
         [[nodiscard]] bool onInit() noexcept;
         [[nodiscard]] bool onStart() noexcept { return true; }
@@ -105,11 +103,9 @@ namespace Driver
         static constexpr std::uint8_t MAX_HEIGHT = 160; // ST7735_HEIGHT
 
         Orientation orientation{Orientation::Vertical};
-        std::array<std::array<DisplayPixelColor::PixelColor, MAX_HEIGHT>, MAX_WIDTH> content{};
+        //   std::array<std::array<DisplayPixelColor::PixelColor, MAX_HEIGHT>, MAX_WIDTH> content{};
     };
 
     static_assert(Driver::Concepts::DisplayDriverConcept<DisplayDriver>,
                   "DisplayDriver must satisfy concept requirements");
 }
-
-#endif // ST7735DisplayDISPLAY_H_

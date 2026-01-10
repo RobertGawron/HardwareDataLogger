@@ -1,21 +1,19 @@
-/**
- * @file UartDriver.hpp
- * @brief Defines the UartDriver class for UART communication using STM32 HAL.
- */
-
-#ifndef UartDriver_h
-#define UartDriver_h
-
-#include "Driver/Interface/UartDriverConcept.hpp"
-#include "Driver/Interface/DriverComponent.hpp"
-#include "Driver/Interface/UartStatus.hpp"
-#include "Driver/Interface/UartId.hpp"
+module;
 
 #include <span>
 #include <cstdint>
 
-namespace Driver
+export module Driver.UartDriver;
+
+import Driver.DriverComponent;
+import Driver.UartDriverConcept;
+
+import Driver.UartStatus;
+import Driver.UartId;
+
+export namespace Driver
 {
+
     class UartDriver final : public DriverComponent
     {
     public:
@@ -50,5 +48,3 @@ namespace Driver
     static_assert(Driver::Concepts::UartDriverConcept<UartDriver>,
                   "UartDriver must satisfy the concept requirements");
 }
-
-#endif // UartDriver_h

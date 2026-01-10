@@ -1,11 +1,14 @@
-#include "EventHandlers.hpp"
-
-#include "SdCardDriver.hpp"
-#include "Driver/Interface/UartId.hpp"
-#include "Driver/Interface/SdCardStatus.hpp"
+// EventHandlers.cpp
+module;
 
 #include <iostream>
 #include <cstdint>
+
+module Driver.EventHandlers;
+
+import Driver.Interface.UartId;
+import Driver.Interface.SdCardStatus;
+import Driver.Interface.FileOpenMode;
 
 SerialTxCallback serialTxCallback = nullptr;
 SdCardOpenCallback sdCardOpenCallback = nullptr;
@@ -106,6 +109,7 @@ Driver::SdCardStatus sdCardWrite(const std::uint8_t *data, std::uint16_t size)
 
     return result;
 }
+
 Driver::SdCardStatus sdCardClose()
 {
     Driver::SdCardStatus result = Driver::SdCardStatus::INVALID_PARAMETER;

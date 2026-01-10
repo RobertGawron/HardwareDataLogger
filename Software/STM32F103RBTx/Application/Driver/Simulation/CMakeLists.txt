@@ -12,7 +12,6 @@ add_library(Driver STATIC)
 # Link dependencies
 target_link_libraries(Driver 
     PUBLIC DriverInterface
-    PRIVATE u8g2
 )
 
 target_sources(Driver
@@ -26,6 +25,7 @@ target_sources(Driver
         Modules/PulseCounterDriver.cppm
         Modules/SdCardDriver.cppm
         Modules/UartDriver.cppm
+        Modules/UartId.cppm
 )
 
 target_sources(Driver PRIVATE
@@ -36,16 +36,10 @@ target_sources(Driver PRIVATE
     Src/PulseCounterDriver.cpp
     Src/SdCardDriver.cpp
     Src/UartDriver.cpp
-    ../../../FATFS/Target/user_diskio_spi.c
+    EventHandlers.cpp
+    LibWrapper.cpp
 )
 
 target_include_directories(Driver PRIVATE
-    ../../../Drivers/STM32F1xx_HAL_Driver/Inc
-    ../../../Drivers/CMSIS/Driver/ST/STM32F1xx/Include
-    ../../../Drivers/CMSIS/Include
-    ../../../Core/Inc
-    ../../Library/stm32-st7735
-    ../../../Middlewares/Third_Party/FatFs/src
-    ../../../FATFS/Target
-    ../../../Drivers/CMSIS/Device/ST/STM32F1xx/Include
+    .
 )

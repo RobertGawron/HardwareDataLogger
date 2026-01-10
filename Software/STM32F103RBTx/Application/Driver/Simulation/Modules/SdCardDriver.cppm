@@ -1,23 +1,18 @@
-/**
- * @file SdCardDriver.hpp
- * @brief Defines the SdCardDriver class for interacting with SD cards.
- */
-
-#ifndef SdCardDriver_H_
-#define SdCardDriver_H_
-
-#include "Driver/Interface/SdCardDriverConcept.hpp"
-#include "Driver/Interface/DriverComponent.hpp"
-#include "Driver/Interface/SdCardStatus.hpp"
-#include "Driver/Interface/FileOpenMode.hpp"
+module;
 
 #include <string_view>
 #include <span>
 #include <cstdint>
 
-namespace Driver
-{
+export module Driver.SdCardDriver;
 
+import Driver.DriverComponent;
+import Driver.SdCardDriverConcept;
+import Driver.SdCardStatus;
+import Driver.FileOpenMode;
+
+export namespace Driver
+{
     class SdCardDriver : public DriverComponent
     {
     public:
@@ -181,5 +176,3 @@ namespace Driver
     static_assert(Driver::Concepts::SdCardDriverConcept<SdCardDriver>,
                   "SdCardDriverConcept must satisfy the concept requirements");
 }
-
-#endif // SdCardDriver_H_
