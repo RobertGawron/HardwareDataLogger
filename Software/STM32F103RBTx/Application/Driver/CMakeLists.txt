@@ -26,9 +26,11 @@ target_sources(DriverInterface
         Interface/SdCardDriverConcept.cppm
         Interface/SdCardStatus.cppm
         Interface/UartDriverConcept.cppm
-        Interface/UartId.cppm
         Interface/UartStatus.cppm
 )
 
-
-add_subdirectory(Hardware)
+if(BUILD_IS_FOR_HARDWARE)
+    add_subdirectory(Hardware)
+else()
+    add_subdirectory(Simulation)
+endif()

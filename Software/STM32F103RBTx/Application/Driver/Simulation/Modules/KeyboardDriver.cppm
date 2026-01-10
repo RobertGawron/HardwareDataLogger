@@ -1,13 +1,16 @@
-#ifndef KeyboardDriver_H_
-#define KeyboardDriver_H_
-
-#include "Driver/Interface/DriverComponent.hpp"
-#include "Driver/Interface/KeyState.hpp"
-#include "Driver/Interface/KeyIdentifier.hpp"
+module;
 
 #include <array>
+#include <cstdint>
 
-namespace Driver
+export module Driver.KeyboardDriver;
+
+import Driver.DriverComponent;
+import Driver.KeyboardDriverConcept;
+import Driver.KeyState;
+import Driver.KeyIdentifier;
+
+export namespace Driver
 {
     class KeyboardDriver : public DriverComponent
     {
@@ -65,7 +68,4 @@ namespace Driver
 
         std::array<KeyState, AmountOfKeys> keyState{KeyState::NotPressed};
     };
-
 }
-
-#endif // DRIVER_KeyboardDriver_H_

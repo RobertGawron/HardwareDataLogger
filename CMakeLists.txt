@@ -8,21 +8,28 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Define ARM target for static analysis (STM32F103 = Cortex-M3)
 set(ARM_STATIC_ANALYSIS_TARGET "thumbv7m-none-eabi" CACHE STRING "ARM target for static analysis")
 
+option(BUILD_IS_FOR_HARDWARE "Build for STM32 hardware" OFF)
+
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -pg")
     
 
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-    add_subdirectory(Software/STM32F103RBTx/Application/Library/u8g2/)
-    add_subdirectory(Software/STM32F103RBTx/Application/Driver/)
-    #add_subdirectory(Software/STM32F103RBTx/Application/Driver/Host)
-    add_subdirectory(Software/STM32F103RBTx/Application/Device/)
-    add_subdirectory(Software/STM32F103RBTx/Application/BusinessLogic/)
 
     
 endif()
 
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+    add_subdirectory(Software/STM32F103RBTx/Application/Library/u8g2/)
+    add_subdirectory(Software/STM32F103RBTx/Application/Driver/)
+    add_subdirectory(Software/STM32F103RBTx/Application/Device/)
+    add_subdirectory(Software/STM32F103RBTx/Application/BusinessLogic/)
+
+
+    include(Software/STM32F103RBTx/Application/CodeCoverage.cmake)
+    include(DevOps/Cmake/CStaticAnalysis.cmake)
+    include(DevOps/Cmake/PythonStaticAnalysis.cmake)
+    include(DevOps/Cmake/DocsCoverage.cmake)
 
 add_custom_target(firmware
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/firmware-build
@@ -32,6 +39,7 @@ add_custom_target(firmware
         -G Ninja
         -DCMAKE_TOOLCHAIN_FILE=${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/cmake/gcc-arm-none-eabi.cmake
         -DCMAKE_BUILD_TYPE=Release
+        -DBUILD_IS_FOR_HARDWARE=ON
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
     COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR}/firmware-build --parallel
     COMMENT "Building STM32 firmware with Ninja..."

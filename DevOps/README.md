@@ -41,11 +41,3 @@ cd /workspace/build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja test_
 ```
 cd /workspace/build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja docs
 ```
-
-## Run UML Generation
-
-```
-cd /workspace/build
-cmake ..
-make uml
-```

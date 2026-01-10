@@ -56,6 +56,7 @@ add_subdirectory(Application/Driver/)
 add_subdirectory(Application/Device/)
 add_subdirectory(Application/BusinessLogic/)
 
+ #set(BUILD_IS_FOR_HARDWARE ON)
 
 target_sources(${PROJECT_NAME} PRIVATE
     Application/Library/stm32-st7735/st7735.c

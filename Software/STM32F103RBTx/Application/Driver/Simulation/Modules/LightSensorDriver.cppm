@@ -1,20 +1,21 @@
-#ifndef LightSensorDriver_H_
-#define LightSensorDriver_H_
+module;
 
-#include "Driver/Interface/LightSensorDriverConcept.hpp"
-#include "Driver/Interface/DriverComponent.hpp"
+#include <array>
+#include <cstddef>
+#include <cstdint>
 
-#include <stdint.h>
+export module Driver.LightSensorDriver;
 
-namespace Driver
+import Driver.DriverComponent;
+import Driver.LightSensorDriverConcept;
+
+export namespace Driver
 {
-
     class LightSensorDriver : public DriverComponent
     {
     public:
         /**
          * @brief Default constructor.
-         *
          */
         LightSensorDriver() = default;
 
@@ -67,7 +68,4 @@ namespace Driver
 
     static_assert(Driver::Concepts::LightSensorDriverConcept<LightSensorDriver>,
                   "LightSensorDriver must satisfy the concept requirements");
-
 }
-
-#endif // LightSensorDriver_H_

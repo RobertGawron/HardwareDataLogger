@@ -1,35 +1,29 @@
-#include "LibWrapper.hpp"
-#include "PlatformFactory.hpp"
-
-#include "BusinessLogic/Inc/ApplicationFacade.hpp"
-
-#include "Driver/Interface/KeyState.hpp"
-#include "Driver/Interface/KeyIdentifier.hpp"
-
-#include "PulseCounterDriver.hpp"
-#include "KeyboardDriver.hpp"
-#include "DisplayDriver.hpp"
-
-#include "EventHandlers.hpp"
-
-#include "Driver/Host/Inc/LightSensorDriver.hpp"
-#include "Driver/Host/Inc/BrightnessDriver.hpp"
-#include "Driver/Host/Inc/DisplayDriver.hpp"
-#include "Driver/Host/Inc/KeyboardDriver.hpp"
-#include "Driver/Host/Inc/UartDriver.hpp"
-#include "Driver/Host/Inc/SdCardDriver.hpp"
-#include "Driver/Host/Inc/PulseCounterDriver.hpp"
+// LibWrapper.cpp
+module;
 
 #include <array>
 #include <cstdint>
 #include <cstdio>
 #include <optional>
 #include <functional>
-#include <array>
-#include <cstdint>
-#include <cstdio>
-#include <optional>
-#include <functional>
+
+// module LibWrapper;
+
+import PlatformFactory;
+import BusinessLogic.ApplicationFacade;
+import Driver.Interface.KeyState;
+import Driver.Interface.KeyIdentifier;
+import Driver.PulseCounterDriver;
+import Driver.KeyboardDriver;
+import Driver.DisplayDriver;
+import EventHandlers;
+import Driver.LightSensorDriver;
+import Driver.BrightnessDriver;
+import Driver.UartDriver;
+import Driver.SdCardDriver;
+import Driver.Interface.UartId;
+import Driver.Interface.PulseCounterId;
+
 static Driver::LightSensorDriver LightSensor;
 static Driver::BrightnessDriver displayBrightness;
 static Driver::DisplayDriver display;

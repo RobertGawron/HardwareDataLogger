@@ -1,20 +1,19 @@
-#ifndef BrightnessDriver_H_
-#define BrightnessDriver_H_
+module;
 
-#include "Driver/Interface/BrightnessDriverConcept.hpp"
-#include "Driver/Interface/DriverComponent.hpp"
+#include <cstdint>
 
-#include <stdint.h>
+export module Driver.BrightnessDriver;
 
-namespace Driver
+import Driver.DriverComponent;
+import Driver.BrightnessDriverConcept;
+
+export namespace Driver
 {
-
     class BrightnessDriver : public DriverComponent
     {
     public:
         /**
          * @brief Default constructor for BrightnessDriver.
-         *
          */
         BrightnessDriver() = default;
 
@@ -22,8 +21,6 @@ namespace Driver
          * @brief Default destructor for BrightnessDriver.
          */
         ~BrightnessDriver() = default;
-
-        // Delete copy constructor and assignment operator
 
         // Non-copyable and non-movable
         BrightnessDriver(const BrightnessDriver &) = delete;
@@ -49,5 +46,3 @@ namespace Driver
     static_assert(Driver::Concepts::BrightnessDriverConcept<BrightnessDriver>,
                   "BrightnessDriver must satisfy concept requirements");
 }
-
-#endif // BrightnessDriver_H_
