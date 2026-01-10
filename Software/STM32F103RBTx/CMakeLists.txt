@@ -57,13 +57,10 @@ add_subdirectory(Application/Device/)
 add_subdirectory(Application/BusinessLogic/)
 
 
-# Target sources
 target_sources(${PROJECT_NAME} PRIVATE
-    # Regular C/C++ sources
     Application/Library/stm32-st7735/st7735.c
     Application/Library/stm32-st7735/st7735_reg.c
-#Core/Src/MyApplication.cpp
-    )
+)
 
 # C++20 Module (separate target_sources call)
 target_sources(${PROJECT_NAME} PRIVATE
@@ -71,12 +68,9 @@ target_sources(${PROJECT_NAME} PRIVATE
     Core/Src/MyApplication.cpp
 )
 
-# Include directories
 target_include_directories(${PROJECT_NAME} PRIVATE
     Core/Inc
-    #Application/BusinessLogic/Inc/
     Drivers/STM32F1xx_HAL_Driver/Inc
-    #Drivers/STM32F1xx_HAL_Driver/Inc/Legacy 
     Drivers/CMSIS/Device/ST/STM32F1xx/Include
     Drivers/CMSIS/Include
 )
@@ -91,11 +85,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     target_link_options(${PROJECT_NAME} PRIVATE
         -Wl,--gc-sections           # Remove unused sections
         -flto                       # Link-time optimization
-        -s                          # Strip symbols
+       # -s                          # Strip symbols
     )
-
- #   target_link_libraries(Driver PUBLIC DriverInterface)
-
 
 target_link_libraries(${PROJECT_NAME}
     stm32cubemx
@@ -104,9 +95,6 @@ target_link_libraries(${PROJECT_NAME}
     Driver
     Device
     BusinessLogic
-    
-    
-    
 )
 
 # Apply debug options
