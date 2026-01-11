@@ -56,6 +56,7 @@ add_subdirectory(Application/Driver/)
 add_subdirectory(Application/Device/)
 add_subdirectory(Application/BusinessLogic/)
 
+option(BUILD_IS_FOR_HARDWARE "Build for STM32 hardware" ON)
  #set(BUILD_IS_FOR_HARDWARE ON)
 
 target_sources(${PROJECT_NAME} PRIVATE
@@ -102,3 +103,16 @@ target_link_libraries(${PROJECT_NAME}
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_compile_options(${PROJECT_NAME} PRIVATE ${DEBUG_OPTIONS})
 endif()
+
+
+
+# Custom target for flashing
+add_custom_target(flash
+    COMMAND openocd -f interface/stlink.cfg -f target/stm32f1x.cfg 
+            -c "program ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.elf verify reset exit"
+    DEPENDS ${PROJECT_NAME}
+    COMMENT "Flashing ${PROJECT_NAME}.elf to STM32"
+)
+
+# Set flash as the default run target
+set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DEBUGGER_COMMAND "")

@@ -93,8 +93,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ninja-build \
     gdb \
     gdb-multiarch \
-    valgrind \
-    strace \
+    openocd \
+    usbutils \
+    stlink-tools \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set Environment Variables

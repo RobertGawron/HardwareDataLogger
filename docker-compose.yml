@@ -7,7 +7,7 @@ services:
     privileged: true
     command: >
       bash -c "
-      pip install -e /workspace/Software/STM32F103RBTx/Application/Driver/Host/Python/ &&
+      pip install -e /workspace/Software/STM32F103RBTx/Application/Driver/Simulation/Python/ &&
       exec bash
       "
     environment:
@@ -27,6 +27,9 @@ services:
       - ./DevOps/Scripts:/workspace/DevOps/Scripts
       - ./DevOps/Cmake:/workspace/DevOps/Cmake
       - ./CMakeLists.txt:/workspace/CMakeLists.txt
+      - ./HardwareDataLogger.code-workspace:/workspace/HardwareDataLogger.code-workspace
+      - ./.vscode:/workspace/.vscode
+      - /dev/bus/usb:/dev/bus/usb
     working_dir: /workspace
     stdin_open: true
     tty: true
