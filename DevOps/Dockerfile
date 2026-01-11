@@ -143,6 +143,8 @@ RUN curl -L "https://github.com/esp-rs/espup/releases/latest/download/espup-x86_
     espup install --targets "${ESP_BOARD}" --log-level info --export-file /root/export-esp.sh && \
     rustup default esp
 
+RUN cargo install espflash
+
 # ---------------------------------------------------------------------
 # FINAL STAGE: Runtime environment with build helpers
 # ---------------------------------------------------------------------
@@ -154,6 +156,8 @@ COPY Software/STM32F103RBTx/Application/Driver/Simulation/Python/ /tmp/PythonDri
 
 RUN /workspace/venv/bin/pip install -e /tmp/PythonDriver/ && \
     rm -rf /tmp/PythonDriver/
+
+RUN apt-get install tree 
 
 WORKDIR /workspace/build
 

@@ -14,6 +14,7 @@ jobs:
     name: Build Firmware (STM32)
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,7 +22,7 @@ jobs:
           repository: ${{ github.event.workflow_run.head_repository.full_name }}
           ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 0
-          
+
       - name: Set up Docker Compose
         uses: docker/setup-compose-action@v1
 
@@ -43,9 +44,13 @@ jobs:
         run: |
           docker compose -f docker-compose.yml up -d
 
-      - name: Build Firmware
+      - name: Build Firmware (STM32 Release)
         run: |
-          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace/build && cmake -G Ninja .. && ninja firmware && mv firmware-build/HardwareDataLogger_STM32F103RBTx.* /workspace/build/BuildArtifacts/"
+          docker compose -f docker-compose.yml exec -T dev bash -lc "\
+            cd /workspace/Software/STM32F103RBTx && \
+            cmake --preset stm32-release --fresh && \
+            cmake --build --preset build-stm32-release \
+          "
 
       - name: Upload Firmware Build Results
         if: always()
@@ -53,8 +58,8 @@ jobs:
         with:
           name: firmware-stm32-results
           path: |
-            DevOps/BuildArtifacts/HardwareDataLogger_STM32F103RBTx.elf
-            DevOps/BuildArtifacts/HardwareDataLogger_STM32F103RBTx.map
+            Software/STM32F103RBTx/build/stm32-release/HardwareDataLogger_STM32F103RBTx.elf
+            Software/STM32F103RBTx/build/stm32-release/HardwareDataLogger_STM32F103RBTx.map
 
       - name: Clean up Docker containers
         if: always()
