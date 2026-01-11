@@ -1,27 +1,24 @@
 {
   "version": 6,
-  "cmakeMinimumRequired": {
-    "major": 3,
-    "minor": 28,
-    "patch": 0
-  },
+  "cmakeMinimumRequired": { "major": 3, "minor": 28, "patch": 0 },
   "configurePresets": [
     {
-      "name": "host-debug",
-      "displayName": "Host Debug (Ninja)",
+      "name": "docs",
+      "displayName": "Docs coverage (Ninja, tmp build)",
       "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build/host-debug",
+      "binaryDir": "/tmp/cmake-docs",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_BUILD_TYPE": "Debug",
+        "Python3_EXECUTABLE": "/opt/venv/bin/python",
+        "DOXYGEN_OUTPUT_DIR": "/workspace/DevOps/BuildArtifacts/DocsCoverage"
       }
     }
   ],
   "buildPresets": [
     {
       "name": "docs",
-      "displayName": "Build docs target",
-      "configurePreset": "host-debug",
-      "targets": [ "docs" ]
+      "configurePreset": "docs",
+      "targets": ["docs"]
     }
   ]
 }

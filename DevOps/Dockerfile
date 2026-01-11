@@ -98,6 +98,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     stlink-tools \
     tree \
     vim \
+    lcov \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set Environment Variables
