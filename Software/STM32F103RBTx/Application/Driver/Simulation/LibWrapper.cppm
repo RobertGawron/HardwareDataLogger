@@ -1,5 +1,7 @@
-// LibWrapper.cpp
 module;
+
+#include "LibWrapper.hpp"
+#include "EventHandlers.hpp"
 
 #include <array>
 #include <cstdint>
@@ -7,22 +9,24 @@ module;
 #include <optional>
 #include <functional>
 
-// module LibWrapper;
+// export module Driver.LibWrapper;
 
-import PlatformFactory;
-import BusinessLogic.ApplicationFacade;
-import Driver.Interface.KeyState;
-import Driver.Interface.KeyIdentifier;
+// import BusinessLogic.ApplicationFacade;
+
+import Driver.PlatformFactory;
+
 import Driver.PulseCounterDriver;
 import Driver.KeyboardDriver;
 import Driver.DisplayDriver;
-import EventHandlers;
 import Driver.LightSensorDriver;
 import Driver.BrightnessDriver;
 import Driver.UartDriver;
 import Driver.SdCardDriver;
-import Driver.Interface.UartId;
-import Driver.Interface.PulseCounterId;
+
+import Driver.KeyState;
+import Driver.KeyIdentifier;
+import Driver.UartId;
+import Driver.PulseCounterId;
 
 static Driver::LightSensorDriver LightSensor;
 static Driver::BrightnessDriver displayBrightness;

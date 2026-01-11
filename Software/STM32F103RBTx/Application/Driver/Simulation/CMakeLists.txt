@@ -29,6 +29,9 @@ target_sources(Driver
 )
 
 target_sources(Driver PRIVATE
+    EventHandlers.cppm
+    LibWrapper.cppm
+
     Src/BrightnessDriver.cpp
     Src/DisplayDriver.cpp
     Src/KeyboardDriver.cpp
@@ -36,8 +39,6 @@ target_sources(Driver PRIVATE
     Src/PulseCounterDriver.cpp
     Src/SdCardDriver.cpp
     Src/UartDriver.cpp
-    EventHandlers.cpp
-    LibWrapper.cpp
 )
 
 target_include_directories(Driver PRIVATE

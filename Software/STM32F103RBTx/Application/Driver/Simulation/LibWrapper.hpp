@@ -8,19 +8,26 @@
 #include <cstdint>
 #include <array>
 
-#include "MyApplication.hpp"
+// #include "MyApplication.hpp"
 #include "EventHandlers.hpp"
-#include "KeyIdentifier.hpp"
+// #include "KeyIdentifier.hpp"
 
 constexpr std::size_t PULSE_COUNTER_COUNT = 4U;
 
 enum KeyIdentifier : std::uint8_t
 {
+    /*
     Up = static_cast<std::uint8_t>(Driver::KeyIdentifier::Up),
     Down = static_cast<std::uint8_t>(Driver::KeyIdentifier::Down),
     Left = static_cast<std::uint8_t>(Driver::KeyIdentifier::Left),
     Right = static_cast<std::uint8_t>(Driver::KeyIdentifier::Right),
     LastNotUsed = static_cast<std::uint8_t>(Driver::KeyIdentifier::LastNotUsed)
+*/
+    Up,
+    Down,
+    Left,
+    Right,
+    LastNotUsed
 };
 
 #ifdef __cplusplus

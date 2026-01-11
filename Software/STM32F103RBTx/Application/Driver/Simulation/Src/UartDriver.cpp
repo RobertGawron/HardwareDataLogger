@@ -5,6 +5,7 @@ module;
 
 #include <cstdint>
 #include <span>
+#include <utility>
 
 module Driver.UartDriver;
 
@@ -18,7 +19,7 @@ namespace Driver
     UartStatus UartDriver::transmit(std::span<const std::uint8_t> data, std::uint32_t timeout) noexcept
     {
         const auto size = static_cast<std::uint16_t>(data.size());
-        serialTx(uartId, data.data(), size, timeout);
+        serialTx(std::to_underlying(uartId), data.data(), size, timeout);
 
         return UartStatus::Ok;
     }

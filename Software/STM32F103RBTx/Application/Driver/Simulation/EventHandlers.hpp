@@ -20,6 +20,10 @@ enum class HAL_StatusTypeDef : std::uint8_t
     HAL_TIMEOUT = 0x03U
 };
 
+typedef uint8_t SdCardStatus_t;
+typedef uint8_t FileOpenMode_t;
+typedef uint8_t UartId_t;
+
 // UART callback
 using SerialTxCallback = int (*)(std::uint8_t, const std::uint8_t *, std::uint16_t, std::uint32_t);
 
@@ -34,6 +38,7 @@ using SdCardStartCallback = bool (*)();
 using SdCardStopCallback = bool (*)();
 using SdCardResetCallback = bool (*)();
 
+/*
 extern SerialTxCallback serialTxCallback;
 extern SdCardOpenCallback sdCardOpenCallback;
 extern SdCardWriteCallback sdCardWriteCallback;
@@ -42,6 +47,7 @@ extern SdCardInitializeCallback sdCardInitializeCallback;
 extern SdCardStartCallback sdCardStartCallback;
 extern SdCardStopCallback sdCardStopCallback;
 extern SdCardResetCallback sdCardResetCallback;
+*/
 
 void registerSerialTxCallback(SerialTxCallback callback);
 void registerSdCardOpenCallback(SdCardOpenCallback callback);
@@ -52,10 +58,10 @@ void registerSdCardStartCallback(SdCardStartCallback callback);
 void registerSdCardStopCallback(SdCardStopCallback callback);
 void registerSdCardResetCallback(SdCardResetCallback callback);
 
-HAL_StatusTypeDef serialTx(Driver::UartId uartId, const std::uint8_t *data, std::uint16_t size, std::uint32_t timeout);
-Driver::SdCardStatus sdCardOpen(const char *filename, Driver::FileOpenMode mode);
-Driver::SdCardStatus sdCardWrite(const std::uint8_t *data, std::uint16_t size);
-Driver::SdCardStatus sdCardClose();
+HAL_StatusTypeDef serialTx(UartId_t uartId, const std::uint8_t *data, std::uint16_t size, std::uint32_t timeout);
+SdCardStatus_t sdCardOpen(const char *filename, FileOpenMode_t mode);
+SdCardStatus_t sdCardWrite(const std::uint8_t *data, std::uint16_t size);
+SdCardStatus_t sdCardClose();
 bool sdCardInitialize();
 bool sdCardStart();
 bool sdCardStop();
