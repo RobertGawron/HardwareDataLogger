@@ -149,6 +149,12 @@ RUN curl -L "https://github.com/esp-rs/espup/releases/latest/download/espup-x86_
 FROM esp-toolchain AS final
 
 RUN mkdir -p /workspace/build
+
+COPY Software/STM32F103RBTx/Application/Driver/Simulation/Python/ /tmp/PythonDriver/
+
+RUN /workspace/venv/bin/pip install -e /tmp/PythonDriver/ && \
+    rm -rf /tmp/PythonDriver/
+
 WORKDIR /workspace/build
 
-CMD ["bash", "-c", "show-compilers && exec bash"]
+CMD ["bash", "-c", "exec bash"]
