@@ -46,11 +46,11 @@ jobs:
 
       - name: Build Firmware (STM32 Release)
         run: |
-          docker compose -f docker-compose.yml exec -T dev bash -lc "\
-            cd /workspace/Software/STM32F103RBTx && \
-            cmake --preset stm32-release --fresh && \
-            cmake --build --preset build-stm32-release \
-          "
+          docker compose -f docker-compose.yml exec -T dev bash -lc '
+            cd /workspace/Software/STM32F103RBTx
+            cmake --preset stm32-release --fresh
+            cmake --build --preset build-stm32-release
+          '
 
       - name: Upload Firmware Build Results
         if: always()

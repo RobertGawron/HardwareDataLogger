@@ -99,6 +99,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     tree \
     vim \
     lcov \
+    dos2unix \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set Environment Variables

@@ -1,10 +1,11 @@
 {
   "version": 6,
   "cmakeMinimumRequired": { "major": 3, "minor": 28, "patch": 0 },
+
   "configurePresets": [
     {
       "name": "docs",
-      "displayName": "Docs coverage (Ninja, tmp build)",
+      "displayName": "Docs (Debug, Ninja, /tmp)",
       "generator": "Ninja",
       "binaryDir": "/tmp/cmake-docs",
       "cacheVariables": {
@@ -12,13 +13,41 @@
         "Python3_EXECUTABLE": "/opt/venv/bin/python",
         "DOXYGEN_OUTPUT_DIR": "/workspace/DevOps/BuildArtifacts/DocsCoverage"
       }
+    },
+    {
+      "name": "build-debug",
+      "displayName": "Main build (Debug, Ninja, /workspace/build)",
+      "generator": "Ninja",
+      "binaryDir": "/workspace/build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "pstatic",
+      "displayName": "Python static analysis (Debug, Ninja, /tmp)",
+      "generator": "Ninja",
+      "binaryDir": "/tmp/cmake-pstatic",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "PYTHON_REPORT_DIR": "/workspace/DevOps/BuildArtifacts/PythonStaticAnalysis",
+        "PYTHON_ANALYZE_DIR": "/tmp/cmake-pstatic/BuildArtifacts/PythonStaticAnalysisWork"
+      }
     }
   ],
+
   "buildPresets": [
     {
       "name": "docs",
+      "displayName": "Build: docs",
       "configurePreset": "docs",
       "targets": ["docs"]
+    },
+    {
+      "name": "pstatic",
+      "displayName": "Build: pstatic",
+      "configurePreset": "pstatic",
+      "targets": ["pstatic"]
     }
   ]
 }
