@@ -1,7 +1,7 @@
 // SdCardDriver.cpp
 module;
 
-#include "EventHandlers.hpp"
+#include "EventHandlers.h"
 
 #include <iostream>
 #include <cstring>
@@ -9,6 +9,7 @@ module;
 #include <span>
 #include <cstdint>
 #include <algorithm>
+#include <utility>
 
 module Driver.SdCardDriver;
 
@@ -41,17 +42,17 @@ namespace Driver
         std::memcpy(filenameBuffer, filename.data(), len);
         filenameBuffer[len] = '\0';
 
-        return sdCardOpen(filenameBuffer, mode);
+        return static_cast<SdCardStatus>(sdCardOpen(filenameBuffer, std::to_underlying(mode)));
     }
 
     SdCardStatus SdCardDriver::closeFile() noexcept
     {
-        return sdCardClose();
+        return static_cast<SdCardStatus>(sdCardClose());
     }
 
     SdCardStatus SdCardDriver::write(std::span<const std::uint8_t> data) noexcept
     {
         const auto size = static_cast<std::uint16_t>(data.size());
-        return sdCardWrite(data.data(), size);
+        return static_cast<SdCardStatus>(sdCardWrite(data.data(), size));
     }
 }

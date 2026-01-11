@@ -1,0 +1,35 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "STM32: Configure (Debug)",
+      "type": "shell",
+      "command": "cmake --preset stm32-debug",
+      "options": {
+        "cwd": "${workspaceFolder:STM32 Firmware (STM32F103RBTx)}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "STM32: Build (Debug)",
+      "type": "shell",
+      "command": "cmake --build --preset build-stm32-debug",
+      "options": {
+        "cwd": "${workspaceFolder:STM32 FirmwPare (STM32F103RBTx)}"
+      },
+      "dependsOn": ["STM32: Configure (Debug)"],
+      "group": "build",
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "STM32: Flash (Debug)",
+      "type": "shell",
+      "command": "cmake --build --preset build-stm32-debug --target flash",
+      "options": {
+        "cwd": "${workspaceFolder:STM32 Firmware (STM32F103RBTx)}"
+      },
+      "dependsOn": ["STM32: Build (Debug)"],
+      "problemMatcher": []
+    }
+  ]
+}

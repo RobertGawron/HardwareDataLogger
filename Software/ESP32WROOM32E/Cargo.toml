@@ -1,13 +1,13 @@
 [package]
-name = "esp32-mqtt-bridge"
+name = "esp32wroom32e"
 version = "0.1.0"
-authors = ["root"]
+authors = ["RobertGawron <robert_gawron@yahoo.fr>"]
 edition = "2021"
 resolver = "2"
 rust-version = "1.77"
 
 [[bin]]
-name = "esp32-mqtt-bridge"
+name = "esp32wroom32e"
 harness = false # do not use the built-in cargo test harness -> resolve rust-analyzer errors
 
 [profile.release]
@@ -15,7 +15,7 @@ opt-level = "s"
 
 [profile.dev]
 debug = true    # Symbols are nice, and they don't increase the size on Flash
-opt-level = 1 # "z" is too slow to build
+opt-level = "z"
 
 [features]
 default = []
@@ -25,12 +25,6 @@ experimental = ["esp-idf-svc/experimental"]
 [dependencies]
 log = "0.4"
 esp-idf-svc = "0.51"
-esp-idf-hal = "0.45"
-anyhow = "1.0"
-embedded-svc = "0.28.1"
-heapless = "0.9.1"
-toml-cfg = "0.2" # Check for the latest version
-serde = { version = "1", features = ["derive"] }
 
 # --- Optional Embassy Integration ---
 # esp-idf-svc = { version = "0.51", features = ["critical-section", "embassy-time-driver", "embassy-sync"] }

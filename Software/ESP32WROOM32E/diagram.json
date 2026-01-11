@@ -1,7 +1,7 @@
 {
     "version": 1,
     "editor": "wokwi",
-    "author": "root",
+    "author": "RobertGawron <robert_gawron@yahoo.fr>",
     "parts": [
         {
             "type": "board-esp32-devkit-c-v4",

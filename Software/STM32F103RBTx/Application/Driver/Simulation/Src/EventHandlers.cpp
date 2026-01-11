@@ -1,14 +1,15 @@
 // EventHandlers.cpp
 module;
 
+#include "EventHandlers.h"
+
 #include <iostream>
 #include <cstdint>
+#include <utility>
 
-module Driver.EventHandlers;
-
-import Driver.Interface.UartId;
-import Driver.Interface.SdCardStatus;
-import Driver.Interface.FileOpenMode;
+import Driver.UartId;
+import Driver.SdCardStatus;
+import Driver.FileOpenMode;
 
 SerialTxCallback serialTxCallback = nullptr;
 SdCardOpenCallback sdCardOpenCallback = nullptr;
@@ -59,7 +60,7 @@ void registerSdCardResetCallback(SdCardResetCallback callback)
     sdCardResetCallback = callback;
 }
 
-HAL_StatusTypeDef serialTx(Driver::UartId uartId, const std::uint8_t *data, std::uint16_t size, std::uint32_t timeout)
+HAL_StatusTypeDef serialTx(UartId_t uartId, const std::uint8_t *data, std::uint16_t size, std::uint32_t timeout)
 {
     HAL_StatusTypeDef result = HAL_StatusTypeDef::HAL_ERROR;
 
@@ -76,14 +77,14 @@ HAL_StatusTypeDef serialTx(Driver::UartId uartId, const std::uint8_t *data, std:
     return result;
 }
 
-Driver::SdCardStatus sdCardOpen(const char *filename, Driver::FileOpenMode mode)
+SdCardStatus_t sdCardOpen(const char *filename, FileOpenMode_t mode)
 {
-    Driver::SdCardStatus result = Driver::SdCardStatus::INVALID_PARAMETER;
+    SdCardStatus_t result = std::to_underlying(Driver::SdCardStatus::INVALID_PARAMETER);
 
     if (sdCardOpenCallback != nullptr)
     {
-        const std::uint8_t status = sdCardOpenCallback(filename, static_cast<std::uint8_t>(mode));
-        result = static_cast<Driver::SdCardStatus>(status);
+        result = sdCardOpenCallback(filename, static_cast<std::uint8_t>(mode));
+        // result = static_cast<Driver::SdCardStatus>(status);
     }
     else
     {
@@ -93,14 +94,14 @@ Driver::SdCardStatus sdCardOpen(const char *filename, Driver::FileOpenMode mode)
     return result;
 }
 
-Driver::SdCardStatus sdCardWrite(const std::uint8_t *data, std::uint16_t size)
+SdCardStatus_t sdCardWrite(const std::uint8_t *data, std::uint16_t size)
 {
-    Driver::SdCardStatus result = Driver::SdCardStatus::INVALID_PARAMETER;
+    SdCardStatus_t result = std::to_underlying(Driver::SdCardStatus::INVALID_PARAMETER);
 
     if (sdCardWriteCallback != nullptr)
     {
-        const std::uint8_t status = sdCardWriteCallback(data, size);
-        result = static_cast<Driver::SdCardStatus>(status);
+        result = sdCardWriteCallback(data, size);
+        // result = static_cast<Driver::SdCardStatus>(status);
     }
     else
     {
@@ -110,14 +111,14 @@ Driver::SdCardStatus sdCardWrite(const std::uint8_t *data, std::uint16_t size)
     return result;
 }
 
-Driver::SdCardStatus sdCardClose()
+SdCardStatus_t sdCardClose()
 {
-    Driver::SdCardStatus result = Driver::SdCardStatus::INVALID_PARAMETER;
+    SdCardStatus_t result = std::to_underlying(Driver::SdCardStatus::INVALID_PARAMETER);
 
     if (sdCardCloseCallback != nullptr)
     {
-        const std::uint8_t status = sdCardCloseCallback();
-        result = static_cast<Driver::SdCardStatus>(status);
+        result = sdCardCloseCallback();
+        // result = static_cast<Driver::SdCardStatus>(status);
     }
     else
     {

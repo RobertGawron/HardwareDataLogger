@@ -14,6 +14,10 @@ target_link_libraries(Driver
     PUBLIC DriverInterface
 )
 
+target_include_directories(Driver PRIVATE
+    Inc
+)
+
 target_sources(Driver
     PUBLIC FILE_SET CXX_MODULES FILES
         Modules/BrightnessDriver.cppm
@@ -29,6 +33,9 @@ target_sources(Driver
 )
 
 target_sources(Driver PRIVATE
+   # EventHandlers.cppm
+   # LibWrapper.cppm
+
     Src/BrightnessDriver.cpp
     Src/DisplayDriver.cpp
     Src/KeyboardDriver.cpp
@@ -36,10 +43,5 @@ target_sources(Driver PRIVATE
     Src/PulseCounterDriver.cpp
     Src/SdCardDriver.cpp
     Src/UartDriver.cpp
-    EventHandlers.cpp
-    LibWrapper.cpp
 )
 
-target_include_directories(Driver PRIVATE
-    .
-)

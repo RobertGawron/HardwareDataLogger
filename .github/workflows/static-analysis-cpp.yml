@@ -172,7 +172,7 @@ jobs:
 
       - name: Run Static Analysis (Firmware)
         run: |
-          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace/build/ && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja cstatic_stm"
+          docker compose -f docker-compose.yml exec -T dev bash -c "mkdir /workspace/build/ && cd /workspace/build/ && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja cstatic_stm"
 
       - name: Upload Static Analysis Results
         if: always()

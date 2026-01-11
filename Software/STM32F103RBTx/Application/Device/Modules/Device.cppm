@@ -1,3 +1,5 @@
+module;
+
 export module Device;
 
 export import Device.Display;

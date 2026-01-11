@@ -93,8 +93,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ninja-build \
     gdb \
     gdb-multiarch \
-    valgrind \
-    strace \
+    openocd \
+    usbutils \
+    stlink-tools \
+    tree \
+    vim \
+    lcov \
+    dos2unix \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set Environment Variables
@@ -108,8 +113,8 @@ ENV CXX=g++
 # ---------------------------------------------------------------------
 FROM system-deps AS python-env
 
-RUN python3 -m venv /workspace/venv
-ENV PATH="/workspace/venv/bin:$PATH"
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir \
@@ -142,12 +147,20 @@ RUN curl -L "https://github.com/esp-rs/espup/releases/latest/download/espup-x86_
     espup install --targets "${ESP_BOARD}" --log-level info --export-file /root/export-esp.sh && \
     rustup default esp
 
+RUN cargo install espflash
+
 # ---------------------------------------------------------------------
 # FINAL STAGE: Runtime environment with build helpers
 # ---------------------------------------------------------------------
 FROM esp-toolchain AS final
 
 RUN mkdir -p /workspace/build
+
+COPY Software/STM32F103RBTx/Application/Driver/Simulation/Python/ /tmp/PythonDriver/
+
+RUN /opt/venv/bin/pip install -e /tmp/PythonDriver/ && \
+    rm -rf /tmp/PythonDriver/
+
 WORKDIR /workspace/build
 
-CMD ["bash", "-c", "show-compilers && exec bash"]
+CMD ["bash", "-c", "exec bash"]

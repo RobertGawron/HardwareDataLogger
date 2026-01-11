@@ -24,6 +24,9 @@ endif()
     add_subdirectory(Software/STM32F103RBTx/Application/Driver/)
     add_subdirectory(Software/STM32F103RBTx/Application/Device/)
     add_subdirectory(Software/STM32F103RBTx/Application/BusinessLogic/)
+    add_subdirectory(Software/STM32F103RBTx/Application/SimulationBindings/)
+
+    
 
 
     include(Software/STM32F103RBTx/Application/CodeCoverage.cmake)

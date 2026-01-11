@@ -1,24 +1,31 @@
+# ------------------------------------------------------------------------------
+# Python static analysis: Prospector reports
+# ------------------------------------------------------------------------------
 
-# Define the output directories for Python static analysis and reports
-set(PYTHON_ANALYZE_DIR ${CMAKE_SOURCE_DIR}/build/BuildArtifacts/PythonStaticAnalysis)
-set(PYTHON_REPORT_DIR ${CMAKE_SOURCE_DIR}/DevOps/BuildArtifacts)
+# Where to write the final reports (default: repo DevOps BuildArtifacts)
+set(PYTHON_REPORT_DIR_DEFAULT "${CMAKE_SOURCE_DIR}/DevOps/BuildArtifacts/PythonStaticAnalysis")
+set(PYTHON_REPORT_DIR "${PYTHON_REPORT_DIR_DEFAULT}" CACHE PATH "Output directory for Python static analysis reports")
 
-# Echo the variables for debugging
+# Optional: workspace/temp dir used by the analysis (default: in build tree)
+set(PYTHON_ANALYZE_DIR_DEFAULT "${CMAKE_BINARY_DIR}/BuildArtifacts/PythonStaticAnalysisWork")
+set(PYTHON_ANALYZE_DIR "${PYTHON_ANALYZE_DIR_DEFAULT}" CACHE PATH "Working directory for Python static analysis (temporary)")
+
 message(STATUS "PYTHON_ANALYZE_DIR: ${PYTHON_ANALYZE_DIR}")
 message(STATUS "PYTHON_REPORT_DIR: ${PYTHON_REPORT_DIR}")
 
-# Ensure the output directories exist
-file(MAKE_DIRECTORY ${PYTHON_ANALYZE_DIR})
-file(MAKE_DIRECTORY ${PYTHON_REPORT_DIR})
+file(MAKE_DIRECTORY "${PYTHON_ANALYZE_DIR}")
+file(MAKE_DIRECTORY "${PYTHON_REPORT_DIR}")
 
-# Define a variable for the file path
 set(PYTHON_STATIC_ANALYSIS_SCRIPT "${CMAKE_SOURCE_DIR}/DevOps/Scripts/PythonStaticAnalysis.sh")
 
-# Add a custom target for Python static analysis
 add_custom_target(pstatic
-    COMMAND bash -c " \
-        dos2unix ${PYTHON_STATIC_ANALYSIS_SCRIPT} && source ${PYTHON_STATIC_ANALYSIS_SCRIPT}"
+    COMMAND bash -lc
+      "set -euo pipefail;
+       dos2unix '${PYTHON_STATIC_ANALYSIS_SCRIPT}';
+       export PYTHON_ANALYZE_DIR='${PYTHON_ANALYZE_DIR}';
+       export PYTHON_REPORT_DIR='${PYTHON_REPORT_DIR}';
+       source '${PYTHON_STATIC_ANALYSIS_SCRIPT}'"
+    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
     COMMENT "Running Python static analysis with Prospector and generating reports..."
     VERBATIM
 )
-

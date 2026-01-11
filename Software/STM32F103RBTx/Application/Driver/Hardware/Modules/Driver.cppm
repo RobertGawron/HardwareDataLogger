@@ -4,7 +4,6 @@ export import Driver.PlatformFactory;
 
 export import Driver.KeyIdentifier;
 export import Driver.KeyState;
-export import Driver.UartId;
 export import Driver.UartStatus;
 export import Driver.SdCardStatus;
 export import Driver.FileOpenMode;

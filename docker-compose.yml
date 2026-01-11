@@ -5,11 +5,7 @@ services:
       context: .
       dockerfile: DevOps/Dockerfile
     privileged: true
-    command: >
-      bash -c "
-      pip install -e /workspace/Software/STM32F103RBTx/Application/Driver/Host/Python/ &&
-      exec bash
-      "
+    
     environment:
       - DISPLAY=:0
       - WAYLAND_DISPLAY=wayland-0
@@ -20,13 +16,8 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /mnt/wslg:/mnt/wslg
-      - ./Software:/workspace/Software
-      - ./FirmwarePCSimulator/:/workspace/FirmwarePCSimulator/
-      - ./IntegrationTest:/workspace/IntegrationTest
-      - ./DevOps/BuildArtifacts:/workspace/build/BuildArtifacts
-      - ./DevOps/Scripts:/workspace/DevOps/Scripts
-      - ./DevOps/Cmake:/workspace/DevOps/Cmake
-      - ./CMakeLists.txt:/workspace/CMakeLists.txt
+      - ./:/workspace/
+      - /dev/bus/usb:/dev/bus/usb
     working_dir: /workspace
     stdin_open: true
     tty: true
