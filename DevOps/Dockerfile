@@ -96,6 +96,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     openocd \
     usbutils \
     stlink-tools \
+    tree \
+    vim \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set Environment Variables
@@ -156,8 +158,6 @@ COPY Software/STM32F103RBTx/Application/Driver/Simulation/Python/ /tmp/PythonDri
 
 RUN /workspace/venv/bin/pip install -e /tmp/PythonDriver/ && \
     rm -rf /tmp/PythonDriver/
-
-RUN apt-get install tree 
 
 WORKDIR /workspace/build
 
