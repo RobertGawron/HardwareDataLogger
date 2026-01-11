@@ -111,8 +111,8 @@ ENV CXX=g++
 # ---------------------------------------------------------------------
 FROM system-deps AS python-env
 
-RUN python3 -m venv /workspace/venv
-ENV PATH="/workspace/venv/bin:$PATH"
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir \
@@ -156,7 +156,7 @@ RUN mkdir -p /workspace/build
 
 COPY Software/STM32F103RBTx/Application/Driver/Simulation/Python/ /tmp/PythonDriver/
 
-RUN /workspace/venv/bin/pip install -e /tmp/PythonDriver/ && \
+RUN /opt/venv/bin/pip install -e /tmp/PythonDriver/ && \
     rm -rf /tmp/PythonDriver/
 
 WORKDIR /workspace/build
