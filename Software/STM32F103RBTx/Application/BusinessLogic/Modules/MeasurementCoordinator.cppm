@@ -2,26 +2,28 @@ module;
 
 #include <cstdint>
 #include <array>
-#include <functional>
 #include <algorithm>
-#include <span>
 #include <variant>
 
 export module BusinessLogic.MeasurementCoordinator;
 
 import BusinessLogic.ApplicationComponent;
-
 import Device;
 
 export namespace BusinessLogic
 {
+    template <class Range, class F>
+    [[nodiscard]] inline bool all_ok(Range &range, F &&f) noexcept
+    {
+        return std::ranges::all_of(range, [&](auto &v) noexcept
+                                   { return std::visit([&](auto &objref) noexcept
+                                                       { return f(objref.get()); }, v); });
+    }
+
     template <std::size_t SourceCount, std::size_t RecorderCount>
     class MeasurementCoordinator final : public ApplicationComponent
     {
     public:
-        /**
-         * @brief Constructs a MeasurementCoordinator with references to sources and recorders arrays.
-         */
         explicit MeasurementCoordinator(
             std::array<Device::SourceVariant, SourceCount> &sourcesArray,
             std::array<Device::RecorderVariant, RecorderCount> &recordersArray) noexcept
@@ -39,73 +41,26 @@ export namespace BusinessLogic
 
         [[nodiscard]] bool onInit() noexcept
         {
-            bool status = std::ranges::all_of(
-                sources,
-                [](auto &sourceVariant)
-                {
-                    return std::visit([](auto &source)
-                                      { return source.get().init(); }, sourceVariant);
-                });
-
-            if (status)
-            {
-                status = std::ranges::all_of(
-                    recorders,
-                    [](auto &recorderVariant)
-                    {
-                        return std::visit([](auto &recorder)
-                                          { return recorder.get().init(); }, recorderVariant);
-                    });
-            }
-
-            return status;
+            return all_ok(sources, [](auto &s) noexcept
+                          { return s.init(); }) &&
+                   all_ok(recorders, [](auto &r) noexcept
+                          { return r.init(); });
         }
 
         [[nodiscard]] bool onStart() noexcept
         {
-            bool status = std::ranges::all_of(
-                sources,
-                [](auto &sourceVariant)
-                {
-                    return std::visit([](auto &source)
-                                      { return source.get().start(); }, sourceVariant);
-                });
-
-            if (status)
-            {
-                status = std::ranges::all_of(
-                    recorders,
-                    [](auto &recorderVariant)
-                    {
-                        return std::visit([](auto &recorder)
-                                          { return recorder.get().start(); }, recorderVariant);
-                    });
-            }
-
-            return status;
+            return all_ok(sources, [](auto &s) noexcept
+                          { return s.start(); }) &&
+                   all_ok(recorders, [](auto &r) noexcept
+                          { return r.start(); });
         }
 
         [[nodiscard]] bool onStop() noexcept
         {
-            bool status = std::ranges::all_of(
-                sources,
-                [](auto &sourceVariant)
-                {
-                    return std::visit([](auto &source)
-                                      { return source.get().stop(); }, sourceVariant);
-                });
-
-            if (status)
-            {
-                status = std::ranges::all_of(
-                    recorders,
-                    [](auto &recorderVariant)
-                    {
-                        return std::visit([](auto &recorder)
-                                          { return recorder.get().stop(); }, recorderVariant);
-                    });
-            }
-            return status;
+            return all_ok(sources, [](auto &s) noexcept
+                          { return s.stop(); }) &&
+                   all_ok(recorders, [](auto &r) noexcept
+                          { return r.stop(); });
         }
 
         [[nodiscard]] bool onTick() noexcept
@@ -114,20 +69,20 @@ export namespace BusinessLogic
 
             for (auto &sourceVariant : sources)
             {
-                std::visit([&](auto &source)
+                std::visit([&](auto &source) noexcept
                            {
-                if (source.get().isMeasurementAvailable())
-                {
-                    const Device::MeasurementType measurement = source.get().getMeasurement();
+                    auto& s = source.get();
+                    if (!s.isMeasurementAvailable())
+                        return;
 
-                    for (auto &recorderVariant : recorders)
+                    const Device::MeasurementType measurement = s.getMeasurement();
+
+                    for (auto& recorderVariant : recorders)
                     {
-                        std::visit([&measurement, &status](auto &recorder) {
+                        std::visit([&](auto& recorder) noexcept {
                             status = status && recorder.get().notify(measurement);
-            return status;
                         }, recorderVariant);
-                    }
-                } }, sourceVariant);
+                    } }, sourceVariant);
             }
 
             return status;

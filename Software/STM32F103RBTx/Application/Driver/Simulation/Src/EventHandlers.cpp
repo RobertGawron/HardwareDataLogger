@@ -1,13 +1,11 @@
 // EventHandlers.cpp
 module;
 
-#include "EventHandlers.hpp"
+#include "EventHandlers.h"
 
 #include <iostream>
 #include <cstdint>
 #include <utility>
-
-// export module Driver.EventHandlers;
 
 import Driver.UartId;
 import Driver.SdCardStatus;

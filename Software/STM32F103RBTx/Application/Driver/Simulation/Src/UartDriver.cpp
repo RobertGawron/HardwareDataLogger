@@ -1,7 +1,7 @@
 // UartDriver.cpp
 module;
 
-#include "EventHandlers.hpp"
+#include "EventHandlers.h"
 
 #include <cstdint>
 #include <span>
