@@ -5,29 +5,19 @@ services:
       context: .
       dockerfile: DevOps/Dockerfile
     privileged: true
+    
     environment:
-      # Use local sockets for the display
       - DISPLAY=:0
       - WAYLAND_DISPLAY=wayland-0
       - XDG_RUNTIME_DIR=/mnt/wslg/runtime-dir
       - PULSE_SERVER=/mnt/wslg/PulseServer
-      
-      # Qt specific flags for stability in Docker
       - QT_X11_NO_MITSHM=1
       - QT_QPA_PLATFORM=xcb
     volumes:
-      # WSLg Core Mounts (Necessary for GUI)
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /mnt/wslg:/mnt/wslg
-      
-      # Project Mounts
-      - ./Software:/workspace/Software
-      - ./FirmwarePCSimulator/:/workspace/FirmwarePCSimulator/
-      - ./IntegrationTest:/workspace/IntegrationTest
-      - ./DevOps/BuildArtifacts:/workspace/build/BuildArtifacts
-      - ./DevOps/Scripts:/workspace/DevOps/Scripts
-      - ./DevOps/Cmake:/workspace/DevOps/Cmake
-      - ./CMakeLists.txt:/workspace/CMakeLists.txt
+      - ./:/workspace/
+      - /dev/bus/usb:/dev/bus/usb
     working_dir: /workspace
     stdin_open: true
     tty: true

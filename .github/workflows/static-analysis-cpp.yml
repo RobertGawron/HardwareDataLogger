@@ -29,7 +29,7 @@ jobs:
             target: test_Keyboard
             artifact_suffix: dev-keyboard
             
-          - name: Device - PulseCounter
+          - name: Device - PulseCounterSource
             target: test_PulseCounterSource
             artifact_suffix: dev-pulsecounter
             
@@ -51,15 +51,15 @@ jobs:
             
           # Driver Tests
           - name: Driver - AmbientLightSensor
-            target: test_AmbientLightSensorDriver
+            target: test_LightSensorDriver
             artifact_suffix: drv-ambient-light
             
           - name: Driver - DisplayPixelColor
             target: test_DisplayPixelColor
             artifact_suffix: drv-display-pixel
             
-          - name: Driver - DriverState
-            target: test_DriverState
+          - name: Driver - DriverComponent
+            target: test_DriverComponent
             artifact_suffix: drv-state
             
           - name: Driver - Keyboard
@@ -122,7 +122,7 @@ jobs:
 
       - name: Run Static Analysis
         run: |
-          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DEXPORT_SINGLE_JSON=${{ matrix.target }} -DCMAKE_BUILD_TYPE=Debug .. && make cstatic"
+          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace/build && cmake -G Ninja -DEXPORT_SINGLE_JSON=${{ matrix.target }} -DCMAKE_BUILD_TYPE=Debug .. && ninja CMakeFiles/cstatic"
 
       - name: Upload Static Analysis Results
         if: always()
@@ -172,7 +172,7 @@ jobs:
 
       - name: Run Static Analysis (Firmware)
         run: |
-          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make cstatic_stm"
+          docker compose -f docker-compose.yml exec -T dev bash -c "mkdir /workspace/build/ && cd /workspace/build/ && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja cstatic_stm"
 
       - name: Upload Static Analysis Results
         if: always()

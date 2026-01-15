@@ -12,6 +12,18 @@ Note: Some people argue that using STM32CubeMX is a bad idea and that everything
 
 [Setup Manual](../../Documentation/Manuals/SetupFirmwareDevelopment.md)
 
+Seting up Host machine on windows:
+Go to and download and install latest version for windows
+https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads
+Open VS Code and install these extensions (press Ctrl+Shift+X to open Extensions):
+
+C/C++ (by Microsoft) - Essential
+CMake Tools (by Microsoft) - For CMake integration
+CMake (by twxs) - Syntax highlighting for CMake files
+Cortex-Debug (by marus25) - For debugging STM32 (optional but recommended)
+
+Remove this system variable %STM32CLT_PATH%\GNU-tools-for-STM32\bin from PATH
+
 ## Architecture
 
 Measurement flow diagram

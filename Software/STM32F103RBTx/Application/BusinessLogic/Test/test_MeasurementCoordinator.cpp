@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "BusinessLogic/Inc/MeasurementCoordinator.hpp"
-#include "Device/Interface/IMeasurementSource.hpp"
-#include "Device/Interface/IMeasurementRecorder.hpp"
+#include "Device/Interface/MeasurementSourceBase.hpp"
+#include "Device/Interface/MeasurementRecorderBase.hpp"
 
 #include "Device/Inc/MeasurementType.hpp"
 #include "Device/Inc/MeasurementDeviceId.hpp"
@@ -14,32 +14,26 @@
 #include <memory>
 #include <vector>
 
-// Mock classes - must match actual interface signatures
+// Mock classes - must match actual interface signatures including noexcept
 class MockMeasurementSource : public Device::IMeasurementSource
 {
 public:
-    // Constructor required since base class has deleted default constructor
-    explicit MockMeasurementSource() : Device::IMeasurementSource(Device::MeasurementDeviceId::PULSE_COUNTER_1) {}
+    MockMeasurementSource() = default;
 
-    MOCK_METHOD(bool, initialize, (), (override));
-    MOCK_METHOD(bool, start, (), (override));
-    MOCK_METHOD(bool, stop, (), (override));
-    MOCK_METHOD(bool, isMeasurementAvailable, (), (override));
-    MOCK_METHOD(Device::MeasurementType, getMeasurement, (), (override));
+    MOCK_METHOD(bool, onInit, (), (override, noexcept));
+    MOCK_METHOD(bool, onStart, (), (override, noexcept));
+    MOCK_METHOD(bool, onStop, (), (override, noexcept));
+    MOCK_METHOD(bool, isMeasurementAvailable, (), (const, override, noexcept));
+    MOCK_METHOD(Device::MeasurementType, getMeasurement, (), (override, noexcept));
 };
 
 class MockMeasurementRecorder : public Device::IMeasurementRecorder
 {
 public:
-    MOCK_METHOD(bool, initialize, (), (override));
-    MOCK_METHOD(bool, start, (), (override));
-    MOCK_METHOD(bool, stop, (), (override));
-    MOCK_METHOD(bool, onInitialize, (), (override));
-    MOCK_METHOD(bool, onStart, (), (override));
-    MOCK_METHOD(bool, onStop, (), (override));
-    MOCK_METHOD(bool, onReset, (), (override));
-    // Note: notify returns bool and takes non-const reference
-    MOCK_METHOD(bool, notify, (Device::MeasurementType &), (override));
+    MOCK_METHOD(bool, onInit, (), (override, noexcept));
+    MOCK_METHOD(bool, onStart, (), (override, noexcept));
+    MOCK_METHOD(bool, onStop, (), (override, noexcept));
+    MOCK_METHOD(bool, notify, (const Device::MeasurementType &), (override, noexcept));
 };
 
 // Test fixture
@@ -48,27 +42,11 @@ class MeasurementCoordinatorTest : public ::testing::Test
 protected:
     void SetUp() override
     {
-        // Create mock objects
         mockSource1 = std::make_unique<testing::NiceMock<MockMeasurementSource>>();
         mockSource2 = std::make_unique<testing::NiceMock<MockMeasurementSource>>();
         mockRecorder1 = std::make_unique<testing::NiceMock<MockMeasurementRecorder>>();
         mockRecorder2 = std::make_unique<testing::NiceMock<MockMeasurementRecorder>>();
 
-        // Set default return values for methods that return bool
-        ON_CALL(*mockSource1, start()).WillByDefault(testing::Return(true));
-        ON_CALL(*mockSource2, start()).WillByDefault(testing::Return(true));
-        ON_CALL(*mockRecorder1, start()).WillByDefault(testing::Return(true));
-        ON_CALL(*mockRecorder2, start()).WillByDefault(testing::Return(true));
-
-        ON_CALL(*mockSource1, stop()).WillByDefault(testing::Return(true));
-        ON_CALL(*mockSource2, stop()).WillByDefault(testing::Return(true));
-        ON_CALL(*mockRecorder1, stop()).WillByDefault(testing::Return(true));
-        ON_CALL(*mockRecorder2, stop()).WillByDefault(testing::Return(true));
-
-        ON_CALL(*mockRecorder1, notify(testing::_)).WillByDefault(testing::Return(true));
-        ON_CALL(*mockRecorder2, notify(testing::_)).WillByDefault(testing::Return(true));
-
-        // Create reference arrays using make_unique with aggregate initialization
         sources = std::make_unique<std::array<std::reference_wrapper<Device::IMeasurementSource>, 2>>(
             std::array<std::reference_wrapper<Device::IMeasurementSource>, 2>{{std::ref(*mockSource1),
                                                                                std::ref(*mockSource2)}});
@@ -77,7 +55,6 @@ protected:
             std::array<std::reference_wrapper<Device::IMeasurementRecorder>, 2>{{std::ref(*mockRecorder1),
                                                                                  std::ref(*mockRecorder2)}});
 
-        // Create coordinator
         coordinator = std::make_unique<BusinessLogic::MeasurementCoordinator<2, 2>>(*sources, *recorders);
     }
 
@@ -92,11 +69,11 @@ protected:
         mockRecorder2.reset();
     }
 
-    MockMeasurementSource *getMockSource1() { return mockSource1.get(); }
-    MockMeasurementSource *getMockSource2() { return mockSource2.get(); }
-    MockMeasurementRecorder *getMockRecorder1() { return mockRecorder1.get(); }
-    MockMeasurementRecorder *getMockRecorder2() { return mockRecorder2.get(); }
-    BusinessLogic::MeasurementCoordinator<2, 2> *getCoordinator() { return coordinator.get(); }
+    auto getMockSource1() -> MockMeasurementSource * { return mockSource1.get(); }
+    auto getMockSource2() -> MockMeasurementSource * { return mockSource2.get(); }
+    auto getMockRecorder1() -> MockMeasurementRecorder * { return mockRecorder1.get(); }
+    auto getMockRecorder2() -> MockMeasurementRecorder * { return mockRecorder2.get(); }
+    auto getCoordinator() -> BusinessLogic::MeasurementCoordinator<2, 2> * { return coordinator.get(); }
 
 private:
     std::unique_ptr<MockMeasurementSource> mockSource1;
@@ -110,48 +87,39 @@ private:
     std::unique_ptr<BusinessLogic::MeasurementCoordinator<2, 2>> coordinator;
 };
 
-// ==================== Initialize Tests ====================
+// ==================== init Tests ====================
 
-TEST_F(MeasurementCoordinatorTest, Initialize_AllSourcesSucceed_ReturnsTrue)
+TEST_F(MeasurementCoordinatorTest, init_AllSourcesSucceed_ReturnsTrue)
 {
-    // Arrange
-    EXPECT_CALL(*getMockSource1(), initialize()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockSource2(), initialize()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockRecorder1(), initialize()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockRecorder2(), initialize()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockSource1(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockSource2(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder1(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder2(), onInit()).WillOnce(testing::Return(true));
 
-    // Act
-    const bool result = getCoordinator()->initialize();
+    const bool result = getCoordinator()->init();
 
-    // Assert
     EXPECT_TRUE(result);
 }
 
-TEST_F(MeasurementCoordinatorTest, Initialize_SourceFails_ReturnsFalse)
+TEST_F(MeasurementCoordinatorTest, init_SourceFails_ReturnsFalse)
 {
-    // Arrange
-    EXPECT_CALL(*getMockSource1(), initialize()).WillOnce(testing::Return(false));
-    EXPECT_CALL(*getMockSource2(), initialize()).Times(0);
+    EXPECT_CALL(*getMockSource1(), onInit()).WillOnce(testing::Return(false));
+    EXPECT_CALL(*getMockSource2(), onInit()).Times(0);
 
-    // Act
-    const bool result = getCoordinator()->initialize();
+    const bool result = getCoordinator()->init();
 
-    // Assert
     EXPECT_FALSE(result);
 }
 
-TEST_F(MeasurementCoordinatorTest, Initialize_SourcesSucceedRecorderFails_ReturnsFalse)
+TEST_F(MeasurementCoordinatorTest, init_SourcesSucceedRecorderFails_ReturnsFalse)
 {
-    // Arrange
-    EXPECT_CALL(*getMockSource1(), initialize()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockSource2(), initialize()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockRecorder1(), initialize()).WillOnce(testing::Return(false));
-    EXPECT_CALL(*getMockRecorder2(), initialize()).Times(0);
+    EXPECT_CALL(*getMockSource1(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockSource2(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder1(), onInit()).WillOnce(testing::Return(false));
+    EXPECT_CALL(*getMockRecorder2(), onInit()).Times(0);
 
-    // Act
-    const bool result = getCoordinator()->initialize();
+    const bool result = getCoordinator()->init();
 
-    // Assert
     EXPECT_FALSE(result);
 }
 
@@ -159,61 +127,61 @@ TEST_F(MeasurementCoordinatorTest, Initialize_SourcesSucceedRecorderFails_Return
 
 TEST_F(MeasurementCoordinatorTest, Start_AllSucceed_ReturnsTrue)
 {
-    // Arrange
-    EXPECT_CALL(*getMockSource1(), start()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockSource2(), start()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockRecorder1(), start()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockRecorder2(), start()).WillOnce(testing::Return(true));
+    // Initialize first (required for state machine)
+    EXPECT_CALL(*getMockSource1(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockSource2(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder1(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder2(), onInit()).WillOnce(testing::Return(true));
+    ASSERT_TRUE(getCoordinator()->init());
 
-    // Act
+    // Now test start
+    EXPECT_CALL(*getMockSource1(), onStart()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockSource2(), onStart()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder1(), onStart()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder2(), onStart()).WillOnce(testing::Return(true));
+
     const bool result = getCoordinator()->start();
 
-    // Assert
     EXPECT_TRUE(result);
 }
 
 TEST_F(MeasurementCoordinatorTest, Start_SourceFails_ReturnsFalse)
 {
-    // Arrange
-    EXPECT_CALL(*getMockSource1(), start()).WillOnce(testing::Return(false));
-    EXPECT_CALL(*getMockSource2(), start()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockRecorder1(), start()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockRecorder2(), start()).WillOnce(testing::Return(true));
+    // Initialize first
+    EXPECT_CALL(*getMockSource1(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockSource2(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder1(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder2(), onInit()).WillOnce(testing::Return(true));
+    ASSERT_TRUE(getCoordinator()->init());
 
-    // Act
+    // Test start with source failure
+    EXPECT_CALL(*getMockSource1(), onStart()).WillOnce(testing::Return(false));
+    EXPECT_CALL(*getMockSource2(), onStart()).Times(0);
+    EXPECT_CALL(*getMockRecorder1(), onStart()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder2(), onStart()).WillOnce(testing::Return(true));
+
     const bool result = getCoordinator()->start();
 
-    // Assert
     EXPECT_FALSE(result);
 }
 
 TEST_F(MeasurementCoordinatorTest, Start_RecorderFails_ReturnsFalse)
 {
-    // Arrange
-    EXPECT_CALL(*getMockSource1(), start()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockSource2(), start()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockRecorder1(), start()).WillOnce(testing::Return(false));
-    EXPECT_CALL(*getMockRecorder2(), start()).WillOnce(testing::Return(true));
+    // Initialize first
+    EXPECT_CALL(*getMockSource1(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockSource2(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder1(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder2(), onInit()).WillOnce(testing::Return(true));
+    ASSERT_TRUE(getCoordinator()->init());
 
-    // Act
+    // Test start with recorder failure
+    EXPECT_CALL(*getMockSource1(), onStart()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockSource2(), onStart()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder1(), onStart()).WillOnce(testing::Return(false));
+    EXPECT_CALL(*getMockRecorder2(), onStart()).Times(0);
+
     const bool result = getCoordinator()->start();
 
-    // Assert
-    EXPECT_FALSE(result);
-}
-
-TEST_F(MeasurementCoordinatorTest, Start_MultipleFailures_ReturnsFalse)
-{
-    // Arrange
-    EXPECT_CALL(*getMockSource1(), start()).WillOnce(testing::Return(false));
-    EXPECT_CALL(*getMockSource2(), start()).WillOnce(testing::Return(false));
-    EXPECT_CALL(*getMockRecorder1(), start()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockRecorder2(), start()).WillOnce(testing::Return(true));
-
-    // Act
-    const bool result = getCoordinator()->start();
-
-    // Assert
     EXPECT_FALSE(result);
 }
 
@@ -221,61 +189,79 @@ TEST_F(MeasurementCoordinatorTest, Start_MultipleFailures_ReturnsFalse)
 
 TEST_F(MeasurementCoordinatorTest, Stop_AllSucceed_ReturnsTrue)
 {
-    // Arrange
-    EXPECT_CALL(*getMockSource1(), stop()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockSource2(), stop()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockRecorder1(), stop()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockRecorder2(), stop()).WillOnce(testing::Return(true));
+    // Initialize and start first (required for state machine)
+    EXPECT_CALL(*getMockSource1(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockSource2(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder1(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder2(), onInit()).WillOnce(testing::Return(true));
+    ASSERT_TRUE(getCoordinator()->init());
 
-    // Act
+    EXPECT_CALL(*getMockSource1(), onStart()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockSource2(), onStart()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder1(), onStart()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder2(), onStart()).WillOnce(testing::Return(true));
+    ASSERT_TRUE(getCoordinator()->start());
+
+    // Now test stop
+    EXPECT_CALL(*getMockSource1(), onStop()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockSource2(), onStop()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder1(), onStop()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder2(), onStop()).WillOnce(testing::Return(true));
+
     const bool result = getCoordinator()->stop();
 
-    // Assert
     EXPECT_TRUE(result);
 }
 
 TEST_F(MeasurementCoordinatorTest, Stop_SourceFails_ReturnsFalse)
 {
-    // Arrange
-    EXPECT_CALL(*getMockSource1(), stop()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockSource2(), stop()).WillOnce(testing::Return(false));
-    EXPECT_CALL(*getMockRecorder1(), stop()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockRecorder2(), stop()).WillOnce(testing::Return(true));
+    // Initialize and start first
+    EXPECT_CALL(*getMockSource1(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockSource2(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder1(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder2(), onInit()).WillOnce(testing::Return(true));
+    ASSERT_TRUE(getCoordinator()->init());
 
-    // Act
+    EXPECT_CALL(*getMockSource1(), onStart()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockSource2(), onStart()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder1(), onStart()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder2(), onStart()).WillOnce(testing::Return(true));
+    ASSERT_TRUE(getCoordinator()->start());
+
+    // Test stop with source failure
+    EXPECT_CALL(*getMockSource1(), onStop()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockSource2(), onStop()).WillOnce(testing::Return(false));
+    EXPECT_CALL(*getMockRecorder1(), onStop()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder2(), onStop()).WillOnce(testing::Return(true));
+
     const bool result = getCoordinator()->stop();
 
-    // Assert
     EXPECT_FALSE(result);
 }
 
 TEST_F(MeasurementCoordinatorTest, Stop_RecorderFails_ReturnsFalse)
 {
-    // Arrange
-    EXPECT_CALL(*getMockSource1(), stop()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockSource2(), stop()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockRecorder1(), stop()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockRecorder2(), stop()).WillOnce(testing::Return(false));
+    // Initialize and start first
+    EXPECT_CALL(*getMockSource1(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockSource2(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder1(), onInit()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder2(), onInit()).WillOnce(testing::Return(true));
+    ASSERT_TRUE(getCoordinator()->init());
 
-    // Act
+    EXPECT_CALL(*getMockSource1(), onStart()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockSource2(), onStart()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder1(), onStart()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder2(), onStart()).WillOnce(testing::Return(true));
+    ASSERT_TRUE(getCoordinator()->start());
+
+    // Test stop with recorder failure
+    EXPECT_CALL(*getMockSource1(), onStop()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockSource2(), onStop()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder1(), onStop()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder2(), onStop()).WillOnce(testing::Return(false));
+
     const bool result = getCoordinator()->stop();
 
-    // Assert
-    EXPECT_FALSE(result);
-}
-
-TEST_F(MeasurementCoordinatorTest, Stop_MultipleFailures_ReturnsFalse)
-{
-    // Arrange
-    EXPECT_CALL(*getMockSource1(), stop()).WillOnce(testing::Return(false));
-    EXPECT_CALL(*getMockSource2(), stop()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockRecorder1(), stop()).WillOnce(testing::Return(false));
-    EXPECT_CALL(*getMockRecorder2(), stop()).WillOnce(testing::Return(true));
-
-    // Act
-    const bool result = getCoordinator()->stop();
-
-    // Assert
     EXPECT_FALSE(result);
 }
 
@@ -283,73 +269,68 @@ TEST_F(MeasurementCoordinatorTest, Stop_MultipleFailures_ReturnsFalse)
 
 TEST_F(MeasurementCoordinatorTest, Tick_NoMeasurementsAvailable_NoRecordersNotified)
 {
-    // Arrange
     EXPECT_CALL(*getMockSource1(), isMeasurementAvailable()).WillOnce(testing::Return(false));
     EXPECT_CALL(*getMockSource2(), isMeasurementAvailable()).WillOnce(testing::Return(false));
     EXPECT_CALL(*getMockRecorder1(), notify(testing::_)).Times(0);
     EXPECT_CALL(*getMockRecorder2(), notify(testing::_)).Times(0);
 
-    // Act
     const bool result = getCoordinator()->tick();
 
-    // Assert
     EXPECT_TRUE(result);
 }
 
 TEST_F(MeasurementCoordinatorTest, Tick_OneMeasurementAvailable_AllRecordersNotified)
 {
-    // Arrange
-    const Device::MeasurementType measurement{
-        std::uint32_t{100},
-        Device::MeasurementDeviceId::PULSE_COUNTER_1};
+    const auto measurement = Device::MeasurementType{
+        .source = Device::MeasurementDeviceId::PULSE_COUNTER_1,
+        .data = std::uint32_t{100U}};
 
     EXPECT_CALL(*getMockSource1(), isMeasurementAvailable()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockSource1(), getMeasurement()).WillOnce(testing::Return(measurement));
+    EXPECT_CALL(*getMockSource1(), getMeasurement())
+        .WillOnce(testing::Invoke([measurement]()
+                                  { return measurement; }));
     EXPECT_CALL(*getMockSource2(), isMeasurementAvailable()).WillOnce(testing::Return(false));
 
     EXPECT_CALL(*getMockRecorder1(), notify(testing::_)).WillOnce(testing::Return(true));
     EXPECT_CALL(*getMockRecorder2(), notify(testing::_)).WillOnce(testing::Return(true));
 
-    // Act
     const bool result = getCoordinator()->tick();
 
-    // Assert
     EXPECT_TRUE(result);
 }
 
 TEST_F(MeasurementCoordinatorTest, Tick_BothMeasurementsAvailable_AllRecordersNotifiedTwice)
 {
-    // Arrange
-    const Device::MeasurementType measurement1{
-        std::uint32_t{100},
-        Device::MeasurementDeviceId::PULSE_COUNTER_1};
-    const Device::MeasurementType measurement2{
-        std::uint32_t{200},
-        Device::MeasurementDeviceId::PULSE_COUNTER_2};
+    const auto measurement1 = Device::MeasurementType{
+        .source = Device::MeasurementDeviceId::PULSE_COUNTER_1,
+        .data = std::uint32_t{100U}};
+    const auto measurement2 = Device::MeasurementType{
+        .source = Device::MeasurementDeviceId::PULSE_COUNTER_2,
+        .data = std::uint32_t{200U}};
 
     EXPECT_CALL(*getMockSource1(), isMeasurementAvailable()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockSource1(), getMeasurement()).WillOnce(testing::Return(measurement1));
+    EXPECT_CALL(*getMockSource1(), getMeasurement())
+        .WillOnce(testing::Invoke([measurement1]()
+                                  { return measurement1; }));
     EXPECT_CALL(*getMockSource2(), isMeasurementAvailable()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockSource2(), getMeasurement()).WillOnce(testing::Return(measurement2));
+    EXPECT_CALL(*getMockSource2(), getMeasurement())
+        .WillOnce(testing::Invoke([measurement2]()
+                                  { return measurement2; }));
 
-    // Each recorder should be notified twice (once per measurement)
     EXPECT_CALL(*getMockRecorder1(), notify(testing::_)).Times(2).WillRepeatedly(testing::Return(true));
     EXPECT_CALL(*getMockRecorder2(), notify(testing::_)).Times(2).WillRepeatedly(testing::Return(true));
 
-    // Act
     const bool result = getCoordinator()->tick();
 
-    // Assert
     EXPECT_TRUE(result);
 }
 
 TEST_F(MeasurementCoordinatorTest, MultipleTicks_HandlesMultipleCycles)
 {
-    // Arrange
-    constexpr std::uint32_t TEST_MEASUREMENT_VALUE = 100;
-    const Device::MeasurementType measurement{
-        std::uint32_t{TEST_MEASUREMENT_VALUE},
-        Device::MeasurementDeviceId::PULSE_COUNTER_1};
+    constexpr std::uint32_t TEST_MEASUREMENT_VALUE = 100U;
+    const auto measurement = Device::MeasurementType{
+        .source = Device::MeasurementDeviceId::PULSE_COUNTER_1,
+        .data = std::uint32_t{TEST_MEASUREMENT_VALUE}};
 
     EXPECT_CALL(*getMockSource1(), isMeasurementAvailable())
         .WillOnce(testing::Return(true))
@@ -358,13 +339,13 @@ TEST_F(MeasurementCoordinatorTest, MultipleTicks_HandlesMultipleCycles)
 
     EXPECT_CALL(*getMockSource1(), getMeasurement())
         .Times(2)
-        .WillRepeatedly(testing::Return(measurement));
+        .WillRepeatedly(testing::Invoke([measurement]()
+                                        { return measurement; }));
 
     EXPECT_CALL(*getMockSource2(), isMeasurementAvailable())
         .Times(3)
         .WillRepeatedly(testing::Return(false));
 
-    // Set up expectations for notify calls - 2 measurements mean 2 notifications per recorder
     EXPECT_CALL(*getMockRecorder1(), notify(testing::_))
         .Times(2)
         .WillRepeatedly(testing::Return(true));
@@ -372,7 +353,6 @@ TEST_F(MeasurementCoordinatorTest, MultipleTicks_HandlesMultipleCycles)
         .Times(2)
         .WillRepeatedly(testing::Return(true));
 
-    // Act & Assert
     EXPECT_TRUE(getCoordinator()->tick());
     EXPECT_TRUE(getCoordinator()->tick());
     EXPECT_TRUE(getCoordinator()->tick());
@@ -383,22 +363,21 @@ TEST_F(MeasurementCoordinatorTest, MultipleTicks_HandlesMultipleCycles)
 class MeasurementCoordinatorLargeTest : public ::testing::Test
 {
 protected:
-    static constexpr std::size_t NUM_SOURCES = 5;
-    static constexpr std::size_t NUM_RECORDERS = 3;
+    static constexpr std::size_t NUM_SOURCES = 5U;
+    static constexpr std::size_t NUM_RECORDERS = 3U;
 
     void SetUp() override
     {
-        for (std::size_t i = 0; i < NUM_SOURCES; ++i)
+        for (std::size_t i{}; i < NUM_SOURCES; ++i)
         {
             mockSources.push_back(std::make_unique<testing::NiceMock<MockMeasurementSource>>());
         }
 
-        for (std::size_t i = 0; i < NUM_RECORDERS; ++i)
+        for (std::size_t i{}; i < NUM_RECORDERS; ++i)
         {
             mockRecorders.push_back(std::make_unique<testing::NiceMock<MockMeasurementRecorder>>());
         }
 
-        // Create arrays using make_unique with aggregate initialization
         sources = std::make_unique<std::array<std::reference_wrapper<Device::IMeasurementSource>, NUM_SOURCES>>(
             std::array<std::reference_wrapper<Device::IMeasurementSource>, NUM_SOURCES>{{std::ref(*mockSources[0]),
                                                                                          std::ref(*mockSources[1]),
@@ -414,9 +393,9 @@ protected:
         coordinator = std::make_unique<BusinessLogic::MeasurementCoordinator<NUM_SOURCES, NUM_RECORDERS>>(*sources, *recorders);
     }
 
-    std::vector<std::unique_ptr<MockMeasurementSource>> &getMockSources() { return mockSources; }
-    std::vector<std::unique_ptr<MockMeasurementRecorder>> &getMockRecorders() { return mockRecorders; }
-    BusinessLogic::MeasurementCoordinator<NUM_SOURCES, NUM_RECORDERS> *getCoordinator() { return coordinator.get(); }
+    auto getMockSources() -> std::vector<std::unique_ptr<MockMeasurementSource>> & { return mockSources; }
+    auto getMockRecorders() -> std::vector<std::unique_ptr<MockMeasurementRecorder>> & { return mockRecorders; }
+    auto getCoordinator() -> BusinessLogic::MeasurementCoordinator<NUM_SOURCES, NUM_RECORDERS> * { return coordinator.get(); }
 
 private:
     std::vector<std::unique_ptr<MockMeasurementSource>> mockSources;

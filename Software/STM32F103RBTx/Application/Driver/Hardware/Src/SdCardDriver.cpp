@@ -1,10 +1,20 @@
-#include "Driver/Hardware/Inc/SdCardDriver.hpp"
+module;
+
+#include "stm32f1xx_hal.h"
+#include "stm32f1xx_hal_gpio.h"
+
+#include "ff.h"
+
+#include <span>
+#include <string_view>
+#include <cstdint>
+
+module Driver.SdCardDriver;
 
 namespace Driver
 {
-    // Ensure size types are compatible
     static_assert(sizeof(std::uint16_t) <= sizeof(UINT),
-                  "std::uint16_t must not be larger than UINT for safe conversion in f_write()");
+                  "std::uint16_t must not exceed UINT size for f_write()");
 
     SdCardDriver::~SdCardDriver()
     {
@@ -14,21 +24,18 @@ namespace Driver
         }
     }
 
-    bool SdCardDriver::onInitialize()
+    bool SdCardDriver::onInit() noexcept
     {
-        // not possible to get status from HAL methods, all are void
-        const bool status = true;
+        GPIO_InitTypeDef GPIO_InitStruct{};
 
-        GPIO_InitTypeDef GPIO_InitStruct = {0};
+        // Enable GPIO clocks
+        __HAL_RCC_GPIOA_CLK_ENABLE(); // SCK, MISO, MOSI
+        __HAL_RCC_GPIOB_CLK_ENABLE(); // CS
 
-        /* 1. Enable GPIO Clocks */
-        __HAL_RCC_GPIOA_CLK_ENABLE(); // For SCK, MISO, MOSI
-        __HAL_RCC_GPIOB_CLK_ENABLE(); // For CS
-
-        /* 2. Free PB4 from JTAG (CRITICAL!) */
+        // Free PB4 from JTAG (CRITICAL for CS pin!)
         __HAL_AFIO_REMAP_SWJ_NOJTAG(); // Disable JTAG, keep SWD
 
-        /* 3. Configure SPI Pins */
+        // Configure SPI pins
         // SCK (PA5) - Alternate Function Push-Pull
         GPIO_InitStruct.Pin = GPIO_PIN_5;
         GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -51,48 +58,42 @@ namespace Driver
         GPIO_InitStruct.Pull = GPIO_NOPULL;
         GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
         HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET); // Set CS high
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET); // CS high (inactive)
 
         HAL_Delay(POWER_UP_DELAY_MS);
 
-        return status;
+        return true;
     }
 
-    bool SdCardDriver::onStart()
+    bool SdCardDriver::onStart() noexcept
     {
-        // Mount the filesystem
-        const FRESULT libStatus = f_mount(&fileSystem, SD_CARD_VOLUME, MOUNT_NOW_FLAG);
+        const auto result = f_mount(&fileSystem, SD_CARD_VOLUME, MOUNT_NOW_FLAG);
 
-        if (libStatus == FR_OK)
+        if (result == FR_OK)
         {
             isFileSystemMounted = true;
         }
 
-        return (libStatus == FR_OK);
+        return result == FR_OK;
     }
 
-    bool SdCardDriver::onStop()
+    bool SdCardDriver::onStop() noexcept
     {
         bool status = true;
 
         // Close any open file before unmounting
         if (isFileOpen)
         {
-            const SdCardStatus closeStatus = closeFile();
-            if (closeStatus != SdCardStatus::OK)
+            if (closeFile() != SdCardStatus::OK)
             {
                 status = false;
             }
         }
 
-        // Unmount the filesystem
-        // the library is made in a way that passing empty string is unmounting volume
-        // it's a third party lib, that's how it is
-        static constexpr const char *SD_CARD_UNMOUNT_VOLUME = "";
+        // Unmount filesystem (empty string unmounts)
+        const auto result = f_mount(nullptr, SD_CARD_UNMOUNT_VOLUME, MOUNT_NOW_FLAG);
 
-        const FRESULT libStatus = f_mount(0, SD_CARD_UNMOUNT_VOLUME, MOUNT_NOW_FLAG);
-
-        if (libStatus != FR_OK)
+        if (result != FR_OK)
         {
             status = false;
         }
@@ -104,122 +105,87 @@ namespace Driver
         return status;
     }
 
-    bool SdCardDriver::onReset()
+    SdCardStatus SdCardDriver::openFile(std::string_view filename,
+                                        FileOpenMode mode) noexcept
     {
-        const bool status = true;
-        return status;
-    }
-
-    SdCardStatus SdCardDriver::openFile(std::string_view filename, FileOpenMode mode)
-    {
-        SdCardStatus status = SdCardStatus::OK;
-
-        if (filename.empty())
-        {
-            status = SdCardStatus::INVALID_PARAMETER;
-        }
-        else if (!isFileSystemMounted)
-        {
-            status = SdCardStatus::FILESYSTEM_NOT_MOUNTED;
-        }
-        else if (isFileOpen)
-        {
-            status = SdCardStatus::FILE_ALREADY_OPEN;
-        }
-        else
-        {
-            BYTE fatFsMode;
-
-            if (mode == FileOpenMode::OVERWRITE)
-            {
-                fatFsMode = FA_WRITE | FA_CREATE_ALWAYS;
-            }
-            else // FileOpenMode::APPEND
-            {
-                fatFsMode = FA_WRITE | FA_OPEN_ALWAYS;
-            }
-
-            // FatFs requires null-terminated string
-            FRESULT result = f_open(&file, filename.data(), fatFsMode);
-
-            if (result != FR_OK)
-            {
-                status = SdCardStatus::FILE_OPEN_ERROR;
-            }
-            else
-            {
-                // For append mode, seek to end of file
-                if (mode == FileOpenMode::APPEND)
-                {
-                    result = f_lseek(&file, f_size(&file));
-                    if (result != FR_OK)
-                    {
-                        f_close(&file);
-                        isFileOpen = false;
-                        status = SdCardStatus::FILE_OPEN_ERROR;
-                    }
-                    else
-                    {
-                        isFileOpen = true;
-                    }
-                }
-                else
-                {
-                    isFileOpen = true;
-                }
-            }
-        }
-
-        return status;
-    }
-
-    SdCardStatus SdCardDriver::closeFile()
-    {
-        SdCardStatus status = SdCardStatus::OK;
-
-        if (!isFileOpen)
-        {
-            status = SdCardStatus::NO_FILE_OPEN;
-        }
-        else
-        {
-            FRESULT result = f_close(&file);
-
-            if (result != FR_OK)
-            {
-                status = SdCardStatus::FILE_CLOSE_ERROR;
-            }
-            else
-            {
-                isFileOpen = false;
-            }
-        }
-
-        return status;
-    }
-
-    SdCardStatus SdCardDriver::write(std::span<const std::uint8_t> data)
-    {
-        // Empty check is automatic - span knows its size!
-        if (data.empty())
+        if (filename.empty()) [[unlikely]]
         {
             return SdCardStatus::INVALID_PARAMETER;
         }
 
-        if (!isFileSystemMounted)
+        if (!isFileSystemMounted) [[unlikely]]
         {
             return SdCardStatus::FILESYSTEM_NOT_MOUNTED;
         }
 
-        if (!isFileOpen)
+        if (isFileOpen) [[unlikely]]
+        {
+            return SdCardStatus::FILE_ALREADY_OPEN;
+        }
+
+        const BYTE fatFsMode = (mode == FileOpenMode::OVERWRITE)
+                                   ? (FA_WRITE | FA_CREATE_ALWAYS)
+                                   : (FA_WRITE | FA_OPEN_ALWAYS);
+
+        auto result = f_open(&file, filename.data(), fatFsMode);
+
+        if (result != FR_OK)
+        {
+            return SdCardStatus::FILE_OPEN_ERROR;
+        }
+
+        // For append mode, seek to end of file
+        if (mode == FileOpenMode::APPEND)
+        {
+            result = f_lseek(&file, f_size(&file));
+            if (result != FR_OK)
+            {
+                f_close(&file);
+                return SdCardStatus::FILE_OPEN_ERROR;
+            }
+        }
+
+        isFileOpen = true;
+        return SdCardStatus::OK;
+    }
+
+    SdCardStatus SdCardDriver::closeFile() noexcept
+    {
+        if (!isFileOpen) [[unlikely]]
         {
             return SdCardStatus::NO_FILE_OPEN;
         }
 
-        UINT bytesWritten = 0;
+        const auto result = f_close(&file);
 
-        // span.data() and span.size() replace your pointer + size
-        FRESULT result = f_write(&file, data.data(), data.size(), &bytesWritten);
+        if (result != FR_OK)
+        {
+            return SdCardStatus::FILE_CLOSE_ERROR;
+        }
+
+        isFileOpen = false;
+        return SdCardStatus::OK;
+    }
+
+    SdCardStatus SdCardDriver::write(std::span<const std::uint8_t> data) noexcept
+    {
+        if (data.empty()) [[unlikely]]
+        {
+            return SdCardStatus::INVALID_PARAMETER;
+        }
+
+        if (!isFileSystemMounted) [[unlikely]]
+        {
+            return SdCardStatus::FILESYSTEM_NOT_MOUNTED;
+        }
+
+        if (!isFileOpen) [[unlikely]]
+        {
+            return SdCardStatus::NO_FILE_OPEN;
+        }
+
+        UINT bytesWritten = 0U;
+        auto result = f_write(&file, data.data(), data.size(), &bytesWritten);
 
         if (result != FR_OK)
         {
@@ -231,7 +197,7 @@ namespace Driver
             return SdCardStatus::INCOMPLETE_WRITE;
         }
 
-        // Ensure data is physically written to the SD card
+        // Ensure data is physically written to SD card
         result = f_sync(&file);
         if (result != FR_OK)
         {
@@ -241,4 +207,4 @@ namespace Driver
         return SdCardStatus::OK;
     }
 
-}
+} // namespace Driver

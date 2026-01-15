@@ -45,7 +45,10 @@ jobs:
 
       - name: Run Docs Coverage
         run: |
-          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make docs"
+          docker compose -f docker-compose.yml exec -T dev bash -lc '
+            cmake -S /workspace --preset docs
+            cmake --build --preset docs
+          '
 
       - name: Upload Docs Coverage Results
         if: always()

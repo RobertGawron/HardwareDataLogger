@@ -38,47 +38,47 @@ TEST_F(DisplayPixelColorTest, TestColorConversion)
     // Test conversion of specific colors and check against known values
 
     // Test Black
-    const std::uint16_t black = Driver::DisplayPixelColor::getColor(getMinIntensity(), getMinIntensity(), getMinIntensity());
-    EXPECT_EQ(black, Driver::DisplayPixelColor::BLACK);
+    const std::uint16_t black = Device::DisplayPixelColor::getColor(getMinIntensity(), getMinIntensity(), getMinIntensity());
+    EXPECT_EQ(black, Device::DisplayPixelColor::BLACK);
 
     // Test Blue
-    const std::uint16_t blue = Driver::DisplayPixelColor::getColor(getMinIntensity(), getMinIntensity(), getMaxIntensity());
-    EXPECT_EQ(blue, Driver::DisplayPixelColor::BLUE);
+    const std::uint16_t blue = Device::DisplayPixelColor::getColor(getMinIntensity(), getMinIntensity(), getMaxIntensity());
+    EXPECT_EQ(blue, Device::DisplayPixelColor::BLUE);
 
     // Test Red
-    const std::uint16_t red = Driver::DisplayPixelColor::getColor(getMaxIntensity(), getMinIntensity(), getMinIntensity());
-    EXPECT_EQ(red, Driver::DisplayPixelColor::RED);
+    const std::uint16_t red = Device::DisplayPixelColor::getColor(getMaxIntensity(), getMinIntensity(), getMinIntensity());
+    EXPECT_EQ(red, Device::DisplayPixelColor::RED);
 
     // Test Green
-    const std::uint16_t green = Driver::DisplayPixelColor::getColor(getMinIntensity(), getMaxIntensity(), getMinIntensity());
-    EXPECT_EQ(green, Driver::DisplayPixelColor::GREEN);
+    const std::uint16_t green = Device::DisplayPixelColor::getColor(getMinIntensity(), getMaxIntensity(), getMinIntensity());
+    EXPECT_EQ(green, Device::DisplayPixelColor::GREEN);
 
     // Test Cyan
-    const std::uint16_t cyan = Driver::DisplayPixelColor::getColor(getMinIntensity(), getMaxIntensity(), getMaxIntensity());
-    EXPECT_EQ(cyan, Driver::DisplayPixelColor::CYAN);
+    const std::uint16_t cyan = Device::DisplayPixelColor::getColor(getMinIntensity(), getMaxIntensity(), getMaxIntensity());
+    EXPECT_EQ(cyan, Device::DisplayPixelColor::CYAN);
 
     // Test Magenta
-    const std::uint16_t magenta = Driver::DisplayPixelColor::getColor(getMaxIntensity(), getMinIntensity(), getMaxIntensity());
-    EXPECT_EQ(magenta, Driver::DisplayPixelColor::MAGENTA);
+    const std::uint16_t magenta = Device::DisplayPixelColor::getColor(getMaxIntensity(), getMinIntensity(), getMaxIntensity());
+    EXPECT_EQ(magenta, Device::DisplayPixelColor::MAGENTA);
 
     // Test Yellow
-    const std::uint16_t yellow = Driver::DisplayPixelColor::getColor(getMaxIntensity(), getMaxIntensity(), getMinIntensity());
-    EXPECT_EQ(yellow, Driver::DisplayPixelColor::YELLOW);
+    const std::uint16_t yellow = Device::DisplayPixelColor::getColor(getMaxIntensity(), getMaxIntensity(), getMinIntensity());
+    EXPECT_EQ(yellow, Device::DisplayPixelColor::YELLOW);
 
     // Test White
-    const std::uint16_t white = Driver::DisplayPixelColor::getColor(getMaxIntensity(), getMaxIntensity(), getMaxIntensity());
-    EXPECT_EQ(white, Driver::DisplayPixelColor::WHITE);
+    const std::uint16_t white = Device::DisplayPixelColor::getColor(getMaxIntensity(), getMaxIntensity(), getMaxIntensity());
+    EXPECT_EQ(white, Device::DisplayPixelColor::WHITE);
 }
 
 // Additional tests for arbitrary colors using the public interface
 TEST_F(DisplayPixelColorTest, TestCustomColors)
 {
     // Example: Test some arbitrary colors and compare them with expected RGB565 values
-    const std::uint16_t customColor1 = Driver::DisplayPixelColor::getColor(0x12, 0x34, 0x56);
+    const std::uint16_t customColor1 = Device::DisplayPixelColor::getColor(0x12, 0x34, 0x56);
     const std::uint16_t expectedColor1 = (0x12 >> 3) << 11 | (0x34 >> 2) << 5 | (0x56 >> 3);
     EXPECT_EQ(customColor1, expectedColor1);
 
-    const std::uint16_t customColor2 = Driver::DisplayPixelColor::getColor(0xAA, 0xBB, 0xCC);
+    const std::uint16_t customColor2 = Device::DisplayPixelColor::getColor(0xAA, 0xBB, 0xCC);
     const std::uint16_t expectedColor2 = (0xAA >> 3) << 11 | (0xBB >> 2) << 5 | (0xCC >> 3);
     EXPECT_EQ(customColor2, expectedColor2);
 }

@@ -1,28 +1,32 @@
-#include "Device/Inc/Display.hpp"
-#include "Driver/Interface/DisplayPixelColor.hpp"
-
-#include "u8g2.h"
-#include "u8x8.h"
+module;
 
 #include <array>
 #include <cstdint>
 #include <cstdlib>
 
+#include "u8g2.h"
+#include "u8x8.h"
+
+module Device.Display;
+
+// import Driver.DisplayPixelColor;
+// import Device.DisplayPixelColor;
+
 namespace Device
 {
-    // Not used. Required by the u8g2 library, but this action is handled by the St7735DisplayDriver class.
+    // Not used. Required by the u8g2 library, but this action is handled by the DisplayDriver class.
     std::uint8_t u8x8_byte_dummy_callback(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t arg_int, void *arg_ptr);
 
-    // Not used. Required by the u8g2 library, but this action is handled by the St7735DisplayDriver class.
+    // Not used. Required by the u8g2 library, but this action is handled by the DisplayDriver class.
     std::uint8_t u8x8_gpio_and_delay_dummy_callback(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t arg_int, void *arg_ptr);
 
-    static const std::uint8_t U8G2_STATUS_OK = 1u;
-    static const std::uint8_t U8G2_STATUS_NOT_OK = 0u;
+    static const std::uint8_t U8G2_STATUS_OK = 1U;
+    static const std::uint8_t U8G2_STATUS_NOT_OK = 0U;
 
     namespace
     {
         // Define a constant for maximum displays, change if needed
-        constexpr std::size_t MAX_DISPLAYS = 1u;
+        constexpr std::size_t MAX_DISPLAYS = 1U;
 
         // Struct for mapping display entries
         struct DisplayMapEntry
@@ -33,7 +37,7 @@ namespace Device
 
         // Use std::array for a fixed-size array
         std::array<DisplayMapEntry, MAX_DISPLAYS> displayMap{};
-        std::size_t displayCount = 1u;
+        std::size_t displayCount = 1U;
 
         constexpr std::uint8_t TILE_PIXEL_HEIGHT = 8;
         constexpr std::uint8_t DEFAULT_COLOR_RED = 0x2f;
@@ -44,7 +48,7 @@ namespace Device
         // It must have the same signature as u8x8_d_st7735.
         std::uint8_t trampolineU8x8DSt7735(u8x8_t *u8x8, std::uint8_t msg, std::uint8_t argInt, void *argPtr)
         {
-            for (std::size_t i = 0u; i < displayCount; i++)
+            for (std::size_t i = 0U; i < displayCount; i++)
             {
                 if (displayMap[i].u8x8 == u8x8)
                 {
@@ -145,17 +149,17 @@ namespace Device
                     const std::uint8_t col_data = tile.tile_ptr[col]; // This is a vertical column
                     for (std::uint8_t bit = 0; bit < TILE_PIXEL_HEIGHT; bit++)
                     {
-                        Driver::DisplayPixelColor::PixelColor color = Driver::DisplayPixelColor::getColor(0x00, 0x00, 0x00);
+                        Device::DisplayPixelColor::PixelColor color = Device::DisplayPixelColor::getColor(0x00, 0x00, 0x00);
                         const std::uint8_t x = tile_x_start + col;
                         const std::uint8_t y = tile_y_start + bit;
 
                         if ((col_data & (1 << bit)) != 0)
                         {
                             // Now (col, bit) corresponds to (x, y) pixel offsets within the tile:
-                            color = Driver::DisplayPixelColor::getColor(DEFAULT_COLOR_RED, DEFAULT_COLOR_GREEN, DEFAULT_COLOR_BLUE);
+                            color = Device::DisplayPixelColor::getColor(DEFAULT_COLOR_RED, DEFAULT_COLOR_GREEN, DEFAULT_COLOR_BLUE);
                         }
 
-                        displayDriver.setPixel(x, y, color);
+                        // displayDriver.setPixel(x, y, color);
                     }
                 }
             }
@@ -213,14 +217,14 @@ namespace Device
                     for (std::uint8_t bit = 0; bit < TILE_PIXEL_HEIGHT; bit++)
                     {
                         //
-                        Driver::DisplayPixelColor::PixelColor color = Driver::DisplayPixelColor::getColor(0x00, 0x00, 0x00);
+                        Device::DisplayPixelColor::PixelColor color = Device::DisplayPixelColor::getColor(0x00, 0x00, 0x00);
                         const std::uint8_t x = tile_x_start + col;
                         const std::uint8_t y = tile_y_start + bit;
 
                         if ((col_data & (1 << bit)) != 0)
                         {
                             // Now (col, bit) corresponds to (x, y) pixel offsets within the tile:
-                            color = Driver::DisplayPixelColor::getColor(DEFAULT_COLOR_RED, DEFAULT_COLOR_GREEN, DEFAULT_COLOR_BLUE);
+                            color = Device::DisplayPixelColor::getColor(DEFAULT_COLOR_RED, DEFAULT_COLOR_GREEN, DEFAULT_COLOR_BLUE);
 
                             printf("tile_x_start *********** GOT IT ************ \n");
                         }
@@ -324,16 +328,14 @@ void u8g2_SetupBuffer_SDL_128x64(u8g2_t *u8g2, const u8g2_cb_t *u8g2_cb)
         */
     }
 
-    Display::Display(Driver::IDisplayDriver &_displayDriver) : displayDriver(_displayDriver)
+    Display::Display(Driver::DisplayDriver &_displayDriver) : displayDriver(_displayDriver)
     {
-
         displayMap[0].u8x8 = &u8g2.u8x8;
         displayMap[0].display = this;
     }
 
-    bool Display::initialize()
+    bool Display::onInit() noexcept
     {
-
         // 2025
 #if 0       
         const u8g2_cb_t *rotation = U8G2_R0;
@@ -341,4 +343,5 @@ void u8g2_SetupBuffer_SDL_128x64(u8g2_t *u8g2, const u8g2_cb_t *u8g2_cb)
 #endif
         return true;
     }
-}
+
+} // namespace Device

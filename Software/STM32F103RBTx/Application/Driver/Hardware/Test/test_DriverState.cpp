@@ -1,147 +1,146 @@
-#include "Driver/Interface/DriverState.hpp"
+/**
+ * @file test_DriverComponent.cpp
+ * @brief Modern C++23 tests for DriverComponent state machine
+ */
+
+#include "Driver/Interface/DriverComponent.hpp"
 
 #include <gtest/gtest.h>
 
-// A mock or stub class inheriting from DriverState for testing purposes
-class TestDriver : public Driver::DriverState
+// Mock driver for testing
+class TestDriver : public Driver::DriverComponent
 {
 public:
-    bool onInitialize() override
-    {
-        // Custom initialization logic for testing
-        return true;
-    }
+    [[nodiscard]] bool onInit() noexcept override { return initResult; }
+    [[nodiscard]] bool onStart() noexcept override { return startResult; }
+    [[nodiscard]] bool onStop() noexcept override { return stopResult; }
 
-    bool onStart() override
-    {
-        // Custom start logic for testing
-        return true;
-    }
-
-    bool onStop() override
-    {
-        // Custom stop logic for testing
-        return true;
-    }
-
-    bool onReset() override
-    {
-        // Custom reset logic for testing
-        return true;
-    }
+    // Test control
+    bool initResult{true};
+    bool startResult{true};
+    bool stopResult{true};
 };
 
-class FailingResetDriver : public Driver::DriverState
+// Test fixture
+class DriverComponentTest : public ::testing::Test
 {
-public:
-    bool onInitialize() override { return true; }
-    bool onStart() override { return true; }
-    bool onStop() override { return true; }
-
-    // Simulate failure
-    bool onReset() override { return false; }
-};
-
-// Test fixture class for DriverState
-class DriverStateTest : public ::testing::Test
-{
-public:
+protected:
     void SetUp() override
     {
-        ASSERT_EQ(getDriver().getState(), Driver::DriverState::State::Reset);
+        ASSERT_EQ(driver.getState(), Driver::DriverComponent::State::IN_RESETING);
     }
 
-    void TearDown() override
-    {
-        // Any cleanup can go here
-    }
-
-    // Getter for accessing private member
-    TestDriver &getDriver() { return driver; }
-
-private:
     TestDriver driver;
 };
 
-// Test the initialize method
-TEST_F(DriverStateTest, InitializeTest)
+// ==================== Initialization Tests ====================
+
+TEST_F(DriverComponentTest, InitTransitionsToInitializing)
 {
-    EXPECT_TRUE(getDriver().initialize());
-    EXPECT_EQ(getDriver().getState(), Driver::DriverState::State::Initialized);
+    EXPECT_TRUE(driver.init());
+    // Note: After init(), state remains IN_INITIALIZING (not a final state)
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::IN_INITIALIZING);
 }
 
-// Test the start method
-TEST_F(DriverStateTest, StartTest)
+TEST_F(DriverComponentTest, InitFailsWhenOnInitFails)
 {
-    getDriver().initialize();
-    EXPECT_TRUE(getDriver().start());
-    EXPECT_EQ(getDriver().getState(), Driver::DriverState::State::Running);
+    driver.initResult = false;
+    EXPECT_FALSE(driver.init());
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::IN_INITIALIZING);
 }
 
-// Test the stop method
-TEST_F(DriverStateTest, StopTest)
+// ==================== Start Tests ====================
+
+TEST_F(DriverComponentTest, StartTransitionsToRunning)
 {
-    getDriver().initialize();
-    getDriver().start();
-    EXPECT_TRUE(getDriver().stop());
-    EXPECT_EQ(getDriver().getState(), Driver::DriverState::State::Stop);
+    driver.init();
+    EXPECT_TRUE(driver.start());
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::RUNNING);
 }
 
-// Test the reset method
-TEST_F(DriverStateTest, ResetTest)
+TEST_F(DriverComponentTest, StartFailsIfNotInitialized)
 {
-    getDriver().initialize();
-    getDriver().start();
-    getDriver().stop();
-    EXPECT_TRUE(getDriver().reset());
-    EXPECT_EQ(getDriver().getState(), Driver::DriverState::State::Reset);
+    EXPECT_FALSE(driver.start());
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::IN_RESETING);
 }
 
-// Test that start fails if not initialized
-TEST_F(DriverStateTest, StartFailsIfNotInitialized)
+TEST_F(DriverComponentTest, StartFailsWhenOnStartFails)
 {
-    EXPECT_FALSE(getDriver().start());
-    EXPECT_EQ(getDriver().getState(), Driver::DriverState::State::Reset);
+    driver.init();
+    driver.startResult = false;
+    EXPECT_FALSE(driver.start());
+    // State is IN_STARTING but onStart failed, so doesn't reach IN_RUNNING
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::IN_STARTING);
 }
 
-// Test that stop fails if not running
-TEST_F(DriverStateTest, StopFailsIfNotRunning)
-{
-    EXPECT_FALSE(getDriver().stop());
-    EXPECT_EQ(getDriver().getState(), Driver::DriverState::State::Reset);
+// ==================== Stop Tests ====================
 
-    getDriver().initialize();
-    EXPECT_FALSE(getDriver().stop());
-    EXPECT_EQ(getDriver().getState(), Driver::DriverState::State::Initialized);
+TEST_F(DriverComponentTest, StopTransitionsToStopping)
+{
+    driver.init();
+    driver.start();
+    EXPECT_TRUE(driver.stop());
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::IN_STOPPING);
 }
 
-TEST_F(DriverStateTest, IsInStateReflectsCurrentState)
+TEST_F(DriverComponentTest, StopFailsIfNotRunning)
 {
-    // Initially in Reset
-    EXPECT_TRUE(getDriver().isInState(Driver::DriverState::State::Reset));
+    EXPECT_FALSE(driver.stop());
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::IN_RESETING);
 
-    getDriver().initialize();
-    EXPECT_TRUE(getDriver().isInState(Driver::DriverState::State::Initialized));
-    EXPECT_FALSE(getDriver().isInState(Driver::DriverState::State::Reset));
-
-    getDriver().start();
-    EXPECT_TRUE(getDriver().isInState(Driver::DriverState::State::Running));
-
-    getDriver().stop();
-    EXPECT_TRUE(getDriver().isInState(Driver::DriverState::State::Stop));
-
-    getDriver().reset();
-    EXPECT_TRUE(getDriver().isInState(Driver::DriverState::State::Reset));
+    driver.init();
+    EXPECT_FALSE(driver.stop());
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::IN_INITIALIZING);
 }
 
-TEST(DriverStateNegativeTest, ResetFailsWhenOnResetFails)
+TEST_F(DriverComponentTest, StopFailsWhenOnStopFails)
 {
-    FailingResetDriver driver;
-    driver.initialize();
+    driver.init();
+    driver.start();
+    driver.stopResult = false;
+    EXPECT_FALSE(driver.stop());
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::IN_STOPPING);
+}
+
+// ==================== State Transition Tests ====================
+
+TEST_F(DriverComponentTest, FullLifecycle)
+{
+    // Reset -> Init -> Start -> Stop
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::IN_RESETING);
+
+    EXPECT_TRUE(driver.init());
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::IN_INITIALIZING);
+
+    EXPECT_TRUE(driver.start());
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::RUNNING);
+
+    EXPECT_TRUE(driver.stop());
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::IN_STOPPING);
+}
+
+TEST_F(DriverComponentTest, StoppingAllowsRestart)
+{
+    driver.init();
     driver.start();
     driver.stop();
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::IN_STOPPING);
 
-    EXPECT_FALSE(driver.reset());
-    // State should remain unchanged from last successful state
-    EXPECT_EQ(driver.getState(), Driver::DriverState::State::Stop);
+    // From STOPPING, can restart: STOPPING -> STARTING -> RUNNING
+    EXPECT_TRUE(driver.start());
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::RUNNING);
+}
+
+// ==================== Invalid Transition Tests ====================
+
+TEST_F(DriverComponentTest, InvalidTransitionsAreRejected)
+{
+    // Cannot start from RESET
+    EXPECT_FALSE(driver.start());
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::IN_RESETING);
+
+    // Cannot stop from INITIALIZED
+    driver.init();
+    EXPECT_FALSE(driver.stop());
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::IN_INITIALIZING);
 }
