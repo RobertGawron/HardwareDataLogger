@@ -20,42 +20,42 @@ SdCardStartCallback sdCardStartCallback = nullptr;
 SdCardStopCallback sdCardStopCallback = nullptr;
 SdCardResetCallback sdCardResetCallback = nullptr;
 
-void registerSerialTxCallback(SerialTxCallback callback)
+void LibWrapper_RegisterSerialTxCallback(SerialTxCallback callback)
 {
     serialTxCallback = callback;
 }
 
-void registerSdCardOpenCallback(SdCardOpenCallback callback)
+void LibWrapper_RegisterSdCardOpenCallback(SdCardOpenCallback callback)
 {
     sdCardOpenCallback = callback;
 }
 
-void registerSdCardWriteCallback(SdCardWriteCallback callback)
+void LibWrapper_RegisterSdCardWriteCallback(SdCardWriteCallback callback)
 {
     sdCardWriteCallback = callback;
 }
 
-void registerSdCardCloseCallback(SdCardCloseCallback callback)
+void LibWrapper_RegisterSdCardCloseCallback(SdCardCloseCallback callback)
 {
     sdCardCloseCallback = callback;
 }
 
-void registerSdCardInitializeCallback(SdCardInitializeCallback callback)
+void LibWrapper_RegisterSdCardInitializeCallback(SdCardInitializeCallback callback)
 {
     sdCardInitializeCallback = callback;
 }
 
-void registerSdCardStartCallback(SdCardStartCallback callback)
+void LibWrapper_RegisterSdCardStartCallback(SdCardStartCallback callback)
 {
     sdCardStartCallback = callback;
 }
 
-void registerSdCardStopCallback(SdCardStopCallback callback)
+void LibWrapper_RegisterSdCardStopCallback(SdCardStopCallback callback)
 {
     sdCardStopCallback = callback;
 }
 
-void registerSdCardResetCallback(SdCardResetCallback callback)
+void LibWrapper_RegisterSdCardResetCallback(SdCardResetCallback callback)
 {
     sdCardResetCallback = callback;
 }

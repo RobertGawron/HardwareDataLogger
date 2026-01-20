@@ -8,14 +8,24 @@ extern "C"
 {
 #endif
 
-    typedef uint8_t HAL_StatusTypeDef;
-    enum : uint8_t
+    /*
+        typedef uint8_t HAL_StatusTypeDef;
+        enum : uint8_t
+        {
+            HAL_OK = 0x00U,
+            HAL_ERROR = 0x01U,
+            HAL_BUSY = 0x02U,
+            HAL_TIMEOUT = 0x03U
+        };
+    */
+
+    typedef enum
     {
         HAL_OK = 0x00U,
         HAL_ERROR = 0x01U,
         HAL_BUSY = 0x02U,
         HAL_TIMEOUT = 0x03U
-    };
+    } HAL_StatusTypeDef;
 
     typedef uint8_t SdCardStatus_t;
     typedef uint8_t FileOpenMode_t;
@@ -32,14 +42,14 @@ extern "C"
     typedef bool (*SdCardStopCallback)(void);
     typedef bool (*SdCardResetCallback)(void);
 
-    void registerSerialTxCallback(SerialTxCallback callback);
-    void registerSdCardOpenCallback(SdCardOpenCallback callback);
-    void registerSdCardWriteCallback(SdCardWriteCallback callback);
-    void registerSdCardCloseCallback(SdCardCloseCallback callback);
-    void registerSdCardInitializeCallback(SdCardInitializeCallback callback);
-    void registerSdCardStartCallback(SdCardStartCallback callback);
-    void registerSdCardStopCallback(SdCardStopCallback callback);
-    void registerSdCardResetCallback(SdCardResetCallback callback);
+    void LibWrapper_RegisterSerialTxCallback(SerialTxCallback callback);
+    void LibWrapper_RegisterSdCardOpenCallback(SdCardOpenCallback callback);
+    void LibWrapper_RegisterSdCardWriteCallback(SdCardWriteCallback callback);
+    void LibWrapper_RegisterSdCardCloseCallback(SdCardCloseCallback callback);
+    void LibWrapper_RegisterSdCardInitializeCallback(SdCardInitializeCallback callback);
+    void LibWrapper_RegisterSdCardStartCallback(SdCardStartCallback callback);
+    void LibWrapper_RegisterSdCardStopCallback(SdCardStopCallback callback);
+    void LibWrapper_RegisterSdCardResetCallback(SdCardResetCallback callback);
 
     HAL_StatusTypeDef serialTx(UartId_t uartId, const uint8_t *data, uint16_t size, uint32_t timeout);
     SdCardStatus_t sdCardOpen(const char *filename, FileOpenMode_t mode);

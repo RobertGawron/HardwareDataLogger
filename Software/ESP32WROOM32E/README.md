@@ -6,7 +6,7 @@ While the DevOps approach is theoretically platform-agnostic, we are dealing wit
 
 # Prerequisites
 
-   * (Setup of the docker image for this project)[../../DevOps/README.md)
+   * [Setup of the docker image for this project](../../DevOps/README.md)
    * Install usbipd-win (run as root PowerShell and type: winget install usbipd).
    * Install CH340 drivers from https://www.wch-ic.com/downloads/ch341ser_zip.html
 
@@ -33,7 +33,10 @@ While the DevOps approach is theoretically platform-agnostic, we are dealing wit
 
    * Attach the device (Replace 4-2 with your actual ID)
    
-      ```usbipd attach --wsl --busid 4-2```
+      ```
+      usbipd bind --busid 4-3
+      usbipd attach --wsl --busid 4-2
+      ```
 
    * Load Driver in Shared Kernel, type ```wsl``` in PowerShell and run:
 
@@ -93,3 +96,10 @@ ser.dtr = False
 
 ser.close()
 ```
+
+
+
+/// building:
+
+
+cargo install ldproxy
