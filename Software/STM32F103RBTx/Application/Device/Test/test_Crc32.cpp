@@ -1,9 +1,9 @@
-#include "Device/Inc/Crc32.hpp"
-
 #include <gtest/gtest.h>
 #include <cstdint>
 #include <array>
 #include <span>
+
+import Device.Crc32;
 
 namespace
 {

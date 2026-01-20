@@ -22,7 +22,7 @@
     },
     {
       "name": "Python Driver",
-      "path": "Software/STM32F103RBTx/Application/Driver/Simulation/Python"
+      "path": "Software/STM32F103RBTx/Application/SimulationBindings/Python"
     }
   ],
   "settings": {
@@ -31,20 +31,15 @@
     "cmake.configureOnOpen": false,
     "cmake.automaticReconfigure": false,
     "cmake.buildBeforeRun": true,
-
     // Optional: reduces background noise in multi-root workspaces
     "cmake.showOptionsMovedNotification": false,
-
     // ---------- C/C++ defaults ----------
     "C_Cpp.default.cppStandard": "c++23",
     "C_Cpp.default.cStandard": "c11",
-
     // Helps IntelliSense
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
-
     // ---------- Python ----------
     "python.defaultInterpreterPath": "/workspace/venv/bin/python3",
-
     // ---------- Quality of life ----------
     "task.quickOpen.detail": true,
     "task.quickOpen.skip": false

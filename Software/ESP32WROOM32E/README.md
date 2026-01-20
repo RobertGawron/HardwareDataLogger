@@ -103,3 +103,4 @@ ser.close()
 
 
 cargo install ldproxy
+cargo install cargo-espflash

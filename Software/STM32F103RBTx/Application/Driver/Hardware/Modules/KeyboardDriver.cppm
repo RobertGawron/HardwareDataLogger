@@ -12,7 +12,7 @@ export module Driver.KeyboardDriver;
 import Driver.DriverComponent;
 import Driver.KeyboardDriverConcept;
 import Driver.KeyState;
-import Driver.KeyIdentifier;
+import Driver.KeyId;
 
 export namespace Driver
 {
@@ -27,7 +27,7 @@ export namespace Driver
     {
     public:
         static constexpr std::uint8_t AMOUNT_OF_KEYS =
-            static_cast<std::uint8_t>(KeyIdentifier::LastNotUsed);
+            static_cast<std::uint8_t>(KeyId::LastNotUsed);
 
         KeyboardDriver() = default;
         ~KeyboardDriver() = default;
@@ -38,7 +38,7 @@ export namespace Driver
         KeyboardDriver &operator=(KeyboardDriver &&) = delete;
 
         [[nodiscard]] bool tick() noexcept;
-        [[nodiscard]] KeyState getKeyState(KeyIdentifier key) const noexcept;
+        [[nodiscard]] KeyState getKeyState(KeyId key) const noexcept;
 
     protected:
         // [[nodiscard]] constexpr bool onInit() noexcept  { return true; }

@@ -26,7 +26,7 @@ namespace BusinessLogic
           wifiRecorder{drivers.wifiUart},
           sdCardRecorder{drivers.sdCard},
           recorders{std::ref(wifiRecorder), std::ref(sdCardRecorder)},
-          measurementCoordinator{sources, recorders},
+          measurement{sources, recorders},
           display{drivers.display},
           brightness{drivers.LightSensor, drivers.displayBrightness},
           keyboard{drivers.keyboard},
@@ -36,22 +36,22 @@ namespace BusinessLogic
 
     auto ApplicationFacade::onInit() noexcept -> bool
     {
-        return measurementCoordinator.init();
+        return measurement.init();
     }
 
     auto ApplicationFacade::onStart() noexcept -> bool
     {
-        return measurementCoordinator.start();
+        return measurement.start();
     }
 
     auto ApplicationFacade::onStop() noexcept -> bool
     {
-        return measurementCoordinator.stop();
+        return measurement.stop();
     }
 
     auto ApplicationFacade::onTick() noexcept -> bool
     {
-        return measurementCoordinator.tick();
+        return measurement.tick();
     }
 
 } // namespace BusinessLogic

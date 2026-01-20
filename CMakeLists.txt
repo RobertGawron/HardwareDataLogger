@@ -5,6 +5,9 @@ project(HardwareDataLogger)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# 1. Enable Testing Globally (Mandatory for CTest)
+enable_testing()
+
 # Define ARM target for static analysis (STM32F103 = Cortex-M3)
 set(ARM_STATIC_ANALYSIS_TARGET "thumbv7m-none-eabi" CACHE STRING "ARM target for static analysis")
 
@@ -14,7 +17,6 @@ option(BUILD_IS_FOR_HARDWARE "Build for STM32 hardware" OFF)
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -pg")
     
-
 
     
 endif()
@@ -26,8 +28,10 @@ endif()
     add_subdirectory(Software/STM32F103RBTx/Application/BusinessLogic/)
     add_subdirectory(Software/STM32F103RBTx/Application/SimulationBindings/)
 
+    #add_subdirectory(Software/STM32F103RBTx/Application/BusinessLogic/Test)
+    add_subdirectory(Software/STM32F103RBTx/Application/Device/Test)
+    #add_subdirectory(Software/STM32F103RBTx/Application/Driver/Hardware/Test)
     
-
 
     include(Software/STM32F103RBTx/Application/CodeCoverage.cmake)
     include(DevOps/Cmake/CStaticAnalysis.cmake)
@@ -46,6 +50,25 @@ add_custom_target(firmware
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
     COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR}/firmware-build --parallel
     COMMENT "Building STM32 firmware with Ninja..."
+    USES_TERMINAL
+)
+
+
+# todo move it??
+add_custom_target(install-sim
+  COMMAND ${CMAKE_COMMAND} --install ${CMAKE_BINARY_DIR}
+          --prefix ${CMAKE_BINARY_DIR}/install
+  COMMENT "Installing SimulationBindings into ${CMAKE_BINARY_DIR}/install"
+  USES_TERMINAL
+)
+
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+
+add_custom_target(integration
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/BuildArtifacts
+    COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_SOURCE_DIR}/IntegrationTest
+        ${Python3_EXECUTABLE} -m pytest -s
+        --html=${CMAKE_BINARY_DIR}/BuildArtifacts/IntegrationTest.html
     USES_TERMINAL
 )
 

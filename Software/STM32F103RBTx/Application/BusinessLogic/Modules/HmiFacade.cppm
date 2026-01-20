@@ -27,11 +27,11 @@ export namespace BusinessLogic
         /**
          * @brief Constructs interface with hardware component references.
          * @param display Renders graphical content to screen.
-         * @param displayBrightnessRegulator Controls backlight intensity.
+         * @param displayBrightness Controls backlight intensity.
          * @param keyboard Captures user button presses and input events.
          */
         HmiFacade(Device::Display &display,
-                  Device::DisplayBrightness &displayBrightnessRegulator,
+                  Device::DisplayBrightness &displayBrightness,
                   Device::Keyboard &keyboard);
 
         HmiFacade() = delete;
@@ -62,11 +62,11 @@ export namespace BusinessLogic
          * @return true if update successful.
          * @deprecated Use onTick() instead for lifecycle-managed execution.
          */
-        bool tick();
+        // bool tick();
 
     private:
         Device::Display &display;
-        Device::DisplayBrightness &displayBrightnessRegulator;
+        Device::DisplayBrightness &displayBrightness;
         Device::Keyboard &keyboard;
         MUIU8G2 mui; ///< MUI graphical framework instance
     };

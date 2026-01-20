@@ -97,7 +97,7 @@ xhost +local:docker
 
 ```
 cd /workspace/build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && \
-    ninja -C /workspace/build && cd /workspace/FirmwarePCSimulator/ && /workspace/venv/bin/python3 main.py
+    ninja -C /workspace/build && cd /workspace/FirmwarePCSimulator/ && /opt/venv/bin/python3 main.py
 ```
 
 ### Troubleshooting tunneling GUI to host environment

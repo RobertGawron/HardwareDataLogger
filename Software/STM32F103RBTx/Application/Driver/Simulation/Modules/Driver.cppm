@@ -2,7 +2,7 @@ export module Driver;
 
 export import Driver.PlatformFactory;
 
-export import Driver.KeyIdentifier;
+export import Driver.KeyId;
 export import Driver.KeyState;
 export import Driver.UartStatus;
 export import Driver.SdCardStatus;
@@ -34,5 +34,5 @@ export import Device.RecorderVariant;
 export import Device.MeasurementSource;
 export import Device.MeasurementType;
 export import Device.MeasurementRecorder;
-export import Device.KeyActionState;
+export import Device.KeyAction;
 */

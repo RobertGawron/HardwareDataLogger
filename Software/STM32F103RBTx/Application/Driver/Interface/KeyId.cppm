@@ -2,27 +2,27 @@ module;
 
 #include <cstdint>
 
-export module Driver.KeyIdentifier;
+export module Driver.KeyId;
 
 /**
- * @file KeyIdentifier.hpp
- * @brief Defines the KeyIdentifier enum for identifying keyboard keys.
+ * @file KeyId.hpp
+ * @brief Defines the KeyId enum for identifying keyboard keys.
  *
- * This file contains the definition of the KeyIdentifier enum, which assigns unique values
+ * This file contains the definition of the KeyId enum, which assigns unique values
  * to different keys on a keyboard. It allows for easy expansion if more keys are added.
  */
 
 export namespace Driver
 {
     /**
-     * @enum KeyIdentifier
+     * @enum KeyId
      * @brief Assigns unique identifiers to keyboard keys.
      *
-     * The KeyIdentifier enum is used to represent different keys on a keyboard with unique
+     * The KeyId enum is used to represent different keys on a keyboard with unique
      * integer values. This allows for easy identification and handling of different key inputs.
      * Currently, there are four keys defined, but more can be added as needed.
      */
-    enum class KeyIdentifier : std::uint8_t
+    enum class KeyId : std::uint8_t
     {
         Up = 0U,         /**< Represents the 'Up' key, assigned with value 0. */
         Down = 1U,       /**< Represents the 'Down' key, assigned with value 1. */

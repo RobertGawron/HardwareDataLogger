@@ -89,7 +89,7 @@ export namespace BusinessLogic
         std::array<Device::RecorderVariant, RECORDERS_COUNT> recorders;
 
         // Data routing
-        MeasurementCoordinator<SOURCES_COUNT, RECORDERS_COUNT> measurementCoordinator;
+        MeasurementCoordinator<SOURCES_COUNT, RECORDERS_COUNT> measurement;
 
         // Human-Machine Interface
         Device::Display display;
