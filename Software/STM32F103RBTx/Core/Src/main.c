@@ -150,9 +150,9 @@ int main(void)
   MX_USART1_Init();
   MX_USART3_Init();
   MX_ADC2_Init();
-  MX_IWDG_Init();
+  // MX_IWDG_Init();
   MX_SPI1_Init();
-  MX_WWDG_Init();
+  // MX_WWDG_Init();
   MX_FATFS_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
@@ -178,12 +178,12 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    if (app_tick_flag)
+    // if (app_tick_flag)
     {
       app_tick_flag = 0;
       app_tick();
 
-      __WFI(); // CPU sleeps, wakes on ANY interrupt
+      // __WFI(); // CPU sleeps, wakes on ANY interrupt
     }
     /* USER CODE END WHILE */
 
@@ -213,6 +213,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
+
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();

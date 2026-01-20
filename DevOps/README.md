@@ -1,6 +1,8 @@
 ## Prerequisites
 
-* * Install Docker. For Linux, use your package manager. For Windows, you need to install WSL (Windows Subsystem for Linux) first, then install Docker Desktop.
+* Install Docker:
+    * On Linux, use your package manager. 
+    * On Windows, install WSL (Windows Subsystem for Linux), then install Docker Desktop.
 
 ## Build the Docker Image
 

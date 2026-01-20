@@ -33,7 +33,7 @@ target_sources(Driver
 )
 
 target_sources(Driver PRIVATE
-   # EventHandlers.cppm
+    Src/EventHandlers.cpp
    # LibWrapper.cppm
 
     Src/BrightnessDriver.cpp

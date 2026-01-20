@@ -18,6 +18,9 @@ services:
       - /mnt/wslg:/mnt/wslg
       - ./:/workspace/
       - /dev/bus/usb:/dev/bus/usb
+    devices:
+      - /dev:/dev                   # Give container access to all devices
+      - /lib/modules:/lib/modules   # Give container access to Host Kernel Modules
     working_dir: /workspace
     stdin_open: true
     tty: true
