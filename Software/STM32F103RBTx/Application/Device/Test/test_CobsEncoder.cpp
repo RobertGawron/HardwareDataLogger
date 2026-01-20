@@ -1,13 +1,13 @@
-#include "Device/Inc/CobsEncoder.hpp"
-
 #include <gtest/gtest.h>
 #include <array>
 #include <cstdint>
-#include <cstddef>   // For std::size_t
-#include <iostream>  // For std::cout
-#include <iomanip>   // For std::hex, std::dec, std::setw, std::setfill
-#include <algorithm> // For std::equal
-#include <span>      // For std::span
+#include <cstddef>
+#include <iostream>
+#include <iomanip>
+#include <algorithm>
+#include <span>
+
+import Device.CobsEncoder;
 
 class CobsEncoderTest : public ::testing::Test
 {
@@ -21,7 +21,7 @@ public:
 
 TEST_F(CobsEncoderTest, EncodeDecodeEmptyData)
 {
-    static constexpr std::size_t EMPTY_INPUT_SIZE = 1U; // Minimum size to avoid zero-length array
+    static constexpr std::size_t EMPTY_INPUT_SIZE = 1U;
     static constexpr std::size_t EMPTY_INPUT_LENGTH = 0U;
     static constexpr std::size_t EXPECTED_OUTPUT_SIZE = 2U;
     static constexpr std::uint8_t EXPECTED_CODE_BYTE = 0x01U;
@@ -31,15 +31,13 @@ TEST_F(CobsEncoderTest, EncodeDecodeEmptyData)
 
     const std::array<std::uint8_t, EMPTY_INPUT_SIZE> input{};
 
-    // Create spans for the new API
     const std::span<const std::uint8_t> inputSpan{input.data(), EMPTY_INPUT_LENGTH};
     std::span<std::uint8_t> outputSpan{getEncodeBuffer()};
 
     auto result = Device::CobsEncoder::encode(inputSpan, outputSpan);
     ASSERT_TRUE(result.has_value());
-    const std::size_t encodedSize = result.value_or(0U); // Provides default value
+    const std::size_t encodedSize = result.value_or(0U);
 
-    // Print the encoded buffer data
     std::cout << "Encoded Data: ";
     for (std::size_t i = 0U; i < encodedSize; ++i)
     {
@@ -66,7 +64,6 @@ TEST_F(CobsEncoderTest, HandlesInsufficientEncodeBuffer)
     std::fill(input.begin(), input.end(), TEST_FILL_VALUE);
     std::array<std::uint8_t, SMALL_BUFFER_SIZE> smallBuffer{};
 
-    // Create spans for the new API
     const std::span<const std::uint8_t> inputSpan{input};
     std::span<std::uint8_t> outputSpan{smallBuffer};
 

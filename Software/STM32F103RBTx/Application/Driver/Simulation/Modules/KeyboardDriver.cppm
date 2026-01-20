@@ -8,7 +8,7 @@ export module Driver.KeyboardDriver;
 import Driver.DriverComponent;
 import Driver.KeyboardDriverConcept;
 import Driver.KeyState;
-import Driver.KeyIdentifier;
+import Driver.KeyId;
 
 export namespace Driver
 {
@@ -47,7 +47,7 @@ export namespace Driver
          * @param key The identifier of the button whose state is requested.
          * @return The current state of the button (`KeyState`).
          */
-        [[nodiscard]] KeyState getKeyState(KeyIdentifier key) const noexcept;
+        [[nodiscard]] KeyState getKeyState(KeyId key) const noexcept;
 
         /**
          * @brief Sets the state of a specific key.
@@ -55,7 +55,7 @@ export namespace Driver
          * @param key The identifier of the button whose state should be set.
          * @param state The new state to set for the button.
          */
-        void setKeyState(KeyIdentifier key, KeyState state) noexcept;
+        void setKeyState(KeyId key, KeyState state) noexcept;
 
     private:
         /**
@@ -64,7 +64,7 @@ export namespace Driver
          * This constant defines the total number of keys that are supported by the keyboard driver.
          * It is derived from the last unused key identifier.
          */
-        static constexpr std::uint8_t AmountOfKeys = static_cast<std::uint8_t>(Driver::KeyIdentifier::LastNotUsed);
+        static constexpr std::uint8_t AmountOfKeys = static_cast<std::uint8_t>(Driver::KeyId::LastNotUsed);
 
         std::array<KeyState, AmountOfKeys> keyState{KeyState::NotPressed};
     };

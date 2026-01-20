@@ -28,8 +28,8 @@ def test_sdcard_write_csv(stm32_dut):
 
     # Verify the file opened correctly
     open_op = stm32_dut.sd.get_operation(2)
-    assert open_op['filename'] == 'measurements.txt', \
-        f"Expected filename 'measurements.txt', got '{open_op['filename']}'"
+    assert open_op['filename'] == '0:/DAT01.TXT', \
+        f"Expected filename '0:/DAT01.TXT', got '{open_op['filename']}'"
     assert open_op['mode'] == 1, \
         f"Expected APPEND mode (1), got {open_op['mode']}"
 

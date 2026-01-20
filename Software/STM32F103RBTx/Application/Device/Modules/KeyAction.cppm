@@ -1,27 +1,27 @@
 /**
- * @file KeyActionState.cppm
- * @brief Defines the KeyActionState enum for key press actions.
+ * @file KeyAction.cppm
+ * @brief Defines the KeyAction enum for key press actions.
  *
- * This file contains the definition of the KeyActionState enum, which represents
+ * This file contains the definition of the KeyAction enum, which represents
  * various actions or outcomes related to key presses on a keyboard.
  */
 module;
 
 #include <cstdint>
 
-export module Device.KeyActionState;
+export module Device.KeyAction;
 
 export namespace Device
 {
     /**
-     * @enum KeyActionState
+     * @enum KeyAction
      * @brief Represents different actions or outcomes related to key presses.
      *
-     * The KeyActionState enum is used to describe the state of a key press on a keyboard.
+     * The KeyAction enum is used to describe the state of a key press on a keyboard.
      * It provides different states to represent the start of a press, holding, the end of
      * a short or long press, and other relevant states.
      */
-    enum class KeyActionState : std::uint8_t
+    enum class KeyAction : std::uint8_t
     {
         PRESS_NOT = 0U,       /**< The key is in a fail mode, indicating an error or invalid state. */
         PRESS_START = 1U,     /**< The user started pressing the key. */

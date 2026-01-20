@@ -30,7 +30,7 @@ namespace Driver
         return status;
     }
 
-    KeyState KeyboardDriver::getKeyState(KeyIdentifier key) const noexcept
+    KeyState KeyboardDriver::getKeyState(KeyId key) const noexcept
     {
         const auto index = static_cast<std::size_t>(key);
 

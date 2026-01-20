@@ -24,7 +24,7 @@ target_sources(Device PUBLIC FILE_SET CXX_MODULES FILES
     Modules/DisplayBrightness.cppm
     Modules/DisplayPixelColor.cppm
     Modules/Keyboard.cppm
-    Modules/KeyActionState.cppm
+    Modules/KeyAction.cppm
     Modules/MeasurementDeviceId.cppm
     Modules/MeasurementRecorder.cppm
     Modules/MeasurementSource.cppm

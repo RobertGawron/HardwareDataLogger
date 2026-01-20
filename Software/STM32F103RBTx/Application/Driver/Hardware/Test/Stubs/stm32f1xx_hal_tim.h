@@ -1,6 +1,7 @@
 #ifndef stm32f1xx_hal_tim_h
 #define stm32f1xx_hal_tim_h
 
+#if 0
 // Code can't be fix, we need compatibility with stm32f1xx_hal_tim.h naming conventions.
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wreserved-identifier"
@@ -133,5 +134,7 @@ inline void __HAL_RCC_TIM3_CLK_ENABLE()
 }
 
 #pragma clang diagnostic pop
+
+#endif
 
 #endif

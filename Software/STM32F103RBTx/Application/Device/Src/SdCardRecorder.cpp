@@ -23,8 +23,9 @@ namespace Device
     auto SdCardRecorder::onStart() noexcept -> bool
     {
         using FileOpenMode = Driver::FileOpenMode;
-        static constexpr std::string_view FILENAME{"measurements.txt"};
-        static constexpr FileOpenMode MODE{FileOpenMode::APPEND};
+        // filenames must be strict, up to 8 chars + '.' + up to 3 chars
+        static constexpr std::string_view FILENAME{"0:/DAT01.TXT"};
+        static constexpr FileOpenMode MODE{FileOpenMode::OVERWRITE}; // todo fix it
 
         const bool status = driver.start() &&
                             (driver.openFile(FILENAME, MODE) == Driver::SdCardStatus::OK);

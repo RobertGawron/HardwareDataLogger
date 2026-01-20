@@ -4,6 +4,8 @@ module;
 #include "stm32f1xx_hal_gpio.h"
 
 #include "ff.h"
+// #include "disk_status.h"
+#include "diskio.h"
 
 #include <span>
 #include <string_view>
@@ -74,6 +76,14 @@ namespace Driver
             isFileSystemMounted = true;
         }
 
+        DSTATUS st = disk_status(0);
+        // printf("disk_status(0)=0x%02X\n", st);
+
+        DWORD fre_clust;
+        FATFS *fs;
+        FRESULT fr = f_getfree("0:", &fre_clust, &fs);
+        // printf("f_getfree=%d\n", (int)fr);
+
         return result == FR_OK;
     }
 
@@ -127,7 +137,10 @@ namespace Driver
                                    ? (FA_WRITE | FA_CREATE_ALWAYS)
                                    : (FA_WRITE | FA_OPEN_ALWAYS);
 
-        auto result = f_open(&file, filename.data(), fatFsMode);
+        // auto ds = disk_status(0);
+
+        // auto result = f_open(&file, filename.data(), fatFsMode);
+        auto result = f_open(&file, "0:/TXT.TXT", /*fatFsMode*/ 0x0a);
 
         if (result != FR_OK)
         {

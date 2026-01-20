@@ -1,7 +1,7 @@
 #ifndef stm32f1xx_hal_adc_h
 #define stm32f1xx_hal_adc_h
 
-#include <gmock/gmock.h>
+// #include <gmock/gmock.h>
 #include <stdint.h>
 
 #include "stm32f1xx_hal_def.h"
@@ -12,6 +12,7 @@ struct ADC_HandleTypeDef
     std::uint32_t dummy;
 };
 
+#if 0
 // Mock class for HAL functions
 class MockHAL_ADC
 {
@@ -33,5 +34,6 @@ inline HAL_StatusTypeDef HAL_ADC_Stop_DMA(ADC_HandleTypeDef *hadc)
 {
     return mockHAL_ADC->HAL_ADC_Stop_DMA(hadc);
 }
+#endif
 
 #endif // stm32f1xx_hal_adc_h

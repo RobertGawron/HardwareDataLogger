@@ -6,10 +6,10 @@ module;
 
 module Device.Keyboard;
 
-import Device.KeyActionState;
+import Device.KeyAction;
 
 import Driver.KeyState;
-import Driver.KeyIdentifier;
+import Driver.KeyId;
 
 namespace Device
 {
@@ -38,39 +38,39 @@ namespace Device
 
         if (status)
         {
-            for (std::size_t i{0}; i < keyActionState.size(); ++i)
+            for (std::size_t i{0}; i < keyAction.size(); ++i)
             {
-                const auto keyId = static_cast<Driver::KeyIdentifier>(i);
+                const auto keyId = static_cast<Driver::KeyId>(i);
                 const auto newState = keyboardDriver.getKeyState(keyId);
-                const auto currentState = keyActionState[i];
+                const auto currentState = keyAction[i];
 
                 auto nextState = currentState;
 
                 switch (currentState)
                 {
-                case KeyActionState::PRESS_NOT:
+                case KeyAction::PRESS_NOT:
                     if (newState == Driver::KeyState::Pressed)
                     {
                         pressDurationTicks[i] = 0;
-                        nextState = KeyActionState::PRESS_START;
+                        nextState = KeyAction::PRESS_START;
                     }
                     break;
 
-                case KeyActionState::PRESS_START:
+                case KeyAction::PRESS_START:
                     if (newState == Driver::KeyState::Pressed)
                     {
                         pressDurationTicks[i]++;
-                        nextState = KeyActionState::PRESS_HOLD;
+                        nextState = KeyAction::PRESS_HOLD;
                     }
                     else if (newState == Driver::KeyState::NotPressed)
                     {
                         nextState = (pressDurationTicks[i] >= LONG_PRESS_THRESHOLD_TICKS)
-                                        ? KeyActionState::PRESS_END_LONG
-                                        : KeyActionState::PRESS_END_SHORT;
+                                        ? KeyAction::PRESS_END_LONG
+                                        : KeyAction::PRESS_END_SHORT;
                     }
                     break;
 
-                case KeyActionState::PRESS_HOLD:
+                case KeyAction::PRESS_HOLD:
                     if (newState == Driver::KeyState::Pressed)
                     {
                         pressDurationTicks[i]++;
@@ -79,45 +79,45 @@ namespace Device
                     else if (newState == Driver::KeyState::NotPressed)
                     {
                         nextState = (pressDurationTicks[i] >= LONG_PRESS_THRESHOLD_TICKS)
-                                        ? KeyActionState::PRESS_END_LONG
-                                        : KeyActionState::PRESS_END_SHORT;
+                                        ? KeyAction::PRESS_END_LONG
+                                        : KeyAction::PRESS_END_SHORT;
                     }
                     break;
 
-                case KeyActionState::PRESS_END_SHORT:
-                case KeyActionState::PRESS_END_LONG:
+                case KeyAction::PRESS_END_SHORT:
+                case KeyAction::PRESS_END_LONG:
                     if (newState == Driver::KeyState::NotPressed)
                     {
-                        nextState = KeyActionState::PRESS_NOT;
+                        nextState = KeyAction::PRESS_NOT;
                     }
                     else if (newState == Driver::KeyState::Pressed)
                     {
                         pressDurationTicks[i] = 0;
-                        nextState = KeyActionState::PRESS_START;
+                        nextState = KeyAction::PRESS_START;
                     }
                     break;
 
-                case KeyActionState::FAIL:
+                case KeyAction::FAIL:
                     break;
                 }
 
-                keyActionState[i] = nextState;
+                keyAction[i] = nextState;
             }
         }
 
         return status;
     }
 
-    auto Keyboard::getKeyState(Driver::KeyIdentifier key) const noexcept -> KeyActionState
+    auto Keyboard::getKeyState(Driver::KeyId key) const noexcept -> KeyAction
     {
         const auto index = static_cast<std::size_t>(key);
 
-        if (index >= keyActionState.size()) [[unlikely]]
+        if (index >= keyAction.size()) [[unlikely]]
         {
-            return KeyActionState::FAIL;
+            return KeyAction::FAIL;
         }
 
-        return keyActionState[index];
+        return keyAction[index];
     }
 
 } // namespace Device

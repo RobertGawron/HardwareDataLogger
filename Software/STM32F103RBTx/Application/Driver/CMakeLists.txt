@@ -17,7 +17,7 @@ target_sources(DriverInterface
         Interface/DriverComponent.cppm
         Interface/FileOpenMode.cppm
         Interface/KeyboardDriverConcept.cppm
-        Interface/KeyIdentifier.cppm
+        Interface/KeyId.cppm
         Interface/KeyState.cppm
         Interface/LightSensorDriverConcept.cppm
         Interface/PulseCounterDriverConcept.cppm

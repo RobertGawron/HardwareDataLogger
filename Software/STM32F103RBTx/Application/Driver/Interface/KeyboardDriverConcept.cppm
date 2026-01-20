@@ -6,7 +6,7 @@ export module Driver.KeyboardDriverConcept;
 
 import Driver.DriverComponent;
 import Driver.KeyState;
-import Driver.KeyIdentifier;
+import Driver.KeyId;
 
 export namespace Driver::Concepts
 {
@@ -17,7 +17,7 @@ export namespace Driver::Concepts
     template <typename T>
     concept KeyboardDriverConcept =
         std::derived_from<T, DriverComponent> &&
-        requires(T driver, const T constDriver, KeyIdentifier key) {
+        requires(T driver, const T constDriver, KeyId key) {
             { driver.tick() } noexcept -> std::same_as<bool>;
             { constDriver.getKeyState(key) } noexcept -> std::same_as<KeyState>;
         };

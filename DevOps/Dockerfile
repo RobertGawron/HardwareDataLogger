@@ -156,7 +156,7 @@ FROM esp-toolchain AS final
 
 RUN mkdir -p /workspace/build
 
-COPY Software/STM32F103RBTx/Application/Driver/Simulation/Python/ /tmp/PythonDriver/
+COPY Software/STM32F103RBTx/Application/SimulationBindings/Python/ /tmp/PythonDriver/
 
 RUN /opt/venv/bin/pip install -e /tmp/PythonDriver/ && \
     rm -rf /tmp/PythonDriver/
