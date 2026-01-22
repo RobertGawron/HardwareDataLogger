@@ -117,8 +117,6 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-  //  __HAL_RCC_AFIO_CLK_ENABLE();
-  __HAL_AFIO_REMAP_SWJ_DISABLE();
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -127,7 +125,8 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  __HAL_RCC_AFIO_CLK_ENABLE();
+  __HAL_AFIO_REMAP_SWJ_NOJTAG(); // disables JTAG, keeps SWD
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -161,14 +160,16 @@ int main(void)
   __HAL_DBGMCU_FREEZE_IWDG();
   __HAL_DBGMCU_FREEZE_WWDG();
 
+  // TODO
+  __HAL_RCC_AFIO_CLK_ENABLE();
+  __HAL_AFIO_REMAP_SWJ_NOJTAG();
+
   HAL_Delay(2000);
   if (HAL_SPI_GetState(&hspi1) == HAL_SPI_STATE_READY)
   {
     // SPI is initialized and enabled
     volatile int isOK;
   }
-  //__HAL_SPI_ENABLE(&hspi1);
-  //   MODIFY_REG(SD_SPI_HANDLE.Instance->CR1, 0, SPI_CR1_SPE);
 
   app_init();
   app_start();

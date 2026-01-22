@@ -13,12 +13,27 @@ export namespace Driver
 {
     /**
      * @class BrightnessDriver
-     * @brief Controls LCD backlight brightness via PWM at 5kHz
+     * @brief LCD backlight brightness control using a hardware PWM timer.
+     *
+     * @details
+     * This driver starts/stops PWM output on a pre-configured timer channel and
+     * updates the duty cycle to set perceived backlight brightness.
+     *
+     * @note The timer peripheral and its GPIO pin (alternate-function output) must be
+     * initialized by platform code (e.g. CubeMX `MX_TIMx_Init()` / `HAL_TIM_MspPostInit()`)
+     * before calling onStart().
      */
     class BrightnessDriver final : public DriverComponent
     {
     public:
-        explicit BrightnessDriver(TIM_HandleTypeDef &htim) noexcept;
+        /**
+         * @brief Construct a brightness driver bound to a HAL timer handle.
+         * @param timer HAL timer handle configured for PWM (e.g. TIM3).
+         */
+        explicit constexpr BrightnessDriver(TIM_HandleTypeDef &timer) noexcept
+            : timer(timer)
+        {
+        }
 
         ~BrightnessDriver() = default;
 
@@ -28,32 +43,46 @@ export namespace Driver
         BrightnessDriver(BrightnessDriver &&) = delete;
         BrightnessDriver &operator=(BrightnessDriver &&) = delete;
 
-        [[nodiscard]] bool setBrightness(std::uint8_t brightness) noexcept;
+        /**
+         * @brief Set backlight brightness.
+         * @param brightness Brightness level in the driver-defined range (typically 0..MAX_BRIGHTNESS).
+         * @return true on valid input and successful compare update; false on invalid level.
+         *
+         * @note This updates the PWM duty cycle. PWM must be started via onStart() to take effect.
+         */
+        [[nodiscard]] bool setBrightness(std::uint8_t percentage) noexcept;
 
-        [[nodiscard]] bool onInit();
-        [[nodiscard]] bool onStart();
-        [[nodiscard]] bool onStop();
+        /**
+         * @brief Driver initialization hook.
+         * @return Always true (timer/GPIO initialization is handled externally).
+         */
+        [[nodiscard]] constexpr bool onInit() noexcept { return true; }
+
+        /**
+         * @brief Start PWM output and apply the initial brightness level.
+         * @return true on success; false if HAL PWM start fails.
+         */
+        [[nodiscard]] bool onStart() noexcept;
+
+        /**
+         * @brief Stop PWM output (backlight control disabled).
+         * @return true on success; false if HAL PWM stop fails.
+         */
+        [[nodiscard]] bool onStop() noexcept;
 
     private:
-        // Hardware configuration constants
-        static constexpr std::uint32_t TIMER_CLOCK_FREQ = 24'000'000U; // 24 MHz
-        static constexpr std::uint32_t PWM_FREQ = 5'000U;              // 5 kHz
-        static constexpr std::uint32_t TIMER_PERIOD = (TIMER_CLOCK_FREQ / PWM_FREQ) - 1U;
-        static constexpr std::uint8_t MAX_BRIGHTNESS = 100U;
-        static constexpr std::uint8_t INITIAL_BRIGHTNESS = 0U;
+        /**
+         * @brief Start PWM generation on the configured timer channel.
+         */
+        [[nodiscard]] bool startPwm() noexcept;
 
-        [[nodiscard]] bool initializeTimer() noexcept;
-        [[nodiscard]] bool configurePwmChannel() noexcept;
-        [[nodiscard]] bool startPwmWithInitialBrightness() noexcept;
+        /**
+         * @brief Stop PWM generation on the configured timer channel.
+         */
         [[nodiscard]] bool stopPwm() noexcept;
 
-        [[nodiscard]] static constexpr std::uint32_t calculatePulseFromBrightness(
-            std::uint8_t brightness) noexcept
-        {
-            return (static_cast<std::uint32_t>(brightness) * TIMER_PERIOD) / MAX_BRIGHTNESS;
-        }
-
-        TIM_HandleTypeDef &htim;
+        /// HAL timer used to generate the PWM signal.
+        TIM_HandleTypeDef &timer;
     };
 
     static_assert(Driver::Concepts::BrightnessDriverConcept<BrightnessDriver>,

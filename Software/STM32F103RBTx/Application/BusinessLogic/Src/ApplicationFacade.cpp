@@ -36,22 +36,27 @@ namespace BusinessLogic
 
     auto ApplicationFacade::onInit() noexcept -> bool
     {
-        return measurement.init();
+        return measurement.init() && hmi.init();
     }
 
     auto ApplicationFacade::onStart() noexcept -> bool
     {
-        return measurement.start();
+        // dont have storage card , wokaround
+        bool status = measurement.start();
+        status = hmi.start();
+        return status;
+
+        //    return measurement.start() && hmi.start();
     }
 
     auto ApplicationFacade::onStop() noexcept -> bool
     {
-        return measurement.stop();
+        return measurement.stop() && hmi.stop();
     }
 
     auto ApplicationFacade::onTick() noexcept -> bool
     {
-        return measurement.tick();
+        return measurement.tick() && hmi.tick();
     }
 
 } // namespace BusinessLogic
