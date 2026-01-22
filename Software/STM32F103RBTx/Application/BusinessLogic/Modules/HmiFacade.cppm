@@ -51,18 +51,12 @@ export namespace BusinessLogic
          */
         [[nodiscard]] auto onStart() noexcept -> bool;
 
+        [[nodiscard]] auto onStop() noexcept -> bool;
         /**
          * @brief Processes input events and updates display content.
          * @return true if frame rendered and input processed successfully.
          */
         [[nodiscard]] auto onTick() noexcept -> bool;
-
-        /**
-         * @brief Legacy periodic update method.
-         * @return true if update successful.
-         * @deprecated Use onTick() instead for lifecycle-managed execution.
-         */
-        // bool tick();
 
     private:
         Device::Display &display;

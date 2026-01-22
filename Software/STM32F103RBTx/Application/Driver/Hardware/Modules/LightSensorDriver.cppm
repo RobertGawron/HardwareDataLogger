@@ -38,7 +38,7 @@ export namespace Driver
 
         [[nodiscard]] std::uint32_t getAmbientLightLevel() const noexcept;
 
-        //  [[nodiscard]] constexpr bool onInit() noexcept  { return true; }
+        [[nodiscard]] constexpr bool onInit() noexcept { return true; }
         [[nodiscard]] bool onStart();
         [[nodiscard]] bool onStop();
 
