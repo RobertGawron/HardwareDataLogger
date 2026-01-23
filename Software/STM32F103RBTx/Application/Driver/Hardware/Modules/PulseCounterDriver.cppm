@@ -1,6 +1,7 @@
 module;
 
 #include <cstdint>
+#include <utility>
 
 export module Driver.PulseCounterDriver;
 
@@ -28,9 +29,11 @@ export namespace Driver
     class PulseCounterDriver final : public DriverComponent
     {
     public:
-        static constexpr std::uint8_t PULSE_COUNTER_AMOUNT = 4U;
-
         explicit PulseCounterDriver(PulseCounterId deviceIdentifier) noexcept;
+        /*
+            : value(pulseCounters[std::to_underlying(deviceIdentifier)])
+        {
+        }*/
 
         ~PulseCounterDriver() = default;
 
@@ -41,11 +44,11 @@ export namespace Driver
         PulseCounterDriver &operator=(PulseCounterDriver &&) = delete;
 
         [[nodiscard]] auto getMeasurement() noexcept -> PulseCounterMeasurementSize;
-        void clearMeasurement() noexcept;
+        auto clearMeasurement() noexcept -> void;
 
-        [[nodiscard]] bool onInit();
-        [[nodiscard]] bool onStart();
-        [[nodiscard]] bool onStop();
+        [[nodiscard]] constexpr bool onInit() noexcept { return true; }
+        [[nodiscard]] auto onStart() noexcept -> bool;
+        [[nodiscard]] auto onStop() noexcept -> bool;
 
     private:
         PulseCounterMeasurementSize &value;
