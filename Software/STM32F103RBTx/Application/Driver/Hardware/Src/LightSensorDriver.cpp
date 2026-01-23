@@ -1,50 +1,34 @@
 module;
 
 #include "stm32f1xx_hal.h"
-#include "stm32f1xx_hal_dma.h"
 #include "stm32f1xx_hal_adc.h"
 
-#include <numeric>
+#include <array>
+#include <span>
 #include <cstdint>
 
 module Driver.LightSensorDriver;
 
 namespace Driver
 {
-
-    bool LightSensorDriver::onStart() noexcept
+    auto LightSensorDriver::onStart() noexcept -> bool
     {
-        return startAdc();
+        const HAL_StatusTypeDef halStatus =
+            HAL_ADC_Start_DMA(&adc,
+                              reinterpret_cast<std::uint32_t *>(adcDmaBuffer.data()),
+                              static_cast<std::uint32_t>(adcDmaBuffer.size()));
+
+        return (halStatus == HAL_OK);
     }
 
-    bool LightSensorDriver::onStop() noexcept
+    auto LightSensorDriver::onStop() noexcept -> bool
     {
-        return stopAdc();
+        return (HAL_ADC_Stop_DMA(&adc) == HAL_OK);
     }
 
-    std::uint32_t LightSensorDriver::getAmbientLightLevel() const noexcept
+    auto LightSensorDriver::samples() const noexcept
+        -> std::span<const std::uint16_t>
     {
-        const auto sum = std::accumulate(adcBuffer.begin(),
-                                         adcBuffer.end(),
-                                         std::uint32_t{0});
-
-        return sum / adcBuffer.size();
+        return std::span{adcDmaBuffer};
     }
-
-    bool LightSensorDriver::startAdc() noexcept
-    {
-        const auto status = HAL_ADC_Start_DMA(&hadc,
-                                              reinterpret_cast<std::uint32_t *>(adcBuffer.data()),
-                                              static_cast<std::uint32_t>(adcBuffer.size()));
-
-        return status == HAL_OK;
-    }
-
-    bool LightSensorDriver::stopAdc() noexcept
-    {
-        const auto status = HAL_ADC_Stop_DMA(&hadc);
-
-        return status == HAL_OK;
-    }
-
-} // namespace Driver
+}

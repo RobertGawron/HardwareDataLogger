@@ -2,6 +2,7 @@ module;
 
 #include <concepts>
 #include <cstdint>
+#include <span>
 
 export module Driver.LightSensorDriverConcept;
 
@@ -15,13 +16,13 @@ export namespace Driver::Concepts
      *
      * A type satisfies LightSensorDriver if it:
      * - Derives from DriverComponent
-     * - Provides a getAmbientLightLevel() const method returning uint32_t
+     * - Provides a samples() const method returning std::span<const std::uint16_t>
      * - Is not copyable or movable (enforced by DriverComponent)
      */
     template <typename T>
     concept LightSensorDriverConcept =
         std::derived_from<T, DriverComponent> &&
         requires(const T sensor) {
-            { sensor.getAmbientLightLevel() } noexcept -> std::same_as<std::uint32_t>;
+            { sensor.samples() } noexcept -> std::same_as<std::span<const std::uint16_t>>;
         };
 }

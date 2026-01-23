@@ -17,8 +17,8 @@ module Driver.DisplayDriver;
 namespace
 {
     // Hardware globals required by the ST7735 library
-    ST7735_IO_t hwDisplayIoDef{};
-    ST7735_Object_t hwDisplayDriver{};
+    constinit ST7735_IO_t hwDisplayIoDef{};
+    constinit ST7735_Object_t hwDisplayDriver{};
 
     constexpr std::uint32_t SPI_TIMEOUT_MS = 500U;
 }
