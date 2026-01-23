@@ -6,7 +6,7 @@ module;
 export module Driver.PulseCounterDriverConcept;
 
 import Driver.DriverComponent;
-import Driver.PulseCounterMeasurementSize;
+import Driver.PulseCount;
 
 // import Driver.PulseCounterDriverConcept;
 
@@ -21,7 +21,7 @@ export namespace Driver::Concepts
         std::derived_from<T, DriverComponent> &&
         requires(T driver) {
             // Measurement operations - use the global type alias
-            { driver.getMeasurement() } noexcept -> std::same_as<PulseCounterMeasurementSize>;
-            { driver.clearMeasurement() } noexcept -> std::same_as<void>;
+            { driver.read() } noexcept -> std::same_as<PulseCount>;
+            { driver.clear() } noexcept -> std::same_as<void>;
         };
 }

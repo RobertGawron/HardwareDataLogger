@@ -22,7 +22,7 @@ target_sources(DriverInterface
         Interface/LightSensorDriverConcept.cppm
         Interface/PulseCounterDriverConcept.cppm
         Interface/PulseCounterId.cppm
-        Interface/PulseCounterMeasurementSize.cppm
+        Interface/PulseCount.cppm
         Interface/SdCardDriverConcept.cppm
         Interface/SdCardStatus.cppm
         Interface/UartDriverConcept.cppm
