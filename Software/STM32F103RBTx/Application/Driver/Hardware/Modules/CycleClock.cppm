@@ -12,7 +12,6 @@ import Driver.CycleCpu;
 
 export namespace Driver
 {
-    // Compile-time requirements for this driver (fail-fast).
 #if !defined(DWT)
     static_assert(false, "CycleClock requires DWT to be defined.");
 #endif
@@ -33,11 +32,13 @@ export namespace Driver
 #endif
 
     static_assert(std::is_integral_v<CycleCpu>,
-                  "CycleCpu must be an integral type. Reason: it represents a hardware counter value.");
+                  "CycleCpu must be an integral type. It represents a hardware counter value.");
+
     static_assert(std::is_unsigned_v<CycleCpu>,
-                  "CycleCpu must be unsigned. Reason: wrap-around elapsed computation relies on modulo arithmetic.");
+                  "CycleCpu must be unsigned. Wrap-around elapsed computation relies on modulo arithmetic.");
+
     static_assert(sizeof(CycleCpu) >= sizeof(std::uint32_t),
-                  "CycleCpu must be at least 32-bit. Reason: DWT->CYCCNT is a 32-bit counter.");
+                  "CycleCpu must be at least 32-bit. DWT->CYCCNT is a 32-bit counter.");
 
     /**
      * @brief Access to the CPU cycle counter (DWT->CYCCNT).
@@ -87,9 +88,10 @@ export namespace Driver
          * @param end   Counter value at end.
          * @return Elapsed cycles from start to end.
          */
-        [[nodiscard]] static constexpr auto elapsed(CycleCpu start, CycleCpu end) noexcept -> CycleCpu
+        [[nodiscard]] static constexpr auto elapsed(CycleCpu start,
+                                                    CycleCpu end) noexcept -> CycleCpu
         {
-            // todo will i overlap?
+            // Unsigned integer, will work correctly even if overflow happened.
             const CycleCpu result = end - start;
             return result;
         }

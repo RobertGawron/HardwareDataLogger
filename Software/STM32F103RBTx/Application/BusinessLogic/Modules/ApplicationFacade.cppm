@@ -137,6 +137,7 @@ export namespace BusinessLogic
             return table;
         }();
 
+        Scheduler::Registry registry;
         Scheduler scheduler;
     };
 

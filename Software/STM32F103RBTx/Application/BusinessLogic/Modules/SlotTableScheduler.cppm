@@ -68,13 +68,25 @@ export namespace BusinessLogic
         struct Config final
         {
             const SlotTable &slotTable;
+            Registry &registry;
             std::uint32_t maxCatchUpPerCall{2U};
         };
 
         explicit SlotTableScheduler(const Config &cfg) noexcept
-            : slotTableRef(cfg.slotTable), registry{}, maxCatchUpPerCall(cfg.maxCatchUpPerCall), slotIndex(0U), pendingSlots(0U), started(false), statusValue{}
+            : slotTableRef(cfg.slotTable),
+              registryRef(cfg.registry),
+              maxCatchUpPerCall(cfg.maxCatchUpPerCall),
+              slotIndex(0U),
+              pendingSlots(0U),
+              started(false),
+              statusValue{}
         {
         }
+        /*
+        explicit SlotTableScheduler(const Config &cfg) noexcept
+            : slotTableRef(cfg.slotTable), registry{}, maxCatchUpPerCall(cfg.maxCatchUpPerCall), slotIndex(0U), pendingSlots(0U), started(false), statusValue{}
+        {
+        }*/
 
         template <TickableConcept T>
         auto bindTask(TaskId id, T &obj) noexcept -> bool
@@ -82,9 +94,9 @@ export namespace BusinessLogic
             bool result = false;
 
             const std::size_t idx = std::to_underlying(id);
-            if (idx < registry.size())
+            if (idx < registryRef.size())
             {
-                registry[idx] = TickDelegate(obj);
+                registryRef[idx] = TickDelegate(obj);
                 result = true;
             }
             else
@@ -190,7 +202,7 @@ export namespace BusinessLogic
         {
             bool complete = true;
 
-            for (const auto &entry : registry)
+            for (const auto &entry : registryRef)
             {
                 if (!entry.isBound())
                 {
@@ -216,7 +228,7 @@ export namespace BusinessLogic
             {
                 const std::size_t taskIdx = std::to_underlying(slot.taskIds[i]);
 
-                const bool ok = registry[taskIdx]();
+                const bool ok = registryRef[taskIdx]();
                 if (!ok)
                 {
                     allOk = false;
@@ -249,7 +261,7 @@ export namespace BusinessLogic
         }
 
         const SlotTable &slotTableRef;
-        Registry registry;
+        Registry &registryRef;
         std::uint32_t maxCatchUpPerCall;
 
         std::size_t slotIndex;

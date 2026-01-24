@@ -8,6 +8,8 @@ import BusinessLogic.ApplicationComponent;
 import BusinessLogic.MeasurementCoordinator;
 import BusinessLogic.HmiFacade;
 
+import BusinessLogic.TickDelegate;
+
 import Device;
 
 import Driver.PlatformFactory;
@@ -31,7 +33,9 @@ namespace BusinessLogic
           brightness{drivers.lightSensor, drivers.displayBrightness},
           keyboard{drivers.keyboard},
           hmi{display, brightness, keyboard},
-          scheduler{Scheduler::Config{slotTable, 2U}}
+
+          registry{TickDelegate(measurement), TickDelegate(hmi)},
+          scheduler{Scheduler::Config{slotTable, registry, 2U}}
     {
     }
 
