@@ -174,18 +174,24 @@ int main(void)
 
   app_init();
   app_start();
+
+  // only when started start the timer, think to move this to somewhere
+  HAL_TIM_Base_Start_IT(&htim2); // start time base for app_tick
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    // if (app_tick_flag)
+    if (app_tick_flag != 0U)
     {
-      app_tick_flag = 0;
+      app_tick_flag = 0U;
       app_tick();
-
-      // __WFI(); // CPU sleeps, wakes on ANY interrupt
+    }
+    else
+    {
+      __WFI(); // Sleep until any interrupt occurs (e.g., TIM2 sets app_tick_flag)
     }
     /* USER CODE END WHILE */
 
