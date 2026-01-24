@@ -15,9 +15,12 @@ import BusinessLogic.ApplicationComponent;
 import BusinessLogic.MeasurementCoordinator;
 import BusinessLogic.HmiFacade;
 
+import BusinessLogic.SlotTableScheduler;
+
 import Device;
 
 import Driver.PlatformFactory;
+import Driver.CycleBudget;
 
 export namespace BusinessLogic
 {
@@ -69,6 +72,13 @@ export namespace BusinessLogic
          */
         [[nodiscard]] auto onTick() noexcept -> bool;
 
+        // todo
+        void onTimeSlot() noexcept
+        {
+            // scheduler.status() tod check this and log it
+            scheduler.notifyTimeSlotIsr();
+        }
+
     private:
         static constexpr std::size_t SOURCES_COUNT{
             std::to_underlying(Device::MeasurementDeviceId::LAST_NOT_USED)};
@@ -96,6 +106,38 @@ export namespace BusinessLogic
         Device::DisplayBrightness brightness;
         Device::Keyboard keyboard;
         BusinessLogic::HmiFacade hmi;
+
+        static constexpr std::size_t slotsPerCycle = 4U;
+        static constexpr std::size_t maxTasksPerSlot = 2U;
+
+        using Scheduler = BusinessLogic::SlotTableScheduler<slotsPerCycle, maxTasksPerSlot>;
+        using TaskId = Scheduler::TaskId;
+        using SlotDef = Scheduler::SlotDef;
+
+        static constexpr std::array<SlotDef, slotsPerCycle> slotTable = []() constexpr
+        {
+            std::array<SlotDef, slotsPerCycle> table{};
+
+            table[0] = SlotDef{.taskIds{TaskId::MEASUREMENT, TaskId::HMI},
+                               .taskIdCount = 2U,
+                               .budgetCycles = Driver::CycleBudget::fromUs(72'000'000U, 700U)};
+
+            table[1] = SlotDef{.taskIds{TaskId::MEASUREMENT},
+                               .taskIdCount = 1U,
+                               .budgetCycles = Driver::CycleBudget::fromUs(72'000'000U, 500U)};
+
+            table[2] = SlotDef{.taskIds{TaskId::MEASUREMENT, TaskId::HMI},
+                               .taskIdCount = 2U,
+                               .budgetCycles = Driver::CycleBudget::fromUs(72'000'000U, 700U)};
+
+            table[3] = SlotDef{.taskIds{TaskId::MEASUREMENT},
+                               .taskIdCount = 1U,
+                               .budgetCycles = Driver::CycleBudget::fromUs(72'000'000U, 500U)};
+
+            return table;
+        }();
+
+        Scheduler scheduler;
     };
 
 } // namespace BusinessLogic

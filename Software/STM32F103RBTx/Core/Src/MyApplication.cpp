@@ -2,11 +2,11 @@ module;
 
 #include "MyApplication.hpp"
 
-#include "stm32f1xx_hal.h"       // 1. Base HAL FIRST (includes hal_def.h internally)
-#include "stm32f1xx_hal_dma.h"   // 2. DMA second
-#include "stm32f1xx_hal_usart.h" // 3. UART (depends on DMA)
-#include "stm32f1xx_hal_adc.h"   // 4. ADC (depends on DMA)
-#include "stm32f1xx_hal_tim.h"   // 5. TIM (depends on DMA)
+#include "stm32f1xx_hal.h"
+#include "stm32f1xx_hal_dma.h"
+#include "stm32f1xx_hal_usart.h"
+#include "stm32f1xx_hal_adc.h"
+#include "stm32f1xx_hal_tim.h"
 
 #include "main.h"
 
@@ -25,16 +25,9 @@ import Driver.KeyboardDriver;
 import Driver.UartDriver;
 import Driver.SdCardDriver;
 import Driver.PulseCounterDriver;
-/*
-// HAL handles from main
-extern UART_HandleTypeDef huart1;
-extern UART_HandleTypeDef huart2;
-extern UART_HandleTypeDef husart3;
-extern ADC_HandleTypeDef hadc1;
-extern TIM_HandleTypeDef htim3;
-*/
+
 // Static concrete driver instances
-static Driver::LightSensorDriver LightSensor{hadc1};
+static Driver::LightSensorDriver lightSensor{hadc1};
 static Driver::BrightnessDriver displayBrightness{htim3};
 static Driver::DisplayDriver display;
 static Driver::KeyboardDriver keyboard;
@@ -55,7 +48,7 @@ static Driver::PulseCounterDriver counter4{Driver::PulseCounterId::bncD};
 
 // Global platform drivers instance
 static Driver::PlatformFactory platform = {
-    .LightSensor = LightSensor,
+    .lightSensor = lightSensor,
     .displayBrightness = displayBrightness,
     .display = display,
     .keyboard = keyboard,
@@ -70,23 +63,27 @@ static Driver::PlatformFactory platform = {
 
 static BusinessLogic::ApplicationFacade facade{platform};
 
-// C linkage functions
 extern "C"
 {
 
-    void app_init()
+    bool app_init()
     {
-        facade.init();
+        return facade.init();
     }
 
-    void app_start()
+    bool app_start()
     {
-        facade.start();
+        return facade.start();
     }
 
-    void app_tick()
+    bool app_tick()
     {
-        facade.tick();
+        return facade.tick();
+    }
+
+    void app_timeSlotIsr()
+    {
+        facade.onTimeSlot();
     }
 
 } // extern "C"

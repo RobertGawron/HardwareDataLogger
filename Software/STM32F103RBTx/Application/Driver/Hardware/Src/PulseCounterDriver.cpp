@@ -17,7 +17,7 @@ namespace
     static constexpr std::uint8_t PULSE_COUNTER_COUNT =
         std::to_underlying(Driver::PulseCounterId::LastNotUsed);
 
-    // modified in interruption, shared by all instances of PulseCounterDriver
+    // Modified in interruption, shared by all instances of PulseCounterDriver
     // Each counter uses one and only one element in array.
     alignas(std::uint32_t) std::array<Driver::PulseCount,
                                       PULSE_COUNTER_COUNT> rawPulseCounters = {0};

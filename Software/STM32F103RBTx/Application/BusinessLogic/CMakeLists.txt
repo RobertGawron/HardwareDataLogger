@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.31)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -11,6 +11,10 @@ add_library(BusinessLogic STATIC)
 
 # Module interface files
 target_sources(BusinessLogic PUBLIC FILE_SET CXX_MODULES FILES
+    Modules/TickableConcept.cppm
+    Modules/TickDelegate.cppm
+    Modules/SlotTableScheduler.cppm
+
     Modules/ApplicationComponent.cppm
     Modules/ApplicationFacade.cppm
     Modules/HmiFacade.cppm

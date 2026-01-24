@@ -11,6 +11,9 @@ export import Driver.PulseCounterId;
 export import Driver.PulseCount;
 export import Driver.DriverComponent;
 
+export import Driver.CycleClock;
+export import Driver.CycleBudget;
+
 export import Driver.BrightnessDriver;
 export import Driver.DisplayDriver;
 export import Driver.KeyboardDriver;

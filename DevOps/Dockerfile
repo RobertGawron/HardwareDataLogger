@@ -8,11 +8,11 @@ ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /workspace
 
 # ---------------------------------------------------------------------
-# STAGE 1: System dependencies & Latest Toolchains
+# STAGE 1: System dependencies & Build Tools
 # ---------------------------------------------------------------------
-FROM base AS system-deps
+FROM base AS build-deps
 
-# Install base dependencies
+# Install base dependencies and build requirements
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
@@ -25,45 +25,110 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     gnupg \
     lsb-release \
+    libgmp-dev \
+    libmpfr-dev \
+    libmpc-dev \
+    flex \
+    bison \
+    texinfo \
     && rm -rf /var/lib/apt/lists/*
 
 # ---------------------------------------------------------------------
-# Install Latest Native GCC (v14.2) for x86_64 Linux
+# Build GCC 15 from source (experimental C++26 support)
 # ---------------------------------------------------------------------
-RUN add-apt-repository -y ppa:ubuntu-toolchain-r/test && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-    gcc-14 \
-    g++-14 \
-    gcc-14-multilib \
-    g++-14-multilib \
-    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 100 \
-    --slave /usr/bin/g++ g++ /usr/bin/g++-14 \
-    --slave /usr/bin/gcov gcov /usr/bin/gcov-14 \
-    --slave /usr/bin/gcc-ar gcc-ar /usr/bin/gcc-ar-14 \
-    --slave /usr/bin/gcc-ranlib gcc-ranlib /usr/bin/gcc-ranlib-14 \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+FROM build-deps AS gcc-builder
+
+ARG GCC_SNAPSHOT_DATE=20260117
+
+# Download GCC 15 snapshot
+RUN mkdir -p /tmp/gcc-build && cd /tmp/gcc-build && \
+    wget -q "https://gcc.gnu.org/pub/gcc/snapshots/LATEST-15/gcc-15-${GCC_SNAPSHOT_DATE}.tar.xz" && \
+    tar -xf gcc-15-${GCC_SNAPSHOT_DATE}.tar.xz && \
+    rm gcc-15-${GCC_SNAPSHOT_DATE}.tar.xz
+
+# Configure and build GCC 15
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    zlib1g-dev \
+    libisl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    file \
+    && rm -rf /var/lib/apt/lists/*
+    
+# This will take 30-60 minutes depending on CPU
+RUN cd /tmp/gcc-build/gcc-15-${GCC_SNAPSHOT_DATE} && \
+    ./contrib/download_prerequisites && \
+    cd /tmp/gcc-build && \
+    mkdir build && cd build && \
+    ../gcc-15-${GCC_SNAPSHOT_DATE}/configure \
+        --prefix=/opt/gcc-15 \
+        --enable-languages=c,c++ \
+        --disable-multilib \
+        --disable-bootstrap \
+        --enable-checking=release \
+        --with-system-zlib && \
+    make -j$(nproc) && \
+    make install && \
+    cd / && rm -rf /tmp/gcc-build
 
 # ---------------------------------------------------------------------
-# Install Latest LLVM/Clang (v19) for x86_64 Linux
+# STAGE 2: System dependencies with GCC 15
+# ---------------------------------------------------------------------
+FROM base AS system-deps
+
+# Copy GCC 15 from builder stage
+COPY --from=gcc-builder /opt/gcc-15 /opt/gcc-15
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    cmake \
+    git \
+    curl \
+    wget \
+    xz-utils \
+    software-properties-common \
+    ca-certificates \
+    unzip \
+    gnupg \
+    lsb-release \
+    libgmp10 \
+    libmpfr6 \
+    libmpc3 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set up alternatives for GCC 15
+RUN update-alternatives --install /usr/bin/gcc gcc /opt/gcc-15/bin/gcc 100 \
+    --slave /usr/bin/g++ g++ /opt/gcc-15/bin/g++ \
+    --slave /usr/bin/gcov gcov /opt/gcc-15/bin/gcov \
+    --slave /usr/bin/gcc-ar gcc-ar /opt/gcc-15/bin/gcc-ar \
+    --slave /usr/bin/gcc-ranlib gcc-ranlib /opt/gcc-15/bin/gcc-ranlib
+
+# Add GCC 15 to library path
+ENV LD_LIBRARY_PATH="/opt/gcc-15/lib64:${LD_LIBRARY_PATH}"
+
+# ---------------------------------------------------------------------
+# Install Latest LLVM/Clang (v20) for x86_64 Linux - C++26 Support
 # ---------------------------------------------------------------------
 RUN wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc && \
-    add-apt-repository -y "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-19 main" && \
+    add-apt-repository -y "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-20 main" && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
-    clang-19 \
-    clang++-19 \
-    clang-tools-19 \
-    clang-format-19 \
-    clang-tidy-19 \
-    lld-19 \
-    lldb-19 \
-    libc++-19-dev \
-    libc++abi-19-dev \
-    && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 100 \
-    --slave /usr/bin/clang++ clang++ /usr/bin/clang++-19 \
-    --slave /usr/bin/clang-format clang-format /usr/bin/clang-format-19 \
-    --slave /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-19 \
+    clang-20 \
+    clang++-20 \
+    clang-tools-20 \
+    clang-format-20 \
+    clang-tidy-20 \
+    lld-20 \
+    lldb-20 \
+    libc++-20-dev \
+    libc++abi-20-dev \
+    && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-20 100 \
+    --slave /usr/bin/clang++ clang++ /usr/bin/clang++-20 \
+    --slave /usr/bin/clang-format clang-format /usr/bin/clang-format-20 \
+    --slave /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-20 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # ---------------------------------------------------------------------
@@ -103,13 +168,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set Environment Variables
-ENV PATH="/opt/arm-toolchain/bin:${PATH}"
-# Default to GCC for native builds (can override with CC/CXX)
+ENV PATH="/opt/arm-toolchain/bin:/opt/gcc-15/bin:${PATH}"
 ENV CC=gcc
 ENV CXX=g++
 
 # ---------------------------------------------------------------------
-# STAGE 2: Python environment
+# STAGE 3: Python environment
 # ---------------------------------------------------------------------
 FROM system-deps AS python-env
 
@@ -130,7 +194,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     vjunit
 
 # ---------------------------------------------------------------------
-# STAGE 3: Rust & ESP Toolchains
+# STAGE 4: Rust & ESP Toolchains
 # ---------------------------------------------------------------------
 FROM python-env AS esp-toolchain
 
@@ -160,6 +224,12 @@ COPY Software/STM32F103RBTx/Application/SimulationBindings/Python/ /tmp/PythonDr
 
 RUN /opt/venv/bin/pip install -e /tmp/PythonDriver/ && \
     rm -rf /tmp/PythonDriver/
+
+# In your Dockerfile, install newer CMake
+RUN wget -q https://github.com/Kitware/CMake/releases/download/v3.31.5/cmake-3.31.5-linux-x86_64.sh && \
+    chmod +x cmake-3.31.5-linux-x86_64.sh && \
+    ./cmake-3.31.5-linux-x86_64.sh --skip-license --prefix=/usr/local && \
+    rm cmake-3.31.5-linux-x86_64.sh
 
 WORKDIR /workspace/build
 

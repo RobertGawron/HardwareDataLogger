@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.31)
 
 # Use CubeMX toolchain by default
 if(NOT CMAKE_TOOLCHAIN_FILE)
@@ -9,12 +9,12 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 
 # This makes it apply to subdirectories too
-set(CMAKE_CXX_STANDARD 23 CACHE STRING "C++ standard" FORCE)
+set(CMAKE_CXX_STANDARD 26 CACHE STRING "C++ standard" FORCE)
 
 # Enable experimental C++ module support
 set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API "aa1f7df0-828a-4fcd-9afc-2dc80491aca7")
@@ -81,6 +81,8 @@ target_compile_options(${PROJECT_NAME} PRIVATE
     -flto
     -ffunction-sections
     -fdata-sections
+    -fno-exceptions              # not using C++ exceptions
+    -fno-rtti                    # not using runtime type info
 )
 
 target_link_options(${PROJECT_NAME} PRIVATE

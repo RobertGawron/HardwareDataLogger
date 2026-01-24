@@ -28,15 +28,27 @@ namespace BusinessLogic
           recorders{std::ref(wifiRecorder), std::ref(sdCardRecorder)},
           measurement{sources, recorders},
           display{drivers.display},
-          brightness{drivers.LightSensor, drivers.displayBrightness},
+          brightness{drivers.lightSensor, drivers.displayBrightness},
           keyboard{drivers.keyboard},
-          hmi{display, brightness, keyboard}
+          hmi{display, brightness, keyboard},
+          scheduler{Scheduler::Config{slotTable, 2U}}
     {
     }
 
     auto ApplicationFacade::onInit() noexcept -> bool
     {
-        return measurement.init() && hmi.init();
+        // todo
+        bool status = true;
+
+        measurement.init();
+        hmi.init();
+
+        status = scheduler.bindTask(TaskId::MEASUREMENT, measurement) && status;
+        status = scheduler.bindTask(TaskId::HMI, hmi) && status;
+
+        status = scheduler.start() && status;
+
+        return true;
     }
 
     auto ApplicationFacade::onStart() noexcept -> bool
@@ -56,7 +68,9 @@ namespace BusinessLogic
 
     auto ApplicationFacade::onTick() noexcept -> bool
     {
-        return measurement.tick() && hmi.tick();
+        scheduler.runPending();
+        return true;
+        // return measurement.tick() && hmi.tick();
     }
 
 } // namespace BusinessLogic
