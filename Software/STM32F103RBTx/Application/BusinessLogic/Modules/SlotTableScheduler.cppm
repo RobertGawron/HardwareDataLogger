@@ -10,6 +10,8 @@ export module BusinessLogic.SlotTableScheduler;
 
 import BusinessLogic.TickableConcept;
 import BusinessLogic.TickDelegate;
+import BusinessLogic.TaskId;
+
 import Driver.CycleCpu;
 import Driver.CycleClock;
 
@@ -46,35 +48,28 @@ export namespace BusinessLogic
     class SlotTableScheduler final
     {
     public:
-        enum class TaskId : std::uint8_t
-        {
-            MEASUREMENT = 0,
-            HMI = 1,
-            LAST_NOT_USED
-        };
-
         static constexpr std::size_t taskCount = std::to_underlying(TaskId::LAST_NOT_USED);
 
-        struct SlotDef final
+        struct Slot final
         {
             std::array<TaskId, MaxTasksPerSlot> taskIds{};
             std::uint8_t taskIdCount{0U};
             Driver::CycleCpu budgetCycles{0U}; // 0 disables overrun check
         };
 
-        using SlotTable = std::array<SlotDef, SlotsPerCycle>;
-        using Registry = std::array<TickDelegate, taskCount>;
+        using SlotTable = std::array<Slot, SlotsPerCycle>;
+        using TaskCallTable = std::array<TickDelegate, taskCount>;
 
         struct Config final
         {
             const SlotTable &slotTable;
-            Registry &registry;
+            TaskCallTable &registry;
             std::uint32_t maxCatchUpPerCall{2U};
         };
 
         explicit SlotTableScheduler(const Config &cfg) noexcept
             : slotTableRef(cfg.slotTable),
-              registryRef(cfg.registry),
+              taskCallTable(cfg.registry),
               maxCatchUpPerCall(cfg.maxCatchUpPerCall),
               slotIndex(0U),
               pendingSlots(0U),
@@ -82,37 +77,12 @@ export namespace BusinessLogic
               statusValue{}
         {
         }
-        /*
-        explicit SlotTableScheduler(const Config &cfg) noexcept
-            : slotTableRef(cfg.slotTable), registry{}, maxCatchUpPerCall(cfg.maxCatchUpPerCall), slotIndex(0U), pendingSlots(0U), started(false), statusValue{}
-        {
-        }*/
 
-        template <TickableConcept T>
-        auto bindTask(TaskId id, T &obj) noexcept -> bool
+        [[nodiscard]] auto start() noexcept -> bool
         {
             bool result = false;
 
-            const std::size_t idx = std::to_underlying(id);
-            if (idx < registryRef.size())
-            {
-                registryRef[idx] = TickDelegate(obj);
-                result = true;
-            }
-            else
-            {
-                statusValue.error = Error::REGISTRY_INCOMPLETE;
-                result = false;
-            }
-
-            return result;
-        }
-
-        auto start() noexcept -> bool
-        {
-            bool result = false;
-
-            if (isRegistryComplete())
+            if (isTaskCallTableComplete())
             {
                 Driver::CycleClock::init();
                 slotIndex = 0U;
@@ -136,7 +106,7 @@ export namespace BusinessLogic
             pendingSlots.fetch_add(1U, std::memory_order_relaxed);
         }
 
-        auto runPending() noexcept -> bool
+        [[nodiscard]] auto runPending() noexcept -> bool
         {
             bool result = true;
 
@@ -198,11 +168,11 @@ export namespace BusinessLogic
         }
 
     private:
-        [[nodiscard]] auto isRegistryComplete() const noexcept -> bool
+        [[nodiscard]] auto isTaskCallTableComplete() const noexcept -> bool
         {
             bool complete = true;
 
-            for (const auto &entry : registryRef)
+            for (const auto &entry : taskCallTable)
             {
                 if (!entry.isBound())
                 {
@@ -228,7 +198,7 @@ export namespace BusinessLogic
             {
                 const std::size_t taskIdx = std::to_underlying(slot.taskIds[i]);
 
-                const bool ok = registryRef[taskIdx]();
+                const bool ok = taskCallTable[taskIdx]();
                 if (!ok)
                 {
                     allOk = false;
@@ -261,7 +231,7 @@ export namespace BusinessLogic
         }
 
         const SlotTable &slotTableRef;
-        Registry &registryRef;
+        TaskCallTable &taskCallTable;
         std::uint32_t maxCatchUpPerCall;
 
         std::size_t slotIndex;

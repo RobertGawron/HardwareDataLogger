@@ -1,11 +1,12 @@
 /**
  * @file ApplicationFacade.cppm
- * @brief Application component orchestrator managing initialization and coordination.
+ * @brief Top-level application component and scheduler owner.
  */
 module;
 
 #include <array>
 #include <cstddef>
+#include <cstdint>
 #include <functional>
 #include <utility>
 
@@ -13,9 +14,9 @@ export module BusinessLogic.ApplicationFacade;
 
 import BusinessLogic.ApplicationComponent;
 import BusinessLogic.MeasurementCoordinator;
-import BusinessLogic.HmiFacade;
 
 import BusinessLogic.SlotTableScheduler;
+import BusinessLogic.TaskId;
 
 import Device;
 
@@ -25,18 +26,17 @@ import Driver.CycleBudget;
 export namespace BusinessLogic
 {
     /**
-     * @class ApplicationFacade
-     * @brief Top-level coordinator managing application subsystems and their lifecycles.
-     * Owns and initializes measurement sources, data recorders, HMI components, and
-     * the coordinator that routes data between them. Ensures components are initialized
-     * in correct dependency order and coordinates their operational state transitions.
+     * @brief Top-level coordinator for application subsystems.
+     *
+     * Owns all long-lived sources/recorders and the slot-table scheduler configuration
+     * that drives periodic execution.
      */
     class ApplicationFacade final : public ApplicationComponent
     {
     public:
         /**
-         * @brief Constructs application with platform-specific drivers.
-         * @param factory Provides hardware drivers for peripheral initialization.
+         * @brief Constructs the application using platform-provided drivers.
+         * @param factory Driver factory providing initialized driver instances.
          */
         explicit ApplicationFacade(Driver::PlatformFactory &factory) noexcept;
 
@@ -49,42 +49,45 @@ export namespace BusinessLogic
         ApplicationFacade &operator=(ApplicationFacade &&) = delete;
 
         /**
-         * @brief Initializes all subsystems in dependency order.
-         * @return true if all sources, recorders, HMI, and coordinator initialized successfully.
+         * @brief Initializes all owned subsystems.
+         * @return true on success; false if any subsystem initialization fails.
          */
         [[nodiscard]] auto onInit() noexcept -> bool;
 
         /**
-         * @brief Starts all subsystems for operational mode.
-         * @return true if all components transitioned to running state successfully.
+         * @brief Starts all owned subsystems.
+         * @return true on success; false if any subsystem start fails.
          */
         [[nodiscard]] auto onStart() noexcept -> bool;
 
         /**
-         * @brief Stops all subsystems, halting data acquisition and recording.
-         * @return true if all components stopped cleanly.
+         * @brief Stops all owned subsystems.
+         * @return true on success; false if any subsystem stop fails.
          */
         [[nodiscard]] auto onStop() noexcept -> bool;
 
         /**
-         * @brief Executes one iteration of all active subsystems.
-         * @return true if all subsystem tick operations completed successfully.
+         * @brief Runs pending scheduler slots from the main loop.
+         * @return true if no scheduler error is detected during this call; false otherwise.
          */
         [[nodiscard]] auto onTick() noexcept -> bool;
 
-        // todo
-        void onTimeSlot() noexcept
-        {
-            // scheduler.status() tod check this and log it
-            scheduler.notifyTimeSlotIsr();
-        }
+        /**
+         * @brief Signals one scheduler time slot.
+         *
+         * Intended to be called from a periodic timer interrupt or HAL callback.
+         */
+        auto onTimeSlot() noexcept -> void;
 
     private:
+        /// Number of recorders connected to the measurement coordinator.
+        static constexpr std::size_t RECORDERS_COUNT{2U};
+
+        /// Number of sources connected to the measurement coordinator.
         static constexpr std::size_t SOURCES_COUNT{
             std::to_underlying(Device::MeasurementDeviceId::LAST_NOT_USED)};
-        static constexpr std::size_t RECORDERS_COUNT{2};
 
-        // Measurement sources (data producers)
+        // Measurement sources
         Device::PulseCounterSource pulseCounter1;
         Device::PulseCounterSource pulseCounter2;
         Device::PulseCounterSource pulseCounter3;
@@ -93,52 +96,70 @@ export namespace BusinessLogic
 
         std::array<Device::SourceVariant, SOURCES_COUNT> sources;
 
-        // Data recorders (data consumers)
+        // Measurement recorders
         Device::WiFiRecorder wifiRecorder;
         Device::SdCardRecorder sdCardRecorder;
+
         std::array<Device::RecorderVariant, RECORDERS_COUNT> recorders;
 
-        // Data routing
+        /// Measurement routing and aggregation.
         MeasurementCoordinator<SOURCES_COUNT, RECORDERS_COUNT> measurement;
 
-        // Human-Machine Interface
+        // UI devices
         Device::Display display;
         Device::DisplayBrightness brightness;
         Device::Keyboard keyboard;
-        BusinessLogic::HmiFacade hmi;
 
-        static constexpr std::size_t slotsPerCycle = 4U;
-        static constexpr std::size_t maxTasksPerSlot = 2U;
+        /// Scheduler configuration.
+        static constexpr std::size_t SLOTS_PER_CYCLE{4U};
+        static constexpr std::size_t MAX_TASKS_PERSLOT{2U};
+        static_assert(MAX_TASKS_PERSLOT > 0U, "MAX_TASKS_PERSLOT must be greater than 0.");
 
-        using Scheduler = BusinessLogic::SlotTableScheduler<slotsPerCycle, maxTasksPerSlot>;
-        using TaskId = Scheduler::TaskId;
-        using SlotDef = Scheduler::SlotDef;
+        using Scheduler = BusinessLogic::SlotTableScheduler<SLOTS_PER_CYCLE, MAX_TASKS_PERSLOT>;
 
-        static constexpr std::array<SlotDef, slotsPerCycle> slotTable = []() constexpr
-        {
-            std::array<SlotDef, slotsPerCycle> table{};
+        /// Slot schedule defining per-slot task order and budget.
+        static constexpr std::array<Scheduler::Slot, SLOTS_PER_CYCLE> slotTable = {{
+            Scheduler::Slot{.taskIds{TaskId::MEASUREMENT, TaskId::KEYBOARD},
+                            .taskIdCount = 2U,
+                            .budgetCycles = Driver::CycleBudget::fromUs(72'000'000U, 700U)},
+            Scheduler::Slot{.taskIds{TaskId::MEASUREMENT},
+                            .taskIdCount = 1U,
+                            .budgetCycles = Driver::CycleBudget::fromUs(72'000'000U, 500U)},
+            Scheduler::Slot{.taskIds{TaskId::MEASUREMENT, TaskId::KEYBOARD},
+                            .taskIdCount = 2U,
+                            .budgetCycles = Driver::CycleBudget::fromUs(72'000'000U, 700U)},
+            Scheduler::Slot{.taskIds{TaskId::MEASUREMENT},
+                            .taskIdCount = 1U,
+                            .budgetCycles = Driver::CycleBudget::fromUs(72'000'000U, 500U)},
+        }};
 
-            table[0] = SlotDef{.taskIds{TaskId::MEASUREMENT, TaskId::HMI},
-                               .taskIdCount = 2U,
-                               .budgetCycles = Driver::CycleBudget::fromUs(72'000'000U, 700U)};
+        /// Task dispatch table indexed by TaskId.
+        Scheduler::TaskCallTable taskCallTable;
 
-            table[1] = SlotDef{.taskIds{TaskId::MEASUREMENT},
-                               .taskIdCount = 1U,
-                               .budgetCycles = Driver::CycleBudget::fromUs(72'000'000U, 500U)};
-
-            table[2] = SlotDef{.taskIds{TaskId::MEASUREMENT, TaskId::HMI},
-                               .taskIdCount = 2U,
-                               .budgetCycles = Driver::CycleBudget::fromUs(72'000'000U, 700U)};
-
-            table[3] = SlotDef{.taskIds{TaskId::MEASUREMENT},
-                               .taskIdCount = 1U,
-                               .budgetCycles = Driver::CycleBudget::fromUs(72'000'000U, 500U)};
-
-            return table;
-        }();
-
-        Scheduler::Registry registry;
+        /// Slot-table scheduler instance.
         Scheduler scheduler;
+
+        /**
+         * @brief Validates slotTable at compile time.
+         * @return true if slotTable is internally consistent.
+         */
+        static consteval auto validateSlotTable() -> bool
+        {
+            bool ok = true;
+
+            for (const auto &slot : slotTable)
+            {
+                ok = ok && (slot.taskIdCount <= MAX_TASKS_PERSLOT);
+
+                for (std::uint8_t i = 0U; i < slot.taskIdCount; ++i)
+                {
+                    const auto id = std::to_underlying(slot.taskIds[i]);
+                    ok = ok && (id < std::to_underlying(TaskId::LAST_NOT_USED));
+                }
+            }
+
+            return ok;
+        }
     };
 
 } // namespace BusinessLogic

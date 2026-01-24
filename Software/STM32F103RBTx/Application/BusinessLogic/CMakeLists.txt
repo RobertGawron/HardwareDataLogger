@@ -14,16 +14,15 @@ target_sources(BusinessLogic PUBLIC FILE_SET CXX_MODULES FILES
     Modules/TickableConcept.cppm
     Modules/TickDelegate.cppm
     Modules/SlotTableScheduler.cppm
+    Modules/TaskId.cppm
 
     Modules/ApplicationComponent.cppm
     Modules/ApplicationFacade.cppm
-    Modules/HmiFacade.cppm
     Modules/MeasurementCoordinator.cppm
 )
 
 target_sources(BusinessLogic PRIVATE
     Src/ApplicationFacade.cpp
-    Src/HmiFacade.cpp
 )
 
 target_link_libraries(BusinessLogic PRIVATE
