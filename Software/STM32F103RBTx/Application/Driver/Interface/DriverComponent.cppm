@@ -2,31 +2,35 @@ module;
 
 #include <cstdint>
 #include <concepts>
+#include <type_traits>
 
 export module Driver.DriverComponent;
 
 export namespace Driver
 {
-
     /**
-     * @brief Refined concept for the new Deduced-this pattern
-     */
-    template <typename T>
-    concept DriverLifecycle = requires(T t) {
-        { t.onInit() } noexcept -> std::same_as<bool>;
-        { t.onStart() } noexcept -> std::same_as<bool>;
-        { t.onStop() } noexcept -> std::same_as<bool>;
-        //   { t.onTick() } noexcept -> std::same_as<bool>;
-    };
-
-    /**
-     * @class DriverComponent
-     * @brief Non-template base class using C++23 Deducing This.
-     * Guaranteed zero vtable overhead and optimized for short binary output.
+     * @brief Non-virtual lifecycle base using C++23 deducing-this.
+     *
+     * @details
+     * Derived types may implement any subset of:
+     * - bool onInit() noexcept;
+     * - bool onStart() noexcept;
+     * - bool onStop() noexcept;
+     * - bool onTick() noexcept;
+     *
+     * Missing hooks are treated as successful no-ops, except tick(): if onTick() is missing,
+     * tick() returns false.
      */
     class DriverComponent
     {
     public:
+        constexpr DriverComponent() noexcept {};
+
+        DriverComponent(const DriverComponent &) = delete;
+        DriverComponent &operator=(const DriverComponent &) = delete;
+        DriverComponent(DriverComponent &&) = delete;
+        DriverComponent &operator=(DriverComponent &&) = delete;
+
         enum class State : std::uint8_t
         {
             RESET = 0xFF,
@@ -36,93 +40,125 @@ export namespace Driver
             STOPPED = 0x04
         };
 
-        static constexpr State DEFAULT_INITIAL_STATE = State::RESET;
-
-        constexpr DriverComponent() noexcept {};
-
-        // Deleted copy/move to prevent state slicing
-        DriverComponent(const DriverComponent &) = delete;
-        DriverComponent &operator=(const DriverComponent &) = delete;
-
-        // --- Public Interface (Static Dispatch via Deducing This) ---
-
         template <typename Self>
         [[nodiscard]] bool init(this Self &self) noexcept
         {
-            return self.exec(State::INITIALIZED, &Self::onInit);
+            bool status = self.setState(State::INITIALIZED);
+
+            if (status)
+            {
+                if constexpr (requires(Self &s) { { s.onInit() } noexcept -> std::same_as<bool>; })
+                {
+                    status = self.onInit();
+                }
+            }
+
+            return status;
         }
 
         template <typename Self>
         [[nodiscard]] bool start(this Self &self) noexcept
         {
-            if (!self.exec(State::STARTING, &Self::onStart))
+            bool status = self.setState(State::STARTING);
+
+            if (status)
             {
-                return false;
+                if constexpr (requires(Self &s) { { s.onStart() } noexcept -> std::same_as<bool>; })
+                {
+                    status = self.onStart();
+                }
             }
-            return self.setState(State::RUNNING);
+
+            if (status)
+            {
+                status = self.setState(State::RUNNING);
+            }
+
+            return status;
         }
 
         template <typename Self>
         [[nodiscard]] bool stop(this Self &self) noexcept
         {
-            return self.exec(State::STOPPED, &Self::onStop);
+            bool status = self.setState(State::STOPPED);
+
+            if (status)
+            {
+                if constexpr (requires(Self &s) { { s.onStop() } noexcept -> std::same_as<bool>; })
+                {
+                    status = self.onStop();
+                }
+            }
+
+            return status;
         }
 
         template <typename Self>
         [[nodiscard]] bool tick(this Self &self) noexcept
         {
-            // Hot path optimization: Use [[unlikely]] for non-running states
-            if (self.currentState != State::RUNNING) [[unlikely]]
+            bool status = false;
+
+            if (self.getState() == State::RUNNING) [[likely]]
             {
-                return false;
+                if constexpr (requires(Self &s) { { s.onTick() } noexcept -> std::same_as<bool>; })
+                {
+                    status = self.onTick();
+                }
             }
-            return self.onTick();
+
+            return status;
         }
 
-        [[nodiscard]] constexpr State getState() const noexcept { return currentState; }
-
-    protected:
-        // Transition helper now uses the deduced self
-        template <typename Self, typename Func>
-        [[nodiscard]] bool exec(this Self &self, State target, Func func) noexcept
+        [[nodiscard]] constexpr State getState() const noexcept
         {
-            if (!self.setState(target)) [[unlikely]]
-            {
-                return false;
-            }
-            return (self.*func)();
-        }
-
-        [[nodiscard]] constexpr bool setState(State newState) noexcept
-        {
-            if (isValidTransition(currentState, newState)) [[likely]]
-            {
-                currentState = newState;
-                return true;
-            }
-            return false;
+            return state;
         }
 
     private:
-        State currentState = DEFAULT_INITIAL_STATE;
+        static constexpr State DEFAULT_INITIAL_STATE = State::RESET;
+        State state{DEFAULT_INITIAL_STATE};
 
-        [[nodiscard]] static constexpr bool isValidTransition(State current, State next) noexcept
+        [[nodiscard]] constexpr bool setState(State newState) noexcept
         {
-            switch (current)
+            bool status = false;
+
+            if (isTransitionAllowed(state, newState)) [[likely]]
             {
-            case State::RESET:
-                return next == State::INITIALIZED;
-            case State::INITIALIZED:
-                return next == State::STARTING;
-            case State::STARTING:
-                return next == State::RUNNING || next == State::STOPPED;
-            case State::RUNNING:
-                return next == State::RUNNING || next == State::STOPPED;
-            case State::STOPPED:
-                return next == State::STARTING || next == State::RESET;
-            default:
-                return false;
+                state = newState;
+                status = true;
             }
+
+            return status;
+        }
+
+        [[nodiscard]] static constexpr bool isTransitionAllowed(State current, State next) noexcept
+        {
+            return ((current == State::RESET) && (next == State::INITIALIZED)) ||
+                   ((current == State::INITIALIZED) && (next == State::STARTING)) ||
+                   ((current == State::STARTING) && ((next == State::RUNNING) || (next == State::STOPPED))) ||
+                   ((current == State::RUNNING) && ((next == State::RUNNING) || (next == State::STOPPED))) ||
+                   ((current == State::STOPPED) && ((next == State::STARTING) || (next == State::RESET)));
         }
     };
-}
+
+    static_assert(std::is_standard_layout_v<DriverComponent>,
+                  "DriverComponent must have standard layout for predictable representation.");
+
+    static_assert(std::is_trivially_destructible_v<DriverComponent>,
+                  "DriverComponent must be trivially destructible (no owned resources).");
+
+    // State representation expectations
+    static_assert(std::is_enum_v<DriverComponent::State>,
+                  "DriverComponent::State must remain an enum type.");
+
+    static_assert(std::is_same_v<std::underlying_type_t<DriverComponent::State>, std::uint8_t>,
+                  "DriverComponent::State underlying type must be std::uint8_t for deterministic storage.");
+
+    // Size expectations
+    static_assert(sizeof(DriverComponent::State) == sizeof(std::uint8_t),
+                  "DriverComponent::State must be exactly 1 byte.");
+
+    static_assert(sizeof(DriverComponent) == sizeof(DriverComponent::State),
+                  "DriverComponent is expected to store only the state (no hidden members).");
+
+} // namespace Driver

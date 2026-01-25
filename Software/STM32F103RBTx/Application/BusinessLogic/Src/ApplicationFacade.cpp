@@ -62,7 +62,7 @@ namespace BusinessLogic
         const bool status =
             measurement.init() &&
             display.init() &&
-            brightness.init() &&
+            // brightness.init() &&
             keyboard.init();
 
         return status;
@@ -70,14 +70,22 @@ namespace BusinessLogic
 
     auto ApplicationFacade::onStart() noexcept -> bool
     {
-        const bool status =
-            measurement.start() &&
-            display.start() &&
-            brightness.start() &&
-            keyboard.start() &&
-            scheduler.start();
+        /* const bool status =
+             measurement.start() &&
+             display.start() &&
+             brightness.start() &&
+             keyboard.start() &&
+             scheduler.start();
 
-        return status;
+         return status;*/
+
+        measurement.start();
+        display.start();
+        // brightness.start();
+        keyboard.start();
+        scheduler.start();
+
+        return true;
     }
 
     auto ApplicationFacade::onStop() noexcept -> bool
@@ -85,7 +93,7 @@ namespace BusinessLogic
         const bool status =
             measurement.stop() &&
             display.stop() &&
-            brightness.stop() &&
+            //  brightness.stop() &&
             keyboard.stop();
 
         return status;

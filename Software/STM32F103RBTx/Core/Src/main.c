@@ -76,6 +76,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Instance == TIM2)
   {
+    app_timeSlotIsr();
     app_tick_flag = 1; // Set flag every 5ms
   }
 }
@@ -149,9 +150,9 @@ int main(void)
   MX_USART1_Init();
   MX_USART3_Init();
   MX_ADC2_Init();
-  MX_IWDG_Init();
+  // MX_IWDG_Init();
   MX_SPI1_Init();
-  MX_WWDG_Init();
+  // MX_WWDG_Init();
   MX_FATFS_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */

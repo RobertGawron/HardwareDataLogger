@@ -15,20 +15,20 @@ namespace Device
 {
     auto Keyboard::onInit() noexcept -> bool
     {
-        //  return keyboardDriver.init();
+        // return keyboardDriver.init();
 
         return true;
     }
 
     auto Keyboard::onStart() noexcept -> bool
     {
-        //   return keyboardDriver.start();
+        //    return keyboardDriver.start();
         return true;
     }
 
     auto Keyboard::onStop() noexcept -> bool
     {
-        //    return keyboardDriver.stop();
+        // return keyboardDriver.stop();
         return true;
     }
 

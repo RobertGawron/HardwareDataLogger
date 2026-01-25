@@ -6,6 +6,13 @@ module;
 
 #include <array>
 #include <cstdint>
+#include <array>
+#include <atomic>
+#include <cstddef>
+#include <cstdint>
+#include <span>
+#include <utility>
+#include <limits>
 
 export module Driver.KeyboardDriver;
 
@@ -27,7 +34,7 @@ export namespace Driver
     {
     public:
         static constexpr std::uint8_t AMOUNT_OF_KEYS =
-            static_cast<std::uint8_t>(KeyId::LastNotUsed);
+            std::to_underlying(KeyId::LastNotUsed);
 
         KeyboardDriver() = default;
         ~KeyboardDriver() = default;
