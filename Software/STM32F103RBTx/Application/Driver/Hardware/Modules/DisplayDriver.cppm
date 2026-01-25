@@ -25,8 +25,8 @@ export namespace Driver
         DisplayDriver(DisplayDriver &&) = delete;
         DisplayDriver &operator=(DisplayDriver &&) = delete;
 
-        [[nodiscard]] bool onInit();
-        [[nodiscard]] bool onStart();
+        [[nodiscard]] bool onInit() noexcept;
+        [[nodiscard]] bool onStart() noexcept;
 
         [[nodiscard]] bool setCursor(std::uint8_t xPosition,
                                      std::uint8_t yPosition) noexcept;

@@ -8,6 +8,30 @@ export module Driver.DriverComponent;
 
 export namespace Driver
 {
+    template <typename T>
+    concept HasAnyOnInit = requires(T &t) { t.onInit(); };
+
+    template <typename T>
+    concept HasValidOnInit = requires(T &t) {
+        { t.onInit() } noexcept -> std::same_as<bool>;
+    };
+
+    template <typename T>
+    concept HasAnyOnStart = requires(T &t) { t.onStart(); };
+
+    template <typename T>
+    concept HasValidOnStart = requires(T &t) {
+        { t.onStart() } noexcept -> std::same_as<bool>;
+    };
+
+    template <typename T>
+    concept HasAnyOnStop = requires(T &t) { t.onStop(); };
+
+    template <typename T>
+    concept HasValidOnStop = requires(T &t) {
+        { t.onStop() } noexcept -> std::same_as<bool>;
+    };
+
     /**
      * @brief Non-virtual lifecycle base using C++23 deducing-this.
      *
@@ -43,6 +67,10 @@ export namespace Driver
         template <typename Self>
         [[nodiscard]] bool init(this Self &self) noexcept
         {
+            static_assert(!HasAnyOnInit<Self> || HasValidOnInit<Self>,
+                          "Invalid onInit() detected. Policy: either provide 'bool onInit() noexcept' "
+                          "or do not provide onInit() at all.");
+
             bool status = self.setState(State::INITIALIZED);
 
             if (status)
@@ -59,6 +87,10 @@ export namespace Driver
         template <typename Self>
         [[nodiscard]] bool start(this Self &self) noexcept
         {
+            static_assert(!HasAnyOnStart<Self> || HasValidOnStart<Self>,
+                          "Invalid onStart() detected. Policy: either provide 'bool onStart() noexcept' "
+                          "or do not provide onStart() at all.");
+
             bool status = self.setState(State::STARTING);
 
             if (status)
@@ -80,6 +112,10 @@ export namespace Driver
         template <typename Self>
         [[nodiscard]] bool stop(this Self &self) noexcept
         {
+            static_assert(!HasAnyOnStop<Self> || HasValidOnStop<Self>,
+                          "Invalid onStop() detected. Policy: either provide 'bool onStop() noexcept' "
+                          "or do not provide onStop() at all.");
+
             bool status = self.setState(State::STOPPED);
 
             if (status)
