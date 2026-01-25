@@ -56,6 +56,8 @@ export namespace Driver
         [[nodiscard]] KeyState getKeyState(KeyId key) const noexcept;
 
     private:
+        /// Cached sampling state used to derive per-key states.
+        std::uint32_t gpioSnapshot{0U};
     };
 
     /** @brief Ensures KeyboardDriver satisfies the project keyboard driver interface. */

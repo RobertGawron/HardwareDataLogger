@@ -27,9 +27,6 @@ namespace
     static constexpr std::size_t KEY_COUNT =
         static_cast<std::size_t>(std::to_underlying(Driver::KeyId::LastNotUsed));
 
-    /// Cached sampling state used to derive per-key states.
-    std::uint32_t gpioSnapshot{0U};
-
     /// Compile-time mapping from key identifier to pin mask.
     static constexpr std::array<std::uint16_t, KEY_COUNT> keyPinMask{
         // values are from CubeMX generated main.h
