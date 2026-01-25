@@ -87,8 +87,8 @@ export namespace Device
     private:
         Driver::KeyboardDriver &keyboardDriver;
 
-        static constexpr std::uint8_t AMOUNT_OF_KEYS{
-            static_cast<std::uint8_t>(Driver::KeyId::LastNotUsed)};
+        static constexpr std::uint8_t KEY_COUNT{
+            static_cast<std::uint8_t>(Driver::KeyId::LAST_NOT_USED)};
 
         static constexpr std::uint8_t LONG_PRESS_THRESHOLD_TICKS{10}; // 10 ticks * 100ms = 1 second
 
@@ -97,14 +97,14 @@ export namespace Device
          *
          * Each entry counts the number of `tick()` calls while the key is pressed.
          */
-        std::array<std::uint8_t, AMOUNT_OF_KEYS> pressDurationTicks{};
+        std::array<std::uint8_t, KEY_COUNT> pressDurationTicks{};
 
         /**
          * @brief Array storing the action states for all keys.
          *
          * Each key's action state indicates whether it is pressed, held, or not pressed.
          */
-        std::array<KeyAction, AMOUNT_OF_KEYS> keyAction{};
+        std::array<KeyAction, KEY_COUNT> keyAction{};
     };
 
     // Compile-time verification

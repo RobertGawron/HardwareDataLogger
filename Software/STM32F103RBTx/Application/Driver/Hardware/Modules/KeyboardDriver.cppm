@@ -24,6 +24,7 @@ export namespace Driver
      * Provides polled access to a fixed set of keys defined at compile time.
      * The driver is intended for active-low buttons with pull-ups enabled.
      *
+     * @All keys should be on the same GPIO port.
      * @note Debouncing is not performed by this driver.
      */
     class KeyboardDriver final : public DriverComponent
@@ -54,6 +55,8 @@ export namespace Driver
          * @return KeyState::DriverNotOperational when the driver is not operational.
          */
         [[nodiscard]] KeyState getKeyState(KeyId key) const noexcept;
+
+
 
     private:
         /// Cached sampling state used to derive per-key states.

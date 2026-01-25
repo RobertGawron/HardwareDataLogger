@@ -25,11 +25,11 @@ export namespace Driver
      */
     enum class KeyId : std::uint8_t
     {
-        Up = 0U,         /**< Represents the 'Up' key, assigned with value 0. */
-        Down = 1U,       /**< Represents the 'Down' key, assigned with value 1. */
-        Left = 2U,       /**< Represents the 'Left' key, assigned with value 2. */
-        Right = 3U,      /**< Represents the 'Right' key, assigned with value 3. */
-        LastNotUsed = 4U /**< Represents the last enum value, used to determine the size of the enum. */
+        UP = 0U,           /**< Represents the 'Up' key, assigned with value 0. */
+        DOWN = 1U,         /**< Represents the 'Down' key, assigned with value 1. */
+        LEFT = 2U,         /**< Represents the 'Left' key, assigned with value 2. */
+        RIGHT = 3U,        /**< Represents the 'Right' key, assigned with value 3. */
+        LAST_NOT_USED = 4U /**< Represents the last enum value, used to determine the size of the enum. */
     };
 
     static_assert(std::is_enum_v<KeyId>, "KeyId must remain an enum type");
@@ -37,25 +37,24 @@ export namespace Driver
     static_assert(std::is_same_v<std::underlying_type_t<KeyId>, std::uint8_t>,
                   "KeyId underlying type must be std::uint8_t");
 
-    static_assert(static_cast<std::uint8_t>(KeyId::Up) == 0U,
-                  "KeyId::Up must be 0");
+    static_assert(static_cast<std::uint8_t>(KeyId::UP) == 0U,
+                  "KeyId::UP must be 0");
 
-    static_assert(static_cast<std::uint8_t>(KeyId::Down) == 1U,
-                  "KeyId::Down must be 1");
+    static_assert(static_cast<std::uint8_t>(KeyId::DOWN) == 1U,
+                  "KeyId::DOWN must be 1");
 
-    static_assert(static_cast<std::uint8_t>(KeyId::Left) == 2U,
-                  "KeyId::Left must be 2");
+    static_assert(static_cast<std::uint8_t>(KeyId::LEFT) == 2U,
+                  "KeyId::LEFT must be 2");
 
-    static_assert(static_cast<std::uint8_t>(KeyId::Right) == 3U,
-                  "KeyId::Right must be 3");
+    static_assert(static_cast<std::uint8_t>(KeyId::RIGHT) == 3U,
+                  "KeyId::RIGHT must be 3");
 
-    static_assert(static_cast<std::uint8_t>(KeyId::LastNotUsed) == 4U,
-                  "KeyId::LastNotUsed must be 4 (number of keys)");
-
+    static_assert(static_cast<std::uint8_t>(KeyId::LAST_NOT_USED) == 4U,
+                  "KeyId::LAST_NOT_USED must be 4 (number of keys)");
     constexpr bool isValid(KeyId k) noexcept
     {
         using U = std::underlying_type_t<KeyId>;
-        return static_cast<U>(k) < static_cast<U>(KeyId::LastNotUsed);
+        return static_cast<U>(k) < static_cast<U>(KeyId::LAST_NOT_USED);
     }
 
 }

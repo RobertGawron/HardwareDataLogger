@@ -61,41 +61,46 @@ namespace BusinessLogic
     {
         const bool statusMeasurement = measurement.init();
         const bool statusDisplay = display.init();
+        const bool statusBrightness = brightness.init();
         const bool statusKeyboard = keyboard.init();
 
-        const bool status = (statusMeasurement && statusDisplay && statusKeyboard);
+        const bool status = (statusMeasurement &&
+                             statusDisplay &&
+                             statusBrightness &&
+                             statusKeyboard);
 
         return status;
     }
 
     auto ApplicationFacade::onStart() noexcept -> bool
     {
-        /* const bool status =
-             measurement.start() &&
-             display.start() &&
-             brightness.start() &&
-             keyboard.start() &&
-             scheduler.start();
+        const bool statusMeasurement = measurement.start();
+        const bool statusDisplay = display.start();
+        const bool statusBrightness = brightness.start();
+        const bool statusKeyboard = keyboard.start();
+        const bool statusScheduler = scheduler.start();
 
-         return status;*/
+        const bool status = (statusMeasurement &&
+                             statusDisplay &&
+                             statusBrightness &&
+                             statusKeyboard &&
+                             statusScheduler);
 
-        measurement.start();
-        display.start();
-        // brightness.start();
-        keyboard.start();
-        scheduler.start();
-
+        //        return status;
         return true;
     }
 
     auto ApplicationFacade::onStop() noexcept -> bool
     {
-        const bool status =
-            measurement.stop() &&
-            display.stop() &&
-            //  brightness.stop() &&
-            keyboard.stop();
+        const bool statusMeasurement = measurement.stop();
+        const bool statusDisplay = display.stop();
+        const bool statusBrightness = brightness.stop();
+        const bool statusKeyboard = keyboard.stop();
 
+        const bool status = (statusMeasurement &&
+                             statusDisplay &&
+                             statusBrightness &&
+                             statusKeyboard);
         return status;
     }
 
