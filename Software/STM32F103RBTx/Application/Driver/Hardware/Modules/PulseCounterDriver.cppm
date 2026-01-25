@@ -60,26 +60,11 @@ export namespace Driver
         auto clear() noexcept -> void;
 
         /**
-         * @brief Initializes the pulse counter driver.
-         * @return Always returns true (no initialization required, API constraints).
-         * @note Hardware GPIO configuration is performed externally (CubeMX).
-         */
-        [[nodiscard]] constexpr bool onInit() noexcept { return true; }
-
-        /**
          * @brief Starts pulse counting by clearing the counter.
          * @return Always returns true (API constraints).
          * @note Interrupts are already enabled - this just resets the count.
          */
         [[nodiscard]] auto onStart() noexcept -> bool;
-
-        /**
-         * @brief Stops pulse counting by clearing the counter.
-         * @return Always returns true (API constraints).
-         * @note Does not disable GPIO interrupts - pulses continue to be counted.
-         *       This method only resets the counter value to prepare for next session.
-         */
-        [[nodiscard]] constexpr bool onStop() noexcept { return true; }
 
     private:
         /**

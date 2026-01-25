@@ -30,7 +30,6 @@ export namespace Driver
         LightSensorDriver(LightSensorDriver &&) = delete;
         LightSensorDriver &operator=(LightSensorDriver &&) = delete;
 
-        [[nodiscard]] constexpr bool onInit() noexcept { return true; }
         [[nodiscard]] auto onStart() noexcept -> bool;
         [[nodiscard]] auto onStop() noexcept -> bool;
 

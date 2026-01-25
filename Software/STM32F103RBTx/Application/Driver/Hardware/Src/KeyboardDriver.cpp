@@ -1,57 +1,121 @@
 module;
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_gpio.h"
+#include "stm32f1xx_ll_gpio.h"
 #include "main.h"
 
+#include <array>
 #include <cstddef>
 #include <cstdint>
+#include <utility> // std::to_underlying
 
 module Driver.KeyboardDriver;
 
 import Driver.DriverComponent;
 import Driver.KeyState;
+import Driver.KeyId;
 
+namespace
+{
+
+    /**
+     * @brief Number of keys supported by this driver.
+     *
+     * This value is derived from the @ref Driver::KeyId sentinel enumerator and is used
+     * for bounds checks and compile-time sizing.
+     */
+    static constexpr std::size_t KEY_COUNT =
+        static_cast<std::size_t>(std::to_underlying(Driver::KeyId::LastNotUsed));
+
+    /// Cached sampling state used to derive per-key states.
+    std::uint32_t gpioSnapshot{0U};
+
+    /// Compile-time mapping from key identifier to pin mask.
+    static constexpr std::array<std::uint16_t, KEY_COUNT> keyPinMask{
+        // values are from CubeMX generated main.h
+        KEY_UP_Pin,
+        KEY_DOWN_Pin,
+        KEY_LEFT_Pin,
+        KEY_RIGHT_Pin,
+    };
+
+    // ---------------------------------------------------------------------
+    // Compile-time consistency checks
+    // ---------------------------------------------------------------------
+
+    /** @brief Ensures KeyId values match the expected contiguous ordering. */
+    static_assert(std::to_underlying(Driver::KeyId::Up) == 0U,
+                  "KeyId::Up must remain 0 to match keyPinMask content");
+
+    /** @brief Ensures KeyId values match the expected contiguous ordering. */
+    static_assert(std::to_underlying(Driver::KeyId::Down) == 1U,
+                  "KeyId::Down must remain 1 to match keyPinMask content");
+
+    /** @brief Ensures KeyId values match the expected contiguous ordering. */
+    static_assert(std::to_underlying(Driver::KeyId::Left) == 2U,
+                  "KeyId::Left must remain 2 to match keyPinMask content");
+
+    /** @brief Ensures KeyId values match the expected contiguous ordering. */
+    static_assert(std::to_underlying(Driver::KeyId::Right) == 3U,
+                  "KeyId::Right must remain 3 to match keyPinMask content");
+#if 0
+        /** @brief Ensures the pin mapping table stays consistent with KEY_COUNT. */
+        static_assert(keyPinMask.size() == KEY_COUNT,
+                      "Pin mapping table size must match the number of keys");
+
+        /** @brief Ensures the build-time configuration places all keys on the supported port. */
+        static_assert(reinterpret_cast<std::uintptr_t>(KEY_UP_GPIO_Port) == GPIOC_BASE,
+                      "Key configuration mismatch: KEY_UP must be on GPIOC");
+
+        /** @brief Ensures the build-time configuration places all keys on the supported port. */
+        static_assert(KEY_DOWN_GPIO_Port == GPIOC,
+                      "Key configuration mismatch: KEY_DOWN must be on GPIOC");
+
+        /** @brief Ensures the build-time configuration places all keys on the supported port. */
+        static_assert(KEY_LEFT_GPIO_Port == GPIOC,
+                      "Key configuration mismatch: KEY_LEFT must be on GPIOC");
+
+        /** @brief Ensures the build-time configuration places all keys on the supported port. */
+        static_assert(KEY_RIGHT_GPIO_Port == GPIOC,
+                      "Key configuration mismatch: KEY_RIGHT must be on GPIOC");
+#endif
+}
 namespace Driver
 {
     bool KeyboardDriver::tick() noexcept
     {
-        bool status = false;
+        // Driver operational-state transitions are handled by the DriverComponent base class.
+        // If we are here the driver is already in running state
 
-        if (getState() == DriverComponent::State::RUNNING)
-        {
-            // Update all key states from GPIO
-            for (auto &key : keys)
-            {
-                key.state = readGpio(key.port, key.pin);
-            }
-            status = true;
-        }
+        // Read once; individual key states are derived from this cached snapshot.
+        gpioSnapshot = LL_GPIO_ReadInputPort(GPIOC);
 
-        return status;
+        return true;
     }
 
     KeyState KeyboardDriver::getKeyState(KeyId key) const noexcept
     {
-        const auto index = static_cast<std::size_t>(key);
+        KeyState status = KeyState::DriverNotOperational;
 
-        if (index >= keys.size()) [[unlikely]]
+        if (getState() == DriverComponent::State::RUNNING)
         {
-            return KeyState::UnknownKeyAsked;
+            status = KeyState::UnknownKeyAsked;
+
+            if (Driver::isValid(key))
+            {
+                const std::size_t index =
+                    static_cast<std::size_t>(std::to_underlying(key));
+
+                const std::uint32_t pinMask =
+                    static_cast<std::uint32_t>(keyPinMask[index]);
+
+                // Active-low: pressed when the input bit is 0.
+                status = (gpioSnapshot & pinMask) ? KeyState::NotPressed
+                                                  : KeyState::Pressed;
+            }
         }
 
-        if (getState() != DriverComponent::State::RUNNING) [[unlikely]]
-        {
-            return KeyState::DriverNotOperational;
-        }
-
-        return keys[index].state;
-    }
-
-    KeyState KeyboardDriver::readGpio(GPIO_TypeDef *port, std::uint16_t pin) noexcept
-    {
-        // Button pressed when GPIO is low (active low with pull-up)
-        const auto pinState = HAL_GPIO_ReadPin(port, pin);
-        return (pinState == GPIO_PIN_RESET) ? KeyState::Pressed : KeyState::NotPressed;
+        return status;
     }
 
 } // namespace Driver

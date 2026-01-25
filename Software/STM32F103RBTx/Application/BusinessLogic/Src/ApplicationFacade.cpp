@@ -59,11 +59,11 @@ namespace BusinessLogic
 
     auto ApplicationFacade::onInit() noexcept -> bool
     {
-        const bool status =
-            measurement.init() &&
-            display.init() &&
-            // brightness.init() &&
-            keyboard.init();
+        const bool statusMeasurement = measurement.init();
+        const bool statusDisplay = display.init();
+        const bool statusKeyboard = keyboard.init();
+
+        const bool status = (statusMeasurement && statusDisplay && statusKeyboard);
 
         return status;
     }
