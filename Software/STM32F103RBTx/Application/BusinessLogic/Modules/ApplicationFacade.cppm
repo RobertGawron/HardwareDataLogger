@@ -3,7 +3,7 @@
  * @brief Top-level application component and scheduler owner.
  */
 module;
-// #include <meta>
+
 #include <array>
 #include <cstddef>
 #include <cstdint>

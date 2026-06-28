@@ -1,15 +1,12 @@
-cmake_minimum_required(VERSION 3.31)
+cmake_minimum_required(VERSION 4.3.1)
 
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API "aa1f7df0-828a-4fcd-9afc-2dc80491aca7")
 set(CMAKE_EXPERIMENTAL_CXX_MODULE_DYNDEP ON)
 
 add_library(BusinessLogic STATIC)
-
-#add_compile_options(-freflection)
 
 # Module interface files
 target_sources(BusinessLogic PUBLIC FILE_SET CXX_MODULES FILES

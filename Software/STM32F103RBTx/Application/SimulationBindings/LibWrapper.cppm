@@ -3,12 +3,8 @@ module;
 #include <array>
 #include <cstdint>
 #include <cstdio>
-// #include <optional>
-// #include <functional>
-// #include <print>
-// #include <iostream>
+#include <print>
 
-// export module SimulationBindings;
 export module SimulationBindings;
 
 import BusinessLogic.ApplicationFacade;
@@ -92,10 +88,13 @@ extern "C"
 
     void LibWrapper_Init()
     {
+
+        std::print("DOES IT WORKS???\n");
+
         if (!facade.init())
         {
             //  std::cerr << "Error: No SD card open callback registered." << "\n";
-            // std::print("ERROR: facade.init() failed!\n");
+            std::print("ERROR: facade.init() failed!\n");
         }
 
         if (!facade.start())
