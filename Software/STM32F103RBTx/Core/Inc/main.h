@@ -1,21 +1,21 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.h
-  * @brief          : Header for main.c file.
-  *                   This file contains the common defines of the application.
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2024 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.h
+ * @brief          : Header for main.c file.
+ *                   This file contains the common defines of the application.
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2024 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -56,6 +56,21 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
 
+#ifdef __cplusplus
+  extern "C"
+  {
+#endif
+
+    extern USART_HandleTypeDef husart1;
+    extern USART_HandleTypeDef husart2;
+    extern USART_HandleTypeDef husart3;
+    extern ADC_HandleTypeDef hadc1;
+    extern TIM_HandleTypeDef htim3;
+
+#ifdef __cplusplus
+  }
+#endif
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -75,14 +90,6 @@ void Error_Handler(void);
 #define USART_RX_GPIO_Port GPIOA
 #define LCD_RST_Pin GPIO_PIN_2
 #define LCD_RST_GPIO_Port GPIOB
-#define BNC1_Pin GPIO_PIN_6
-#define BNC1_GPIO_Port GPIOC
-#define BNC2_Pin GPIO_PIN_7
-#define BNC2_GPIO_Port GPIOC
-#define BNC3_Pin GPIO_PIN_8
-#define BNC3_GPIO_Port GPIOC
-#define BNC4_Pin GPIO_PIN_9
-#define BNC4_GPIO_Port GPIOC
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
@@ -97,7 +104,8 @@ void Error_Handler(void);
 #define SD_CS_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-#define SD_SPI_HANDLE hspi1
+#define SD_SPI_Handle hspi1
+#define LCD_SPI_Handle hspi1
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

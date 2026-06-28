@@ -1,12 +1,13 @@
-#include "Device/Inc/CobsEncoder.hpp"
-
 #include <gtest/gtest.h>
 #include <array>
 #include <cstdint>
-#include <cstddef>   // For std::size_t
-#include <iostream>  // For std::cout
-#include <iomanip>   // For std::hex, std::dec, std::setw, std::setfill
-#include <algorithm> // For std::equal
+#include <cstddef>
+#include <iostream>
+#include <iomanip>
+#include <algorithm>
+#include <span>
+
+import Device.CobsEncoder;
 
 class CobsEncoderTest : public ::testing::Test
 {
@@ -20,18 +21,23 @@ public:
 
 TEST_F(CobsEncoderTest, EncodeDecodeEmptyData)
 {
-    static constexpr std::size_t EMPTY_INPUT_SIZE = 1U; // Minimum size to avoid zero-length array
+    static constexpr std::size_t EMPTY_INPUT_SIZE = 1U;
     static constexpr std::size_t EMPTY_INPUT_LENGTH = 0U;
     static constexpr std::size_t EXPECTED_OUTPUT_SIZE = 2U;
     static constexpr std::uint8_t EXPECTED_CODE_BYTE = 0x01U;
     static constexpr std::uint8_t EXPECTED_DELIMITER = 0x00U;
     static constexpr int HEX_WIDTH = 2;
     static constexpr char HEX_FILL = '0';
+
     const std::array<std::uint8_t, EMPTY_INPUT_SIZE> input{};
-    auto result = Device::CobsEncoder::encode(input, EMPTY_INPUT_LENGTH, getEncodeBuffer());
+
+    const std::span<const std::uint8_t> inputSpan{input.data(), EMPTY_INPUT_LENGTH};
+    std::span<std::uint8_t> outputSpan{getEncodeBuffer()};
+
+    auto result = Device::CobsEncoder::encode(inputSpan, outputSpan);
     ASSERT_TRUE(result.has_value());
-    const std::size_t encodedSize = result.value_or(0U); // Provides default value
-    // Print the encoded buffer data
+    const std::size_t encodedSize = result.value_or(0U);
+
     std::cout << "Encoded Data: ";
     for (std::size_t i = 0U; i < encodedSize; ++i)
     {
@@ -39,11 +45,13 @@ TEST_F(CobsEncoderTest, EncodeDecodeEmptyData)
                   << static_cast<int>(getEncodeBuffer()[i]) << " ";
     }
     std::cout << std::dec << '\n';
+
     // Empty data encodes to {0x01, 0x00}
-    const std::uint8_t output[] = {EXPECTED_CODE_BYTE, EXPECTED_DELIMITER};
+    const std::array<std::uint8_t, EXPECTED_OUTPUT_SIZE> output = {EXPECTED_CODE_BYTE, EXPECTED_DELIMITER};
+
     // Check if the encoded message matches the expected output
     EXPECT_EQ(encodedSize, EXPECTED_OUTPUT_SIZE);
-    EXPECT_TRUE(std::equal(std::begin(output), std::end(output), getEncodeBuffer().begin()));
+    EXPECT_TRUE(std::equal(output.begin(), output.end(), getEncodeBuffer().begin()));
 }
 
 TEST_F(CobsEncoderTest, HandlesInsufficientEncodeBuffer)
@@ -55,7 +63,11 @@ TEST_F(CobsEncoderTest, HandlesInsufficientEncodeBuffer)
     std::array<std::uint8_t, INPUT_SIZE> input{};
     std::fill(input.begin(), input.end(), TEST_FILL_VALUE);
     std::array<std::uint8_t, SMALL_BUFFER_SIZE> smallBuffer{};
-    auto result = Device::CobsEncoder::encode(input, input.size(), smallBuffer);
+
+    const std::span<const std::uint8_t> inputSpan{input};
+    std::span<std::uint8_t> outputSpan{smallBuffer};
+
+    auto result = Device::CobsEncoder::encode(inputSpan, outputSpan);
 
     EXPECT_FALSE(result.has_value());
 }

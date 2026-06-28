@@ -5088,7 +5088,7 @@
 				)
 			)
 		)
-		(property "Value" "6p8"
+		(property "Value" "18p"
 			(at 0 1.679999 135)
 			(layer "F.Fab")
 			(uuid "77ac12e6-8dc3-4d52-a099-cd88ade2b7dc")
@@ -6095,7 +6095,7 @@
 				)
 			)
 		)
-		(property "Value" "TBD"
+		(property "Value" "0R"
 			(at 0 1.65 45)
 			(layer "F.Fab")
 			(uuid "6718a1f4-670c-4ba0-9ce4-d071c046eeae")
@@ -6762,7 +6762,7 @@
 				)
 			)
 		)
-		(property "Value" "TBD"
+		(property "Value" "0R"
 			(at 0 1.65 45)
 			(layer "F.Fab")
 			(uuid "b5928d91-8cfc-4a7d-b8e3-569a4c1efbd1")
@@ -7164,7 +7164,7 @@
 				)
 			)
 		)
-		(property "Value" "Crystal"
+		(property "Value" "8M"
 			(at 0 3.55 135)
 			(layer "F.Fab")
 			(uuid "ef48622d-7b05-41ea-9edd-cf092c19bc16")
@@ -8021,7 +8021,7 @@
 				)
 			)
 		)
-		(property "Value" "6p8"
+		(property "Value" "18p"
 			(at 0 1.679999 135)
 			(layer "F.Fab")
 			(uuid "9d63cc82-6cc7-41a0-a85c-fa3f3a97d6c1")
@@ -8422,7 +8422,7 @@
 				)
 			)
 		)
-		(property "Value" "6p8"
+		(property "Value" "22p"
 			(at 0 1.679999 45)
 			(layer "F.Fab")
 			(uuid "e95afac1-65ae-4b68-9a08-9069cff8ce87")
@@ -12441,7 +12441,7 @@
 				)
 			)
 		)
-		(property "Value" "6p8"
+		(property "Value" "22p"
 			(at 0 1.679999 45)
 			(layer "F.Fab")
 			(uuid "8d7067c3-dfb7-492f-bbdc-4b233073be09")

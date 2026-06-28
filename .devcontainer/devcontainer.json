@@ -1,0 +1,34 @@
+{
+    "name": "STM32 Logger Development",
+    
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "dev",
+    "workspaceFolder": "/workspace",
+    
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "ms-vscode.cmake-tools",
+                "twxs.cmake",
+                "ms-vscode.cpptools-extension-pack",
+                "ms-python.python",
+                "rust-lang.rust-analyzer",
+                "vadimcn.vscode-lldb"
+            ]
+        }
+    },
+    
+    "postCreateCommand": "echo 'Dev container ready! Open HardwareDataLogger.code-workspace'",
+    
+    "shutdownAction": "stopCompose",
+    
+    "containerEnv": {
+        "DISPLAY": ":0",
+        "WAYLAND_DISPLAY": "wayland-0",
+        "XDG_RUNTIME_DIR": "/mnt/wslg/runtime-dir",
+        "PULSE_SERVER": "/mnt/wslg/PulseServer",
+        "QT_X11_NO_MITSHM": "1",
+        "QT_QPA_PLATFORM": "xcb"
+    }
+}

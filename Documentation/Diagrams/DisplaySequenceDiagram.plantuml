@@ -16,19 +16,19 @@ participant MUIU8G2
 participant U8G2
 end box
 
-participant "Driver::St7735DisplayDriver" as DRIVER
+participant "Driver::DisplayDriver" as DRIVER
 box "STM library"
 participant "stm32-st7735" as ST7735_LIB
 end box
 
 == Initialization ==
 
-CONTROLLER --> DISPLAY : onInitialize
-DISPLAY --> DRIVER : onInitialize
+CONTROLLER --> DISPLAY : onInit
+DISPLAY --> DRIVER : onInit
 DISPLAY --> U8G2 : u8g2_Setup_st7735
 
 DRIVER --> ST7735_LIB : Initialize hardware (TBD)
-CONTROLLER --> VIEW: onInitialize
+CONTROLLER --> VIEW: onInit
 == Start ==
 
 CONTROLLER --> DISPLAY : onStart

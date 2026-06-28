@@ -1,7 +1,7 @@
 #ifndef stm32f1xx_hal_gpio_h
 #define stm32f1xx_hal_gpio_h
 
-#include <gmock/gmock.h>
+// #include <gmock/gmock.h>
 #include <stdint.h>
 
 #include "stm32f1xx_hal_def.h"
@@ -22,6 +22,7 @@ extern GPIO_TypeDef portPinRight;
 extern GPIO_TypeDef portPinUp;
 extern GPIO_TypeDef portPinDown;
 
+#if 0
 // Mock class for HAL functions
 class MockHAL_GPIO
 {
@@ -37,5 +38,6 @@ inline GPIO_PinState HAL_GPIO_ReadPin(GPIO_TypeDef *GPIOx, std::uint16_t GPIO_Pi
 {
     return mockHAL_GPIO->HAL_GPIO_ReadPin(GPIOx, GPIO_Pin);
 }
+#endif
 
 #endif

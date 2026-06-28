@@ -1,0 +1,5 @@
+{
+    "C_Cpp.default.cppStandard": "c++23",
+    "C_Cpp.default.intelliSenseMode": "gcc-x64", 
+    "cmake.configureOnOpen": false
+}

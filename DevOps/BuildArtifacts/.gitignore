@@ -1,0 +1,8 @@
+# Ignore everything in this directory
+*
+
+# But keep this .gitignore file
+!.gitignore
+
+# (Optional) also keep a README or placeholder if you want
+#!README.md

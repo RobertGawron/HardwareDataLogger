@@ -1,5 +1,5 @@
-#include "Driver/Hardware/Inc/AmbientLightSensorDriver.hpp"
-#include "Driver/Interface/DriverState.hpp"
+#include "Driver/Hardware/Inc/LightSensorDriver.hpp"
+#include "Driver/Interface/DriverComponent.hpp"
 
 #include "stm32f1xx_hal_adc.h"
 #include "stm32f1xx_hal_def.h"
@@ -11,7 +11,7 @@ class MockHAL_ADC;
 
 MockHAL_ADC *mockHAL_ADC = nullptr;
 
-class AmbientLightSensorDriverTest : public ::testing::Test
+class LightSensorDriverTest : public ::testing::Test
 {
 public:
     void SetUp() override
@@ -33,45 +33,45 @@ private:
     ADC_HandleTypeDef dummyADC{};
 };
 
-TEST_F(AmbientLightSensorDriverTest, InitializeTransitionsToInitialized)
+TEST_F(LightSensorDriverTest, InitializeTransitionsToInitialized)
 {
-    Driver::AmbientLightSensorDriver driver(getDummyADC());
+    Driver::LightSensorDriver driver(getDummyADC());
 
     // Expect no calls to HAL functions during initialization in this example
-    EXPECT_TRUE(driver.initialize());
-    EXPECT_EQ(driver.getState(), Driver::DriverState::State::Initialized);
+    EXPECT_TRUE(driver.init());
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::Initialized);
 }
 
-TEST_F(AmbientLightSensorDriverTest, StartTransitionsToRunning)
+TEST_F(LightSensorDriverTest, StartTransitionsToRunning)
 {
-    Driver::AmbientLightSensorDriver driver(getDummyADC());
+    Driver::LightSensorDriver driver(getDummyADC());
 
     EXPECT_CALL(getMockHALInstance(), HAL_ADC_Start_DMA(::testing::_, ::testing::_, ::testing::_))
         .WillOnce(::testing::Return(HAL_OK));
-    driver.initialize(); // Must be initialized before starting
+    driver.init(); // Must be initialized before starting
     EXPECT_TRUE(driver.start());
-    EXPECT_EQ(driver.getState(), Driver::DriverState::State::Running);
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::Running);
 }
 
-TEST_F(AmbientLightSensorDriverTest, StopTransitionsToStopped)
+TEST_F(LightSensorDriverTest, StopTransitionsToStopped)
 {
-    Driver::AmbientLightSensorDriver driver(getDummyADC());
+    Driver::LightSensorDriver driver(getDummyADC());
 
     EXPECT_CALL(getMockHALInstance(), HAL_ADC_Stop_DMA(::testing::_))
         .WillOnce(::testing::Return(HAL_OK));
-    driver.initialize();
+    driver.init();
     driver.start(); // Must be running before stopping
     EXPECT_TRUE(driver.stop());
-    EXPECT_EQ(driver.getState(), Driver::DriverState::State::Stop);
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::Stop);
 }
 
-TEST_F(AmbientLightSensorDriverTest, ResetTransitionsToReset)
+TEST_F(LightSensorDriverTest, ResetTransitionsToReset)
 {
-    Driver::AmbientLightSensorDriver driver(getDummyADC());
+    Driver::LightSensorDriver driver(getDummyADC());
 
-    driver.initialize();
+    driver.init();
     driver.start();
     driver.stop();
     EXPECT_TRUE(driver.reset());
-    EXPECT_EQ(driver.getState(), Driver::DriverState::State::Reset);
+    EXPECT_EQ(driver.getState(), Driver::DriverComponent::State::Reset);
 }

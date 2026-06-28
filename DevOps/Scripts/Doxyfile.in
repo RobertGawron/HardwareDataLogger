@@ -2,7 +2,7 @@
 INPUT = "@DOXYGEN_INPUT_DIR@"
 OUTPUT_DIRECTORY = "@DOXYGEN_OUTPUT_DIR@"
 
-FILE_PATTERNS = "*.hpp"
+FILE_PATTERNS = "*.cppm"
 
 # Search subdirectories recursively
 RECURSIVE = YES

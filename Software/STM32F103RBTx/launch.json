@@ -1,0 +1,28 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "STM32F103 (OpenOCD + ST-LINK) - Debug",
+      "type": "cortex-debug",
+      "request": "launch",
+      "cwd": "${workspaceFolder:STM32 Firmware (STM32F103RBTx)}",
+
+      "servertype": "openocd",
+      "gdbPath": "arm-none-eabi-gdb",
+
+      "executable": "${workspaceFolder:STM32 Firmware (STM32F103RBTx)}/build/stm32-debug/HardwareDataLogger_STM32F103RBTx.elf",
+
+      "configFiles": [
+        "interface/stlink.cfg",
+        "target/stm32f1x.cfg"
+      ],
+
+      "svdFile": "",
+
+      "runToEntryPoint": "main",
+      "showDevDebugOutput": "raw",
+
+      "preLaunchTask": "STM32: Build (Debug)"
+    }
+  ]
+}

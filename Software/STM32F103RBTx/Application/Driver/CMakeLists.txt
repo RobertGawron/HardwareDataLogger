@@ -1,0 +1,40 @@
+cmake_minimum_required(VERSION 3.31)
+
+set(CMAKE_CXX_STANDARD 26)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API "aa1f7df0-828a-4fcd-9afc-2dc80491aca7")
+set(CMAKE_EXPERIMENTAL_CXX_MODULE_DYNDEP ON)
+
+add_library(DriverInterface STATIC)
+
+# Module interface files
+target_sources(DriverInterface
+    PUBLIC FILE_SET CXX_MODULES FILES
+        Interface/CycleBudget.cppm
+        Interface/CycleCpu.cppm
+        Interface/CoreClockConfig.cppm
+
+        Interface/BrightnessDriverConcept.cppm
+        Interface/DisplayDriverConcept.cppm
+        Interface/DriverComponent.cppm
+        Interface/FileOpenMode.cppm
+        Interface/KeyboardDriverConcept.cppm
+        Interface/KeyId.cppm
+        Interface/KeyState.cppm
+        Interface/LightSensorDriverConcept.cppm
+        Interface/PulseCounterDriverConcept.cppm
+        Interface/PulseCounterId.cppm
+        Interface/PulseCount.cppm
+        Interface/SdCardDriverConcept.cppm
+        Interface/SdCardStatus.cppm
+        Interface/UartDriverConcept.cppm
+        Interface/UartStatus.cppm
+)
+
+if(BUILD_IS_FOR_HARDWARE)
+    add_subdirectory(Hardware)
+else()
+    add_subdirectory(Simulation)
+endif()
