@@ -18,7 +18,7 @@ set(CMAKE_CXX_STANDARD 26 CACHE STRING "C++ standard" FORCE)
 
 
 # Enable experimental C++ module support
-set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API "aa1f7df0-828a-4fcd-9afc-2dc80491aca7")
+#set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API "aa1f7df0-828a-4fcd-9afc-2dc80491aca7")
 set(CMAKE_EXPERIMENTAL_CXX_MODULE_DYNDEP ON)
 
 #add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:-freflection>")

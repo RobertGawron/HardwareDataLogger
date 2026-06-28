@@ -1,6 +1,6 @@
 {
   "version": 6,
-  "cmakeMinimumRequired": { "major": 3, "minor": 28, "patch": 0 },
+  "cmakeMinimumRequired": { "major": 4, "minor": 3, "patch": 1 },
 
   "configurePresets": [
     {
@@ -25,97 +25,157 @@
         "PYTHON_ANALYZE_DIR": "/tmp/cmake-pstatic/BuildArtifacts/PythonStaticAnalysisWork"
       }
     },
+
     {
-      "name": "build-debug",
-      "displayName": "Main build (Debug, Ninja, /workspace/build)",
+      "name": "host-dev",
+      "displayName": "Host dev build (Debug, everything)",
       "generator": "Ninja",
       "binaryDir": "/workspace/build",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_BUILD_TYPE": "Debug",
+        "BUILD_TESTING": "ON",
+        "HDL_BUILD_U8G2": "ON",
+        "HDL_BUILD_DRIVER": "ON",
+        "HDL_BUILD_DEVICE": "ON",
+        "HDL_BUILD_BUSINESS": "ON",
+        "HDL_BUILD_SIMBIND": "ON",
+        "HDL_BUILD_TESTS_DRIVER": "ON",
+        "HDL_BUILD_TESTS_DEVICE": "ON",
+        "HDL_BUILD_TESTS_BUSINESS": "ON"
+      }
+    },
+
+    {
+      "name": "unit-businesslogic",
+      "displayName": "Unit tests - BusinessLogic only (Debug)",
+      "generator": "Ninja",
+      "binaryDir": "/tmp/cmake-unit-businesslogic",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "BUILD_TESTING": "ON",
+        "HDL_BUILD_U8G2": "OFF",
+        "HDL_BUILD_DRIVER": "ON",
+        "HDL_BUILD_DEVICE": "ON",
+        "HDL_BUILD_BUSINESS": "ON",
+        "HDL_BUILD_SIMBIND": "OFF",
+        "HDL_BUILD_TESTS_BUSINESS": "ON"
+      }
+    },
+    {
+      "name": "unit-device",
+      "displayName": "Unit tests - Device only (Debug)",
+      "generator": "Ninja",
+      "binaryDir": "/tmp/cmake-unit-device",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "BUILD_TESTING": "ON",
+        "HDL_BUILD_U8G2": "OFF",
+        "HDL_BUILD_DRIVER": "ON",
+        "HDL_BUILD_DEVICE": "ON",
+        "HDL_BUILD_BUSINESS": "OFF",
+        "HDL_BUILD_SIMBIND": "OFF",
+        "HDL_BUILD_TESTS_DEVICE": "ON"
+      }
+    },
+    {
+      "name": "unit-driver",
+      "displayName": "Unit tests - Driver only (Debug)",
+      "generator": "Ninja",
+      "binaryDir": "/tmp/cmake-unit-driver",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "BUILD_TESTING": "ON",
+        "HDL_BUILD_U8G2": "OFF",
+        "HDL_BUILD_DRIVER": "ON",
+        "HDL_BUILD_DEVICE": "OFF",
+        "HDL_BUILD_BUSINESS": "OFF",
+        "HDL_BUILD_SIMBIND": "OFF",
+        "HDL_BUILD_TESTS_DRIVER": "ON"
       }
     },
 
     {
       "name": "integration-debug",
-      "displayName": "Integration build (Debug, Ninja, isolated build dir + install prefix)",
+      "displayName": "Integration build (Debug, isolated + install prefix)",
       "generator": "Ninja",
       "binaryDir": "/tmp/cmake-integration",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_INSTALL_PREFIX": "/usr/local"
+        "CMAKE_INSTALL_PREFIX": "/usr/local",
+        "BUILD_TESTING": "OFF",
+        "HDL_BUILD_SIMBIND": "ON"
+      }
+    },
+
+    {
+      "name": "firmware-release",
+      "displayName": "Firmware (STM32) Release",
+      "generator": "Ninja",
+      "binaryDir": "/tmp/cmake-firmware-release",
+      "toolchainFile": "${sourceDir}/Software/STM32F103RBTx/cmake/gcc-arm-none-eabi.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "BUILD_TESTING": "OFF",
+        "BUILD_IS_FOR_HARDWARE": "ON",
+        "HDL_BUILD_SIMBIND": "OFF"
       }
     }
   ],
 
   "buildPresets": [
     {
-      "name": "build-debug",
-      "displayName": "Build: main (Debug)",
-      "configurePreset": "build-debug"
-    },
-    {
-      "name": "docs",
-      "displayName": "Build: docs",
-      "configurePreset": "docs",
-      "targets": ["docs"]
-    },
-    {
-      "name": "pstatic",
-      "displayName": "Build: pstatic",
-      "configurePreset": "pstatic",
-      "targets": ["pstatic"]
+      "name": "host-dev",
+      "displayName": "Build: host-dev",
+      "configurePreset": "host-dev"
     },
 
-    {
-      "name": "integration-debug",
-      "displayName": "Build: integration-debug (compile everything needed)",
-      "configurePreset": "integration-debug"
-    },
+    { "name": "docs", "configurePreset": "docs", "targets": ["docs"] },
+    { "name": "pstatic", "configurePreset": "pstatic", "targets": ["pstatic"] },
 
-    {
-      "name": "integration",
-      "displayName": "Build: integration (pytest)",
-      "configurePreset": "build-debug",
-      "targets": ["integration"]
-    },
-    {
-      "name": "install-sim",
-      "displayName": "Build: install SimulationBindings",
-      "configurePreset": "build-debug",
-      "targets": ["install-sim"]
-    },
+    { "name": "unit-businesslogic", "configurePreset": "unit-businesslogic" },
+    { "name": "unit-device", "configurePreset": "unit-device" },
+    { "name": "unit-driver", "configurePreset": "unit-driver" },
+
+    { "name": "integration-debug", "configurePreset": "integration-debug" },
 
     {
       "name": "install-integration",
-      "displayName": "Build: install SimulationBindings (integration-debug)",
+      "displayName": "Install: integration-debug",
       "configurePreset": "integration-debug",
       "targets": ["install-sim"]
+    },
+
+    {
+      "name": "firmware-release",
+      "displayName": "Build: firmware-release",
+      "configurePreset": "firmware-release"
     }
   ],
 
   "testPresets": [
     {
-      "name": "unit-tests",
-      "displayName": "Run All Unit Tests",
-      "description": "Runs all GTest unit tests with Sanitizers enabled",
-      "configurePreset": "build-debug",
-      "output": {
-        "outputOnFailure": true
-      },
-      "execution": {
-        "noTestsAction": "error",
-        "stopOnFailure": false
-      }
+      "name": "unit-businesslogic",
+      "displayName": "CTests: BusinessLogic",
+      "configurePreset": "unit-businesslogic",
+      "output": { "outputOnFailure": true },
+      "execution": { "noTestsAction": "error", "stopOnFailure": false },
+      "filter": { "include": { "label": "BusinessLogic" } }
     },
     {
-      "name": "unit-tests-device",
-      "displayName": "Run Device Layer Tests Only",
-      "inherits": "unit-tests",
-      "filter": {
-        "include": {
-          "label": "Device"
-        }
-      }
+      "name": "unit-device",
+      "displayName": "CTests: Device",
+      "configurePreset": "unit-device",
+      "output": { "outputOnFailure": true },
+      "execution": { "noTestsAction": "error", "stopOnFailure": false },
+      "filter": { "include": { "label": "Device" } }
+    },
+    {
+      "name": "unit-driver",
+      "displayName": "CTests: Driver",
+      "configurePreset": "unit-driver",
+      "output": { "outputOnFailure": true },
+      "execution": { "noTestsAction": "error", "stopOnFailure": false },
+      "filter": { "include": { "label": "Driver" } }
     }
   ]
 }

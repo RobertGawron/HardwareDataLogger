@@ -38,6 +38,21 @@ public:
 class MeasurementCoordinatorTest : public ::testing::Test
 {
 protected:
+    using TestSourceVariant =
+        std::variant<std::reference_wrapper<MockMeasurementSource>>;
+
+    using SourceArray =
+        std::array<TestSourceVariant, 2>;
+
+    using TestRecorderVariant =
+        std::variant<std::reference_wrapper<MockMeasurementRecorder>>;
+
+    using RecorderArray =
+        std::array<TestRecorderVariant, 2>;
+
+    using CoordinatorType =
+        BusinessLogic::MeasurementCoordinator<SourceArray, RecorderArray>;
+
     void SetUp() override
     {
         mockSource1 = std::make_unique<testing::NiceMock<MockMeasurementSource>>();
@@ -45,15 +60,17 @@ protected:
         mockRecorder1 = std::make_unique<testing::NiceMock<MockMeasurementRecorder>>();
         mockRecorder2 = std::make_unique<testing::NiceMock<MockMeasurementRecorder>>();
 
-        sources = std::make_unique<std::array<Device::SourceVariant, 2>>(
-            std::array<Device::SourceVariant, 2>{{std::ref(*mockSource1),
-                                                  std::ref(*mockSource2)}});
+        sources = std::make_unique<SourceArray>(
+            SourceArray{{std::ref(*mockSource1),
+                         std::ref(*mockSource2)}});
 
-        recorders = std::make_unique<std::array<Device::RecorderVariant, 2>>(
-            std::array<Device::RecorderVariant, 2>{{std::ref(*mockRecorder1),
-                                                    std::ref(*mockRecorder2)}});
+        recorders = std::make_unique<RecorderArray>(
+            RecorderArray{{std::ref(*mockRecorder1),
+                           std::ref(*mockRecorder2)}});
 
-        coordinator = std::make_unique<BusinessLogic::MeasurementCoordinator<2, 2>>(*sources, *recorders);
+        coordinator = std::make_unique<CoordinatorType>(
+            *sources,
+            *recorders);
     }
 
     void TearDown() override
@@ -71,7 +88,7 @@ protected:
     auto getMockSource2() -> MockMeasurementSource * { return mockSource2.get(); }
     auto getMockRecorder1() -> MockMeasurementRecorder * { return mockRecorder1.get(); }
     auto getMockRecorder2() -> MockMeasurementRecorder * { return mockRecorder2.get(); }
-    auto getCoordinator() -> BusinessLogic::MeasurementCoordinator<2, 2> * { return coordinator.get(); }
+    auto getCoordinator() -> CoordinatorType * { return coordinator.get(); }
 
 private:
     std::unique_ptr<MockMeasurementSource> mockSource1;
@@ -79,10 +96,10 @@ private:
     std::unique_ptr<MockMeasurementRecorder> mockRecorder1;
     std::unique_ptr<MockMeasurementRecorder> mockRecorder2;
 
-    std::unique_ptr<std::array<Device::SourceVariant, 2>> sources;
-    std::unique_ptr<std::array<Device::RecorderVariant, 2>> recorders;
+    std::unique_ptr<SourceArray> sources;
+    std::unique_ptr<RecorderArray> recorders;
 
-    std::unique_ptr<BusinessLogic::MeasurementCoordinator<2, 2>> coordinator;
+    std::unique_ptr<CoordinatorType> coordinator;
 };
 
 // ==================== init Tests ====================
@@ -155,8 +172,8 @@ TEST_F(MeasurementCoordinatorTest, Start_SourceFails_ReturnsFalse)
     // Test start with source failure
     EXPECT_CALL(*getMockSource1(), start()).WillOnce(testing::Return(false));
     EXPECT_CALL(*getMockSource2(), start()).Times(0);
-    EXPECT_CALL(*getMockRecorder1(), start()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockRecorder2(), start()).WillOnce(testing::Return(true));
+    EXPECT_CALL(*getMockRecorder1(), start()).Times(0);
+    EXPECT_CALL(*getMockRecorder2(), start()).Times(0);
 
     const bool result = getCoordinator()->onStart();
 
@@ -213,24 +230,27 @@ TEST_F(MeasurementCoordinatorTest, Stop_AllSucceed_ReturnsTrue)
 
 TEST_F(MeasurementCoordinatorTest, Stop_SourceFails_ReturnsFalse)
 {
-    // Initialize and start first
+    // Initialize
     EXPECT_CALL(*getMockSource1(), init()).WillOnce(testing::Return(true));
     EXPECT_CALL(*getMockSource2(), init()).WillOnce(testing::Return(true));
     EXPECT_CALL(*getMockRecorder1(), init()).WillOnce(testing::Return(true));
     EXPECT_CALL(*getMockRecorder2(), init()).WillOnce(testing::Return(true));
     ASSERT_TRUE(getCoordinator()->onInit());
 
+    // Start (all succeed)
     EXPECT_CALL(*getMockSource1(), start()).WillOnce(testing::Return(true));
     EXPECT_CALL(*getMockSource2(), start()).WillOnce(testing::Return(true));
     EXPECT_CALL(*getMockRecorder1(), start()).WillOnce(testing::Return(true));
     EXPECT_CALL(*getMockRecorder2(), start()).WillOnce(testing::Return(true));
     ASSERT_TRUE(getCoordinator()->onStart());
 
-    // Test stop with source failure
+    // Stop with source failure
     EXPECT_CALL(*getMockSource1(), stop()).WillOnce(testing::Return(true));
     EXPECT_CALL(*getMockSource2(), stop()).WillOnce(testing::Return(false));
-    EXPECT_CALL(*getMockRecorder1(), stop()).WillOnce(testing::Return(true));
-    EXPECT_CALL(*getMockRecorder2(), stop()).WillOnce(testing::Return(true));
+
+    // Fail‑fast: recorders should NOT be called
+    EXPECT_CALL(*getMockRecorder1(), stop()).Times(0);
+    EXPECT_CALL(*getMockRecorder2(), stop()).Times(0);
 
     const bool result = getCoordinator()->onStop();
 
@@ -364,41 +384,77 @@ protected:
     static constexpr std::size_t NUM_SOURCES = 5U;
     static constexpr std::size_t NUM_RECORDERS = 3U;
 
+    using TestSourceVariant =
+        std::variant<std::reference_wrapper<MockMeasurementSource>>;
+
+    using SourceArray =
+        std::array<TestSourceVariant, NUM_SOURCES>;
+
+    using TestRecorderVariant =
+        std::variant<std::reference_wrapper<MockMeasurementRecorder>>;
+
+    using RecorderArray =
+        std::array<TestRecorderVariant, NUM_RECORDERS>;
+
+    using CoordinatorType =
+        BusinessLogic::MeasurementCoordinator<
+            SourceArray,
+            RecorderArray>;
+
     void SetUp() override
     {
         for (std::size_t i{}; i < NUM_SOURCES; ++i)
         {
-            mockSources.push_back(std::make_unique<testing::NiceMock<MockMeasurementSource>>());
+            mockSources.push_back(
+                std::make_unique<testing::NiceMock<MockMeasurementSource>>());
         }
 
         for (std::size_t i{}; i < NUM_RECORDERS; ++i)
         {
-            mockRecorders.push_back(std::make_unique<testing::NiceMock<MockMeasurementRecorder>>());
+            mockRecorders.push_back(
+                std::make_unique<testing::NiceMock<MockMeasurementRecorder>>());
         }
 
-        sources = std::make_unique<std::array<Device::SourceVariant, NUM_SOURCES>>(
-            std::array<Device::SourceVariant, NUM_SOURCES>{{std::ref(*mockSources[0]),
-                                                            std::ref(*mockSources[1]),
-                                                            std::ref(*mockSources[2]),
-                                                            std::ref(*mockSources[3]),
-                                                            std::ref(*mockSources[4])}});
+        sources = std::make_unique<SourceArray>(
+            SourceArray{{std::ref(*mockSources[0]),
+                         std::ref(*mockSources[1]),
+                         std::ref(*mockSources[2]),
+                         std::ref(*mockSources[3]),
+                         std::ref(*mockSources[4])}});
 
-        recorders = std::make_unique<std::array<Device::RecorderVariant, NUM_RECORDERS>>(
-            std::array<Device::RecorderVariant, NUM_RECORDERS>{{std::ref(*mockRecorders[0]),
-                                                                std::ref(*mockRecorders[1]),
-                                                                std::ref(*mockRecorders[2])}});
+        recorders = std::make_unique<RecorderArray>(
+            RecorderArray{{std::ref(*mockRecorders[0]),
+                           std::ref(*mockRecorders[1]),
+                           std::ref(*mockRecorders[2])}});
 
-        coordinator = std::make_unique<BusinessLogic::MeasurementCoordinator<NUM_SOURCES, NUM_RECORDERS>>(*sources, *recorders);
+        coordinator = std::make_unique<CoordinatorType>(
+            *sources,
+            *recorders);
     }
 
-    auto getMockSources() -> std::vector<std::unique_ptr<MockMeasurementSource>> & { return mockSources; }
-    auto getMockRecorders() -> std::vector<std::unique_ptr<MockMeasurementRecorder>> & { return mockRecorders; }
-    auto getCoordinator() -> BusinessLogic::MeasurementCoordinator<NUM_SOURCES, NUM_RECORDERS> * { return coordinator.get(); }
+    auto getMockSources()
+        -> std::vector<std::unique_ptr<MockMeasurementSource>> &
+    {
+        return mockSources;
+    }
+
+    auto getMockRecorders()
+        -> std::vector<std::unique_ptr<MockMeasurementRecorder>> &
+    {
+        return mockRecorders;
+    }
+
+    auto getCoordinator() -> CoordinatorType *
+    {
+        return coordinator.get();
+    }
 
 private:
     std::vector<std::unique_ptr<MockMeasurementSource>> mockSources;
     std::vector<std::unique_ptr<MockMeasurementRecorder>> mockRecorders;
-    std::unique_ptr<std::array<Device::SourceVariant, NUM_SOURCES>> sources;
-    std::unique_ptr<std::array<Device::RecorderVariant, NUM_RECORDERS>> recorders;
-    std::unique_ptr<BusinessLogic::MeasurementCoordinator<NUM_SOURCES, NUM_RECORDERS>> coordinator;
+
+    std::unique_ptr<SourceArray> sources;
+    std::unique_ptr<RecorderArray> recorders;
+
+    std::unique_ptr<CoordinatorType> coordinator;
 };

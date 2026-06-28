@@ -215,7 +215,7 @@ class Simulation:  # pylint: disable=too-many-instance-attributes
             # self.esp8266.register_uart0_tx_callback(self.esp8266_uart0_tx_callback)
             # self.esp8266.register_gpio_state_callback(self.my_gpio_state_callback)
 
-            self.stm32.init()
+            self.stm32.start()
             # self.esp8266.init()
 
             self._stop_event.clear()
@@ -229,6 +229,8 @@ class Simulation:  # pylint: disable=too-many-instance-attributes
         if self._tick_thread and self._tick_thread.is_alive():
             self._stop_event.set()
             self._tick_thread.join()
+
+        self.stm32.stop()
 
     def reload_firmware(self) -> None:
         """Stop and restart the periodic calls to the `tick` method."""
@@ -265,6 +267,7 @@ class Simulation:  # pylint: disable=too-many-instance-attributes
         This internal method handles periodic updates to simulate device behavior.
         """
         while not self._stop_event.is_set():
+            self.stm32.time_slot()   # simulate timer interrupt
             self.stm32.tick()
             # self.esp8266.tick()
             time.sleep(self.tick_interval)

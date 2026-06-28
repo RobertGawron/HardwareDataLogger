@@ -38,7 +38,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # ---------------------------------------------------------------------
 FROM build-deps AS gcc-builder
 
-ARG GCC_SNAPSHOT_DATE=20260117
+ARG GCC_SNAPSHOT_DATE=20260703
 
 # Download GCC 15 snapshot
 RUN mkdir -p /tmp/gcc-build && cd /tmp/gcc-build && \
@@ -165,6 +165,40 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     vim \
     lcov \
     dos2unix \
+    # OpenGL / EGL / GLES
+    libgl1 \
+    libegl1 \
+    libgles2 \
+    libgl1-mesa-dri \
+    libegl-mesa0 \
+    \
+    # Wayland (WSLg)
+    libwayland-client0 \
+    libwayland-server0 \
+    libwayland-egl1 \
+    libwayland-cursor0 \
+    \
+    # DRM / GBM (required by Mesa/Wayland)
+    libdrm2 \
+    libgbm1 \
+    \
+    # Keyboard / input
+    libxkbcommon0 \
+    libxkbcommon-x11-0 \
+    \
+    # XCB (fallback support)
+    libxcb-cursor0 \
+    libxcb-xinerama0 \
+    libxcb-randr0 \
+    libxcb-shape0 \
+    libxcb-xfixes0 \
+    libxcb-render-util0 \
+    \
+    libgl1-mesa-dri \
+    libegl-mesa0 \
+    mesa-utils \
+    libgbm1 \
+    libdrm2 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set Environment Variables
@@ -225,11 +259,13 @@ COPY Software/STM32F103RBTx/Application/SimulationBindings/Python/ /tmp/PythonDr
 RUN /opt/venv/bin/pip install -e /tmp/PythonDriver/ && \
     rm -rf /tmp/PythonDriver/
 
-# In your Dockerfile, install newer CMake
-RUN wget -q https://github.com/Kitware/CMake/releases/download/v3.31.5/cmake-3.31.5-linux-x86_64.sh && \
-    chmod +x cmake-3.31.5-linux-x86_64.sh && \
-    ./cmake-3.31.5-linux-x86_64.sh --skip-license --prefix=/usr/local && \
-    rm cmake-3.31.5-linux-x86_64.sh
+# Install latest CMake for cpp modules support
+ARG CMAKE_VERSION=4.3.2
+
+RUN wget -q https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.sh && \
+    chmod +x cmake-${CMAKE_VERSION}-linux-x86_64.sh && \
+    ./cmake-${CMAKE_VERSION}-linux-x86_64.sh --skip-license --prefix=/usr/local && \
+    rm cmake-${CMAKE_VERSION}-linux-x86_64.sh
 
 WORKDIR /workspace/build
 
