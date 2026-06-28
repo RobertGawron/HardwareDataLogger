@@ -1,11 +1,9 @@
 add_library(SimulationBindings SHARED)
 
-target_sources(SimulationBindings PRIVATE
-  LibWrapper.cpp
-)
-
-target_include_directories(SimulationBindings PUBLIC
-  ${CMAKE_CURRENT_SOURCE_DIR}
+target_sources(SimulationBindings PUBLIC 
+  FILE_SET CXX_MODULES 
+    FILES
+      LibWrapper.cppm
 )
 
 target_link_libraries(SimulationBindings PRIVATE
