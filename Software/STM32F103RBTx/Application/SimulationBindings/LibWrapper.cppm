@@ -62,9 +62,9 @@ static Driver::PlatformFactory platform = {
 
 BusinessLogic::ApplicationFacade facade{platform};
 
-// constexpr
-const size_t PULSE_COUNTER_COUNT = 4U;
+constexpr size_t PULSE_COUNTER_COUNT = 4U;
 
+#if 0
 enum KeyId //: std::uint8_t
 {
     /*
@@ -80,6 +80,7 @@ enum KeyId //: std::uint8_t
     Right,
     LastNotUsed
 };
+#endif
 
 #ifdef __cplusplus
 extern "C"
@@ -88,18 +89,14 @@ extern "C"
 
     void LibWrapper_Init()
     {
-
-        std::print("DOES IT WORKS???\n");
-
         if (!facade.init())
         {
-            //  std::cerr << "Error: No SD card open callback registered." << "\n";
-            std::print("ERROR: facade.init() failed!\n");
+            std::print(stderr, "ERROR: facade.init() failed!\n");
         }
 
         if (!facade.start())
         {
-            //     print(stderr, "ERROR: facade.start() failed!\n");
+            std::print(stderr, "ERROR: facade.start() failed!\n");
         }
     }
 
@@ -107,11 +104,11 @@ extern "C"
     {
         if (!facade.tick())
         {
-            //     print(stderr, "ERROR: facade.tick() failed!\n");
+            std::print(stderr, "ERROR: facade.tick() failed!\n");
         }
     }
 
-    void LibWrapper_KeyPressed(KeyId keyId)
+    void LibWrapper_KeyPressed(Driver::KeyId keyId)
     {
         /*
         auto &keyboard = static_cast<Driver::KeyboardDriver &>(platformDrivers.keyboard);
@@ -121,28 +118,27 @@ extern "C"
     */
     }
 
-    void LibWrapper_KeyReleased(KeyId keyId)
+    void LibWrapper_KeyReleased(Driver::KeyId keyId)
     {
-        /*   auto &keyboard = static_cast<Driver::KeyboardDriver &>(platform.keyboard);
-           keyboard.setKeyState(
-               static_cast<Driver::KeyId>(keyId),
-               Driver::KeyState::NotPressed);
-       */
+        auto &keyboard = static_cast<Driver::KeyboardDriver &>(platform.keyboard);
+        keyboard.setKeyState(
+            static_cast<Driver::KeyId>(keyId),
+            Driver::KeyState::NotPressed);
     }
 
     std::uint8_t LibWrapper_GetDisplayWidth()
     {
         std::uint8_t width = 0U;
-        //    const auto &display = static_cast<Driver::DisplayDriver &>(platform.display);
-        //    static_cast<void>(display.getXSize(width));
+        const auto &display = static_cast<Driver::DisplayDriver &>(platform.display);
+        static_cast<void>(display.getXSize(width));
         return width;
     }
 
     std::uint8_t LibWrapper_GetDisplayHeight()
     {
         std::uint8_t height = 0U;
-        //    const auto &display = static_cast<Driver::DisplayDriver &>(platform.display);
-        //    static_cast<void>(display.getYSize(height));
+        const auto &display = static_cast<Driver::DisplayDriver &>(platform.display);
+        static_cast<void>(display.getYSize(height));
         return height;
     }
 
