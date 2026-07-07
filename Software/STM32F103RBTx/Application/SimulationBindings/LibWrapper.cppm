@@ -4,6 +4,7 @@ module;
 #include <cstdint>
 #include <cstdio>
 #include <print>
+#include <utility>
 
 export module SimulationBindings;
 
@@ -91,12 +92,23 @@ extern "C"
     {
         if (!facade.init())
         {
-            std::print(stderr, "ERROR: facade.init() failed!\n");
+            std::println(stderr, "ERROR: facade.init() failed!");
         }
+    }
 
+    void LibWrapper_Start()
+    {
         if (!facade.start())
         {
-            std::print(stderr, "ERROR: facade.start() failed!\n");
+            std::println(stderr, "ERROR: facade.start() failed!");
+        }
+    }
+
+    void LibWrapper_Stop()
+    {
+        if (!facade.stop())
+        {
+            std::println(stderr, "ERROR: facade.stop() failed!");
         }
     }
 

@@ -52,6 +52,20 @@ class STM32F103:  # pylint: disable=too-many-instance-attributes
         """
         self.dut.LibWrapper_Init()
 
+    def start(self) -> None:
+        """
+        Start the firmware scheduler.
+        Transition: INITIALIZED/STOPPED → RUNNING
+        """
+        self.dut.LibWrapper_Start()
+
+    def stop(self) -> None:
+        """
+        Stop the firmware scheduler.
+        Transition: RUNNING → STOPPED
+        """
+        self.dut.LibWrapper_Stop()
+        
     def tick(self) -> None:
         """
         Trigger a single tick in the simulation.
