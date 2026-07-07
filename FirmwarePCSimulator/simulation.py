@@ -267,6 +267,7 @@ class Simulation:  # pylint: disable=too-many-instance-attributes
         This internal method handles periodic updates to simulate device behavior.
         """
         while not self._stop_event.is_set():
+            self.stm32.time_slot()   # simulate timer interrupt
             self.stm32.tick()
             # self.esp8266.tick()
             time.sleep(self.tick_interval)

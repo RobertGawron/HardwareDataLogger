@@ -74,6 +74,17 @@ class STM32F103:  # pylint: disable=too-many-instance-attributes
         """
         self.dut.LibWrapper_Tick()
 
+    def time_slot(self) -> None:
+        """
+        Notify the simulation that a scheduler time slot has elapsed.
+
+        This simulates the hardware timer interrupt that triggers the
+        scheduler's time-slot ISR in the embedded firmware. It increments
+        the internal pending slot counter, allowing the next call to
+        `tick()` to execute scheduled tasks.
+        """
+        self.dut.LibWrapper_TimeSlot()
+
     def get_display_width(self) -> int:
         """
         Retrieve the display width from the library.

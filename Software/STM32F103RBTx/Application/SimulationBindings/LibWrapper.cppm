@@ -5,6 +5,7 @@ module;
 #include <cstdio>
 #include <print>
 #include <utility>
+#include <source_location>
 
 export module SimulationBindings;
 
@@ -92,7 +93,9 @@ extern "C"
     {
         if (!facade.init())
         {
-            std::println(stderr, "ERROR: facade.init() failed!");
+            std::println(stderr,
+                         "ERROR {} failed!",
+                         std::source_location::current().function_name());
         }
     }
 
@@ -100,7 +103,9 @@ extern "C"
     {
         if (!facade.start())
         {
-            std::println(stderr, "ERROR: facade.start() failed!");
+            std::println(stderr,
+                         "ERROR {} failed!",
+                         std::source_location::current().function_name());
         }
     }
 
@@ -108,7 +113,9 @@ extern "C"
     {
         if (!facade.stop())
         {
-            std::println(stderr, "ERROR: facade.stop() failed!");
+            std::println(stderr,
+                         "ERROR {} failed!",
+                         std::source_location::current().function_name());
         }
     }
 
@@ -116,8 +123,15 @@ extern "C"
     {
         if (!facade.tick())
         {
-            std::print(stderr, "ERROR: facade.tick() failed!\n");
+            std::println(stderr,
+                         "ERROR {} failed!",
+                         std::source_location::current().function_name());
         }
+    }
+
+    void LibWrapper_TimeSlot()
+    {
+        facade.onTimeSlot();
     }
 
     void LibWrapper_KeyPressed(Driver::KeyId keyId)
