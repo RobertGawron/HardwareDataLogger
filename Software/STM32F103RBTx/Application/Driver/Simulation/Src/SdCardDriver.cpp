@@ -3,7 +3,6 @@ module;
 
 #include "EventHandlers.h"
 
-#include <iostream>
 #include <cstring>
 #include <string_view>
 #include <span>

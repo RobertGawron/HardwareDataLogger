@@ -1,4 +1,3 @@
-// EventHandlers.cpp
 module;
 
 #include "EventHandlers.h"
@@ -6,6 +5,7 @@ module;
 #include <iostream>
 #include <cstdint>
 #include <utility>
+#include <print>
 
 import Driver.UartId;
 import Driver.SdCardStatus;
@@ -71,7 +71,7 @@ HAL_StatusTypeDef serialTx(UartId_t uartId, const std::uint8_t *data, std::uint1
     }
     else
     {
-        std::cerr << "Error: No UART callback registered." << "\n";
+        std::println("Error: No UART callback registered.");
     }
 
     return result;

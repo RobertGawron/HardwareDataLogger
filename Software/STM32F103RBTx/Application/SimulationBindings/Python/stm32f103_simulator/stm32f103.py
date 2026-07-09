@@ -52,6 +52,20 @@ class STM32F103:  # pylint: disable=too-many-instance-attributes
         """
         self.dut.LibWrapper_Init()
 
+    def start(self) -> None:
+        """
+        Start the firmware scheduler.
+        Transition: INITIALIZED/STOPPED → RUNNING
+        """
+        self.dut.LibWrapper_Start()
+
+    def stop(self) -> None:
+        """
+        Stop the firmware scheduler.
+        Transition: RUNNING → STOPPED
+        """
+        self.dut.LibWrapper_Stop()
+        
     def tick(self) -> None:
         """
         Trigger a single tick in the simulation.
@@ -59,6 +73,17 @@ class STM32F103:  # pylint: disable=too-many-instance-attributes
         This simulates a single step in the device's processing cycle.
         """
         self.dut.LibWrapper_Tick()
+
+    def time_slot(self) -> None:
+        """
+        Notify the simulation that a scheduler time slot has elapsed.
+
+        This simulates the hardware timer interrupt that triggers the
+        scheduler's time-slot ISR in the embedded firmware. It increments
+        the internal pending slot counter, allowing the next call to
+        `tick()` to execute scheduled tasks.
+        """
+        self.dut.LibWrapper_TimeSlot()
 
     def get_display_width(self) -> int:
         """

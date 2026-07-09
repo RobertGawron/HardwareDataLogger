@@ -2,8 +2,8 @@ module;
 
 #include <cstdint>
 
-#include "U8g2lib.h"
-#include "u8g2.h"
+// #include "U8g2lib.h"
+// #include "u8g2.h"
 
 export module Device.Display;
 
@@ -22,7 +22,7 @@ export namespace Device
      * It manages the initialization and configuration of the display and provides utility functions
      * for working with the underlying display driver.
      */
-    class Display final : public U8G2, public DeviceComponent
+    class Display final : /*public U8G2,*/ public DeviceComponent
     {
     public:
         /**

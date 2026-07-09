@@ -3,7 +3,7 @@
  * @brief Top-level application component and scheduler owner.
  */
 module;
-// #include <meta>
+
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -94,16 +94,32 @@ export namespace BusinessLogic
         Device::PulseCounterSource pulseCounter4;
         Device::UartSource uartReceiver;
 
-        std::array<Device::SourceVariant, SOURCES_COUNT> sources;
+        using SourceArray =
+            std::array<Device::SourceVariant, SOURCES_COUNT>;
+
+        //   std::array<Device::SourceVariant, SOURCES_COUNT> sources;
+        SourceArray sources;
 
         // Measurement recorders
         Device::WiFiRecorder wifiRecorder;
         Device::SdCardRecorder sdCardRecorder;
 
-        std::array<Device::RecorderVariant, RECORDERS_COUNT> recorders;
+        using RecorderArray =
+            std::array<Device::RecorderVariant, RECORDERS_COUNT>;
+
+        RecorderArray recorders;
+
+        using MeasurementCoordinatorType =
+            BusinessLogic::MeasurementCoordinator<
+                SourceArray,
+                RecorderArray>;
+
+        MeasurementCoordinatorType measurement;
+
+        //   std::array<Device::RecorderVariant, RECORDERS_COUNT> recorders;
 
         /// Measurement routing and aggregation.
-        MeasurementCoordinator<SOURCES_COUNT, RECORDERS_COUNT> measurement;
+        //  MeasurementCoordinator<SOURCES_COUNT, RECORDERS_COUNT> measurement;
 
         // UI devices
         Device::Display display;

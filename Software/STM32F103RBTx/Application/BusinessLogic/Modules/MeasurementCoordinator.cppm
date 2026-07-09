@@ -2,8 +2,9 @@ module;
 
 #include <cstdint>
 #include <array>
-#include <algorithm>
 #include <variant>
+#include <ranges>
+#include <functional>
 
 export module BusinessLogic.MeasurementCoordinator;
 
@@ -12,22 +13,54 @@ import Device;
 
 export namespace BusinessLogic
 {
-    template <class Range, class F>
-    [[nodiscard]] inline bool all_ok(Range &range, F &&f) noexcept
+    // ------------------------------------------------------------
+    // visit_range : applies f(obj) for each concrete object
+    // ------------------------------------------------------------
+    template <std::ranges::forward_range Range, class F>
+    inline auto visit_range(Range &range, F &&f) noexcept -> void
     {
-        return std::ranges::all_of(range, [&](auto &v) noexcept
-                                   { return std::visit([&](auto &objref) noexcept
-                                                       { return f(objref.get()); }, v); });
+        for (auto &element : range)
+        {
+            std::visit(
+                [&](auto &ref) noexcept
+                {
+                    f(ref.get());
+                },
+                element);
+        }
     }
 
-    template <std::size_t SourceCount, std::size_t RecorderCount>
+    // ------------------------------------------------------------
+    // reduce_range : boolean AND aggregation
+    // ------------------------------------------------------------
+    template <std::ranges::forward_range Range, class F>
+    [[nodiscard]] inline auto reduce_range(Range &range, F &&f) noexcept -> bool
+    {
+        bool result{true};
+
+        visit_range(range,
+                    [&](auto &obj) noexcept
+                    {
+                        result = result && std::invoke(f, obj);
+                    });
+
+        return result;
+    }
+
+    // ------------------------------------------------------------
+    // MeasurementCoordinator
+    // ------------------------------------------------------------
+    template <
+        std::ranges::forward_range SourceRange,
+        std::ranges::forward_range RecorderRange>
     class MeasurementCoordinator final : public ApplicationComponent
     {
     public:
-        explicit MeasurementCoordinator(
-            std::array<Device::SourceVariant, SourceCount> &sourcesArray,
-            std::array<Device::RecorderVariant, RecorderCount> &recordersArray) noexcept
-            : sources(sourcesArray), recorders(recordersArray)
+        constexpr MeasurementCoordinator(
+            SourceRange &sourcesRange,
+            RecorderRange &recordersRange) noexcept
+            : sources(sourcesRange),
+              recorders(recordersRange)
         {
         }
 
@@ -35,61 +68,80 @@ export namespace BusinessLogic
         ~MeasurementCoordinator() = default;
 
         MeasurementCoordinator(const MeasurementCoordinator &) = delete;
-        MeasurementCoordinator &operator=(const MeasurementCoordinator &) = delete;
         MeasurementCoordinator(MeasurementCoordinator &&) = delete;
+        MeasurementCoordinator &operator=(const MeasurementCoordinator &) = delete;
         MeasurementCoordinator &operator=(MeasurementCoordinator &&) = delete;
 
-        [[nodiscard]] bool onInit() noexcept
+        [[nodiscard]] auto onInit() noexcept -> bool
         {
-            return all_ok(sources, [](auto &s) noexcept
-                          { return s.init(); }) &&
-                   all_ok(recorders, [](auto &r) noexcept
-                          { return r.init(); });
+            bool result{true};
+
+            result = result && reduce_range(sources,
+                                            [](auto &obj) noexcept
+                                            { return obj.init(); });
+
+            result = result && reduce_range(recorders,
+                                            [](auto &obj) noexcept
+                                            { return obj.init(); });
+
+            return result;
         }
 
-        [[nodiscard]] bool onStart() noexcept
+        [[nodiscard]] auto onStart() noexcept -> bool
         {
-            return all_ok(sources, [](auto &s) noexcept
-                          { return s.start(); }) &&
-                   all_ok(recorders, [](auto &r) noexcept
-                          { return r.start(); });
+            bool result{true};
+
+            result = result && reduce_range(sources,
+                                            [](auto &obj) noexcept
+                                            { return obj.start(); });
+
+            result = result && reduce_range(recorders,
+                                            [](auto &obj) noexcept
+                                            { return obj.start(); });
+
+            return result;
         }
 
-        [[nodiscard]] bool onStop() noexcept
+        [[nodiscard]] auto onStop() noexcept -> bool
         {
-            return all_ok(sources, [](auto &s) noexcept
-                          { return s.stop(); }) &&
-                   all_ok(recorders, [](auto &r) noexcept
-                          { return r.stop(); });
+            bool result{true};
+
+            result = result && reduce_range(sources,
+                                            [](auto &obj) noexcept
+                                            { return obj.stop(); });
+
+            result = result && reduce_range(recorders,
+                                            [](auto &obj) noexcept
+                                            { return obj.stop(); });
+
+            return result;
         }
 
-        [[nodiscard]] bool onTick() noexcept
+        [[nodiscard]] auto onTick() noexcept -> bool
         {
-            bool status = true;
+            bool status{true};
 
-            for (auto &sourceVariant : sources)
-            {
-                std::visit([&](auto &source) noexcept
-                           {
-                    auto& s = source.get();
-                    if (!s.isMeasurementAvailable())
-                        return;
+            visit_range(sources,
+                        [&](auto &source) noexcept
+                        {
+                            if (source.isMeasurementAvailable())
+                            {
+                                const auto measurement = source.getMeasurement();
 
-                    const Device::MeasurementType measurement = s.getMeasurement();
-
-                    for (auto& recorderVariant : recorders)
-                    {
-                        std::visit([&](auto& recorder) noexcept {
-                            status = status && recorder.get().notify(measurement);
-                        }, recorderVariant);
-                    } }, sourceVariant);
-            }
+                                visit_range(recorders,
+                                            [&](auto &recorder) noexcept
+                                            {
+                                                status = status &&
+                                                         recorder.notify(measurement);
+                                            });
+                            }
+                        });
 
             return status;
         }
 
     private:
-        std::array<Device::SourceVariant, SourceCount> &sources;
-        std::array<Device::RecorderVariant, RecorderCount> &recorders;
+        SourceRange &sources;
+        RecorderRange &recorders;
     };
 }

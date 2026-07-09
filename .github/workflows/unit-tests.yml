@@ -10,32 +10,27 @@ jobs:
   unit-tests:
     name: Unit Tests (${{ matrix.name }})
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    
+
     strategy:
-      fail-fast: false # If Driver fails, Device tests should still run!
+      fail-fast: false
       matrix:
         include:
-          # Label corresponds to the LABELS property we set in CMake
           - name: Device
-            ctest_label: Device
-            
+            preset: unit-device
+
           - name: Business Logic
-            ctest_label: BusinessLogic
-            
+            preset: unit-businesslogic
+
           - name: Driver
-            ctest_label: Driver
+            preset: unit-driver
 
     uses: robertgawron/hardwaredatalogger/.github/workflows/docker-postbuild-generic.yml@main
     with:
       docker_image_repo: robertgawron/hardwaredatalogger
-      artifact_name: test-logs-${{ matrix.ctest_label }}
-      artifact_paths: /workspace/build/Testing
-      
-      # The script does the following:
-      # 1. Configure (using the Debug preset)
-      # 2. Build (compiles all tests)
-      # 3. Test (Runs only the specific Label via CTest)
+      artifact_name: test-logs-${{ matrix.preset }}
+      artifact_paths: /tmp/cmake-${{ matrix.preset }}/Testing
+
       run_script: |
-        cmake --preset build-debug
-        cmake --build --preset build-debug
-        ctest --preset unit-tests -L "${{ matrix.ctest_label }}"
+        cmake --preset ${{ matrix.preset }}
+        cmake --build --preset ${{ matrix.preset }}
+        ctest --preset ${{ matrix.preset }}
