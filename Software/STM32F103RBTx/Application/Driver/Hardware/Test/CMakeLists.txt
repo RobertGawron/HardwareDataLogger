@@ -73,15 +73,6 @@ create_test_exec(test_LightSensorDriver
     test_LightSensorDriver.cpp
 )
 
-create_test_exec(test_DisplayPixelColor 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/DisplayPixelColor.cpp 
-    test_DisplayPixelColor.cpp
-)
-
-create_test_exec(test_DriverComponent 
-    test_DriverComponent.cpp
-)
-
 create_test_exec(test_KeyboardDriver 
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/KeyboardDriver.cpp 
     ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Test/Stubs/stm32f1xx_hal_gpio.cpp

@@ -1,11 +1,4 @@
-cmake_minimum_required(VERSION 4.3.1)
 project(DeviceUnitTests LANGUAGES CXX)
-
-set(CMAKE_CXX_STANDARD 26)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
-set(CMAKE_EXPERIMENTAL_CXX_MODULE_DYNDEP ON)
 
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
