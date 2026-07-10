@@ -1,10 +1,8 @@
 
 add_library(Driver STATIC)
 
-# Link dependencies
 target_link_libraries(Driver 
     PUBLIC DriverInterface
-    PRIVATE u8g2
 )
 
 target_sources(Driver

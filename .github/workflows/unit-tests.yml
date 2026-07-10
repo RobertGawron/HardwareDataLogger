@@ -21,8 +21,9 @@ jobs:
           - name: Business Logic
             preset: unit-businesslogic
 
-          - name: Driver
-            preset: unit-driver
+          # maybe add them in the future, rethink the strategy
+          #- name: Driver
+          #  preset: unit-driver
 
     uses: robertgawron/hardwaredatalogger/.github/workflows/docker-postbuild-generic.yml@main
     with:

@@ -1,6 +1,5 @@
 add_library(BusinessLogic STATIC)
 
-# Module interface files
 target_sources(BusinessLogic
     PUBLIC 
         FILE_SET CXX_MODULES 
@@ -23,9 +22,4 @@ target_sources(BusinessLogic
 target_link_libraries(BusinessLogic PUBLIC # todo PUBLIC for unit tests, but should be PRIVATE
     Device
     Driver
-#    u8g2
 )
-
-#target_include_directories(BusinessLogic PRIVATE
-#    ../Library/u8g2/cppsrc
-#)

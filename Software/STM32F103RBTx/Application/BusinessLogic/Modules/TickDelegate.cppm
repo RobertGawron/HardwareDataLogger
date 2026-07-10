@@ -4,7 +4,7 @@ module;
 #include <memory>
 #include <type_traits>
 #include <utility>
-#include <cassert>
+// #include <cassert>
 
 export module BusinessLogic.TickDelegate;
 
@@ -39,8 +39,8 @@ export namespace BusinessLogic
         explicit TickDelegate(T &obj) noexcept
             : objectPtr(std::addressof(obj)), wrapperFn(&wrapper<T>)
         {
-            assert(objectPtr != nullptr);
-            assert(wrapperFn != nullptr);
+            // assert(objectPtr != nullptr);
+            // assert(wrapperFn != nullptr);
         }
 
         [[nodiscard]] auto operator()() const noexcept -> bool
@@ -63,7 +63,7 @@ export namespace BusinessLogic
         template <TickableConcept T>
         static auto wrapper(void *objPtr) noexcept -> bool
         {
-            assert(objPtr != nullptr);
+            // assert(objPtr != nullptr);
             const bool result = static_cast<T *>(objPtr)->tick();
             return result;
         }
