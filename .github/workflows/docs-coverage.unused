@@ -1,3 +1,5 @@
+Doxygen doesnt support cpp modules
+
 name: Docs Coverage
 
 on:
