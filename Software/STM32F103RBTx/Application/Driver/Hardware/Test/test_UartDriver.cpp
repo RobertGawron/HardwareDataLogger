@@ -1,11 +1,10 @@
-#include "Driver/Hardware/Inc/UartDriver.hpp"
-#include "Driver/Interface/UartStatus.hpp"
-
-#include "stm32f1xx_hal_uart.h"
-#include "stm32f1xx_hal_def.h"
+module;
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+
+#include "stm32f1xx_hal_uart.h"
+#include "stm32f1xx_hal_def.h"
 
 #include <cstdint>
 #include <memory>
@@ -13,6 +12,9 @@
 #include <span>
 #include <algorithm>
 #include <ostream>
+
+import Driver.UartDriver;
+import Driver.UartStatus;
 
 // Global mock instance pointer for the HAL C-linkage
 MockHAL_UART *mockHAL_UART = nullptr;

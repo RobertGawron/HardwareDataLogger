@@ -2,10 +2,11 @@
  * @file test_DriverComponent.cpp
  * @brief Modern C++23 tests for DriverComponent state machine
  */
-
-#include "Driver/Interface/DriverComponent.hpp"
+module;
 
 #include <gtest/gtest.h>
+
+import Driver.DriverComponent;
 
 // Mock driver for testing
 class TestDriver : public Driver::DriverComponent

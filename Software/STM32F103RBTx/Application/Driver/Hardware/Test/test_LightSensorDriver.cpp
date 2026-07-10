@@ -1,11 +1,13 @@
-#include "Driver/Hardware/Inc/LightSensorDriver.hpp"
-#include "Driver/Interface/DriverComponent.hpp"
+module;
+
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 #include "stm32f1xx_hal_adc.h"
 #include "stm32f1xx_hal_def.h"
 
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
+import Driver.LightSensorDriver;
+import Driver.DriverComponent;
 
 class MockHAL_ADC;
 

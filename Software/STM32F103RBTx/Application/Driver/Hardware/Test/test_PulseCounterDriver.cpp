@@ -1,9 +1,11 @@
-#include "Driver/Interface/PulseCounterId.hpp"
-#include "Driver/Hardware/Inc/PulseCounterDriver.hpp"
+module;
 
 #include <gtest/gtest.h>
 #include <cstdint>
 #include <memory>
+
+import Driver.PulseCounterId;
+import Driver.PulseCounterDriver;
 
 namespace
 {

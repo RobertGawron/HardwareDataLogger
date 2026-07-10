@@ -1,10 +1,13 @@
+module;
+
 #include "stm32f1xx_hal.h"
-#include "Driver/Hardware/Inc/BrightnessDriver.hpp"
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <memory>
 #include <cstdint>
+
+import Driver.BrightnessDriver;
 
 // Global pointer for production code access (MockTimer definition assumed in separate file)
 extern MockTimer *mockTimer;

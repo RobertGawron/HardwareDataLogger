@@ -1,12 +1,15 @@
+module;
+
 #include "stm32f1xx_hal_gpio.h"
-#include "Driver/Interface/KeyId.hpp"
-#include "Driver/Interface/KeyState.hpp"
-#include "Driver/Hardware/Inc/KeyboardDriver.hpp"
-#include "Driver/Interface/DriverComponent.hpp"
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <cstdint>
+
+import Driver.KeyId;
+import Driver.KeyState;
+import Driver.DriverComponent;
+import Driver.KeyboardDriver;
 
 class MockHAL_GPIO;
 

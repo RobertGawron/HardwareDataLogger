@@ -1,95 +1,74 @@
-cmake_minimum_required(VERSION 4.3.1)
-project(BusinessLogicUnitTests)
+project(DriverHardwareUnitTests LANGUAGES CXX)
 
-# 1. Setup Environment
-set(CMAKE_CXX_STANDARD 26)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
-# Find pthreads and GTest
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_package(Threads REQUIRED)
 enable_testing()
+
+find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
-find_path(GMOCK_INCLUDE_DIR gmock/gmock.h)
+include(GoogleTest)
 
-# --- Helper Functions ---
+# ------------------------------------------------------------
+# Common flags
+# ------------------------------------------------------------
 
-function(add_sanitizers target)
+function(add_common_flags target)
+    target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic)
+
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        target_compile_options(${target} PRIVATE -fsanitize=address,undefined -g)
+        target_compile_options(${target} PRIVATE
+            -fsanitize=address,undefined
+            -g -O0
+            -fprofile-arcs -ftest-coverage
+        )
         target_link_options(${target} PRIVATE -fsanitize=address,undefined)
-    endif()
-endfunction()
-
-function(apply_coverage_flags target)
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        target_compile_options(${target} PRIVATE -g -O0 -fprofile-arcs -ftest-coverage)
         target_link_libraries(${target} PRIVATE gcov)
     endif()
 endfunction()
 
-# Custom target to run just these business logic tests
+# ------------------------------------------------------------
+# Custom test target
+# ------------------------------------------------------------
+
 add_custom_target(test_drv
     COMMAND ${CMAKE_CTEST_COMMAND} -V
-    COMMENT "Executing Business Logic unit tests."
+    COMMENT "Running Driver Layer Unit Tests..."
+    USES_TERMINAL
 )
 
-function(create_test_exec TARGET_NAME)
-    # Using ARGN to allow multiple source files
-    add_executable(${TARGET_NAME} ${ARGN})
-    
-    if(DEFINED EXPORT_SINGLE_JSON AND EXPORT_SINGLE_JSON STREQUAL "${TARGET_NAME}")
-        message(STATUS "Enabling compile_commands.json export for: ${TARGET_NAME}")
-        set_target_properties(${TARGET_NAME} PROPERTIES EXPORT_COMPILE_COMMANDS ON)
-    endif()
+# ------------------------------------------------------------
+# Helper to create test
+# ------------------------------------------------------------
 
+function(create_driver_test TARGET_NAME TEST_FILE)
 
-    target_link_libraries(${TARGET_NAME} PRIVATE
-        Threads::Threads
-        gtest
-        gtest_main
-        gmock
-        gmock_main
+    add_executable(${TARGET_NAME} ${TEST_FILE})
+
+    target_link_libraries(${TARGET_NAME}
+        PRIVATE
+            Driver           
+            GTest::gtest
+            GTest::gtest_main
+            Threads::Threads
     )
 
     target_include_directories(${TARGET_NAME} PRIVATE
-        ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/
+        ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application
         ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Test/Stubs
-        ${GTEST_INCLUDE_DIRS}
-        ${GMOCK_INCLUDE_DIR}
     )
 
-    apply_coverage_flags(${TARGET_NAME})
-    add_sanitizers(${TARGET_NAME})
-    add_test(NAME ${TARGET_NAME} COMMAND ${TARGET_NAME})
+    add_common_flags(${TARGET_NAME})
 
+    gtest_discover_tests(${TARGET_NAME})
     add_dependencies(test_drv ${TARGET_NAME})
+
 endfunction()
 
+# ------------------------------------------------------------
+# Tests
+# ------------------------------------------------------------
 
-create_test_exec(test_LightSensorDriver 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/LightSensorDriver.cpp
-    test_LightSensorDriver.cpp
-)
-
-create_test_exec(test_KeyboardDriver 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/KeyboardDriver.cpp 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Test/Stubs/stm32f1xx_hal_gpio.cpp
-    test_KeyboardDriver.cpp
-)
-
-create_test_exec(test_AmbientLight 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/LightSensorDriver.cpp 
-    test_LightSensorDriver.cpp
-)
-
-create_test_exec(test_UartDriver 
-    ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/Driver/Hardware/Src/UartDriver.cpp 
-    test_UartDriver.cpp
-)
-
-create_test_exec(test_PulseCounterDriver 
-    ../Src/PulseCounterDriver.cpp 
-    test_PulseCounterDriver.cpp
-)
+create_driver_test(test_LightSensorDriver test_LightSensorDriver.cpp)
+create_driver_test(test_KeyboardDriver test_KeyboardDriver.cpp)
+create_driver_test(test_UartDriver test_UartDriver.cpp)
+create_driver_test(test_PulseCounterDriver test_PulseCounterDriver.cpp)
+create_driver_test(test_DriverState test_DriverState.cpp)
+create_driver_test(test_St7735DisplayBrightnessDriver test_St7735DisplayBrightnessDriver.cpp)

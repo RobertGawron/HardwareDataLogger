@@ -2,12 +2,6 @@ cmake_minimum_required(VERSION 4.3.1)
 
 project(HardwareDataLogger LANGUAGES C CXX)
 
-## hack
-
-  set(CMAKE_EXPERIMENTAL_CXX_MODULE_DYNDEP OFF)
-
-  add_compile_options(-fno-modules -fno-modules-ts)
-  
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # ---- Language / modules policy ----
@@ -89,15 +83,10 @@ endif()
 option(HDL_ENABLE_TOOLING_TARGETS "Enable tooling targets like integration/docs/static analysis" ON)
 if(HDL_ENABLE_TOOLING_TARGETS)
 
-#tmp hack
-  set(CMAKE_EXPERIMENTAL_CXX_MODULE_DYNDEP OFF)
-
-
-
   include("${HARDWARE_APP_DIR}/CodeCoverage.cmake" OPTIONAL)
-  include("${CMAKE_SOURCE_DIR}/DevOps/Cmake/CStaticAnalysis.cmake" OPTIONAL)
+#  include("${CMAKE_SOURCE_DIR}/DevOps/Cmake/CStaticAnalysis.cmake" OPTIONAL)
   include("${CMAKE_SOURCE_DIR}/DevOps/Cmake/PythonStaticAnalysis.cmake" OPTIONAL)
-  include("${CMAKE_SOURCE_DIR}/DevOps/Cmake/DocsCoverage.cmake" OPTIONAL)
+#  include("${CMAKE_SOURCE_DIR}/DevOps/Cmake/DocsCoverage.cmake" OPTIONAL)
 
   find_package(Python3 QUIET COMPONENTS Interpreter)
   if(Python3_Interpreter_FOUND)
