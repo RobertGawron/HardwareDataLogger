@@ -1,3 +1,5 @@
+CodeChecker doesnt support cpp modules for now
+
 name: Static Analysis (Python)
 
 on:
