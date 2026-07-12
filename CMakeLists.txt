@@ -12,14 +12,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPERIMENTAL_CXX_MODULE_DYNDEP ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# ---- Testing (standard CMake way) ----
-include(CTest)      # provides BUILD_TESTING option
+# ---- Testing ----
+include(CTest)
 enable_testing()
 
 # ---- Options to control what is built (used by presets) ----
 option(BUILD_IS_FOR_HARDWARE "Build for STM32 hardware" OFF)
 
-option(HDL_BUILD_U8G2     "Build u8g2 library" ON)
 option(HDL_BUILD_DRIVER   "Build Driver layer" ON)
 option(HDL_BUILD_DEVICE   "Build Device layer" ON)
 option(HDL_BUILD_BUSINESS "Build BusinessLogic layer" ON)
@@ -29,6 +28,8 @@ option(HDL_BUILD_TESTS_DRIVER   "Build Driver unit tests" OFF)
 option(HDL_BUILD_TESTS_DEVICE   "Build Device unit tests" OFF)
 option(HDL_BUILD_TESTS_BUSINESS "Build BusinessLogic unit tests" OFF)
 
+option(ENABLE_COVERAGE "Enable GCC coverage instrumentation" OFF)
+
 # ---- Debug flags: avoid forcing -pg globally ----
 option(HDL_ENABLE_GPROF "Enable -pg profiling instrumentation (host only)" OFF)
 if(HDL_ENABLE_GPROF)
@@ -36,18 +37,21 @@ if(HDL_ENABLE_GPROF)
   add_link_options(-pg)
 endif()
 
-# ---- Static analysis configuration ----
-set(ARM_STATIC_ANALYSIS_TARGET "thumbv7m-none-eabi"
-    CACHE STRING "ARM target for static analysis")
+
+
+if(ENABLE_COVERAGE AND NOT BUILD_IS_FOR_HARDWARE)
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    message(STATUS "Coverage instrumentation enabled")
+
+    add_compile_options(--coverage -O0 -g)
+    add_link_options(--coverage)
+  endif()
+endif()
 
 # ---- Source tree root ----
 set(HARDWARE_APP_DIR "${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application")
 
 # ---- Dependencies / layers ----
-if(HDL_BUILD_U8G2)
-  add_subdirectory("${HARDWARE_APP_DIR}/Library/u8g2")
-endif()
-
 if(HDL_BUILD_DRIVER)
   add_subdirectory("${HARDWARE_APP_DIR}/Driver")
 endif()
@@ -74,10 +78,8 @@ if(BUILD_TESTING)
     add_subdirectory("${HARDWARE_APP_DIR}/Device/Test")
   endif()
 
-  if(HDL_BUILD_TESTS_DRIVER)
-    add_subdirectory("${HARDWARE_APP_DIR}/Driver/Hardware/Test")
-  endif()
 endif()
+
 
 # ---- Tooling targets (optional; should be guarded so unit builds stay small) ----
 option(HDL_ENABLE_TOOLING_TARGETS "Enable tooling targets like integration/docs/static analysis" ON)

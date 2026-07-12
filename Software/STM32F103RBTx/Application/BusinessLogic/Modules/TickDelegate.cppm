@@ -45,7 +45,6 @@ export namespace BusinessLogic
 
         [[nodiscard]] auto operator()() const noexcept -> bool
         {
-            // Bound-only invariant: no runtime checks required in normal operation.
             const bool result = wrapperFn(objectPtr);
             return result;
         }
@@ -63,8 +62,13 @@ export namespace BusinessLogic
         template <TickableConcept T>
         static auto wrapper(void *objPtr) noexcept -> bool
         {
-            // assert(objPtr != nullptr);
-            const bool result = static_cast<T *>(objPtr)->tick();
+            bool result = false;
+
+            if (objPtr != nullptr)
+            {
+                result = static_cast<T *>(objPtr)->tick();
+            }
+
             return result;
         }
     };

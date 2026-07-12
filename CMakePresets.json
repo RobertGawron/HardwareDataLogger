@@ -7,7 +7,7 @@
       "name": "docs",
       "displayName": "Docs Coverage",
       "generator": "Ninja",
-      "binaryDir": "/tmp/cmake-docs",
+      "binaryDir": "${sourceDir}/DevOps/BuildArtifacts/docs",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "Python3_EXECUTABLE": "/opt/venv/bin/python",
@@ -18,11 +18,11 @@
       "name": "pstatic",
       "displayName": "Python Static Analysis",
       "generator": "Ninja",
-      "binaryDir": "/tmp/cmake-pstatic",
+      "binaryDir": "${sourceDir}/DevOps/BuildArtifacts/pstatic",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "PYTHON_REPORT_DIR": "/workspace/DevOps/Artifacts/PythonStaticAnalysis",
-        "PYTHON_ANALYZE_DIR": "/tmp/cmake-pstatic/BuildArtifacts/PythonStaticAnalysisWork"
+        "PYTHON_ANALYZE_DIR": "${sourceDir}/DevOps/BuildArtifacts/pstatic/BuildArtifacts/PythonStaticAnalysisWork"
       }
     },
 
@@ -30,11 +30,10 @@
       "name": "host-dev",
       "displayName": "Host dev build (Debug, everything)",
       "generator": "Ninja",
-      "binaryDir": "/workspace/build",
+      "binaryDir": "${sourceDir}/DevOps/BuildArtifacts/host-dev",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "BUILD_TESTING": "ON",
-        "HDL_BUILD_U8G2": "ON",
         "HDL_BUILD_DRIVER": "ON",
         "HDL_BUILD_DEVICE": "ON",
         "HDL_BUILD_BUSINESS": "ON",
@@ -49,11 +48,10 @@
       "name": "unit-businesslogic",
       "displayName": "Unit tests - BusinessLogic only (Debug)",
       "generator": "Ninja",
-      "binaryDir": "/tmp/cmake-unit-businesslogic",
+      "binaryDir": "${sourceDir}/DevOps/BuildArtifacts/unit-businesslogic",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "BUILD_TESTING": "ON",
-        "HDL_BUILD_U8G2": "OFF",
         "HDL_BUILD_DRIVER": "ON",
         "HDL_BUILD_DEVICE": "ON",
         "HDL_BUILD_BUSINESS": "ON",
@@ -65,11 +63,10 @@
       "name": "unit-device",
       "displayName": "Unit tests - Device only (Debug)",
       "generator": "Ninja",
-      "binaryDir": "/tmp/cmake-unit-device",
+      "binaryDir": "${sourceDir}/DevOps/BuildArtifacts/unit-device",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "BUILD_TESTING": "ON",
-        "HDL_BUILD_U8G2": "OFF",
         "HDL_BUILD_DRIVER": "ON",
         "HDL_BUILD_DEVICE": "ON",
         "HDL_BUILD_BUSINESS": "OFF",
@@ -77,28 +74,23 @@
         "HDL_BUILD_TESTS_DEVICE": "ON"
       }
     },
+
     {
-      "name": "unit-driver",
-      "displayName": "Unit tests - Driver only (Debug)",
-      "generator": "Ninja",
-      "binaryDir": "/tmp/cmake-unit-driver",
+      "name": "coverage",
+      "displayName": "Host Coverage Build",
+      "inherits": "host-dev",
+      "binaryDir": "/tmp/cmake-coverage",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "BUILD_TESTING": "ON",
-        "HDL_BUILD_U8G2": "OFF",
-        "HDL_BUILD_DRIVER": "ON",
-        "HDL_BUILD_DEVICE": "OFF",
-        "HDL_BUILD_BUSINESS": "OFF",
-        "HDL_BUILD_SIMBIND": "OFF",
-        "HDL_BUILD_TESTS_DRIVER": "ON"
+        "ENABLE_COVERAGE": "ON"
       }
-    },
+    }, 
 
     {
       "name": "integration-debug",
       "displayName": "Integration build (Debug, isolated + install prefix)",
       "generator": "Ninja",
-      "binaryDir": "/tmp/cmake-integration",
+      "binaryDir": "${sourceDir}/DevOps/BuildArtifacts/integration",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_INSTALL_PREFIX": "/usr/local",
@@ -111,7 +103,7 @@
       "name": "firmware-release",
       "displayName": "Firmware (STM32) Release",
       "generator": "Ninja",
-      "binaryDir": "/tmp/cmake-firmware-release",
+      "binaryDir": "${sourceDir}/DevOps/BuildArtifacts/firmware-release",
       "toolchainFile": "${sourceDir}/Software/STM32F103RBTx/cmake/gcc-arm-none-eabi.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
@@ -134,7 +126,12 @@
 
     { "name": "unit-businesslogic", "configurePreset": "unit-businesslogic" },
     { "name": "unit-device", "configurePreset": "unit-device" },
-    { "name": "unit-driver", "configurePreset": "unit-driver" },
+
+    {
+      "name": "coverage",
+      "displayName": "Build: coverage",
+      "configurePreset": "coverage"
+    },
 
     { "name": "integration-debug", "configurePreset": "integration-debug" },
 
@@ -169,13 +166,13 @@
       "execution": { "noTestsAction": "error", "stopOnFailure": false },
       "filter": { "include": { "label": "Device" } }
     },
+
     {
-      "name": "unit-driver",
-      "displayName": "CTests: Driver",
-      "configurePreset": "unit-driver",
+      "name": "coverage",
+      "displayName": "CTests: Coverage",
+      "configurePreset": "coverage",
       "output": { "outputOnFailure": true },
-      "execution": { "noTestsAction": "error", "stopOnFailure": false },
-      "filter": { "include": { "label": "Driver" } }
+      "execution": { "noTestsAction": "error", "stopOnFailure": false }
     }
   ]
 }

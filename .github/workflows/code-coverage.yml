@@ -46,14 +46,20 @@ jobs:
 
       - name: Run Code Coverage
         run: |
-          docker compose -f docker-compose.yml exec -T dev bash -c "cd /workspace/build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja test_biz && ninja test_dev && ninja test_drv && ninja cov"
+          docker compose -f docker-compose.yml exec -T dev bash -c "
+            cd /workspace &&
+            rm -rf /tmp/cmake-coverage &&
+            cmake --preset coverage &&
+            cmake --build --preset coverage &&
+            cmake --build --preset coverage --target cov
+          "
 
       - name: Upload Code Coverage Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: code-coverage-results
-          path: DevOps/BuildArtifacts/CodeCoverage
+          path: DevOps/BuildArtifacts/CppCodeCoverage
 
       - name: Clean up Docker containers
         if: always()

@@ -38,7 +38,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # ---------------------------------------------------------------------
 FROM build-deps AS gcc-builder
 
-ARG GCC_SNAPSHOT_DATE=20260703
+ARG GCC_SNAPSHOT_DATE=20260710
 
 # Download GCC 15 snapshot
 RUN mkdir -p /tmp/gcc-build && cd /tmp/gcc-build && \

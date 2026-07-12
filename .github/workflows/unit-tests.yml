@@ -29,7 +29,7 @@ jobs:
     with:
       docker_image_repo: robertgawron/hardwaredatalogger
       artifact_name: test-logs-${{ matrix.preset }}
-      artifact_paths: /tmp/cmake-${{ matrix.preset }}/Testing
+      artifact_paths: /workspace/DevOps/BuildArtifacts/cmake-${{ matrix.preset }}/Testing
 
       run_script: |
         cmake --preset ${{ matrix.preset }}
