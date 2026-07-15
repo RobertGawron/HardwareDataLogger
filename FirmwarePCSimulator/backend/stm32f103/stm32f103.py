@@ -5,6 +5,7 @@ This module provides a Python interface for managing the simulation,
 including interactions with the display, keys, and pulse counters.
 """
 
+from pathlib import Path
 import ctypes
 from enum import Enum
 from typing import List, Callable
@@ -31,9 +32,8 @@ class STM32F103:  # pylint: disable=too-many-instance-attributes
 
     def __init__(self) -> None:
         """Initialize the STM32F103 class."""
-        dll_abs_path: str = (
-            "/usr/local/lib/libsimulator_stm32f103.so"
-        )
+        project_root = Path(__file__).resolve().parents[2]
+        dll_abs_path = project_root / "lib" / "libsimulator_stm32f103.so"
         self.dut: ctypes.CDLL = ctypes.CDLL(dll_abs_path)
         self._serial_tx_callback_c = None
         self._sdcard_open_callback = None

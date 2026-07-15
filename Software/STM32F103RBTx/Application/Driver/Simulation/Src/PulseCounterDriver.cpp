@@ -1,4 +1,3 @@
-// PulseCounterDriver.cpp
 module;
 
 #include <cstdint>

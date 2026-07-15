@@ -1,12 +1,9 @@
-// DisplayDriver.cpp
 module;
 
 #include <cstdint>
 #include <array>
 
 module Driver.DisplayDriver;
-
-// import Driver.Interface.DisplayPixelColor;
 
 namespace Driver
 {
@@ -110,14 +107,16 @@ namespace Driver
 #endif
     bool DisplayDriver::getXSize(std::uint8_t &size) const noexcept
     {
-        size = 55; // ST7735_HEIGHT;
+        size = MAX_HEIGHT;
+
         const bool status = true;
         return status;
     }
 
     bool DisplayDriver::getYSize(std::uint8_t &size) const noexcept
     {
-        size = 55; // ST7735_WIDTH;
+        size = MAX_WIDTH;
+
         const bool status = true;
         return status;
     }

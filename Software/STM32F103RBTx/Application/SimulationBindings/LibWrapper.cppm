@@ -97,6 +97,10 @@ extern "C"
                          "ERROR {} failed!",
                          std::source_location::current().function_name());
         }
+        else
+        {
+            std::println(stdout, "{}", std::source_location::current().function_name());
+        }
     }
 
     void LibWrapper_Start()
@@ -106,6 +110,10 @@ extern "C"
             std::println(stderr,
                          "ERROR {} failed!",
                          std::source_location::current().function_name());
+        }
+        else
+        {
+            std::println(stdout, "{}", std::source_location::current().function_name());
         }
     }
 
@@ -117,15 +125,21 @@ extern "C"
                          "ERROR {} failed!",
                          std::source_location::current().function_name());
         }
+        else
+        {
+            std::println(stdout, "{}", std::source_location::current().function_name());
+        }
     }
 
     void LibWrapper_Tick()
     {
         if (!facade.tick())
         {
-            std::println(stderr,
-                         "ERROR {} failed!",
-                         std::source_location::current().function_name());
+#warning todo see what is the problem, dont polute main log for now
+            /*  std::println(stderr,
+                           "ERROR {} failed!",
+                           std::source_location::current().function_name());
+                           */
         }
     }
 
@@ -136,12 +150,13 @@ extern "C"
 
     void LibWrapper_KeyPressed(Driver::KeyId keyId)
     {
-        /*
-        auto &keyboard = static_cast<Driver::KeyboardDriver &>(platformDrivers.keyboard);
+
+        auto &keyboard = static_cast<Driver::KeyboardDriver &>(platform.keyboard);
         keyboard.setKeyState(
             static_cast<Driver::KeyId>(keyId),
             Driver::KeyState::Pressed);
-    */
+
+        std::println(stdout, "{}", std::source_location::current().function_name());
     }
 
     void LibWrapper_KeyReleased(Driver::KeyId keyId)
@@ -150,6 +165,8 @@ extern "C"
         keyboard.setKeyState(
             static_cast<Driver::KeyId>(keyId),
             Driver::KeyState::NotPressed);
+
+        std::println(stdout, "{}", std::source_location::current().function_name());
     }
 
     std::uint8_t LibWrapper_GetDisplayWidth()

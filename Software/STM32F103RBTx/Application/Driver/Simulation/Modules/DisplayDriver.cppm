@@ -7,7 +7,10 @@ export module Driver.DisplayDriver;
 
 import Driver.DriverComponent;
 import Driver.Concepts.DisplayDriver;
-// import Driver.DisplayPixelColor;
+
+// Defined by HW of the ST7735 display.
+#define ST7735_WIDTH 128U
+#define ST7735_HEIGHT 160U
 
 export namespace Driver
 {
@@ -81,9 +84,9 @@ export namespace Driver
         [[nodiscard]] bool onStop() noexcept { return true; }
 
     private:
-        // Display dimensions - ST7735_HEIGHT assumed to be defined elsewhere
-        static constexpr std::uint8_t MAX_WIDTH = 160;  // ST7735_HEIGHT
-        static constexpr std::uint8_t MAX_HEIGHT = 160; // ST7735_HEIGHT
+        // Display dimensions
+        static constexpr std::uint8_t MAX_WIDTH = ST7735_WIDTH;
+        static constexpr std::uint8_t MAX_HEIGHT = ST7735_HEIGHT;
 
         Orientation orientation{Orientation::Vertical};
         //   std::array<std::array<DisplayPixelColor::PixelColor, MAX_HEIGHT>, MAX_WIDTH> content{};

@@ -281,6 +281,9 @@ class SdCardCapture:
         logger.info(
             "SD Card: Open file '%s', mode=%d", filename, mode
         )
+
+        print ("OPEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEN")
+        
         self.operations.append({
             'operation': SdCardOperation.OPEN,
             'filename': filename,

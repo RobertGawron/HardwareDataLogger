@@ -2,7 +2,6 @@ module;
 
 #include "EventHandlers.h"
 
-#include <iostream>
 #include <cstdint>
 #include <utility>
 #include <print>
@@ -88,7 +87,7 @@ SdCardStatus_t sdCardOpen(const char *filename, FileOpenMode_t mode)
     }
     else
     {
-        std::cerr << "Error: No SD card open callback registered." << "\n";
+        std::println(stderr, "Error: No SD card open callback registered.");
     }
 
     return result;
@@ -105,7 +104,7 @@ SdCardStatus_t sdCardWrite(const std::uint8_t *data, std::uint16_t size)
     }
     else
     {
-        std::cerr << "Error: No SD card write callback registered." << "\n";
+        std::println(stderr, "Error: No SD card write callback registered.");
     }
 
     return result;
@@ -122,7 +121,7 @@ SdCardStatus_t sdCardClose()
     }
     else
     {
-        std::cerr << "Error: No SD card close callback registered." << "\n";
+        std::println(stderr, "Error: No SD card close callback registered.");
     }
 
     return result;
@@ -138,7 +137,7 @@ bool sdCardInitialize()
     }
     else
     {
-        std::cerr << "Error: No SD card initialize callback registered." << "\n";
+        std::println(stderr, "Error: No SD card initialize callback registered.");
     }
 
     return result;
@@ -154,7 +153,7 @@ bool sdCardStart()
     }
     else
     {
-        std::cerr << "Error: No SD card start callback registered." << "\n";
+        std::println(stderr, "Error: No SD card start callback registered.");
     }
 
     return result;
@@ -170,7 +169,7 @@ bool sdCardStop()
     }
     else
     {
-        std::cerr << "Error: No SD card stop callback registered." << "\n";
+        std::println(stderr, "Error: No SD card stop callback registered.");
     }
 
     return result;
@@ -186,7 +185,7 @@ bool sdCardReset()
     }
     else
     {
-        std::cerr << "Error: No SD card reset callback registered." << "\n";
+        std::println(stderr, "Error: No SD card reset callback registered.");
     }
 
     return result;

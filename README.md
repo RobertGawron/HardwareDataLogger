@@ -1,7 +1,7 @@
 # HardwareDataLogger
 
 [![Integration Tests](https://github.com/RobertGawron/HardwareDataLogger/actions/workflows/integration-tests.yml/badge.svg)](https://github.com/RobertGawron/HardwareDataLogger/actions/workflows/integration-tests.yml)
- [![Unit Tests](https://github.com/RobertGawron/HardwareDataLogger/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/RobertGawron/HardwareDataLogger/actions/workflows/unit-tests.yml) [![Static Analysis (C++)](https://github.com/RobertGawron/HardwareDataLogger/actions/workflows/static-analysis-cpp.yml/badge.svg)](https://github.com/RobertGawron/HardwareDataLogger/actions/workflows/static-analysis-cpp.yml) [![Static Analysis (Python)](https://github.com/RobertGawron/HardwareDataLogger/actions/workflows/static-analysis-python.yml/badge.svg)](https://github.com/RobertGawron/HardwareDataLogger/actions/workflows/static-analysis-python.yml)
+ [![Unit Tests](https://github.com/RobertGawron/HardwareDataLogger/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/RobertGawron/HardwareDataLogger/actions/workflows/unit-tests.yml)
 ## Summary
 
 **_TL;DR It can collect, display, and store data locally and remotely, interfacing with various other devices._**

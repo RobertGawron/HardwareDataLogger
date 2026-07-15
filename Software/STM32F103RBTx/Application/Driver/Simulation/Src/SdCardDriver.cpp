@@ -1,4 +1,3 @@
-// SdCardDriver.cpp
 module;
 
 #include "EventHandlers.h"
@@ -16,6 +15,7 @@ namespace Driver
 {
     bool SdCardDriver::onInit() noexcept
     {
+
         return sdCardInitialize();
     }
 

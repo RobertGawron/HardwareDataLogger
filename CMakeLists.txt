@@ -102,12 +102,10 @@ if(HDL_ENABLE_TOOLING_TARGETS)
   endif()
 
   # install-sim should only exist if SimulationBindings is built
-  if(HDL_BUILD_SIMBIND)
-    add_custom_target(install-sim
-      COMMAND ${CMAKE_COMMAND} --install ${CMAKE_BINARY_DIR}
-              --prefix ${CMAKE_BINARY_DIR}/install
-      COMMENT "Installing SimulationBindings into ${CMAKE_BINARY_DIR}/install"
-      USES_TERMINAL
-    )
-  endif()
+  add_custom_target(install-local
+    COMMAND ${CMAKE_COMMAND} --install ${CMAKE_BINARY_DIR}
+            --prefix ${CMAKE_SOURCE_DIR}
+    COMMENT "Installing SimulationBindings into project root"
+    USES_TERMINAL
+  )
 endif()
