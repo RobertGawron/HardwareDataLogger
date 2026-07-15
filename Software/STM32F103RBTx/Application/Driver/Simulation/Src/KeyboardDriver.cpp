@@ -1,4 +1,3 @@
-// KeyboardDriver.cpp
 module;
 
 #include <cstdint>
@@ -7,18 +6,18 @@ module Driver.KeyboardDriver;
 
 namespace Driver
 {
-    bool KeyboardDriver::tick() noexcept
+    auto KeyboardDriver::tick() noexcept -> bool
     {
         return true;
     }
 
-    KeyState KeyboardDriver::getKeyState(const KeyId key) const noexcept
+    auto KeyboardDriver::getKeyState(const KeyId key) const noexcept -> KeyState
     {
         const KeyState state = keyState.at(static_cast<std::uint8_t>(key));
         return state;
     }
 
-    void KeyboardDriver::setKeyState(KeyId key, KeyState state) noexcept
+    auto KeyboardDriver::setKeyState(KeyId key, KeyState state) noexcept -> void
     {
         keyState.at(static_cast<std::uint8_t>(key)) = state;
     }

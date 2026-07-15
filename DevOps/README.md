@@ -20,12 +20,6 @@ It takes time to build the image the first time, but once it's done, you should 
 cd /workspace/build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja test_biz && ninja test_dev && ninja test_drv
 ```
 
-## Run C++ Static Analysis
-
-```
-cd /workspace/build && cmake -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug .. && ninja CMakeFiles/cstatic
-```
-
 ## Run Python Static Analysis
 
 ```
@@ -36,10 +30,4 @@ cd /workspace/build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja pstat
 
 ```
 cd /workspace/build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja test_biz && ninja test_dev && ninja test_drv && ninja cov
-```
-
-## Run Docs Coverage
-
-```
-cd /workspace/build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug .. && ninja docs
 ```

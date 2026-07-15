@@ -13,12 +13,10 @@ import pytest_html
 
 from stm32f103_simulator import STM32F103  # pylint: disable=import-error
 
-
 logger = logging.getLogger(__name__)
 
 
 class SdCardOperation(Enum):
-
     """Enum for SD card operation types."""
 
     INITIALIZE = auto()
@@ -110,7 +108,6 @@ def cobs_decode(cobs_data: List[int]) -> List[int]:
 
 
 class UartCapture:
-
     """Helper class to capture and verify UART transmissions."""
 
     def __init__(self):
@@ -122,18 +119,18 @@ class UartCapture:
         """Capture UART TX data."""
         # Only log if verbose is True
         if self.verbose:
-            hex_string = ' '.join(f'{byte:02X}' for byte in data)
+            hex_string = " ".join(f"{byte:02X}" for byte in data)
             logger.info(
                 "UART %d: [%s], Size: %d, Timeout: %d",
-                uart_id, hex_string, size, timeout
+                uart_id,
+                hex_string,
+                size,
+                timeout,
             )
 
-        self.transmissions.append({
-            'uart_id': uart_id,
-            'data': data.copy(),
-            'size': size,
-            'timeout': timeout
-        })
+        self.transmissions.append(
+            {"uart_id": uart_id, "data": data.copy(), "size": size, "timeout": timeout}
+        )
         return 0
 
     def register_all(self, dut):
@@ -161,27 +158,28 @@ class UartCapture:
     def assert_transmission_count(self, expected: int):
         """Assert the number of transmissions."""
         actual = len(self.transmissions)
-        assert actual == expected, \
-            f"Expected {expected} transmissions, got {actual}"
+        assert actual == expected, f"Expected {expected} transmissions, got {actual}"
 
     def assert_data(self, expected_data: list, index: int = 0):
         """Assert that specific data was transmitted at given index."""
         transmission = self.get_transmission(index)
-        actual = transmission['data']
+        actual = transmission["data"]
 
-        assert actual == expected_data, \
-            f"Transmission {index} mismatch!\n" \
-            f"Expected: [{' '.join(f'{b:02X}' for b in expected_data)}]\n" \
+        assert actual == expected_data, (
+            f"Transmission {index} mismatch!\n"
+            f"Expected: [{' '.join(f'{b:02X}' for b in expected_data)}]\n"
             f"Actual:   [{' '.join(f'{b:02X}' for b in actual)}]"
+        )
 
     def assert_uart_id(self, expected_uart_id: int, index: int = 0):
         """Assert that transmission came from expected UART."""
         transmission = self.get_transmission(index)
-        actual = transmission['uart_id']
+        actual = transmission["uart_id"]
 
-        assert actual == expected_uart_id, \
-            f"Transmission {index} UART ID mismatch! " \
+        assert actual == expected_uart_id, (
+            f"Transmission {index} UART ID mismatch! "
             f"Expected: {expected_uart_id}, Actual: {actual}"
+        )
 
     def assert_all_transmissions(self, expected_list: list):
         """
@@ -194,35 +192,31 @@ class UartCapture:
         for i, expected_data in enumerate(expected_list):
             self.assert_data(expected_data, index=i)
 
-        logger.info(
-            "All %d transmissions verified",
-            len(expected_list)
-        )
+        logger.info("All %d transmissions verified", len(expected_list))
 
     def assert_contains_transmission(self, expected_data: list):
         """Assert that at least one transmission matches the expected data."""
         for i, transmission in enumerate(self.transmissions):
-            if transmission['data'] == expected_data:
-                logger.info(
-                    "Found matching transmission at index %d", i
-                )
+            if transmission["data"] == expected_data:
+                logger.info("Found matching transmission at index %d", i)
                 return
 
         # Format all transmissions for error message
-        all_transmissions = '\n'.join(
+        all_transmissions = "\n".join(
             f"  [{i}] UART {t['uart_id']}: "
             f"[{' '.join(f'{b:02X}' for b in t['data'])}]"
             for i, t in enumerate(self.transmissions)
         )
 
-        assert False, \
-            f"Expected transmission not found!\n" \
-            f"Looking for: [{' '.join(f'{b:02X}' for b in expected_data)}]\n" \
+        assert False, (
+            f"Expected transmission not found!\n"
+            f"Looking for: [{' '.join(f'{b:02X}' for b in expected_data)}]\n"
             f"Captured transmissions:\n{all_transmissions}"
+        )
 
     def get_all_data(self) -> list:
         """Get all transmitted data as a list of byte lists."""
-        return [t['data'] for t in self.transmissions]
+        return [t["data"] for t in self.transmissions]
 
     def print_all(self):
         """Print all captured transmissions for debugging."""
@@ -232,18 +226,18 @@ class UartCapture:
 
         logger.info("Captured %d transmissions:", len(self.transmissions))
         for i, transmission in enumerate(self.transmissions):
-            hex_string = ' '.join(
-                f'{byte:02X}' for byte in transmission['data']
-            )
+            hex_string = " ".join(f"{byte:02X}" for byte in transmission["data"])
             logger.info(
                 "  [%d] UART %d: [%s], Size: %d, Timeout: %d",
-                i, transmission['uart_id'], hex_string,
-                transmission['size'], transmission['timeout']
+                i,
+                transmission["uart_id"],
+                hex_string,
+                transmission["size"],
+                transmission["timeout"],
             )
 
 
 class SdCardCapture:
-
     """Helper class to capture and verify SD card operations."""
 
     def __init__(self):
@@ -255,60 +249,53 @@ class SdCardCapture:
     def initialize_callback(self) -> bool:
         """Capture SD card initialize."""
         logger.info("SD Card: Initialize called")
-        self.operations.append({'operation': SdCardOperation.INITIALIZE})
+        self.operations.append({"operation": SdCardOperation.INITIALIZE})
         return True
 
     def start_callback(self) -> bool:
         """Capture SD card start."""
         logger.info("SD Card: Start called")
-        self.operations.append({'operation': SdCardOperation.START})
+        self.operations.append({"operation": SdCardOperation.START})
         return True
 
     def stop_callback(self) -> bool:
         """Capture SD card stop."""
         logger.info("SD Card: Stop called")
-        self.operations.append({'operation': SdCardOperation.STOP})
+        self.operations.append({"operation": SdCardOperation.STOP})
         return True
 
     def reset_callback(self) -> bool:
         """Capture SD card reset."""
         logger.info("SD Card: Reset called")
-        self.operations.append({'operation': SdCardOperation.RESET})
+        self.operations.append({"operation": SdCardOperation.RESET})
         return True
 
     def open_callback(self, filename: str, mode: int) -> int:
         """Capture SD card open file."""
-        logger.info(
-            "SD Card: Open file '%s', mode=%d", filename, mode
+        logger.info("SD Card: Open file '%s', mode=%d", filename, mode)
+
+        print("OPEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEN")
+
+        self.operations.append(
+            {"operation": SdCardOperation.OPEN, "filename": filename, "mode": mode}
         )
-        self.operations.append({
-            'operation': SdCardOperation.OPEN,
-            'filename': filename,
-            'mode': mode
-        })
         self.current_file = filename
         self.file_opened = True
         return 0  # SdCardStatus::OK
 
     def write_callback(self, data: List[int], size: int) -> int:
         """Capture SD card write."""
-        data_str = ''.join(
-            chr(b) if 32 <= b < 127 else f'\\x{b:02x}' for b in data
+        data_str = "".join(chr(b) if 32 <= b < 127 else f"\\x{b:02x}" for b in data)
+        logger.info("SD Card: Write %d bytes: '%s'", size, data_str)
+        self.operations.append(
+            {"operation": SdCardOperation.WRITE, "data": data.copy(), "size": size}
         )
-        logger.info(
-            "SD Card: Write %d bytes: '%s'", size, data_str
-        )
-        self.operations.append({
-            'operation': SdCardOperation.WRITE,
-            'data': data.copy(),
-            'size': size
-        })
         return 0  # SdCardStatus::OK
 
     def close_callback(self) -> int:
         """Capture SD card close file."""
         logger.info("SD Card: Close file")
-        self.operations.append({'operation': SdCardOperation.CLOSE})
+        self.operations.append({"operation": SdCardOperation.CLOSE})
         self.file_opened = False
         return 0  # SdCardStatus::OK
 
@@ -345,37 +332,39 @@ class SdCardCapture:
     def assert_operation_count(self, expected: int):
         """Assert the number of operations."""
         actual = len(self.operations)
-        assert actual == expected, \
-            f"Expected {expected} operations, got {actual}"
+        assert actual == expected, f"Expected {expected} operations, got {actual}"
 
     def assert_operation_type(self, expected_type: SdCardOperation, index: int = 0):
         """Assert the operation type at given index."""
         operation = self.get_operation(index)
-        actual = operation['operation']
+        actual = operation["operation"]
 
-        assert actual == expected_type, \
-            f"Operation {index} type mismatch! " \
+        assert actual == expected_type, (
+            f"Operation {index} type mismatch! "
             f"Expected: {expected_type.name}, Actual: {actual.name}"
+        )
 
     def assert_write_data(self, expected_data: str, index: int = 0):
         """Assert that specific data was written (as string)."""
         operation = self.get_operation(index)
-        assert operation['operation'] == SdCardOperation.WRITE, \
-            f"Operation {index} is not a write operation"
+        assert (
+            operation["operation"] == SdCardOperation.WRITE
+        ), f"Operation {index} is not a write operation"
 
-        actual_str = ''.join(chr(b) for b in operation['data'])
+        actual_str = "".join(chr(b) for b in operation["data"])
 
-        assert actual_str == expected_data, \
-            f"Write data mismatch at operation {index}!\n" \
-            f"Expected: '{expected_data}'\n" \
+        assert actual_str == expected_data, (
+            f"Write data mismatch at operation {index}!\n"
+            f"Expected: '{expected_data}'\n"
             f"Actual:   '{actual_str}'"
+        )
 
     def get_all_writes(self) -> List[str]:
         """Get all write operations as strings."""
         writes = []
         for op in self.operations:
-            if op['operation'] == SdCardOperation.WRITE:
-                data_str = ''.join(chr(b) for b in op['data'])
+            if op["operation"] == SdCardOperation.WRITE:
+                data_str = "".join(chr(b) for b in op["data"])
                 writes.append(data_str)
         return writes
 
@@ -385,28 +374,17 @@ class SdCardCapture:
             logger.info("No SD card operations captured")
             return
 
-        logger.info(
-            "Captured %d SD card operations:", len(self.operations)
-        )
+        logger.info("Captured %d SD card operations:", len(self.operations))
         for i, op in enumerate(self.operations):
-            if op['operation'] == SdCardOperation.WRITE:
-                data_str = ''.join(
-                    chr(b) if 32 <= b < 127 else f'\\x{b:02x}'
-                    for b in op['data']
+            if op["operation"] == SdCardOperation.WRITE:
+                data_str = "".join(
+                    chr(b) if 32 <= b < 127 else f"\\x{b:02x}" for b in op["data"]
                 )
-                logger.info(
-                    "  [%d] WRITE: '%s' (%d bytes)",
-                    i, data_str, op['size']
-                )
-            elif op['operation'] == SdCardOperation.OPEN:
-                logger.info(
-                    "  [%d] OPEN: '%s', mode=%d",
-                    i, op['filename'], op['mode']
-                )
+                logger.info("  [%d] WRITE: '%s' (%d bytes)", i, data_str, op["size"])
+            elif op["operation"] == SdCardOperation.OPEN:
+                logger.info("  [%d] OPEN: '%s', mode=%d", i, op["filename"], op["mode"])
             else:
-                logger.info(
-                    "  [%d] %s", i, op['operation'].name
-                )
+                logger.info("  [%d] %s", i, op["operation"].name)
 
 
 @pytest.fixture(scope="function")

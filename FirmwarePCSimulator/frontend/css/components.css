@@ -1,0 +1,94 @@
+/* ============================================================
+   BUTTONS
+============================================================ */
+
+.button-row {
+    display: flex;
+    gap: 8px;
+}
+
+.btn {
+    padding: 8px 12px;
+    border: 1px solid var(--color-border);
+    background: #f3f4f6;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.btn:hover {
+    background: #e5e7eb;
+}
+
+.btn.primary {
+    background: var(--color-primary);
+    color: #ffffff;
+    border-color: var(--color-primary);
+}
+
+.btn.neutral {
+    background: #6b7280;
+    color: #ffffff;
+    border-color: #6b7280;
+}
+
+.btn.small {
+    flex: 1;
+}
+
+
+/* ============================================================
+   STATUS INDICATORS
+============================================================ */
+
+.status-line {
+    margin-top: 8px;
+    font-size: 13px;
+}
+
+.status {
+    font-weight: 600;
+}
+
+.status.stopped {
+    color: #b91c1c;
+}
+
+.status.running {
+    color: #15803d;
+}
+
+
+/* ============================================================
+   SLIDERS
+============================================================ */
+
+.slider {
+    width: 100%;
+    margin-top: 8px;
+    cursor: pointer;
+}
+
+.full {
+    width: 100%;
+}
+
+.speed-value {
+    margin-top: 6px;
+    font-size: 13px;
+    text-align: right;
+    font-family: "JetBrains Mono", monospace;
+}
+
+
+/* ============================================================
+   GENERIC GRID UTILITY
+============================================================ */
+
+.measurement {
+    display: grid;
+    grid-template-columns: 30px 1fr 30px;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+}

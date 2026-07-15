@@ -21,7 +21,7 @@ if(LCOV_PATH AND GENHTML_PATH AND CMAKE_BUILD_TYPE STREQUAL "Debug")
         COMMAND ${GENHTML_PATH} --prefix ${CMAKE_SOURCE_DIR}/Software/STM32F103RBTx/Application/ --output-directory ${COVERAGE_DIR} ${COVERAGE_DIR}/coverage.filtered.info
 
         COMMAND ${CMAKE_COMMAND} -E echo "Coverage report generated in ${COVERAGE_DIR}/html/index.html"
-        #DEPENDS test
+
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
         COMMENT "Generating coverage report..."
     )

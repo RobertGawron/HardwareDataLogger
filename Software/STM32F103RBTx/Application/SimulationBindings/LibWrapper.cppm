@@ -26,7 +26,7 @@ import Driver.KeyId;
 import Driver.UartId;
 import Driver.PulseCounterId;
 
-export extern "C" void LibWrapper_Init();
+import Simulation.PulseCounterScheduler;
 
 static Driver::LightSensorDriver lightSensor;
 static Driver::BrightnessDriver displayBrightness;
@@ -65,37 +65,21 @@ static Driver::PlatformFactory platform = {
 BusinessLogic::ApplicationFacade facade{platform};
 
 constexpr size_t PULSE_COUNTER_COUNT = 4U;
+Simulation::PulseCounterScheduler pulseScheduler;
 
-#if 0
-enum KeyId //: std::uint8_t
-{
-    /*
-    Up = static_cast<std::uint8_t>(Driver::KeyId::Up),
-    Down = static_cast<std::uint8_t>(Driver::KeyId::Down),
-    Left = static_cast<std::uint8_t>(Driver::KeyId::Left),
-    Right = static_cast<std::uint8_t>(Driver::KeyId::Right),
-    LastNotUsed = static_cast<std::uint8_t>(Driver::KeyId::LastNotUsed)
-*/
-    Up,
-    Down,
-    Left,
-    Right,
-    LastNotUsed
-};
-#endif
-
-#ifdef __cplusplus
 extern "C"
 {
-#endif
 
     void LibWrapper_Init()
     {
         if (!facade.init())
         {
-            std::println(stderr,
-                         "ERROR {} failed!",
+            std::println(stderr, "ERROR {} failed!",
                          std::source_location::current().function_name());
+        }
+        else
+        {
+            std::println(stdout, "{}", std::source_location::current().function_name());
         }
     }
 
@@ -103,9 +87,12 @@ extern "C"
     {
         if (!facade.start())
         {
-            std::println(stderr,
-                         "ERROR {} failed!",
+            std::println(stderr, "ERROR {} failed!",
                          std::source_location::current().function_name());
+        }
+        else
+        {
+            std::println(stdout, "{}", std::source_location::current().function_name());
         }
     }
 
@@ -113,9 +100,12 @@ extern "C"
     {
         if (!facade.stop())
         {
-            std::println(stderr,
-                         "ERROR {} failed!",
+            std::println(stderr, "ERROR {} failed!",
                          std::source_location::current().function_name());
+        }
+        else
+        {
+            std::println(stdout, "{}", std::source_location::current().function_name());
         }
     }
 
@@ -123,9 +113,11 @@ extern "C"
     {
         if (!facade.tick())
         {
-            std::println(stderr,
-                         "ERROR {} failed!",
-                         std::source_location::current().function_name());
+#warning check what is the problem, dont pollute main log for now
+            /*  std::println(stderr,
+                           "ERROR {} failed!",
+                           std::source_location::current().function_name());
+                           */
         }
     }
 
@@ -136,20 +128,20 @@ extern "C"
 
     void LibWrapper_KeyPressed(Driver::KeyId keyId)
     {
-        /*
-        auto &keyboard = static_cast<Driver::KeyboardDriver &>(platformDrivers.keyboard);
-        keyboard.setKeyState(
-            static_cast<Driver::KeyId>(keyId),
-            Driver::KeyState::Pressed);
-    */
+        auto &keyboard = static_cast<Driver::KeyboardDriver &>(platform.keyboard);
+        keyboard.setKeyState(static_cast<Driver::KeyId>(keyId),
+                             Driver::KeyState::Pressed);
+
+        std::println(stdout, "{}", std::source_location::current().function_name());
     }
 
     void LibWrapper_KeyReleased(Driver::KeyId keyId)
     {
         auto &keyboard = static_cast<Driver::KeyboardDriver &>(platform.keyboard);
-        keyboard.setKeyState(
-            static_cast<Driver::KeyId>(keyId),
-            Driver::KeyState::NotPressed);
+        keyboard.setKeyState(static_cast<Driver::KeyId>(keyId),
+                             Driver::KeyState::NotPressed);
+
+        std::println(stdout, "{}", std::source_location::current().function_name());
     }
 
     std::uint8_t LibWrapper_GetDisplayWidth()
@@ -157,6 +149,7 @@ extern "C"
         std::uint8_t width = 0U;
         const auto &display = static_cast<Driver::DisplayDriver &>(platform.display);
         static_cast<void>(display.getXSize(width));
+
         return width;
     }
 
@@ -165,6 +158,7 @@ extern "C"
         std::uint8_t height = 0U;
         const auto &display = static_cast<Driver::DisplayDriver &>(platform.display);
         static_cast<void>(display.getYSize(height));
+
         return height;
     }
 
@@ -176,57 +170,25 @@ extern "C"
         return value;
     }
 
-    void LibWrapper_UpdatePulseCounters(const std::array<std::uint32_t, PULSE_COUNTER_COUNT> &pulseCounters)
+    bool LibWrapper_UpdatePulseCounterFrequency(std::uint8_t pulseCounterId,
+                                                std::uint32_t newPulsesPerMinute)
     {
-        /*    for (std::uint8_t i = 0U; i < PULSE_COUNTER_COUNT; ++i)
-            {
-                setPulseCounter(i, pulseCounters[i]);
-            }
-        */
+        bool status = false;
+
+        if (pulseCounterId < PULSE_COUNTER_COUNT)
+        {
+
+            std::println(stderr, "F CALLED {} {} {}",
+                         std::source_location::current().function_name(), pulseCounterId, newPulsesPerMinute);
+
+            status = pulseScheduler.updateFrequency(pulseCounterId, newPulsesPerMinute);
+        }
+        else
+        {
+            std::println(stderr, "ERROR {} failed!",
+                         std::source_location::current().function_name());
+        }
+
+        return status;
     }
-
-#ifdef __cplusplus
 }
-#endif
-
-/*
-void LibWrapper_RegisterSerialTxCallback(SerialTxCallback callback)
-{
-    //  registerSerialTxCallback(callback);
-}
-
-void LibWrapper_RegisterSdCardOpenCallback(SdCardOpenCallback callback)
-{
-    //  registerSdCardOpenCallback(callback);
-}
-
-void LibWrapper_RegisterSdCardWriteCallback(SdCardWriteCallback callback)
-{
-    //  registerSdCardWriteCallback(callback);
-}
-
-void LibWrapper_RegisterSdCardCloseCallback(SdCardCloseCallback callback)
-{
-    //  registerSdCardCloseCallback(callback);
-}
-
-void LibWrapper_RegisterSdCardInitializeCallback(SdCardInitializeCallback callback)
-{
-    // registerSdCardInitializeCallback(callback);
-}
-
-void LibWrapper_RegisterSdCardStartCallback(SdCardStartCallback callback)
-{
-    //  registerSdCardStartCallback(callback);
-}
-
-void LibWrapper_RegisterSdCardStopCallback(SdCardStopCallback callback)
-{
-    //  registerSdCardStopCallback(callback);
-}
-
-void LibWrapper_RegisterSdCardResetCallback(SdCardResetCallback callback)
-{
-    //  registerSdCardResetCallback(callback);
-}
-*/

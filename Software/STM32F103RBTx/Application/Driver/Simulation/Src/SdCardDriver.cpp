@@ -1,7 +1,4 @@
-// SdCardDriver.cpp
 module;
-
-#include "EventHandlers.h"
 
 #include <cstring>
 #include <string_view>
@@ -12,19 +9,22 @@ module;
 
 module Driver.SdCardDriver;
 
+import EventHandlers;
+
 namespace Driver
 {
-    bool SdCardDriver::onInit() noexcept
+    auto SdCardDriver::onInit() noexcept -> bool
     {
+
         return sdCardInitialize();
     }
 
-    bool SdCardDriver::onStart() noexcept
+    auto SdCardDriver::onStart() noexcept -> bool
     {
         return sdCardStart();
     }
 
-    bool SdCardDriver::onStop() noexcept
+    auto SdCardDriver::onStop() noexcept -> bool
     {
         return sdCardStop();
     }
@@ -34,7 +34,7 @@ namespace Driver
         return sdCardReset();
     }
 
-    SdCardStatus SdCardDriver::openFile(std::string_view filename, FileOpenMode mode) noexcept
+    auto SdCardDriver::openFile(std::string_view filename, FileOpenMode mode) noexcept -> SdCardStatus
     {
         char filenameBuffer[256];
         std::size_t len = std::min(filename.size(), sizeof(filenameBuffer) - 1);
@@ -44,12 +44,12 @@ namespace Driver
         return static_cast<SdCardStatus>(sdCardOpen(filenameBuffer, std::to_underlying(mode)));
     }
 
-    SdCardStatus SdCardDriver::closeFile() noexcept
+    auto SdCardDriver::closeFile() noexcept -> SdCardStatus
     {
         return static_cast<SdCardStatus>(sdCardClose());
     }
 
-    SdCardStatus SdCardDriver::write(std::span<const std::uint8_t> data) noexcept
+    auto SdCardDriver::write(std::span<const std::uint8_t> data) noexcept -> SdCardStatus
     {
         const auto size = static_cast<std::uint16_t>(data.size());
         return static_cast<SdCardStatus>(sdCardWrite(data.data(), size));
