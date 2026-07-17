@@ -184,19 +184,21 @@ RUN pip install --no-cache-dir --upgrade pip && \
         cpplint \
         gprof2dot \
         coverxygen \
-        hpp2plantuml \
+        #hpp2plantuml \
         pytest \
         pytest-html \
         codechecker \
-        prospector \
-        vjunit \
+        #prospector \
+        #vjunit \
         fastapi==0.109.0 \
         uvicorn[standard]==0.27.0 \
         websockets==12.0 \
         pydantic==2.5.0 \
         python-multipart==0.0.6 \
         python-dotenv \
-        aiofiles
+        aiofiles \
+        # python linters
+        black ruff mypy radon bandit pip-audit safety cyclonedx-bom
 
 
 # ==============================================================

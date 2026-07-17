@@ -17,5 +17,5 @@ jobs:
       artifact_name: static-analysis-results-python
       artifact_paths: DevOps/Artifacts/PythonStaticAnalysis
       run_script: |
-        cmake -S /workspace --preset pstatic
-        cmake --build --preset pstatic
+        cd /workspace/FirmwarePCSimulator
+        just lint

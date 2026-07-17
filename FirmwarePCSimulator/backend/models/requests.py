@@ -1,12 +1,12 @@
 from pydantic import BaseModel
-from typing import List
+
 
 class SpeedRequest(BaseModel):
     tick_interval: float
 
 
 class PulseRequest(BaseModel):
-    values: List[int]
+    values: list[int]
 
 
 class KeyRequest(BaseModel):

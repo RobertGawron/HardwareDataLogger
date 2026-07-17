@@ -1,10 +1,12 @@
-from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
 import asyncio
 
-from backend.simulation import Simulation
-from backend.websocket.sdcard import router as sdcard_router, sdcard_manager
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+
 from backend.api.simulation import router as simulation_router
+from backend.simulation import Simulation
+from backend.websocket.sdcard import router as sdcard_router
+from backend.websocket.sdcard import sdcard_manager
 
 app = FastAPI()
 
@@ -13,9 +15,10 @@ simulation = Simulation(sdcard_manager)
 
 
 @app.on_event("startup")
-async def startup_event():
+async def startup_event() -> None:
     loop = asyncio.get_running_loop()
     simulation.set_event_loop(loop)
+    app.state.simulation = simulation
 
 
 # Register routers

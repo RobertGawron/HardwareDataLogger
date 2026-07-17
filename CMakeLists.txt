@@ -87,7 +87,6 @@ if(HDL_ENABLE_TOOLING_TARGETS)
 
   include("${HARDWARE_APP_DIR}/CodeCoverage.cmake" OPTIONAL)
 #  include("${CMAKE_SOURCE_DIR}/DevOps/Cmake/CStaticAnalysis.cmake" OPTIONAL)
-  include("${CMAKE_SOURCE_DIR}/DevOps/Cmake/PythonStaticAnalysis.cmake" OPTIONAL)
 #  include("${CMAKE_SOURCE_DIR}/DevOps/Cmake/DocsCoverage.cmake" OPTIONAL)
 
   find_package(Python3 QUIET COMPONENTS Interpreter)

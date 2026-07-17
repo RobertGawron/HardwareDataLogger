@@ -1,290 +1,297 @@
-"""
-Module for interacting with the simulated STM32 firmware.
-
-This module provides a Python interface for managing the simulation,
-including interactions with the display, keys, and pulse counters.
-"""
-
-from pathlib import Path
 import ctypes
-from enum import Enum
-from typing import List, Callable
+from collections.abc import Callable
+from pathlib import Path
+from typing import Any
+
+from backend.simulation.enums import SimulationKey
+
+PULSE_COUNTER_COUNT = 4
+UINT32_MASK = 0xFFFFFFFF
+
+BytePtr = ctypes.POINTER(ctypes.c_uint8)
 
 
-class SimulationKey(Enum):
-
-    """Enumeration for simulation key events."""
-
-    UP = 0
-    DOWN = 1
-    LEFT = 2
-    RIGHT = 3
+class InvalidPulseCounterCountError(ValueError):
+    def __init__(self, expected: int, received: int) -> None:
+        super().__init__(f"Expected {expected} pulse counters, got {received}")
 
 
-class STM32F103:  # pylint: disable=too-many-instance-attributes
-
-    """
-    Interface for the STM32 firmware simulation.
-
-    Provides methods to initialize the simulation, interact with the display,
-    and update pulse counters.
-    """
+class STM32F103:
+    """Interface for the STM32 firmware simulation."""
 
     def __init__(self) -> None:
-        """Initialize the STM32F103 class."""
         project_root = Path(__file__).resolve().parents[2]
         dll_abs_path = project_root / "lib" / "libsimulator_stm32f103.so"
+
         self.dut: ctypes.CDLL = ctypes.CDLL(dll_abs_path)
-        self._serial_tx_callback_c = None
-        self._sdcard_open_callback = None
-        self._sdcard_write_callback = None
-        self._sdcard_close_callback = None
-        self._sdcard_init_callback = None
-        self._sdcard_start_callback = None
-        self._sdcard_stop_callback = None
-        self._sdcard_reset_callback = None
+
+        # Stored to prevent GC of callbacks
+        self._serial_tx_callback_c: Any | None = None
+        self._sdcard_open_callback: Any | None = None
+        self._sdcard_write_callback: Any | None = None
+        self._sdcard_close_callback: Any | None = None
+        self._sdcard_init_callback: Any | None = None
+        self._sdcard_start_callback: Any | None = None
+        self._sdcard_stop_callback: Any | None = None
+        self._sdcard_reset_callback: Any | None = None
+
+    # ============================================================
+    # Firmware Lifecycle
+    # ============================================================
 
     def init(self) -> None:
-        """
-        Initialize the embedded library.
-
-        This is required for the library to start functioning.
-        """
         self.dut.LibWrapper_Init()
 
     def start(self) -> None:
-        """
-        Start the firmware scheduler.
-        Transition: INITIALIZED/STOPPED → RUNNING
-        """
         self.dut.LibWrapper_Start()
 
     def stop(self) -> None:
-        """
-        Stop the firmware scheduler.
-        Transition: RUNNING → STOPPED
-        """
         self.dut.LibWrapper_Stop()
-        
-    def tick(self) -> None:
-        """
-        Trigger a single tick in the simulation.
 
-        This simulates a single step in the device's processing cycle.
-        """
+    def tick(self) -> None:
         self.dut.LibWrapper_Tick()
 
     def time_slot(self) -> None:
-        """
-        Notify the simulation that a scheduler time slot has elapsed.
-
-        This simulates the hardware timer interrupt that triggers the
-        scheduler's time-slot ISR in the embedded firmware. It increments
-        the internal pending slot counter, allowing the next call to
-        `tick()` to execute scheduled tasks.
-        """
         self.dut.LibWrapper_TimeSlot()
 
-    def get_display_width(self) -> int:
-        """
-        Retrieve the display width from the library.
+    # ============================================================
+    # Display
+    # ============================================================
 
-        :return: The width of the display in pixels.
-        """
+    def get_display_width(self) -> int:
         self.dut.LibWrapper_GetDisplayWidth.restype = ctypes.c_uint8
-        return self.dut.LibWrapper_GetDisplayWidth()
+        return int(self.dut.LibWrapper_GetDisplayWidth())
 
     def get_display_height(self) -> int:
-        """
-        Retrieve the display height from the library.
-
-        :return: The height of the display in pixels.
-        """
         self.dut.LibWrapper_GetDisplayHeight.restype = ctypes.c_uint8
-        return self.dut.LibWrapper_GetDisplayHeight()
+        return int(self.dut.LibWrapper_GetDisplayHeight())
 
     def get_display_pixel(self, x: int, y: int) -> int:
-        """
-        Retrieve the pixel value at the specified coordinates.
-
-        :param x: The x-coordinate of the pixel.
-        :param y: The y-coordinate of the pixel.
-        :return: The pixel value in RGB565 format as a 16-bit integer.
-        """
         self.dut.LibWrapper_GetPixelValue.restype = ctypes.c_uint16
-        self.dut.LibWrapper_GetPixelValue.argtypes = [ctypes.c_uint8, ctypes.c_uint8]
-        return self.dut.LibWrapper_GetPixelValue(ctypes.c_uint8(x), ctypes.c_uint8(y))
-
-    def key_pressed(self, key: SimulationKey):
-        """
-        Notify the simulation of a key press event.
-
-        :param key: The key that was pressed (SimulationKey).
-        """
-        self.dut.LibWrapper_KeyPressed.restype = None
-        self.dut.LibWrapper_KeyPressed.argtypes = [ctypes.c_uint8]
-        self.dut.LibWrapper_KeyPressed(key.value)
-
-    def key_released(self, key: SimulationKey):
-        """
-        Notify the simulation of a key release event.
-
-        :param key: The key that was released (SimulationKey).
-        """
-        self.dut.LibWrapper_KeyReleased.restype = None
-        self.dut.LibWrapper_KeyReleased.argtypes = [ctypes.c_uint8]
-        self.dut.LibWrapper_KeyReleased(key.value)
-
-    def update_pulse_counters(self, pulse_counters: List[int]):
-        """
-        Update the pulse counters in the simulation.
-
-        :param pulse_counters: A list of pulse counter values to update.
-        """
-        pulse_counter_count = 4
-        if len(pulse_counters) != pulse_counter_count:
-            raise ValueError(
-                f"Expected {pulse_counter_count} pulse counters, "
-                f"got {len(pulse_counters)}"
-            )
-
-        # Create array type for uint32
-        pulse_counters_array_type = ctypes.c_uint32 * pulse_counter_count
-
-        # Ensure values are properly masked to 32-bit and create array
-        masked_values = [int(val) & 0xFFFFFFFF for val in pulse_counters]
-        pulse_counters_array = pulse_counters_array_type(*masked_values)
-
-        self.dut.LibWrapper_UpdatePulseCounters.restype = None
-        self.dut.LibWrapper_UpdatePulseCounters.argtypes = [
-            ctypes.POINTER(ctypes.c_uint32)
+        self.dut.LibWrapper_GetPixelValue.argtypes = [
+            ctypes.c_uint8,
+            ctypes.c_uint8,
         ]
-        self.dut.LibWrapper_UpdatePulseCounters(pulse_counters_array)
-
-    def register_serial_tx_callback(
-        self, callback: Callable[[int, List[int], int, int], int]
-    ):
-        """
-        Register a Serial TX callback with the shared library.
-
-        The callback should be a Python function that accepts four arguments:
-        - `uart_id` (int): The UART ID (UartId enum value).
-        - `data` (List[int]): The data to transmit.
-        - `size` (int): The size of the data.
-        - `timeout` (int): Timeout in milliseconds.
-        The function should return an integer (`HAL_StatusTypeDef`).
-        """
-        # Define the C-compatible callback type
-        # C: typedef int (*serial_tx_callback_type)(
-        #     uint8_t uart_id, const uint8_t*, uint16_t, uint32_t);
-        serial_tx_callback_type = ctypes.CFUNCTYPE(
-            ctypes.c_int,                    # return type
-            ctypes.c_uint8,                  # uint8_t uart_id
-            ctypes.POINTER(ctypes.c_uint8),  # const uint8_t* pdata
-            ctypes.c_uint16,                 # uint16_t size
-            ctypes.c_uint32                  # uint32_t timeout
+        return int(
+            self.dut.LibWrapper_GetPixelValue(
+                ctypes.c_uint8(x),
+                ctypes.c_uint8(y),
+            ),
         )
 
-        self.dut.LibWrapper_RegisterSerialTxCallback.argtypes = [
-            serial_tx_callback_type
+    # ============================================================
+    # Keys
+    # ============================================================
+
+    def key_pressed(self, key: SimulationKey) -> None:
+        self.dut.LibWrapper_KeyPressed.argtypes = [ctypes.c_uint8]
+        self.dut.LibWrapper_KeyPressed.restype = None
+        self.dut.LibWrapper_KeyPressed(key.value)
+
+    def key_released(self, key: SimulationKey) -> None:
+        self.dut.LibWrapper_KeyReleased.argtypes = [ctypes.c_uint8]
+        self.dut.LibWrapper_KeyReleased.restype = None
+        self.dut.LibWrapper_KeyReleased(key.value)
+
+    # ============================================================
+    # Pulse Counters
+    # ============================================================
+
+    def update_pulse_counters(self, pulse_counters: list[int]) -> None:
+        if len(pulse_counters) != PULSE_COUNTER_COUNT:
+            raise InvalidPulseCounterCountError(
+                PULSE_COUNTER_COUNT,
+                len(pulse_counters),
+            )
+
+        array_type = ctypes.c_uint32 * PULSE_COUNTER_COUNT
+        masked_values = [int(val) & UINT32_MASK for val in pulse_counters]
+        pulse_array = array_type(*masked_values)
+
+        self.dut.LibWrapper_UpdatePulseCounters.argtypes = [
+            ctypes.POINTER(ctypes.c_uint32),
         ]
+        self.dut.LibWrapper_UpdatePulseCounters.restype = None
+        self.dut.LibWrapper_UpdatePulseCounters(pulse_array)
+
+    # ============================================================
+    # Serial TX Callback
+    # ============================================================
+
+    def register_serial_tx_callback(
+        self,
+        callback: Callable[[int, list[int], int, int], int],
+    ) -> None:
+        callback_type = ctypes.CFUNCTYPE(
+            ctypes.c_int,
+            ctypes.c_uint8,
+            ctypes.POINTER(ctypes.c_uint8),
+            ctypes.c_uint16,
+            ctypes.c_uint32,
+        )
+
+        self.dut.LibWrapper_RegisterSerialTxCallback.argtypes = [callback_type]
         self.dut.LibWrapper_RegisterSerialTxCallback.restype = None
 
-        # Wrap the Python callback
-        def wrapper(uart_id, p_data, size, timeout):
-            data = [p_data[i] for i in range(size)]  # Convert to Python list
+        def wrapper(
+            uart_id: int,
+            p_data: ctypes.c_void_p,
+            size: int,
+            timeout: int,
+        ) -> int:
+            byte_ptr = ctypes.cast(
+                p_data,
+                ctypes.POINTER(ctypes.c_uint8),
+            )
+            data = [byte_ptr[i] for i in range(size)]
             return callback(uart_id, data, size, timeout)
 
-        self._serial_tx_callback_c = serial_tx_callback_type(wrapper)
-        self.dut.LibWrapper_RegisterSerialTxCallback(self._serial_tx_callback_c)
+        self._serial_tx_callback_c = callback_type(wrapper)
+        self.dut.LibWrapper_RegisterSerialTxCallback(
+            self._serial_tx_callback_c,
+        )
 
-    def register_sdcard_initialize_callback(self, callback: Callable[[], bool]):
-        """Register SD card initialize callback."""
+    # ============================================================
+    # SD Card Callbacks
+    # ============================================================
+
+    def register_sdcard_initialize_callback(
+        self,
+        callback: Callable[[], bool],
+    ) -> None:
         callback_type = ctypes.CFUNCTYPE(ctypes.c_bool)
 
         self.dut.LibWrapper_RegisterSdCardInitializeCallback.argtypes = [
-            callback_type
+            callback_type,
         ]
         self.dut.LibWrapper_RegisterSdCardInitializeCallback.restype = None
 
         self._sdcard_init_callback = callback_type(callback)
         self.dut.LibWrapper_RegisterSdCardInitializeCallback(
-            self._sdcard_init_callback
+            self._sdcard_init_callback,
         )
 
-    def register_sdcard_start_callback(self, callback: Callable[[], bool]):
+    def register_sdcard_open_callback(
+        self,
+        callback: Callable[[str, int], int],
+    ) -> None:
+        callback_type = ctypes.CFUNCTYPE(
+            ctypes.c_uint8,
+            ctypes.c_char_p,
+            ctypes.c_uint8,
+        )
+
+        self.dut.LibWrapper_RegisterSdCardOpenCallback.argtypes = [
+            callback_type,
+        ]
+        self.dut.LibWrapper_RegisterSdCardOpenCallback.restype = None
+
+        def wrapper(
+            filename: bytes,
+            mode: int,
+        ) -> int:
+            return callback(filename.decode("utf-8"), mode)
+
+        self._sdcard_open_callback = callback_type(wrapper)
+        self.dut.LibWrapper_RegisterSdCardOpenCallback(
+            self._sdcard_open_callback,
+        )
+
+    def register_sdcard_start_callback(
+        self,
+        callback: Callable[[], bool],
+    ) -> None:
         """Register SD card start callback."""
         callback_type = ctypes.CFUNCTYPE(ctypes.c_bool)
 
-        self.dut.LibWrapper_RegisterSdCardStartCallback.argtypes = [callback_type]
+        self.dut.LibWrapper_RegisterSdCardStartCallback.argtypes = [
+            callback_type,
+        ]
         self.dut.LibWrapper_RegisterSdCardStartCallback.restype = None
 
         self._sdcard_start_callback = callback_type(callback)
-        self.dut.LibWrapper_RegisterSdCardStartCallback(self._sdcard_start_callback)
+        self.dut.LibWrapper_RegisterSdCardStartCallback(
+            self._sdcard_start_callback,
+        )
 
-    def register_sdcard_stop_callback(self, callback: Callable[[], bool]):
+    def register_sdcard_stop_callback(
+        self,
+        callback: Callable[[], bool],
+    ) -> None:
         """Register SD card stop callback."""
         callback_type = ctypes.CFUNCTYPE(ctypes.c_bool)
 
-        self.dut.LibWrapper_RegisterSdCardStopCallback.argtypes = [callback_type]
+        self.dut.LibWrapper_RegisterSdCardStopCallback.argtypes = [
+            callback_type,
+        ]
         self.dut.LibWrapper_RegisterSdCardStopCallback.restype = None
 
         self._sdcard_stop_callback = callback_type(callback)
-        self.dut.LibWrapper_RegisterSdCardStopCallback(self._sdcard_stop_callback)
+        self.dut.LibWrapper_RegisterSdCardStopCallback(
+            self._sdcard_stop_callback,
+        )
 
-    def register_sdcard_reset_callback(self, callback: Callable[[], bool]):
+    def register_sdcard_reset_callback(
+        self,
+        callback: Callable[[], bool],
+    ) -> None:
         """Register SD card reset callback."""
         callback_type = ctypes.CFUNCTYPE(ctypes.c_bool)
 
-        self.dut.LibWrapper_RegisterSdCardResetCallback.argtypes = [callback_type]
+        self.dut.LibWrapper_RegisterSdCardResetCallback.argtypes = [
+            callback_type,
+        ]
         self.dut.LibWrapper_RegisterSdCardResetCallback.restype = None
 
         self._sdcard_reset_callback = callback_type(callback)
-        self.dut.LibWrapper_RegisterSdCardResetCallback(self._sdcard_reset_callback)
-
-    def register_sdcard_open_callback(self, callback: Callable[[str, int], int]):
-        """Register SD card open callback. Returns SdCardStatus as uint8."""
-        callback_type = ctypes.CFUNCTYPE(
-            ctypes.c_uint8,      # Return SdCardStatus as uint8
-            ctypes.c_char_p,     # filename
-            ctypes.c_uint8       # mode
+        self.dut.LibWrapper_RegisterSdCardResetCallback(
+            self._sdcard_reset_callback,
         )
 
-        self.dut.LibWrapper_RegisterSdCardOpenCallback.argtypes = [callback_type]
-        self.dut.LibWrapper_RegisterSdCardOpenCallback.restype = None
-
-        def wrapper(filename, mode):
-            return callback(filename.decode('utf-8'), mode)
-
-        self._sdcard_open_callback = callback_type(wrapper)
-        self.dut.LibWrapper_RegisterSdCardOpenCallback(self._sdcard_open_callback)
-
-    def register_sdcard_write_callback(
-        self, callback: Callable[[List[int], int], int]
-    ):
-        """Register SD card write callback. Returns SdCardStatus as uint8."""
-        callback_type = ctypes.CFUNCTYPE(
-            ctypes.c_uint8,                  # Return SdCardStatus as uint8
-            ctypes.POINTER(ctypes.c_uint8),  # data
-            ctypes.c_uint16                  # size
-        )
-
-        self.dut.LibWrapper_RegisterSdCardWriteCallback.argtypes = [callback_type]
-        self.dut.LibWrapper_RegisterSdCardWriteCallback.restype = None
-
-        def wrapper(p_data, size):
-            data = [p_data[i] for i in range(size)]
-            return callback(data, size)
-
-        self._sdcard_write_callback = callback_type(wrapper)
-        self.dut.LibWrapper_RegisterSdCardWriteCallback(self._sdcard_write_callback)
-
-    def register_sdcard_close_callback(self, callback: Callable[[], int]):
+    def register_sdcard_close_callback(
+        self,
+        callback: Callable[[], int],
+    ) -> None:
         """Register SD card close callback. Returns SdCardStatus as uint8."""
         callback_type = ctypes.CFUNCTYPE(ctypes.c_uint8)
 
-        self.dut.LibWrapper_RegisterSdCardCloseCallback.argtypes = [callback_type]
+        self.dut.LibWrapper_RegisterSdCardCloseCallback.argtypes = [
+            callback_type,
+        ]
         self.dut.LibWrapper_RegisterSdCardCloseCallback.restype = None
 
         self._sdcard_close_callback = callback_type(callback)
-        self.dut.LibWrapper_RegisterSdCardCloseCallback(self._sdcard_close_callback)
+        self.dut.LibWrapper_RegisterSdCardCloseCallback(
+            self._sdcard_close_callback,
+        )
+
+    def register_sdcard_write_callback(
+        self,
+        callback: Callable[[list[int], int], int],
+    ) -> None:
+        callback_type = ctypes.CFUNCTYPE(
+            ctypes.c_uint8,
+            ctypes.POINTER(ctypes.c_uint8),
+            ctypes.c_uint16,
+        )
+
+        self.dut.LibWrapper_RegisterSdCardWriteCallback.argtypes = [
+            callback_type,
+        ]
+        self.dut.LibWrapper_RegisterSdCardWriteCallback.restype = None
+
+        def wrapper(
+            p_data: ctypes.c_void_p,
+            size: int,
+        ) -> int:
+            byte_ptr = ctypes.cast(
+                p_data,
+                ctypes.POINTER(ctypes.c_uint8),
+            )
+            data = [byte_ptr[i] for i in range(size)]
+            return callback(data, size)
+
+        self._sdcard_write_callback = callback_type(wrapper)
+        self.dut.LibWrapper_RegisterSdCardWriteCallback(
+            self._sdcard_write_callback,
+        )
