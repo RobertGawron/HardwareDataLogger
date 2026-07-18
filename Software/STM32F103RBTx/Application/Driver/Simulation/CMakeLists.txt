@@ -4,12 +4,10 @@ target_link_libraries(Driver
     PUBLIC DriverInterface
 )
 
-target_include_directories(Driver PRIVATE
-    Inc
-)
-
 target_sources(Driver
     PUBLIC FILE_SET CXX_MODULES FILES
+        Modules/EventHandlers.cppm
+
         Modules/BrightnessDriver.cppm
         Modules/DisplayDriver.cppm
         Modules/Driver.cppm

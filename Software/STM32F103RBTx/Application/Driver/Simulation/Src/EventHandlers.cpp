@@ -1,10 +1,10 @@
 module;
 
-#include "EventHandlers.h"
-
 #include <cstdint>
 #include <utility>
 #include <print>
+
+import EventHandlers;
 
 import Driver.UartId;
 import Driver.SdCardStatus;
@@ -19,47 +19,47 @@ SdCardStartCallback sdCardStartCallback = nullptr;
 SdCardStopCallback sdCardStopCallback = nullptr;
 SdCardResetCallback sdCardResetCallback = nullptr;
 
-void LibWrapper_RegisterSerialTxCallback(SerialTxCallback callback)
+void LibWrapper_RegisterSerialTxCallback(SerialTxCallback callback) noexcept
 {
     serialTxCallback = callback;
 }
 
-void LibWrapper_RegisterSdCardOpenCallback(SdCardOpenCallback callback)
+void LibWrapper_RegisterSdCardOpenCallback(SdCardOpenCallback callback) noexcept
 {
     sdCardOpenCallback = callback;
 }
 
-void LibWrapper_RegisterSdCardWriteCallback(SdCardWriteCallback callback)
+void LibWrapper_RegisterSdCardWriteCallback(SdCardWriteCallback callback) noexcept
 {
     sdCardWriteCallback = callback;
 }
 
-void LibWrapper_RegisterSdCardCloseCallback(SdCardCloseCallback callback)
+void LibWrapper_RegisterSdCardCloseCallback(SdCardCloseCallback callback) noexcept
 {
     sdCardCloseCallback = callback;
 }
 
-void LibWrapper_RegisterSdCardInitializeCallback(SdCardInitializeCallback callback)
+void LibWrapper_RegisterSdCardInitializeCallback(SdCardInitializeCallback callback) noexcept
 {
     sdCardInitializeCallback = callback;
 }
 
-void LibWrapper_RegisterSdCardStartCallback(SdCardStartCallback callback)
+void LibWrapper_RegisterSdCardStartCallback(SdCardStartCallback callback) noexcept
 {
     sdCardStartCallback = callback;
 }
 
-void LibWrapper_RegisterSdCardStopCallback(SdCardStopCallback callback)
+void LibWrapper_RegisterSdCardStopCallback(SdCardStopCallback callback) noexcept
 {
     sdCardStopCallback = callback;
 }
 
-void LibWrapper_RegisterSdCardResetCallback(SdCardResetCallback callback)
+void LibWrapper_RegisterSdCardResetCallback(SdCardResetCallback callback) noexcept
 {
     sdCardResetCallback = callback;
 }
 
-HAL_StatusTypeDef serialTx(UartId_t uartId, const std::uint8_t *data, std::uint16_t size, std::uint32_t timeout)
+HAL_StatusTypeDef serialTx(UartId_t uartId, const std::uint8_t *data, std::uint16_t size, std::uint32_t timeout) noexcept
 {
     HAL_StatusTypeDef result = HAL_StatusTypeDef::HAL_ERROR;
 
@@ -76,14 +76,13 @@ HAL_StatusTypeDef serialTx(UartId_t uartId, const std::uint8_t *data, std::uint1
     return result;
 }
 
-SdCardStatus_t sdCardOpen(const char *filename, FileOpenMode_t mode)
+SdCardStatus_t sdCardOpen(const char *filename, FileOpenMode_t mode) noexcept
 {
     SdCardStatus_t result = std::to_underlying(Driver::SdCardStatus::INVALID_PARAMETER);
 
     if (sdCardOpenCallback != nullptr)
     {
         result = sdCardOpenCallback(filename, static_cast<std::uint8_t>(mode));
-        // result = static_cast<Driver::SdCardStatus>(status);
     }
     else
     {
@@ -93,14 +92,13 @@ SdCardStatus_t sdCardOpen(const char *filename, FileOpenMode_t mode)
     return result;
 }
 
-SdCardStatus_t sdCardWrite(const std::uint8_t *data, std::uint16_t size)
+SdCardStatus_t sdCardWrite(const std::uint8_t *data, std::uint16_t size) noexcept
 {
     SdCardStatus_t result = std::to_underlying(Driver::SdCardStatus::INVALID_PARAMETER);
 
     if (sdCardWriteCallback != nullptr)
     {
         result = sdCardWriteCallback(data, size);
-        // result = static_cast<Driver::SdCardStatus>(status);
     }
     else
     {
@@ -110,14 +108,13 @@ SdCardStatus_t sdCardWrite(const std::uint8_t *data, std::uint16_t size)
     return result;
 }
 
-SdCardStatus_t sdCardClose()
+SdCardStatus_t sdCardClose() noexcept
 {
     SdCardStatus_t result = std::to_underlying(Driver::SdCardStatus::INVALID_PARAMETER);
 
     if (sdCardCloseCallback != nullptr)
     {
         result = sdCardCloseCallback();
-        // result = static_cast<Driver::SdCardStatus>(status);
     }
     else
     {
@@ -127,7 +124,7 @@ SdCardStatus_t sdCardClose()
     return result;
 }
 
-bool sdCardInitialize()
+bool sdCardInitialize() noexcept
 {
     bool result = true;
 
@@ -143,7 +140,7 @@ bool sdCardInitialize()
     return result;
 }
 
-bool sdCardStart()
+bool sdCardStart() noexcept
 {
     bool result = true;
 
@@ -159,7 +156,7 @@ bool sdCardStart()
     return result;
 }
 
-bool sdCardStop()
+bool sdCardStop() noexcept
 {
     bool result = true;
 
@@ -175,7 +172,7 @@ bool sdCardStop()
     return result;
 }
 
-bool sdCardReset()
+bool sdCardReset() noexcept
 {
     bool result = true;
 

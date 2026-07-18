@@ -26,7 +26,7 @@ import Driver.KeyId;
 import Driver.UartId;
 import Driver.PulseCounterId;
 
-export extern "C" void LibWrapper_Init();
+// export extern "C" void LibWrapper_Init();
 
 static Driver::LightSensorDriver lightSensor;
 static Driver::BrightnessDriver displayBrightness;
@@ -66,28 +66,8 @@ BusinessLogic::ApplicationFacade facade{platform};
 
 constexpr size_t PULSE_COUNTER_COUNT = 4U;
 
-#if 0
-enum KeyId //: std::uint8_t
-{
-    /*
-    Up = static_cast<std::uint8_t>(Driver::KeyId::Up),
-    Down = static_cast<std::uint8_t>(Driver::KeyId::Down),
-    Left = static_cast<std::uint8_t>(Driver::KeyId::Left),
-    Right = static_cast<std::uint8_t>(Driver::KeyId::Right),
-    LastNotUsed = static_cast<std::uint8_t>(Driver::KeyId::LastNotUsed)
-*/
-    Up,
-    Down,
-    Left,
-    Right,
-    LastNotUsed
-};
-#endif
-
-#ifdef __cplusplus
 extern "C"
 {
-#endif
 
     void LibWrapper_Init()
     {
@@ -201,49 +181,4 @@ extern "C"
             }
         */
     }
-
-#ifdef __cplusplus
 }
-#endif
-
-/*
-void LibWrapper_RegisterSerialTxCallback(SerialTxCallback callback)
-{
-    //  registerSerialTxCallback(callback);
-}
-
-void LibWrapper_RegisterSdCardOpenCallback(SdCardOpenCallback callback)
-{
-    //  registerSdCardOpenCallback(callback);
-}
-
-void LibWrapper_RegisterSdCardWriteCallback(SdCardWriteCallback callback)
-{
-    //  registerSdCardWriteCallback(callback);
-}
-
-void LibWrapper_RegisterSdCardCloseCallback(SdCardCloseCallback callback)
-{
-    //  registerSdCardCloseCallback(callback);
-}
-
-void LibWrapper_RegisterSdCardInitializeCallback(SdCardInitializeCallback callback)
-{
-    // registerSdCardInitializeCallback(callback);
-}
-
-void LibWrapper_RegisterSdCardStartCallback(SdCardStartCallback callback)
-{
-    //  registerSdCardStartCallback(callback);
-}
-
-void LibWrapper_RegisterSdCardStopCallback(SdCardStopCallback callback)
-{
-    //  registerSdCardStopCallback(callback);
-}
-
-void LibWrapper_RegisterSdCardResetCallback(SdCardResetCallback callback)
-{
-    //  registerSdCardResetCallback(callback);
-}
-*/

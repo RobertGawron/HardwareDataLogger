@@ -30,16 +30,16 @@ export namespace Driver
         UartDriver &operator=(UartDriver &&) = delete;
 
         // UART operations
-        [[nodiscard]] UartStatus transmit(std::span<const std::uint8_t> data,
-                                          std::uint32_t timeout) noexcept;
+        [[nodiscard]] auto transmit(std::span<const std::uint8_t> data,
+                                    std::uint32_t timeout) noexcept -> UartStatus;
 
-        [[nodiscard]] UartStatus receive(std::span<std::uint8_t> data,
-                                         std::uint32_t timeout) noexcept;
+        [[nodiscard]] auto receive(std::span<std::uint8_t> data,
+                                   std::uint32_t timeout) noexcept -> UartStatus;
 
         // Lifecycle methods
-        [[nodiscard]] bool onInit() noexcept { return true; }
-        [[nodiscard]] bool onStart() noexcept { return true; }
-        [[nodiscard]] bool onStop() noexcept { return true; }
+        [[nodiscard]] auto onInit() noexcept -> bool { return true; }
+        [[nodiscard]] auto onStart() noexcept -> bool { return true; }
+        [[nodiscard]] auto onStop() noexcept -> bool { return true; }
 
     private:
         Driver::UartId uartId;

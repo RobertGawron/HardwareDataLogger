@@ -12,7 +12,7 @@ import Driver.PulseCount;
 export extern "C"
 {
     void incrementPulseCounter(std::uint8_t counterId);
-    void setPulseCounter(std::uint8_t counterId, std::uint32_t value);
+    //   void setPulseCounter(std::uint8_t counterId, std::uint32_t value);
 }
 
 export namespace Driver
@@ -34,13 +34,13 @@ export namespace Driver
         PulseCounterDriver &operator=(PulseCounterDriver &&) = delete;
 
         // Public interface
-        [[nodiscard]] PulseCount read() noexcept;
-        void clear() noexcept;
+        [[nodiscard]] auto read() noexcept -> PulseCount;
+        [[nodiscard]] auto clear() noexcept -> void;
 
         // Lifecycle methods
-        [[nodiscard]] bool onInit() noexcept { return true; }
-        [[nodiscard]] bool onStart() noexcept { return true; }
-        [[nodiscard]] bool onStop() noexcept { return true; }
+        [[nodiscard]] auto onInit() noexcept -> bool { return true; }
+        [[nodiscard]] auto onStart() noexcept -> bool { return true; }
+        [[nodiscard]] auto onStop() noexcept -> bool { return true; }
 
     private:
         PulseCounterId deviceId;

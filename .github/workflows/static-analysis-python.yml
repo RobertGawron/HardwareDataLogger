@@ -15,5 +15,5 @@ jobs:
       artifact_name: static-analysis-results-python
       artifact_paths: DevOps/Artifacts/PythonStaticAnalysis
       run_script: |
-        cd /workspace/FirmwarePCSimulator
+        cd /workspace/
         just lint

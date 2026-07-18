@@ -23,9 +23,9 @@ This project has the following features:
 * ***microSD*** card for permanent data storage.
 * ***WiFi*** capability for remote data transfer.
 
-![Picture of Hardware Data Logger](./Documentation/Pictures/Device_27_09_2025_1.jpg)
+![Picture of Hardware Data Logger](./Documentation/Pictures/Device_18_07_2026_1.jpg)
 
-![Picture of Hardware Data Logger](./Documentation/Pictures/Device_27_09_2025_2.jpg)
+![Picture of Hardware Data Logger](./Documentation/Pictures/Device_18_07_2026_2.jpg)
 
 ## Software
 

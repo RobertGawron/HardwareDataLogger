@@ -15,14 +15,8 @@ export namespace Driver
     class KeyboardDriver : public DriverComponent
     {
     public:
-        /**
-         * @brief Default constructor for KeyboardDriver.
-         */
         KeyboardDriver() = default;
 
-        /**
-         * @brief Default destructor for KeyboardDriver.
-         */
         ~KeyboardDriver() = default;
 
         // Non-copyable and non-movable
@@ -37,7 +31,7 @@ export namespace Driver
          * This function should be called regularly (e.g., in a timer interrupt or main loop) to update
          * the state of the buttons.
          */
-        bool tick() noexcept;
+        auto tick() noexcept -> bool;
 
         /**
          * @brief Gets the current state of a specified button.
@@ -47,7 +41,7 @@ export namespace Driver
          * @param key The identifier of the button whose state is requested.
          * @return The current state of the button (`KeyState`).
          */
-        [[nodiscard]] KeyState getKeyState(KeyId key) const noexcept;
+        [[nodiscard]] auto getKeyState(KeyId key) const noexcept -> KeyState;
 
         /**
          * @brief Sets the state of a specific key.
@@ -55,7 +49,7 @@ export namespace Driver
          * @param key The identifier of the button whose state should be set.
          * @param state The new state to set for the button.
          */
-        void setKeyState(KeyId key, KeyState state) noexcept;
+        auto setKeyState(KeyId key, KeyState state) noexcept -> void;
 
     private:
         /**

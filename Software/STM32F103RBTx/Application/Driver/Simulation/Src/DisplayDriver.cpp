@@ -7,19 +7,19 @@ module Driver.DisplayDriver;
 
 namespace Driver
 {
-    bool DisplayDriver::displayOn() noexcept
+    auto DisplayDriver::displayOn() noexcept -> bool
     {
         const bool status = true;
         return status;
     }
 
-    bool DisplayDriver::displayOff() noexcept
+    auto DisplayDriver::displayOff() noexcept -> bool
     {
         const bool status = true;
         return status;
     }
 
-    bool DisplayDriver::setOrientation(DisplayDriver::Orientation _orientation) noexcept
+    auto DisplayDriver::setOrientation(DisplayDriver::Orientation _orientation) noexcept -> bool
     {
         orientation = _orientation;
         const bool status = true;
@@ -33,7 +33,7 @@ namespace Driver
         return status;
     }
 
-    bool DisplayDriver::setCursor(std::uint8_t xPosition, std::uint8_t yPosition) noexcept
+    auto DisplayDriver::setCursor(std::uint8_t xPosition, std::uint8_t yPosition) noexcept -> bool
     {
         static_cast<void>(xPosition);
         static_cast<void>(yPosition);
@@ -41,9 +41,9 @@ namespace Driver
         return status;
     }
 
-    bool DisplayDriver::drawBitmap(std::uint8_t xPosition,
+    auto DisplayDriver::drawBitmap(std::uint8_t xPosition,
                                    std::uint8_t yPosition,
-                                   std::uint8_t &bitmap) noexcept
+                                   std::uint8_t &bitmap) noexcept -> bool
     {
         static_cast<void>(xPosition);
         static_cast<void>(yPosition);
@@ -52,11 +52,11 @@ namespace Driver
         return status;
     }
 
-    bool DisplayDriver::fillRGBRectangle(std::uint8_t xPosition,
+    auto DisplayDriver::fillRGBRectangle(std::uint8_t xPosition,
                                          std::uint8_t yPosition,
                                          std::uint8_t &data,
                                          std::uint8_t width,
-                                         std::uint8_t height) noexcept
+                                         std::uint8_t height) noexcept -> bool
     {
         static_cast<void>(xPosition);
         static_cast<void>(yPosition);
@@ -105,7 +105,7 @@ namespace Driver
         return status;
     }
 #endif
-    bool DisplayDriver::getXSize(std::uint8_t &size) const noexcept
+    auto DisplayDriver::getXSize(std::uint8_t &size) const noexcept -> bool
     {
         size = MAX_HEIGHT;
 
@@ -113,7 +113,7 @@ namespace Driver
         return status;
     }
 
-    bool DisplayDriver::getYSize(std::uint8_t &size) const noexcept
+    auto DisplayDriver::getYSize(std::uint8_t &size) const noexcept -> bool
     {
         size = MAX_WIDTH;
 
@@ -133,7 +133,7 @@ namespace Driver
             return result;
         }
     */
-    bool DisplayDriver::onInit() noexcept
+    auto DisplayDriver::onInit() noexcept -> bool
     {
         return true;
     }
