@@ -7,7 +7,6 @@ export module Driver.DisplayDriver;
 
 import Driver.DriverComponent;
 import Driver.Concepts.DisplayDriver;
-// import Driver.DisplayPixelColor;
 
 export namespace Driver
 {
@@ -54,36 +53,36 @@ export namespace Driver
         DisplayDriver &operator=(DisplayDriver &&) = delete;
 
         // Display control
-        [[nodiscard]] bool displayOn() noexcept;
-        [[nodiscard]] bool displayOff() noexcept;
+        [[nodiscard]] auto displayOn() noexcept -> bool;
+        [[nodiscard]] auto displayOff() noexcept -> bool;
 
         // Configuration
-        [[nodiscard]] bool setOrientation(Orientation orientation) noexcept;
-        [[nodiscard]] bool getOrientation(Orientation &orientation) const noexcept;
-        [[nodiscard]] bool setCursor(std::uint8_t xPosition, std::uint8_t yPosition) noexcept;
+        [[nodiscard]] auto setOrientation(Orientation orientation) noexcept -> bool;
+        [[nodiscard]] auto getOrientation(Orientation &orientation) const noexcept -> bool;
+        [[nodiscard]] auto setCursor(std::uint8_t xPosition, std::uint8_t yPosition) noexcept -> bool;
 
         // Drawing operations
-        [[nodiscard]] bool drawBitmap(std::uint8_t xPosition, std::uint8_t yPosition,
-                                      std::uint8_t &bitmap) noexcept;
-        [[nodiscard]] bool fillRGBRectangle(std::uint8_t xPosition,
+        [[nodiscard]] auto drawBitmap(std::uint8_t xPosition, std::uint8_t yPosition,
+                                      std::uint8_t &bitmap) noexcept -> bool;
+        [[nodiscard]] auto fillRGBRectangle(std::uint8_t xPosition,
                                             std::uint8_t yPosition,
                                             std::uint8_t &data,
                                             std::uint8_t width,
-                                            std::uint8_t height) noexcept;
-
+                                            std::uint8_t height) noexcept -> bool;
         // Size operations
-        [[nodiscard]] bool getXSize(std::uint8_t &size) const noexcept;
-        [[nodiscard]] bool getYSize(std::uint8_t &size) const noexcept;
+        [[nodiscard]] auto getXSize(std::uint8_t &size) const noexcept -> bool;
+        [[nodiscard]] auto getYSize(std::uint8_t &size) const noexcept -> bool;
 
         // Lifecycle methods
-        [[nodiscard]] bool onInit() noexcept;
-        [[nodiscard]] bool onStart() noexcept { return true; }
-        [[nodiscard]] bool onStop() noexcept { return true; }
+        [[nodiscard]] auto onInit() noexcept -> bool;
+        [[nodiscard]] auto onStart() noexcept -> bool { return true; }
+        [[nodiscard]] auto onStop() noexcept -> bool { return true; }
 
     private:
-        // Display dimensions - ST7735_HEIGHT assumed to be defined elsewhere
-        static constexpr std::uint8_t MAX_WIDTH = 160;  // ST7735_HEIGHT
-        static constexpr std::uint8_t MAX_HEIGHT = 160; // ST7735_HEIGHT
+        // Display dimensions
+        // Defined by HW of the ST7735 display
+        static constexpr std::uint8_t MAX_WIDTH = 128U;
+        static constexpr std::uint8_t MAX_HEIGHT = 160U;
 
         Orientation orientation{Orientation::Vertical};
         //   std::array<std::array<DisplayPixelColor::PixelColor, MAX_HEIGHT>, MAX_WIDTH> content{};

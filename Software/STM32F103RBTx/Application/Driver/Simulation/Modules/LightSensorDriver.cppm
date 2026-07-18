@@ -15,14 +15,8 @@ export namespace Driver
     class LightSensorDriver : public DriverComponent
     {
     public:
-        /**
-         * @brief Default constructor.
-         */
         LightSensorDriver() = default;
 
-        /**
-         * @brief Destructor for LightSensorDriver.
-         */
         ~LightSensorDriver() = default;
 
         // Non-copyable and non-movable
@@ -31,8 +25,8 @@ export namespace Driver
         LightSensorDriver &operator=(const LightSensorDriver &) = delete;
         LightSensorDriver &operator=(LightSensorDriver &&) = delete;
 
-        [[nodiscard]] bool onStart() noexcept { return true; }
-        [[nodiscard]] bool onStop() noexcept { return true; }
+        [[nodiscard]] auto onStart() noexcept -> bool { return true; }
+        [[nodiscard]] auto onStop() noexcept -> bool { return true; }
 
         [[nodiscard]] auto samples() const noexcept -> std::span<const std::uint16_t>;
 
@@ -49,7 +43,7 @@ export namespace Driver
          *
          * @return true if ADC and DMA setup is successful, false otherwise.
          */
-        bool startAdc() noexcept;
+        auto startAdc() noexcept -> bool;
 
         /**
          * @brief Stops the ADC conversion and DMA transfer.
@@ -60,7 +54,7 @@ export namespace Driver
          *
          * @return true if the ADC and DMA stop successfully, false otherwise.
          */
-        bool stopAdc() noexcept;
+        auto stopAdc() noexcept -> bool;
     };
 
     static_assert(Driver::Concepts::LightSensorDriverConcept<LightSensorDriver>,

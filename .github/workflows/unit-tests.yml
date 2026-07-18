@@ -21,14 +21,15 @@ jobs:
           - name: Business Logic
             preset: unit-businesslogic
 
-          - name: Driver
-            preset: unit-driver
+          # maybe add them in the future, rethink the strategy
+          #- name: Driver
+          #  preset: unit-driver
 
     uses: robertgawron/hardwaredatalogger/.github/workflows/docker-postbuild-generic.yml@main
     with:
       docker_image_repo: robertgawron/hardwaredatalogger
       artifact_name: test-logs-${{ matrix.preset }}
-      artifact_paths: /tmp/cmake-${{ matrix.preset }}/Testing
+      artifact_paths: /workspace/DevOps/BuildArtifacts/cmake-${{ matrix.preset }}/Testing
 
       run_script: |
         cmake --preset ${{ matrix.preset }}

@@ -1,24 +1,15 @@
-cmake_minimum_required(VERSION 4.3.1)
-
-set(CMAKE_CXX_STANDARD 26)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
-set(CMAKE_EXPERIMENTAL_CXX_MODULE_DYNDEP ON)
-
 add_library(Driver STATIC)
 
-# Link dependencies
 target_link_libraries(Driver 
     PUBLIC DriverInterface
 )
 
-target_include_directories(Driver PRIVATE
-    Inc
-)
-
 target_sources(Driver
     PUBLIC FILE_SET CXX_MODULES FILES
+        Modules/EventHandlers.cppm
+
+        Modules/PulseCounterScheduler.cppm
+
         Modules/BrightnessDriver.cppm
         Modules/DisplayDriver.cppm
         Modules/Driver.cppm

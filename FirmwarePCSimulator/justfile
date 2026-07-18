@@ -1,0 +1,81 @@
+set shell := ["bash", "-cu"]
+
+# =========================
+# Default
+# =========================
+
+default:
+    just --list
+
+# =========================
+# Frontend
+# =========================
+
+frontend-build:
+    cd frontend && npm run build
+
+frontend-watch:
+    cd frontend && npm run watch
+
+# =========================
+# Firmware (STM32 Simulation .so)
+# =========================
+
+firmware-config:
+    mkdir -p build_stm32
+    cd build_stm32 && \
+    cmake -G Ninja \
+      -DCMAKE_BUILD_TYPE=Debug \
+      -DHDL_BUILD_SIMBIND=ON \
+      -DCMAKE_INSTALL_PREFIX={{justfile_directory()}} \
+      ../..
+
+firmware-build:
+    cd build_stm32 && ninja
+
+firmware-install:
+    cd build_stm32 && ninja install
+
+firmware:
+    just firmware-config
+    just firmware-build
+    just firmware-install
+
+firmware-clean:
+    rm -rf build_stm32
+
+# =========================
+# Backend
+# =========================
+
+backend-run:
+    uvicorn backend.main:app --host 0.0.0.0 --port 8080 --reload
+
+# =========================
+# Combined Commands
+# =========================
+
+# Full rebuild: firmware + frontend + backend
+build:
+    just firmware
+    just frontend-build
+
+run:
+    just build
+    just backend-run
+
+# Development mode (frontend watch + backend)
+dev:
+    bash -c ' \
+        (cd frontend && npm run watch) & \
+        uvicorn backend.main:app --host 0.0.0.0 --port 8080 --reload \
+    '
+
+# =========================
+# Clean
+# =========================
+
+clean:
+    rm -rf frontend/dist
+    rm -rf build_stm32
+    find . -type d -name "__pycache__" -exec rm -rf {} +

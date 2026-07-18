@@ -18,7 +18,6 @@ target_link_libraries(SimulationBindings PRIVATE
   BusinessLogic
   Device
   Driver
-  u8g2
 )
 
 set_target_properties(SimulationBindings PROPERTIES

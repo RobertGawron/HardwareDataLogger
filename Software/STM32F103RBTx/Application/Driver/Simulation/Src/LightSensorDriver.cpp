@@ -13,12 +13,12 @@ namespace Driver
         return std::span{adcDmaBuffer};
     }
 
-    bool LightSensorDriver::startAdc() noexcept
+    auto LightSensorDriver::startAdc() noexcept -> bool
     {
         return true;
     }
 
-    bool LightSensorDriver::stopAdc() noexcept
+    auto LightSensorDriver::stopAdc() noexcept -> bool
     {
         return true;
     }

@@ -1,0 +1,71 @@
+/* ============================================================
+   PULSE INPUT PANEL
+============================================================ */
+
+.input {
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* ============================================================
+   CHANNEL BLOCK
+============================================================ */
+
+.channel {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.channel:last-child {
+    border-bottom: none;
+}
+
+
+/* ============================================================
+   CHANNEL HEADER
+============================================================ */
+
+.channel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+}
+
+
+/* Channel name (CH1, CH2...) */
+
+.channel-name {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--color-text-main);
+}
+
+
+/* Channel numeric value */
+
+.channel-value {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+
+/* Optional unit styling (if separated in HTML) */
+
+.unit {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin-left: 4px;
+}
+
+
+/* ============================================================
+   SLIDER REFINEMENT INSIDE CHANNEL
+============================================================ */
+
+.channel .slider {
+    margin-top: 4px;
+}

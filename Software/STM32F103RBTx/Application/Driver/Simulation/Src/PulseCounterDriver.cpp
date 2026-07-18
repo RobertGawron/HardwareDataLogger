@@ -1,8 +1,13 @@
-// PulseCounterDriver.cpp
 module;
 
 #include <cstdint>
 #include <array>
+
+/*
+#include <print>
+#include <utility>
+#include <source_location>
+*/
 
 module Driver.PulseCounterDriver;
 
@@ -25,11 +30,6 @@ extern "C"
             pulseCounters[counterId]++;
         }
     }
-
-    void setPulseCounter(std::uint8_t counterId, std::uint32_t value)
-    {
-        pulseCounters[counterId] = value;
-    }
 }
 
 namespace Driver
@@ -39,13 +39,18 @@ namespace Driver
     {
     }
 
-    PulseCount PulseCounterDriver::read() noexcept
+    auto PulseCounterDriver::read() noexcept -> PulseCount
     {
+
         const std::uint8_t index = static_cast<std::uint8_t>(deviceId);
+
+        //  std::println(stdout, " {} {} {}",
+        //               std::source_location::current().function_name(), index, pulseCounters[index]);
+
         return pulseCounters[index];
     }
 
-    void PulseCounterDriver::clear() noexcept
+    auto PulseCounterDriver::clear() noexcept -> void
     {
     }
 }

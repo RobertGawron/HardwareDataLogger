@@ -1,0 +1,21 @@
+Doxygen doesnt support cpp modules
+
+name: Docs Coverage
+
+on:
+  workflow_run:
+    workflows: ["Build Docker"]
+    types: [completed]
+    branches: [main, "feature/*"]
+
+jobs:
+  docs-coverage:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    uses: robertgawron/hardwaredatalogger/.github/workflows/docker-postbuild-generic.yml@main
+    with:
+      docker_image_repo: robertgawron/hardwaredatalogger
+      artifact_name: docs-coverage-results
+      artifact_paths: DevOps/Artifacts/DocsCoverage
+      run_script: |
+        cmake -S /workspace --preset docs
+        cmake --build --preset docs

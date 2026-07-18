@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Firmware Simulator</title>
+
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/inputs.css" />
+    <link rel="stylesheet" href="/css/logger.css" />
+</head>
+<body>
+
+<header class="header">
+    Firmware Simulator
+</header>
+
+<div class="main-container">
+
+    <main class="layout">
+
+        <!-- LEFT CONTROL PANEL -->
+        <aside class="panel control">
+
+            <div class="section">
+                <div class="section-title">DEVICE CONTROL</div>
+
+                <div class="button-row">
+                    <button id="start-btn" class="btn primary">Start</button>
+                    <button id="reload-btn" class="btn neutral">Reload</button>
+                </div>
+
+                <div class="status-line">
+                    Status: <span id="status-text" class="status stopped">Stopped</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">HARDWARE BUTTONS</div>
+
+                <div class="button-row">
+                    <button id="btn-up" class="btn small">Up</button>
+                    <button id="btn-down" class="btn small">Down</button>
+                    <button id="btn-left" class="btn small">Left</button>
+                    <button id="btn-right" class="btn small">Right</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">SIMULATION SPEED</div>
+
+                <input id="speed-slider" type="range" class="slider full"
+                    min="0.005" max="0.1" step="0.005" value="0.02" />
+
+                <div id="speed-value" class="speed-value">0.02s</div>
+            </div>
+
+        </aside>
+
+        <!-- CENTER DISPLAY -->
+        <section class="panel display-panel">
+
+            <canvas id="display-canvas"></canvas>
+
+        </section>
+
+        <!-- RIGHT INPUT PANEL -->
+        <aside class="panel input">
+
+            <div class="section-title">PULSE INPUT CHANNELS</div>
+
+            <div class="channel" data-channel="1">
+                <div class="channel-header">
+                    <span class="channel-name">CH1</span>
+                    <span class="channel-value">
+                        <span id="pulse-1-value">0</span> ppm
+                    </span>
+                </div>
+                <input id="pulse-1" type="range" class="slider"
+                    min="0" max="1000" step="1" value="0" />
+            </div>
+
+            <div class="channel" data-channel="2">
+                <div class="channel-header">
+                    <span class="channel-name">CH2</span>
+                    <span class="channel-value">
+                        <span id="pulse-2-value">0</span> ppm
+                    </span>
+                </div>
+                <input id="pulse-2" type="range" class="slider"
+                    min="0" max="1000" step="1" value="0" />
+            </div>
+
+            <div class="channel" data-channel="3">
+                <div class="channel-header">
+                    <span class="channel-name">CH3</span>
+                    <span class="channel-value">
+                        <span id="pulse-3-value">0</span> ppm
+                    </span>
+                </div>
+                <input id="pulse-3" type="range" class="slider"
+                    min="0" max="1000" step="1" value="0" />
+            </div>
+
+            <div class="channel" data-channel="4">
+                <div class="channel-header">
+                    <span class="channel-name">CH4</span>
+                    <span class="channel-value">
+                        <span id="pulse-4-value">0</span> ppm
+                    </span>
+                </div>
+                <input id="pulse-4" type="range" class="slider"
+                    min="0" max="1000" step="1" value="0" />
+            </div>
+
+        </aside>
+
+    </main>
+
+    <section class="logger">
+
+        <!-- TABS -->
+        <div class="logger-tabs">
+            <button class="tab active" data-target="uart1">STM32 UART #1</button>
+            <button class="tab" data-target="uart2">STM32 UART #2</button>
+            <button class="tab" data-target="uart3">STM32 UART #3</button>
+            <button class="tab" data-target="esp0">ESP8266 UART #0</button>
+            <button class="tab" data-target="esp1">ESP8266 UART #1</button>
+            <button class="tab" data-target="sdcard">SD Card</button>
+        </div>
+
+        <!-- LOG PANELS -->
+        <div class="logger-panels">
+
+            <div class="logger-panel active" id="uart1">
+                <div class="log-header">
+                    <div class="col-time">Simulation Time</div>
+                    <div class="col-data">Data</div>
+                </div>
+                <div class="log-body"></div>
+            </div>
+
+            <div class="logger-panel" id="uart2">
+                <div class="log-header">
+                    <div class="col-time">Simulation Time</div>
+                    <div class="col-data">Data</div>
+                </div>
+                <div class="log-body"></div>
+            </div>
+
+            <div class="logger-panel" id="uart3">
+                <div class="log-header">
+                    <div class="col-time">Simulation Time</div>
+                    <div class="col-data">Data</div>
+                </div>
+                <div class="log-body"></div>
+            </div>
+
+            <div class="logger-panel" id="esp0">
+                <div class="log-header">
+                    <div class="col-time">Simulation Time</div>
+                    <div class="col-data">Data</div>
+                </div>
+                <div class="log-body"></div>
+            </div>
+
+            <div class="logger-panel" id="esp1">
+                <div class="log-header">
+                    <div class="col-time">Simulation Time</div>
+                    <div class="col-data">Data</div>
+                </div>
+                <div class="log-body"></div>
+            </div>
+
+            <div class="logger-panel" id="sdcard">
+                <div class="log-header">
+                    <div class="col-time">Simulation Time</div>
+                    <div class="col-data">Data</div>
+                </div>
+                <div class="log-body"></div>
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+<script type="module" src="/dist/main.js"></script>
+</body>
+</html>

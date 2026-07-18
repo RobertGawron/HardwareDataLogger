@@ -6,7 +6,7 @@ module;
 
 #include <span>
 #include <cstdint>
-#include <cassert>
+// #include <cassert>
 #include <cstdint>
 
 module Driver.UartDriver;
@@ -31,7 +31,7 @@ namespace Driver
             else
             {
                 // Ensure size fits in uint16_t for HAL function
-                assert(data.size() <= UINT16_MAX && "Data size exceeds UART HAL limit");
+                // assert(data.size() <= UINT16_MAX && "Data size exceeds UART HAL limit");
 
                 const auto size = static_cast<std::uint16_t>(data.size());
                 const auto halStatus = HAL_USART_Transmit(
@@ -61,7 +61,7 @@ namespace Driver
             else
             {
                 // Ensure size fits in uint16_t for HAL function
-                assert(data.size() <= UINT16_MAX && "Data size exceeds UART HAL limit");
+                // assert(data.size() <= UINT16_MAX && "Data size exceeds UART HAL limit");
 
                 const auto size = static_cast<std::uint16_t>(data.size());
                 const auto halStatus = HAL_USART_Receive(

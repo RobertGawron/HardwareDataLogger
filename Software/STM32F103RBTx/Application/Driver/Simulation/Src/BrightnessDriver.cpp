@@ -1,4 +1,3 @@
-// BrightnessDriver.cpp
 module;
 
 #include <cstdint>

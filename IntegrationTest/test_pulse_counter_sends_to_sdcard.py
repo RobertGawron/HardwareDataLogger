@@ -28,10 +28,10 @@ def test_sdcard_write_csv(stm32_dut):
 
     # Verify the file opened correctly
     open_op = stm32_dut.sd.get_operation(2)
-    assert open_op['filename'] == '0:/DAT01.TXT', \
-        f"Expected filename '0:/DAT01.TXT', got '{open_op['filename']}'"
-    assert open_op['mode'] == 1, \
-        f"Expected APPEND mode (1), got {open_op['mode']}"
+    assert (
+        open_op["filename"] == "0:/DAT01.TXT"
+    ), f"Expected filename '0:/DAT01.TXT', got '{open_op['filename']}'"
+    assert open_op["mode"] == 1, f"Expected APPEND mode (1), got {open_op['mode']}"
 
     stm32_dut.sd.reset()
 
@@ -46,11 +46,11 @@ def test_sdcard_write_csv(stm32_dut):
 
     # Check the initial zero values written
     writes = stm32_dut.sd.get_all_writes()
-    assert writes[0] == '0,0\n', f"Expected '0,0\\n', got '{writes[0]}'"
-    assert writes[1] == '1,0\n', f"Expected '1,0\\n', got '{writes[1]}'"
-    assert writes[2] == '2,0\n', f"Expected '2,0\\n', got '{writes[2]}'"
-    assert writes[3] == '3,0\n', f"Expected '3,0\\n', got '{writes[3]}'"
-    assert writes[4] == '4,5\n', f"Expected '4,5\\n', got '{writes[4]}'"
+    assert writes[0] == "0,0\n", f"Expected '0,0\\n', got '{writes[0]}'"
+    assert writes[1] == "1,0\n", f"Expected '1,0\\n', got '{writes[1]}'"
+    assert writes[2] == "2,0\n", f"Expected '2,0\\n', got '{writes[2]}'"
+    assert writes[3] == "3,0\n", f"Expected '3,0\\n', got '{writes[3]}'"
+    assert writes[4] == "4,5\n", f"Expected '4,5\\n', got '{writes[4]}'"
 
     logger.info("Initial writes verified: 4 counters at 0, plus source 4 at 5")
 
@@ -67,23 +67,26 @@ def test_sdcard_write_csv(stm32_dut):
     logger.info("Captured %d write operations", len(writes))
 
     # Verify the updated measurements
-    assert writes[0] == '0,10\n', f"Expected '0,10\\n', got '{writes[0]}'"
-    assert writes[1] == '1,20\n', f"Expected '1,20\\n', got '{writes[1]}'"
-    assert writes[2] == '2,30\n', f"Expected '2,30\\n', got '{writes[2]}'"
-    assert writes[3] == '3,40\n', f"Expected '3,40\\n', got '{writes[3]}'"
-    assert writes[4] == '4,5\n', f"Expected '4,5\\n', got '{writes[4]}'"
+    assert writes[0] == "0,10\n", f"Expected '0,10\\n', got '{writes[0]}'"
+    assert writes[1] == "1,20\n", f"Expected '1,20\\n', got '{writes[1]}'"
+    assert writes[2] == "2,30\n", f"Expected '2,30\\n', got '{writes[2]}'"
+    assert writes[3] == "3,40\n", f"Expected '3,40\\n', got '{writes[3]}'"
+    assert writes[4] == "4,5\n", f"Expected '4,5\\n', got '{writes[4]}'"
 
-    logger.info("Updated writes verified: counters at [10, 20, 30, 40], plus source 4 at 5")
+    logger.info(
+        "Updated writes verified: counters at [10, 20, 30, 40], plus source 4 at 5"
+    )
 
     # Verify CSV format compliance
     for i, write_data in enumerate(writes):
         # Check format: "sourceId,value\n"
-        assert ',' in write_data, f"Write {i} missing comma delimiter: '{write_data}'"
-        assert write_data.endswith('\n'), f"Write {i} missing newline: '{write_data}'"
+        assert "," in write_data, f"Write {i} missing comma delimiter: '{write_data}'"
+        assert write_data.endswith("\n"), f"Write {i} missing newline: '{write_data}'"
 
-        parts = write_data.strip().split(',')
-        assert len(parts) == 2, \
-            f"Write {i} should have 2 CSV fields, got {len(parts)}: '{write_data}'"
+        parts = write_data.strip().split(",")
+        assert (
+            len(parts) == 2
+        ), f"Write {i} should have 2 CSV fields, got {len(parts)}: '{write_data}'"
 
         # Verify both parts are numeric
         try:
