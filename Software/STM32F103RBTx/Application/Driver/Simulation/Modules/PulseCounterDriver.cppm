@@ -33,8 +33,8 @@ export namespace Driver
         PulseCounterDriver &operator=(PulseCounterDriver &&) = delete;
 
         // Public interface
-        [[nodiscard]] auto read() noexcept -> PulseCount;
-        [[nodiscard]] auto clear() noexcept -> void;
+        [[nodiscard]] auto fetchAndReset() noexcept -> PulseCount;
+        auto clear() noexcept -> void;
 
         // Lifecycle methods
         [[nodiscard]] auto onInit() noexcept -> bool { return true; }

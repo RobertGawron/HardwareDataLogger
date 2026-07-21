@@ -21,7 +21,7 @@ export namespace Driver::Concepts
         std::derived_from<T, DriverComponent> &&
         requires(T driver) {
             // Measurement operations - use the global type alias
-            { driver.read() } noexcept -> std::same_as<PulseCount>;
+            { driver.fetchAndReset() } noexcept -> std::same_as<PulseCount>;
             { driver.clear() } noexcept -> std::same_as<void>;
         };
 }

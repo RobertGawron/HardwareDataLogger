@@ -51,7 +51,7 @@ export namespace Driver
          * @note This is a non-blocking read of a shared volatile counter.
          * @note On STM32F1 (Cortex-M3), 32-bit reads are atomic.
          */
-        [[nodiscard]] auto read() const noexcept -> PulseCount;
+        [[nodiscard]] auto fetchAndReset() const noexcept -> PulseCount;
 
         /**
          * @brief Resets the pulse counter to zero.
@@ -67,11 +67,7 @@ export namespace Driver
         [[nodiscard]] auto onStart() noexcept -> bool;
 
     private:
-        /**
-         * @brief Reference to the shared hardware counter for this device.
-         * @note Modified from ISR context - ensure atomic access patterns.
-         */
-        PulseCount &counter;
+        PulseCounterId deviceId;
     };
 
     static_assert(Concepts::PulseCounterDriverConcept<PulseCounterDriver>,

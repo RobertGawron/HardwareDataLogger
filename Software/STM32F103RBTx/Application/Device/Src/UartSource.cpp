@@ -46,7 +46,7 @@ namespace Device
 
     auto UartSource::getMeasurement() noexcept -> MeasurementType
     {
-        constexpr std::uint16_t DUMMY_DATA = 5U;
+        constexpr std::uint16_t DUMMY_DATA = 0U;
 
         return MeasurementType{
             .source = deviceId,

@@ -39,7 +39,7 @@ namespace Driver
     {
     }
 
-    auto PulseCounterDriver::read() noexcept -> PulseCount
+    auto PulseCounterDriver::fetchAndReset() noexcept -> PulseCount
     {
 
         const std::uint8_t index = static_cast<std::uint8_t>(deviceId);

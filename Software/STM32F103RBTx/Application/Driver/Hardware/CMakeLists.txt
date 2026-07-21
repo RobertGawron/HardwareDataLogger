@@ -1,5 +1,5 @@
 
-add_library(Driver STATIC)
+add_library(Driver OBJECT)
 
 target_link_libraries(Driver 
     PUBLIC DriverInterface
