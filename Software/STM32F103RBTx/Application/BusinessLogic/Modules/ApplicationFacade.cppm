@@ -23,6 +23,8 @@ import Device;
 import Driver.PlatformFactory;
 import Driver.CycleBudget;
 
+import BusinessLogic.EveryNCalls;
+
 export namespace BusinessLogic
 {
     /**
@@ -97,7 +99,6 @@ export namespace BusinessLogic
         using SourceArray =
             std::array<Device::SourceVariant, SOURCES_COUNT>;
 
-        //   std::array<Device::SourceVariant, SOURCES_COUNT> sources;
         SourceArray sources;
 
         // Measurement recorders
@@ -115,11 +116,6 @@ export namespace BusinessLogic
                 RecorderArray>;
 
         MeasurementCoordinatorType measurement;
-
-        //   std::array<Device::RecorderVariant, RECORDERS_COUNT> recorders;
-
-        /// Measurement routing and aggregation.
-        //  MeasurementCoordinator<SOURCES_COUNT, RECORDERS_COUNT> measurement;
 
         // UI devices
         Device::Display display;
@@ -148,6 +144,14 @@ export namespace BusinessLogic
                             .taskIdCount = 1U,
                             .budgetCycles = Driver::CycleBudget::fromUs(72'000'000U, 500U)},
         }};
+
+#warning dont hardcode, made methods for TIM2 data move to driver
+        static constexpr std::uint32_t MEASUREMENT_EVERY_N_CALLS = 12'000U;
+
+        using MeasurementEveryMinute =
+            BusinessLogic::EveryNCalls<MEASUREMENT_EVERY_N_CALLS, MeasurementCoordinatorType>;
+
+        MeasurementEveryMinute measurementEveryMinute;
 
         /// Task dispatch table indexed by TaskId.
         Scheduler::TaskCallTable taskCallTable;

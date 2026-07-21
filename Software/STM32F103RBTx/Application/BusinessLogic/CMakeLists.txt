@@ -9,6 +9,9 @@ target_sources(BusinessLogic
             Modules/TickDelegate.cppm
             Modules/SlotTableScheduler.cppm
             Modules/TaskId.cppm
+
+            Modules/EveryNCalls.cppm
+            
             Modules/ApplicationComponent.cppm
             Modules/ApplicationFacade.cppm
             Modules/MeasurementCoordinator.cppm

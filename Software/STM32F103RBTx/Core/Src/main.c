@@ -66,7 +66,10 @@ WWDG_HandleTypeDef hwwdg;
 
 /* USER CODE BEGIN PV */
 
+#warning make it atomic
 volatile uint8_t app_tick_flag = 0;
+
+#warning move it to a separate file if possible
 /**
  * @brief Period elapsed callback in non-blocking mode
  * @param htim TIM handle

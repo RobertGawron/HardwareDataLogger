@@ -43,11 +43,18 @@ namespace BusinessLogic
           recorders{std::ref(wifiRecorder),
                     std::ref(sdCardRecorder)},
           measurement{sources, recorders},
+
+          // hack for now
+          measurementEveryMinute{measurement},
+
           display{drivers.display},
           brightness{drivers.lightSensor, drivers.displayBrightness},
           keyboard{drivers.keyboard},
-          taskCallTable{TickDelegate(measurement),
+
+          // now we pass the throtted object instead so no evrytick acction is done
+          taskCallTable{TickDelegate(measurementEveryMinute),
                         TickDelegate(keyboard)},
+
           scheduler{Scheduler::Config{slotTable, taskCallTable, 2U}}
     {
         static_assert(taskCallTable.size() == std::to_underlying(TaskId::LAST_NOT_USED),
