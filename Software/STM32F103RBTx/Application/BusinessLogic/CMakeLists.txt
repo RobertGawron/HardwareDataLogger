@@ -1,4 +1,4 @@
-add_library(BusinessLogic STATIC)
+add_library(BusinessLogic OBJECT)
 
 target_sources(BusinessLogic
     PUBLIC 
@@ -9,6 +9,11 @@ target_sources(BusinessLogic
             Modules/TickDelegate.cppm
             Modules/SlotTableScheduler.cppm
             Modules/TaskId.cppm
+
+            Modules/EveryNCalls.cppm
+            
+            Modules/MeasurementSubsystem.cppm
+
             Modules/ApplicationComponent.cppm
             Modules/ApplicationFacade.cppm
             Modules/MeasurementCoordinator.cppm
@@ -17,6 +22,7 @@ target_sources(BusinessLogic
 target_sources(BusinessLogic 
     PRIVATE
         Src/ApplicationFacade.cpp
+        Src/MeasurementSubsystem.cpp
 )
 
 target_link_libraries(BusinessLogic PUBLIC # todo PUBLIC for unit tests, but should be PRIVATE

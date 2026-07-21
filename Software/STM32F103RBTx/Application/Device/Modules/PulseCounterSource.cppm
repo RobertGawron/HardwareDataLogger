@@ -33,7 +33,8 @@ export namespace Device
         explicit constexpr PulseCounterSource(
             MeasurementDeviceId deviceId,
             Driver::PulseCounterDriver &pulseCounterDriver) noexcept
-            : deviceId{deviceId}, pulseCounterDriver{pulseCounterDriver}
+            : deviceId{deviceId},
+              pulseCounterDriver{pulseCounterDriver}
         {
         }
 

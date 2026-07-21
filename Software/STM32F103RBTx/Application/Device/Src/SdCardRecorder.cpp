@@ -83,12 +83,17 @@ namespace Device
                     {
                         csvBuffer[offset++] = '\n';
 
+                        /*
                         // Write to SD card
                         const std::span<const std::uint8_t> writeData{
                             reinterpret_cast<const std::uint8_t *>(csvBuffer.data()),
                             offset};
 
                         status = (driver.write(writeData) == Driver::SdCardStatus::OK);
+                        */
+
+                        const std::string_view csvData{csvBuffer.data(), offset};
+                        status = (driver.write(csvData) == Driver::SdCardStatus::OK);
                     }
                 }
             }

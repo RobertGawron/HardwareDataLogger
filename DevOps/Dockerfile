@@ -36,23 +36,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 
 # ==============================================================
-# STAGE 2: Build GCC 15 (snapshot)
+# STAGE 2: Build GCC 16.1 (Release Candidate)
 # ==============================================================
 FROM build-deps AS gcc-builder
 
-ARG GCC_SNAPSHOT_DATE=20260710
-
+# Use the latest 16.1 RC tarball
 RUN mkdir -p /tmp/gcc-build && cd /tmp/gcc-build && \
-    wget -q "https://gcc.gnu.org/pub/gcc/snapshots/LATEST-15/gcc-15-${GCC_SNAPSHOT_DATE}.tar.xz" && \
-    tar -xf gcc-15-${GCC_SNAPSHOT_DATE}.tar.xz && \
-    rm gcc-15-${GCC_SNAPSHOT_DATE}.tar.xz
+    wget -q "https://gcc.gnu.org/pub/gcc/snapshots/16.1.0-RC-20260424/gcc-16.1.0-RC-20260424.tar.xz" && \
+    tar -xf gcc-16.1.0-RC-20260424.tar.xz && \
+    rm gcc-16.1.0-RC-20260424.tar.xz
 
-RUN cd /tmp/gcc-build/gcc-15-${GCC_SNAPSHOT_DATE} && \
+RUN cd /tmp/gcc-build/gcc-16.1.0-RC-20260424 && \
     ./contrib/download_prerequisites && \
     cd /tmp/gcc-build && \
     mkdir build && cd build && \
-    ../gcc-15-${GCC_SNAPSHOT_DATE}/configure \
-        --prefix=/opt/gcc-15 \
+    ../gcc-16.1.0-RC-20260424/configure \
+        --prefix=/opt/gcc-16 \
         --enable-languages=c,c++ \
         --disable-multilib \
         --disable-bootstrap \
@@ -62,14 +61,13 @@ RUN cd /tmp/gcc-build/gcc-15-${GCC_SNAPSHOT_DATE} && \
     make install && \
     cd / && rm -rf /tmp/gcc-build
 
-
 # ==============================================================
 # STAGE 3: System dependencies
 # ==============================================================
 FROM base AS system-deps
 
-# Copy GCC 15
-COPY --from=gcc-builder /opt/gcc-15 /opt/gcc-15
+# Copy GCC 16
+COPY --from=gcc-builder /opt/gcc-16 /opt/gcc-16
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
@@ -110,51 +108,43 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 
 # --------------------------------------------------------------
-# Set GCC 15 as default
+# Set GCC 16 as default
 # --------------------------------------------------------------
-RUN update-alternatives --install /usr/bin/gcc gcc /opt/gcc-15/bin/gcc 100 \
-    --slave /usr/bin/g++ g++ /opt/gcc-15/bin/g++ \
-    --slave /usr/bin/gcov gcov /opt/gcc-15/bin/gcov \
-    --slave /usr/bin/gcc-ar gcc-ar /opt/gcc-15/bin/gcc-ar \
-    --slave /usr/bin/gcc-ranlib gcc-ranlib /opt/gcc-15/bin/gcc-ranlib
+RUN update-alternatives --install /usr/bin/gcc gcc /opt/gcc-16/bin/gcc 100 \
+    --slave /usr/bin/g++ g++ /opt/gcc-16/bin/g++ \
+    --slave /usr/bin/gcov gcov /opt/gcc-16/bin/gcov \
+    --slave /usr/bin/gcc-ar gcc-ar /opt/gcc-16/bin/gcc-ar \
+    --slave /usr/bin/gcc-ranlib gcc-ranlib /opt/gcc-16/bin/gcc-ranlib
 
-ENV LD_LIBRARY_PATH="/opt/gcc-15/lib64:${LD_LIBRARY_PATH}"
-
-
-# ==============================================================
-# Install LLVM/Clang 20
-# ==============================================================
+# --------------------------------------------------------------
+# Install LLVM/Clang 22.1.0
+# --------------------------------------------------------------
 RUN wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key \
     | tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc && \
-    add-apt-repository -y "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-20 main" && \
+    add-apt-repository -y "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-22 main" && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
-        clang-20 \
-        clang++-20 \
-        clang-tools-20 \
-        clang-format-20 \
-        clang-tidy-20 \
-        lld-20 \
-        lldb-20 \
-        libc++-20-dev \
-        libc++abi-20-dev \
+        clang-22 \
+        clang++-22 \
+        clang-tools-22 \
+        clang-format-22 \
+        clang-tidy-22 \
+        lld-22 \
+        lldb-22 \
+        libc++-22-dev \
+        libc++abi-22-dev \
     && rm -rf /var/lib/apt/lists/*
-
-RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-20 100 \
-    --slave /usr/bin/clang++ clang++ /usr/bin/clang++-20
-
 
 # ==============================================================
 # Install ARM GNU Toolchain
 # ==============================================================
-ARG ARM_TOOLCHAIN_VERSION=15.2.rel1
-ARG ARM_TOOLCHAIN_URL=https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_TOOLCHAIN_VERSION}/binrel/arm-gnu-toolchain-${ARM_TOOLCHAIN_VERSION}-x86_64-arm-none-eabi.tar.xz
+ARG ARM_TOOLCHAIN_VERSION=15.3.rel1
+ARG ARM_TOOLCHAIN_URL=https://gitlab.arm.com/api/v4/projects/tooling%2Fgnu-toolchains-for-arm/packages/generic/gnu-toolchain/${ARM_TOOLCHAIN_VERSION}/arm-gnu-toolchain-${ARM_TOOLCHAIN_VERSION}-x86_64-arm-none-eabi.tar.xz
 
 RUN wget -q ${ARM_TOOLCHAIN_URL} && \
     tar -xJf arm-gnu-toolchain-${ARM_TOOLCHAIN_VERSION}-x86_64-arm-none-eabi.tar.xz -C /opt/ && \
     rm arm-gnu-toolchain-${ARM_TOOLCHAIN_VERSION}-x86_64-arm-none-eabi.tar.xz && \
     ln -s /opt/arm-gnu-toolchain-${ARM_TOOLCHAIN_VERSION}-x86_64-arm-none-eabi /opt/arm-toolchain
-
 
 # ==============================================================
 # Install Node.js 20 + TypeScript
@@ -165,10 +155,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-get install -y --no-install-recommends nodejs && \
     npm install -g typescript && \
     rm -rf /var/lib/apt/lists/*
-
-ENV PATH="/opt/arm-toolchain/bin:/opt/gcc-15/bin:${PATH}"
-ENV CC=gcc
-ENV CXX=g++
 
 
 # ==============================================================
@@ -228,11 +214,15 @@ FROM esp-toolchain AS final
 RUN mkdir -p /workspace/build
 
 # Install latest CMake
-ARG CMAKE_VERSION=4.3.2
+ARG CMAKE_VERSION=4.4.0
 RUN wget -q https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.sh && \
     chmod +x cmake-${CMAKE_VERSION}-linux-x86_64.sh && \
     ./cmake-${CMAKE_VERSION}-linux-x86_64.sh --skip-license --prefix=/usr/local && \
     rm cmake-${CMAKE_VERSION}-linux-x86_64.sh
+
+# todo move it somewhere earlier
+ENV PATH="/opt/arm-toolchain/bin:${PATH}"
+
 
 WORKDIR /workspace/build
 CMD ["bash"]

@@ -1,7 +1,6 @@
 module;
 
 #include <concepts>
-#include <span>
 #include <string_view>
 #include <cstdint>
 
@@ -23,7 +22,7 @@ export namespace Driver::Concepts
         requires(T driver,
                  std::string_view filename,
                  FileOpenMode mode,
-                 std::span<const std::uint8_t> data) {
+                 std::string_view data) {
             // File operations
             { driver.openFile(filename, mode) } noexcept -> std::same_as<SdCardStatus>;
             { driver.write(data) } noexcept -> std::same_as<SdCardStatus>;

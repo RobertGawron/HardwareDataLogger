@@ -279,6 +279,34 @@ export namespace BusinessLogic
         }
 
         /**
+         * @brief Validates a slot table at compile time against this scheduler's constraints.
+         *
+         * @details
+         * Checks that the number of tasks per slot does not exceed MaxTasksPerSlot,
+         * and that all TaskId values are within the valid range [0, TaskId::LAST_NOT_USED).
+         *
+         * @param table The slot table to validate.
+         * @return true if the table is internally consistent and respects scheduler bounds.
+         */
+        [[nodiscard]] static consteval auto validateSlotTable(const SlotTable &table) noexcept -> bool
+        {
+            bool ok = true;
+
+            for (const auto &slot : table)
+            {
+                ok = ok && (slot.taskIdCount <= MaxTasksPerSlot);
+
+                for (std::uint8_t i = 0U; i < slot.taskIdCount; ++i)
+                {
+                    const auto id = std::to_underlying(slot.taskIds[i]);
+                    ok = ok && (id < std::to_underlying(TaskId::LAST_NOT_USED));
+                }
+            }
+
+            return ok;
+        }
+
+        /**
          * @brief Starts the scheduler.
          *
          * @details
