@@ -12,6 +12,8 @@ target_sources(BusinessLogic
 
             Modules/EveryNCalls.cppm
             
+            Modules/MeasurementSubsystem.cppm
+
             Modules/ApplicationComponent.cppm
             Modules/ApplicationFacade.cppm
             Modules/MeasurementCoordinator.cppm
@@ -20,6 +22,7 @@ target_sources(BusinessLogic
 target_sources(BusinessLogic 
     PRIVATE
         Src/ApplicationFacade.cpp
+        Src/MeasurementSubsystem.cpp
 )
 
 target_link_libraries(BusinessLogic PUBLIC # todo PUBLIC for unit tests, but should be PRIVATE
