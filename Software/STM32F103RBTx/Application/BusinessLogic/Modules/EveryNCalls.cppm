@@ -6,7 +6,7 @@ import BusinessLogic.TickableConcept;
 
 export namespace BusinessLogic
 {
-    template <std::uint32_t N, TickableConcept T>
+    template <TickableConcept T, std::uint32_t N>
     class EveryNCalls final
     {
     public:
@@ -21,13 +21,17 @@ export namespace BusinessLogic
         {
             // Called each time the scheduler invokes this TaskId
             ++counter;
-            if (counter < N)
+
+            const bool shouldRun = (counter >= N);
+            bool result = true;
+
+            if (shouldRun)
             {
-                return true; // "not time yet", but not an error
+                counter = 0U;
+                result = inner.tick(); // call the real task only every Nth time
             }
 
-            counter = 0U;
-            return inner.tick(); // call the real task only every Nth time
+            return result;
         }
 
     private:

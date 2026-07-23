@@ -149,7 +149,7 @@ export namespace BusinessLogic
         static constexpr std::uint32_t MEASUREMENT_EVERY_N_CALLS = 12'000U;
 
         using MeasurementEveryMinute =
-            BusinessLogic::EveryNCalls<MEASUREMENT_EVERY_N_CALLS, MeasurementCoordinatorType>;
+            BusinessLogic::EveryNCalls<MeasurementCoordinatorType, MEASUREMENT_EVERY_N_CALLS>;
 
         MeasurementEveryMinute measurementEveryMinute;
 
