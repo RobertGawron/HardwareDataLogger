@@ -4,12 +4,11 @@ module;
 #include "stm32f1xx_hal_gpio.h"
 
 #include "ff.h"
-// #include "disk_status.h"
 #include "diskio.h"
 
-#include <span>
 #include <string_view>
 #include <cstdint>
+#include <cstring>
 
 module Driver.SdCardDriver;
 
@@ -69,22 +68,12 @@ namespace Driver
 
     bool SdCardDriver::onStart() noexcept
     {
-        const auto result = f_mount(&fileSystem, SD_CARD_VOLUME, MOUNT_NOW_FLAG);
+        const FRESULT result = f_mount(&fileSystem, SD_CARD_VOLUME, MOUNT_NOW_FLAG);
 
-        if (result == FR_OK)
-        {
-            isFileSystemMounted = true;
-        }
+        isFileSystemMounted = (result == FR_OK);
+        const auto status = isFileSystemMounted;
 
-        DSTATUS st = disk_status(0);
-        // printf("disk_status(0)=0x%02X\n", st);
-
-        DWORD fre_clust;
-        FATFS *fs;
-        FRESULT fr = f_getfree("0:", &fre_clust, &fs);
-        // printf("f_getfree=%d\n", (int)fr);
-
-        return result == FR_OK;
+        return status;
     }
 
     bool SdCardDriver::onStop() noexcept
@@ -133,14 +122,26 @@ namespace Driver
             return SdCardStatus::FILE_ALREADY_OPEN;
         }
 
+        // FatFs requires a null-terminated C-string.
+        // std::string_view is NOT guaranteed to be null-terminated.
+        // We use a stack buffer to avoid dynamic allocation.
+        // (FF_MAX_LFN is typically 255 in FatFs, so 256 is a safe bound).
+        static constexpr std::size_t MAX_PATH_LEN = 256U;
+
+        if (filename.size() >= MAX_PATH_LEN) [[unlikely]]
+        {
+            return SdCardStatus::INVALID_PARAMETER; // Prevents buffer overflow
+        }
+
+        char pathBuffer[MAX_PATH_LEN];
+        std::memcpy(pathBuffer, filename.data(), filename.size());
+        pathBuffer[filename.size()] = '\0'; // Null-terminate for FatFs
+
         const BYTE fatFsMode = (mode == FileOpenMode::OVERWRITE)
                                    ? (FA_WRITE | FA_CREATE_ALWAYS)
                                    : (FA_WRITE | FA_OPEN_ALWAYS);
 
-        // auto ds = disk_status(0);
-
-        // auto result = f_open(&file, filename.data(), fatFsMode);
-        auto result = f_open(&file, "0:/TXT.TXT", /*fatFsMode*/ 0x0a);
+        auto result = f_open(&file, pathBuffer, fatFsMode);
 
         if (result != FR_OK)
         {
@@ -180,7 +181,7 @@ namespace Driver
         return SdCardStatus::OK;
     }
 
-    SdCardStatus SdCardDriver::write(std::span<const std::uint8_t> data) noexcept
+    SdCardStatus SdCardDriver::write(std::string_view data) noexcept
     {
         if (data.empty()) [[unlikely]]
         {
@@ -198,14 +199,18 @@ namespace Driver
         }
 
         UINT bytesWritten = 0U;
-        auto result = f_write(&file, data.data(), data.size(), &bytesWritten);
+
+        // f_write expects const void*. data.data() returns const char*,
+        // which implicitly and safely converts to const void*.
+        const UINT sizeToWrite = static_cast<UINT>(data.size());
+        auto result = f_write(&file, data.data(), sizeToWrite, &bytesWritten);
 
         if (result != FR_OK)
         {
             return SdCardStatus::WRITE_ERROR;
         }
 
-        if (bytesWritten != data.size())
+        if (bytesWritten != sizeToWrite)
         {
             return SdCardStatus::INCOMPLETE_WRITE;
         }

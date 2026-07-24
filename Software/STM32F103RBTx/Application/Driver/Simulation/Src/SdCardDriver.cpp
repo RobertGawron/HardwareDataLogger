@@ -49,9 +49,11 @@ namespace Driver
         return static_cast<SdCardStatus>(sdCardClose());
     }
 
-    auto SdCardDriver::write(std::span<const std::uint8_t> data) noexcept -> SdCardStatus
+    auto SdCardDriver::write(std::string_view data) noexcept -> SdCardStatus
     {
         const auto size = static_cast<std::uint16_t>(data.size());
-        return static_cast<SdCardStatus>(sdCardWrite(data.data(), size));
+
+        return static_cast<SdCardStatus>(
+            sdCardWrite(reinterpret_cast<const std::uint8_t *>(data.data()), size));
     }
 }

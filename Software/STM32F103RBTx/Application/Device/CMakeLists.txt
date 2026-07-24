@@ -1,4 +1,4 @@
-add_library(Device STATIC)
+add_library(Device OBJECT)
 
 target_link_libraries(Device PUBLIC # TODO PUBLIC for unit tests, but should be PRIVATE
     Driver

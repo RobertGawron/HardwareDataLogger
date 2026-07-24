@@ -1,4 +1,4 @@
-add_library(BusinessLogic STATIC)
+add_library(BusinessLogic OBJECT)
 
 target_sources(BusinessLogic
     PUBLIC 

@@ -6,7 +6,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_EXPERIMENTAL_CXX_MODULE_DYNDEP ON)
 
-add_library(SimulationBindings SHARED)
+add_library(SimulationBindings OBJECT)
 
 target_sources(SimulationBindings PUBLIC 
   FILE_SET CXX_MODULES 

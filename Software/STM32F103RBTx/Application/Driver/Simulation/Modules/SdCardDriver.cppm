@@ -1,7 +1,6 @@
 module;
 
 #include <string_view>
-#include <span>
 #include <cstdint>
 
 export module Driver.SdCardDriver;
@@ -46,7 +45,7 @@ export namespace Driver
         [[nodiscard]] auto onReset() noexcept -> bool;
 
         [[nodiscard]] auto openFile(std::string_view filename, FileOpenMode mode) noexcept -> SdCardStatus;
-        [[nodiscard]] auto write(std::span<const std::uint8_t> data) noexcept -> SdCardStatus;
+        [[nodiscard]] auto write(std::string_view data) noexcept -> SdCardStatus;
         [[nodiscard]] auto closeFile() noexcept -> SdCardStatus;
     };
 
