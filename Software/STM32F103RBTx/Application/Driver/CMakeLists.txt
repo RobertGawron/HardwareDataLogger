@@ -1,4 +1,4 @@
-add_library(DriverInterface STATIC)
+add_library(DriverInterface OBJECT)
 
 target_sources(DriverInterface
     PUBLIC FILE_SET CXX_MODULES FILES

@@ -5,6 +5,7 @@ module;
 #include <cstddef>
 #include <functional>
 #include <utility>
+#include <atomic>
 
 #include "stm32f1xx_hal_gpio.h"
 
@@ -17,10 +18,11 @@ namespace
     static constexpr std::uint8_t PULSE_COUNTER_COUNT =
         std::to_underlying(Driver::PulseCounterId::LastNotUsed);
 
-    // Modified in interruption, shared by all instances of PulseCounterDriver
-    // Each counter uses one and only one element in array.
-    alignas(std::uint32_t) std::array<Driver::PulseCount,
-                                      PULSE_COUNTER_COUNT> rawPulseCounters = {0};
+    // Modified in interruption, shared by all instances of PulseCounterDriver.
+    // Because this is at namespace scope, it has static storage duration and
+    // is zero-initialized before any other initialization.
+    alignas(std::uint32_t) std::array<std::atomic<Driver::PulseCount>, PULSE_COUNTER_COUNT> rawPulseCounters;
+
 }
 
 // We are the client of PulseCounterId; verify enum values because
@@ -55,16 +57,16 @@ extern "C" void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     switch (GPIO_Pin)
     {
     case GPIO_PIN_6:
-        ++rawPulseCounters[COUNTER_1];
+        rawPulseCounters[COUNTER_1].fetch_add(1, std::memory_order_relaxed);
         break;
     case GPIO_PIN_7:
-        ++rawPulseCounters[COUNTER_2];
+        rawPulseCounters[COUNTER_2].fetch_add(1, std::memory_order_relaxed);
         break;
     case GPIO_PIN_8:
-        ++rawPulseCounters[COUNTER_3];
+        rawPulseCounters[COUNTER_3].fetch_add(1, std::memory_order_relaxed);
         break;
     case GPIO_PIN_9:
-        ++rawPulseCounters[COUNTER_4];
+        rawPulseCounters[COUNTER_4].fetch_add(1, std::memory_order_relaxed);
         break;
     default:
         break;
@@ -75,7 +77,7 @@ namespace Driver
 {
 
     PulseCounterDriver::PulseCounterDriver(PulseCounterId deviceId) noexcept
-        : counter(rawPulseCounters[std::to_underlying(deviceId)])
+        : deviceId(deviceId)
     {
     }
 
@@ -85,14 +87,16 @@ namespace Driver
         return true;
     }
 
-    auto PulseCounterDriver::read() const noexcept -> PulseCount
+    auto PulseCounterDriver::fetchAndReset() const noexcept -> PulseCount
     {
-        return counter;
+        return rawPulseCounters[std::to_underlying(deviceId)].exchange(
+            0,
+            std::memory_order_relaxed);
     }
 
     auto PulseCounterDriver::clear() noexcept -> void
     {
-        counter = 0U;
+        rawPulseCounters[std::to_underlying(deviceId)].store(0U, std::memory_order_relaxed);
     }
 
 } // namespace Driver

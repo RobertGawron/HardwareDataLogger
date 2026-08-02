@@ -22,7 +22,7 @@ class Simulation:
         self.sdcard_manager: BroadcastManager = sdcard_manager
 
         # Threading
-        self.tick_interval: float = 0.02
+        self.tick_interval: float = 0.005  # 5 ms, TODO make some config with this
         self._tick_thread: threading.Thread | None = None
         self._stop_event: threading.Event = threading.Event()
 

@@ -13,7 +13,8 @@ module;
 export module BusinessLogic.ApplicationFacade;
 
 import BusinessLogic.ApplicationComponent;
-import BusinessLogic.MeasurementCoordinator;
+
+import BusinessLogic.MeasurementSubsystem;
 
 import BusinessLogic.SlotTableScheduler;
 import BusinessLogic.TaskId;
@@ -80,46 +81,7 @@ export namespace BusinessLogic
         auto onTimeSlot() noexcept -> void;
 
     private:
-        /// Number of recorders connected to the measurement coordinator.
-        static constexpr std::size_t RECORDERS_COUNT{2U};
-
-        /// Number of sources connected to the measurement coordinator.
-        static constexpr std::size_t SOURCES_COUNT{
-            std::to_underlying(Device::MeasurementDeviceId::LAST_NOT_USED)};
-
-        // Measurement sources
-        Device::PulseCounterSource pulseCounter1;
-        Device::PulseCounterSource pulseCounter2;
-        Device::PulseCounterSource pulseCounter3;
-        Device::PulseCounterSource pulseCounter4;
-        Device::UartSource uartReceiver;
-
-        using SourceArray =
-            std::array<Device::SourceVariant, SOURCES_COUNT>;
-
-        //   std::array<Device::SourceVariant, SOURCES_COUNT> sources;
-        SourceArray sources;
-
-        // Measurement recorders
-        Device::WiFiRecorder wifiRecorder;
-        Device::SdCardRecorder sdCardRecorder;
-
-        using RecorderArray =
-            std::array<Device::RecorderVariant, RECORDERS_COUNT>;
-
-        RecorderArray recorders;
-
-        using MeasurementCoordinatorType =
-            BusinessLogic::MeasurementCoordinator<
-                SourceArray,
-                RecorderArray>;
-
-        MeasurementCoordinatorType measurement;
-
-        //   std::array<Device::RecorderVariant, RECORDERS_COUNT> recorders;
-
-        /// Measurement routing and aggregation.
-        //  MeasurementCoordinator<SOURCES_COUNT, RECORDERS_COUNT> measurement;
+        MeasurementSubsystem measurementSubsystem;
 
         // UI devices
         Device::Display display;
@@ -154,28 +116,5 @@ export namespace BusinessLogic
 
         /// Slot-table scheduler instance.
         Scheduler scheduler;
-
-        /**
-         * @brief Validates slotTable at compile time.
-         * @return true if slotTable is internally consistent.
-         */
-        static consteval auto validateSlotTable() -> bool
-        {
-            bool ok = true;
-
-            for (const auto &slot : slotTable)
-            {
-                ok = ok && (slot.taskIdCount <= MAX_TASKS_PERSLOT);
-
-                for (std::uint8_t i = 0U; i < slot.taskIdCount; ++i)
-                {
-                    const auto id = std::to_underlying(slot.taskIds[i]);
-                    ok = ok && (id < std::to_underlying(TaskId::LAST_NOT_USED));
-                }
-            }
-
-            return ok;
-        }
     };
-
 } // namespace BusinessLogic

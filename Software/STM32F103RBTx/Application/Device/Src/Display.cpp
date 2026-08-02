@@ -1,11 +1,6 @@
 module;
 
-#include <array>
 #include <cstdint>
-#include <cstdlib>
-
-// #include "u8g2.h"
-// #include "u8x8.h"
 
 module Device.Display;
 
@@ -21,12 +16,10 @@ namespace Device
     bool Display::onInit() noexcept
     {
         return displayDriver.init();
-        ;
     }
 
     bool Display::onStart() noexcept
     {
-
         return displayDriver.start();
     }
     bool Display::onStop() noexcept
