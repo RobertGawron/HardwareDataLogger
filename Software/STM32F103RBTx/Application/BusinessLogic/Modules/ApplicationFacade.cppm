@@ -15,6 +15,7 @@ export module BusinessLogic.ApplicationFacade;
 import BusinessLogic.ApplicationComponent;
 
 import BusinessLogic.MeasurementSubsystem;
+import BusinessLogic.UserInterfaceSubsystem;
 
 import BusinessLogic.SlotTableScheduler;
 import BusinessLogic.TaskId;
@@ -83,10 +84,7 @@ export namespace BusinessLogic
     private:
         MeasurementSubsystem measurementSubsystem;
 
-        // UI devices
-        Device::Display display;
-        Device::DisplayBrightness brightness;
-        Device::Keyboard keyboard;
+        UserInterfaceSubsystem userInterfaceSubsystem;
 
         /// Scheduler configuration.
         static constexpr std::size_t SLOTS_PER_CYCLE{4U};

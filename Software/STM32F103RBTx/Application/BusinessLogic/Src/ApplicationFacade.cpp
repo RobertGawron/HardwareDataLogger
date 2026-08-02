@@ -30,13 +30,10 @@ namespace BusinessLogic
 
     ApplicationFacade::ApplicationFacade(Driver::PlatformFactory &drivers) noexcept
         : measurementSubsystem{drivers},
-
-          display{drivers.display},
-          brightness{drivers.lightSensor, drivers.displayBrightness},
-          keyboard{drivers.keyboard},
+          userInterfaceSubsystem{drivers},
 
           taskCallTable{TickDelegate(measurementSubsystem),
-                        TickDelegate(keyboard)},
+                        TickDelegate(userInterfaceSubsystem)},
 
           scheduler{Scheduler::Config{slotTable, taskCallTable, 2U}}
     {
@@ -50,14 +47,10 @@ namespace BusinessLogic
     auto ApplicationFacade::onInit() noexcept -> bool
     {
         const bool statusMeasurement = measurementSubsystem.init();
-        const bool statusDisplay = display.init();
-        const bool statusBrightness = brightness.init();
-        const bool statusKeyboard = keyboard.init();
+        const bool statusUserInterface = userInterfaceSubsystem.init();
 
         const bool status = (statusMeasurement &&
-                             statusDisplay &&
-                             statusBrightness &&
-                             statusKeyboard);
+                             statusUserInterface);
 
         return status;
     }
@@ -65,15 +58,11 @@ namespace BusinessLogic
     auto ApplicationFacade::onStart() noexcept -> bool
     {
         const bool statusMeasurement = measurementSubsystem.start();
-        const bool statusDisplay = display.start();
-        const bool statusBrightness = brightness.start();
-        const bool statusKeyboard = keyboard.start();
+        const bool statusUserInterface = userInterfaceSubsystem.start();
         const bool statusScheduler = scheduler.start();
 
         const bool status = (statusMeasurement &&
-                             statusDisplay &&
-                             statusBrightness &&
-                             statusKeyboard &&
+                             statusUserInterface &&
                              statusScheduler);
 
         //        return status;
@@ -83,14 +72,10 @@ namespace BusinessLogic
     auto ApplicationFacade::onStop() noexcept -> bool
     {
         const bool statusMeasurement = measurementSubsystem.stop();
-        const bool statusDisplay = display.stop();
-        const bool statusBrightness = brightness.stop();
-        const bool statusKeyboard = keyboard.stop();
+        const bool statusUserInterface = userInterfaceSubsystem.stop();
 
         const bool status = (statusMeasurement &&
-                             statusDisplay &&
-                             statusBrightness &&
-                             statusKeyboard);
+                             statusUserInterface);
         return status;
     }
 
