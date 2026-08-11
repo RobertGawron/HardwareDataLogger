@@ -108,3 +108,28 @@ if(HDL_ENABLE_TOOLING_TARGETS)
     USES_TERMINAL
   )
 endif()
+
+
+if(HDL_ENABLE_TOOLING_TARGETS)
+    find_program(CLANG_TIDY_EXE NAMES clang-tidy-23 clang-tidy)
+    if(CLANG_TIDY_EXE AND CMAKE_EXPORT_COMPILE_COMMANDS)
+        file(GLOB_RECURSE FIRMWARE_SOURCES
+            "${HARDWARE_APP_DIR}/Driver/*.c"
+            "${HARDWARE_APP_DIR}/Driver/*.cpp"
+            "${HARDWARE_APP_DIR}/Device/*.c"
+            "${HARDWARE_APP_DIR}/Device/*.cpp"
+            "${HARDWARE_APP_DIR}/BusinessLogic/*.c"
+            "${HARDWARE_APP_DIR}/BusinessLogic/*.cpp"
+        )
+
+        add_custom_target(static-analysis
+            COMMAND ${CLANG_TIDY_EXE} ${FIRMWARE_SOURCES}
+                --extra-arg=-Wno-unknown-warning-option
+                -checks='clang-analyzer-*,bugprone-*,performance-*,readability-*,modernize-*,cppcoreguidelines-*'
+                -p ${CMAKE_BINARY_DIR}   # points to the directory containing compile_commands.json
+            COMMENT "Running clang-tidy on firmware sources"
+            USES_TERMINAL
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        )
+    endif()
+endif()
