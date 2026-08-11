@@ -86,6 +86,11 @@ option(HDL_ENABLE_TOOLING_TARGETS "Enable tooling targets like integration/docs/
 if(HDL_ENABLE_TOOLING_TARGETS)
 
   include("${HARDWARE_APP_DIR}/CodeCoverage.cmake" OPTIONAL)
+
+
+    
+
+ # Software/STM32F103RBTx/Application/StaticAnalysis.cmake
 #  include("${CMAKE_SOURCE_DIR}/DevOps/Cmake/CStaticAnalysis.cmake" OPTIONAL)
 #  include("${CMAKE_SOURCE_DIR}/DevOps/Cmake/DocsCoverage.cmake" OPTIONAL)
 
@@ -112,8 +117,12 @@ endif()
 
 if(HDL_ENABLE_TOOLING_TARGETS)
     find_program(CLANG_TIDY_EXE NAMES clang-tidy-23 clang-tidy)
+
+    include("${HARDWARE_APP_DIR}/StaticAnalysis.cmake" OPTIONAL)
+
     if(CLANG_TIDY_EXE AND CMAKE_EXPORT_COMPILE_COMMANDS)
         file(GLOB_RECURSE FIRMWARE_SOURCES
+        # TODO fix it
             "${HARDWARE_APP_DIR}/Driver/*.c"
             "${HARDWARE_APP_DIR}/Driver/*.cpp"
             "${HARDWARE_APP_DIR}/Device/*.c"
