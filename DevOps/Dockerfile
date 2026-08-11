@@ -1,7 +1,7 @@
 # ==============================================================
 # Base
 # ==============================================================
-FROM ubuntu:24.04 AS base
+FROM ubuntu:26.04 AS base
 ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /workspace
 
@@ -117,23 +117,19 @@ RUN update-alternatives --install /usr/bin/gcc gcc /opt/gcc-16/bin/gcc 100 \
     --slave /usr/bin/gcc-ranlib gcc-ranlib /opt/gcc-16/bin/gcc-ranlib
 
 # --------------------------------------------------------------
-# Install LLVM/Clang 22.1.0
+# Install LLVM/Clang
 # --------------------------------------------------------------
-RUN wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key \
-    | tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc && \
-    add-apt-repository -y "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-22 main" && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-        clang-22 \
-        clang++-22 \
-        clang-tools-22 \
-        clang-format-22 \
-        clang-tidy-22 \
-        lld-22 \
-        lldb-22 \
-        libc++-22-dev \
-        libc++abi-22-dev \
-    && rm -rf /var/lib/apt/lists/*
+
+# Download and run the official LLVM installation script for Ubuntu
+RUN wget -q https://apt.llvm.org/llvm.sh && \
+    chmod +x llvm.sh && \
+    ./llvm.sh 23
+
+# Remove the script (not needed anymore)
+RUN rm llvm.sh
+
+# Clean up apt cache
+RUN rm -rf /var/lib/apt/lists/*
 
 # ==============================================================
 # Install ARM GNU Toolchain
@@ -179,7 +175,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
         fastapi==0.109.0 \
         uvicorn[standard]==0.27.0 \
         websockets==12.0 \
-        pydantic==2.5.0 \
+        pydantic \
         python-multipart==0.0.6 \
         python-dotenv \
         aiofiles \
